@@ -151,12 +151,14 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
           </svg>
         </button>
 
-        {/* Image Name - Between the arrows */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-70 text-white text-center">
-          <p className="text-lg font-semibold bg-black bg-opacity-50 px-4 py-2 rounded-lg">
-            {image.name}
-          </p>
-        </div>
+        {/* Image Name - Between the arrows - Only show if name exists */}
+        {image.name && (
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-70 text-white text-center">
+            <p className="text-lg font-semibold bg-black bg-opacity-50 px-4 py-2 rounded-lg">
+              {image.name}
+            </p>
+          </div>
+        )}
 
         {/* Next Button - Bottom Right - Outside image container */}
         <button
