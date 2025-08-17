@@ -30,9 +30,15 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
       : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
   };
 
-  // Handle video click - navigate to specific video page
-  const handleVideoClick = (video) => {
-    navigate(`/video/${video.id}`);
+  // Handle article click - navigate based on content type
+  const handleVideoClick = (article) => {
+    // Navigate to video view page for video content type articles
+    if (article.content_type === 'video' || article.youtube_url) {
+      navigate(`/video/${article.id}`);
+    } else {
+      // Navigate to regular article page for non-video articles
+      navigate(`/article/${article.id}`);
+    }
   };
 
   const getCurrentData = () => {
