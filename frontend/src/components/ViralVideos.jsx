@@ -21,9 +21,15 @@ const ViralVideos = ({ viralVideosData = {}, onArticleClick }) => {
     setFeaturedItems(currentData);
   }, [viralVideosData, activeTab, usaArticles, rowArticles]);
 
-  // Handle video click - navigate to specific video page
-  const handleClick = (review) => {
-    navigate(`/video/${review.id}`);
+  // Handle article click - navigate based on content type
+  const handleClick = (article) => {
+    // Navigate to video view page for video content type articles
+    if (article.content_type === 'video' || article.youtube_url) {
+      navigate(`/video/${article.id}`);
+    } else {
+      // Navigate to regular article page for non-video articles
+      navigate(`/article/${article.id}`);
+    }
   };
 
   // Get articles based on active tab
