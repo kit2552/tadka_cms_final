@@ -1033,12 +1033,12 @@ const ImageGalleryModal = ({ article, onClose, relatedImages = [] }) => {
             image={{
               id: selectedImage.id,
               fullImage: selectedImage.fullImage,
-              name: selectedImage.name
+              name: '' // Empty name to hide title overlay in popup slider
             }}
             images={galleryImages.map(img => ({
               id: img.id,
               fullImage: img.fullImage,
-              name: img.name
+              name: '' // Empty name to hide title overlay in popup slider
             }))}
             onClose={handleImageModalClose}
             onNext={handleImageModalNext}
