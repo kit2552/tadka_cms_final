@@ -30,9 +30,15 @@ const TrendingVideos = ({ trendingVideosData = {}, onImageClick }) => {
       : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
   };
 
-  // Handle video click - navigate to specific video page
+  // Handle video click - navigate to specific video page or article page based on content type
   const handleVideoClick = (video) => {
-    navigate(`/video/${video.id}`);
+    // Navigate to video view page for video content type articles
+    if (video.content_type === 'video' || video.youtube_url) {
+      navigate(`/video/${video.id}`);
+    } else {
+      // Navigate to regular article page for non-video articles
+      navigate(`/article/${video.id}`);
+    }
   };
 
 
