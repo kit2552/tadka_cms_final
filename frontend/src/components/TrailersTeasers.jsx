@@ -9,7 +9,7 @@ const TrailersTeasers = ({ reviews, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
   const [featuredItems, setFeaturedItems] = useState([]);
-  const [activeTab, setActiveTab] = useState('trailers');
+  const [activeTab, setActiveTab] = useTabState('trailers-teasers', 'trailers');
   const [trailersData, setTrailersData] = useState({ trailers: [], bollywood: [] });
   const [loading, setLoading] = useState(true);
 

@@ -9,7 +9,7 @@ const NewVideoSongs = ({ reviews, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
   const [featuredItems, setFeaturedItems] = useState([]);
-  const [activeTab, setActiveTab] = useState('video-songs');
+  const [activeTab, setActiveTab] = useTabState('new-video-songs', 'video-songs');
   const [videoSongsData, setVideoSongsData] = useState({ video_songs: [], bollywood: [] });
   const [loading, setLoading] = useState(true);
 

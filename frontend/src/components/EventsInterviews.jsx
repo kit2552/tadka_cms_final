@@ -9,7 +9,7 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
   const { t } = useLanguage();
   const { theme, getSectionHeaderClasses } = useTheme();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('events');
+  const [activeTab, setActiveTab] = useTabState('events-interviews', 'events');
   const scrollContainerRef = useRef(null);
   
   // Get data from API instead of mock data
