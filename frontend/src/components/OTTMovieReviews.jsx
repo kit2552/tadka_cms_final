@@ -1,3 +1,4 @@
+import useTabState from '../hooks/useTabState';
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
