@@ -8,7 +8,7 @@ const OTTReleases = ({ articles, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses, theme } = useTheme();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('ott');
+  const [activeTab, setActiveTab] = useTabState('ott-releases', 'ott');
   const [releaseData, setReleaseData] = useState({ ott: {}, bollywood: {} });
   const [loading, setLoading] = useState(true);
   
