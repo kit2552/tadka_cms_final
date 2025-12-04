@@ -531,7 +531,7 @@ export const dataService = {
         topNews: mockData.topNews,
         mostRead: mockData.topNews.slice(0, 15),
         teluguNews: mockData.topNews.slice(5, 20),
-        talkOfTown: mockData.talkOfTown,
+        talkOfTown: boxOfficeData,
         politicalNews: mockData.politicalNews,
         entertainmentNews: mockData.entertainmentNews,
         featuredImages: mockData.featuredImages,
