@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import mockData from '../data/comprehensiveMockData';
+import useTabState from '../hooks/useTabState';
 
 const BoxOffice = ({ articles, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
-  const [activeTab, setActiveTab] = useState('box-office');
+  const [activeTab, setActiveTab] = useTabState('box-office', 'box-office');
   const [talkOfTown, setTalkOfTown] = useState([]);
 
   useEffect(() => {
