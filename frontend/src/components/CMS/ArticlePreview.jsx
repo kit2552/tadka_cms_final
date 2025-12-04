@@ -171,12 +171,14 @@ const ArticlePreview = () => {
   const themeClasses = lightThemeClasses;
   const sectionHeaderClasses = getSectionHeaderClasses();
 
-  if (loading) {
+  if (loading || redirecting) {
     return (
       <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className={`text-lg font-medium ${themeClasses.textPrimary}`}>Loading Preview...</p>
+          <p className={`text-lg font-medium ${themeClasses.textPrimary}`}>
+            {redirecting ? 'Opening Preview...' : 'Loading Preview...'}
+          </p>
         </div>
       </div>
     );
