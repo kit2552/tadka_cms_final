@@ -468,7 +468,8 @@ export const dataService = {
         eventsInterviewsData,
         hotTopicsData,
         photoshootsData,
-        travelPicsData
+        travelPicsData,
+        boxOfficeData
       ] = await Promise.all([
         getCachedData(`${cacheKeyPrefix}_top_stories`, () => this.getTopStoriesData()),
         getCachedData(`${cacheKeyPrefix}_movie_reviews`, () => this.getMovieReviewsData()),
@@ -483,7 +484,8 @@ export const dataService = {
         getCachedData(`${cacheKeyPrefix}_events_interviews`, () => this.getEventsInterviewsData()),
         getCachedData(`${cacheKeyPrefix}_hot_topics`, () => this.getHotTopicsData(userStates)),
         getCachedData(`${cacheKeyPrefix}_photoshoots`, () => this.getPhotoshootsData()),
-        getCachedData(`${cacheKeyPrefix}_travel_pics`, () => this.getTravelPicsData())
+        getCachedData(`${cacheKeyPrefix}_travel_pics`, () => this.getTravelPicsData()),
+        getCachedData(`${cacheKeyPrefix}_box_office`, () => this.getBoxOfficeData())
       ]);
 
       console.log('✅ Homepage data loaded successfully');
