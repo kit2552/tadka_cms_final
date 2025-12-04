@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://repo-fetch-9.preview.emergentagent.com"
+BACKEND_URL = "https://spice-loader-1.preview.emergentagent.com"
 
 def test_politics_api_structure():
     """
