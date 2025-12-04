@@ -3,12 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PlaceholderImage } from '../utils/imageUtils';
+import useTabState from '../hooks/useTabState';
 
 const TrendingVideos = ({ trendingVideosData = {}, onImageClick }) => {
   const { t } = useLanguage();
   const { theme, getSectionHeaderClasses } = useTheme();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('trending');
+  const [activeTab, setActiveTab] = useTabState('trending-videos', 'trending');
   const scrollContainerRef = useRef(null);
   
   // Get data from API instead of mock data
