@@ -4,11 +4,12 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import ArticleImage from './ArticleImage';
 import LoadingSpinner from './LoadingSpinner';
+import useTabState from '../hooks/useTabState';
 
 const Politics = ({ politicsData = {}, onArticleClick, isLoading = false }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
-  const [activeTab, setActiveTab] = useState('state'); // 'state' or 'national'
+  const [activeTab, setActiveTab] = useTabState('politics', 'state'); // 'state' or 'national'
 
   // Filter out future-dated articles (for home page display)
   const filterCurrentArticles = (articles) => {
