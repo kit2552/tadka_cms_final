@@ -427,6 +427,22 @@ export const dataService = {
     }
   },
 
+  // Fetch Box Office data from backend
+  async getBoxOfficeData() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/articles/sections/box-office?limit=4`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch Box Office data');
+      }
+      const data = await response.json();
+      // Combine box office and bollywood articles into a single array
+      return [...(data.box_office || []), ...(data.bollywood || [])];
+    } catch (error) {
+      console.error('Error fetching Box Office data:', error);
+      return mockData.talkOfTown; // Fallback to mock data
+    }
+  },
+
   // Get all data needed for the home page
   async getHomePageData() {
     try {
