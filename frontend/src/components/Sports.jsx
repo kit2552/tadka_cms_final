@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import mockData from '../data/comprehensiveMockData';
+import useTabState from '../hooks/useTabState';
 
 const Sports = ({ reviews, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
   const [movieReviews, setMovieReviews] = useState([]);
-  const [activeTab, setActiveTab] = useState('health');
+  const [activeTab, setActiveTab] = useTabState('sports', 'health');
 
   // Sample articles data
   const sampleHealthArticles = [
