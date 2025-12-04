@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import useTabState from '../hooks/useTabState';
 
 const MovieSchedules = ({ articles, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses, theme } = useTheme();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('theater');
+  const [activeTab, setActiveTab] = useTabState('movie-schedules', 'theater');
   const [releaseData, setReleaseData] = useState({ theater: {}, ott: {} });
   const [loading, setLoading] = useState(true);
   
