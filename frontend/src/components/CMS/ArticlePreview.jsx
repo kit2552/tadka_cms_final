@@ -14,6 +14,7 @@ const ArticlePreview = () => {
   const [error, setError] = useState(null);
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
     fetchCMSConfig();
@@ -22,6 +23,26 @@ const ArticlePreview = () => {
       fetchRelatedArticles();
     }
   }, [articleId]);
+
+  // Redirect to appropriate page based on content type
+  useEffect(() => {
+    if (article && !redirecting) {
+      const contentType = article.content_type;
+      const slug = article.slug || article.title?.toLowerCase().replace(/\s+/g, '-');
+      
+      // Redirect based on content type
+      if (contentType === 'photo' && article.gallery_id) {
+        setRedirecting(true);
+        navigate(`/gallery/${article.gallery_id}`, { replace: true });
+      } else if (contentType === 'video' && article.youtube_url) {
+        setRedirecting(true);
+        navigate(`/video/${articleId}`, { replace: true });
+      } else if (contentType === 'post' || contentType === 'movie_review') {
+        setRedirecting(true);
+        navigate(`/article/${articleId}/${slug}`, { replace: true });
+      }
+    }
+  }, [article, articleId, navigate, redirecting]);
 
   // Auto scroll to top when article page loads
   useEffect(() => {
