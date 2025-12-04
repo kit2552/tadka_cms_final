@@ -159,8 +159,8 @@ const OTTReleases = ({ articles, onArticleClick }) => {
                           <p className="text-xs text-gray-500 mt-1">{release.language || 'Hindi'}</p>
                         </div>
                       </div>
-                      <div className="ml-2 flex-shrink-0">
-                        <div className="text-xs text-gray-500">
+                      <div className="flex items-center space-x-2 ml-2">
+                        <div className="bg-gray-800 text-white px-2 py-1 rounded text-xs font-medium">
                           {formatReleaseDate(release.release_date || release.published_at)}
                         </div>
                       </div>
