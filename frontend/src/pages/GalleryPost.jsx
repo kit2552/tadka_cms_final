@@ -179,7 +179,7 @@ const GalleryPost = () => {
                   <>
                     <button
                       onClick={() => handleImageNavigation('prev')}
-                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all duration-200"
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-lg hover:bg-opacity-70 transition-all duration-200"
                     >
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -187,7 +187,7 @@ const GalleryPost = () => {
                     </button>
                     <button
                       onClick={() => handleImageNavigation('next')}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all duration-200"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-lg hover:bg-opacity-70 transition-all duration-200"
                     >
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -197,7 +197,7 @@ const GalleryPost = () => {
                 )}
 
                 {/* Image Counter */}
-                <div className="absolute bottom-4 right-4 bg-black bg-opacity-60 text-white px-4 py-2 rounded-full text-sm font-medium">
+                <div className="absolute bottom-4 right-4 bg-black bg-opacity-60 text-white px-4 py-2 rounded-lg text-sm font-medium">
                   {currentImageIndex + 1} / {totalImages}
                 </div>
               </div>
