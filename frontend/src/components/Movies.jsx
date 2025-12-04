@@ -4,11 +4,12 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import ArticleImage from './ArticleImage';
 import LoadingSpinner from './LoadingSpinner';
+import useTabState from '../hooks/useTabState';
 
 const Movies = ({ moviesData, onArticleClick, isLoading = false }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
-  const [activeTab, setActiveTab] = useState('movie-news');
+  const [activeTab, setActiveTab] = useTabState('movies', 'movie-news');
   
   // Extract movie news and bollywood movies from props data
   const movieNewsArticles = moviesData?.movie_news || [];
