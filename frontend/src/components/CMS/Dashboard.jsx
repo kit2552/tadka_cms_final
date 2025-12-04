@@ -2434,12 +2434,10 @@ const Dashboard = () => {
                                     ? JSON.parse(article.states) 
                                     : article.states;
                                   if (stateCodes && stateCodes.length > 0) {
-                                    const stateNames = stateCodes.map(code => 
-                                      code === 'all' ? 'All States' : getStateNames().find(name => 
-                                        name.toLowerCase().includes(code.toLowerCase()) ||
-                                        name.split(' ').map(w => w[0]).join('').toLowerCase() === code.toLowerCase()
-                                      ) || code.toUpperCase()
-                                    );
+                                    const stateNames = stateCodes.map(code => {
+                                      if (code === 'all' || code === 'national') return 'All States';
+                                      return getStateNameByCode(code) || code.toUpperCase();
+                                    });
                                     return (
                                       <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
                                         📍 {stateNames.join(', ')}
