@@ -304,7 +304,7 @@ const GalleryPost = () => {
               <img
                 src={currentImage.url}
                 alt={currentImage.alt || galleryPost.title}
-                className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                className="max-w-full max-h-[95vh] object-contain rounded-lg"
               />
             </div>
 
