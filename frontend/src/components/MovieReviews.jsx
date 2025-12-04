@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import ArticleImage from './ArticleImage';
+import useTabState from '../hooks/useTabState';
 
 const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState('general'); // 'general' or 'bollywood'
+  const [activeTab, setActiveTab] = useTabState('movie-reviews', 'general'); // 'general' or 'bollywood'
   const sliderRef = useRef(null);
 
   // Filter out future-dated articles (for home page display)
