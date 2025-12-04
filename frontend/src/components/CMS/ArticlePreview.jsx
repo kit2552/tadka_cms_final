@@ -31,13 +31,16 @@ const ArticlePreview = () => {
       const slug = article.slug || article.title?.toLowerCase().replace(/\s+/g, '-');
       
       // Redirect based on content type
-      if (contentType === 'photo' && article.gallery_id) {
+      if (contentType === 'photo') {
+        // For photo galleries, use gallery-post route
         setRedirecting(true);
-        navigate(`/gallery/${article.gallery_id}`, { replace: true });
+        navigate(`/gallery-post/${articleId}`, { replace: true });
       } else if (contentType === 'video' && article.youtube_url) {
+        // For video content
         setRedirecting(true);
         navigate(`/video/${articleId}`, { replace: true });
-      } else if (contentType === 'post' || contentType === 'movie_review') {
+      } else if (contentType === 'post' || contentType === 'movie_review' || !contentType) {
+        // For regular posts and movie reviews, use article page
         setRedirecting(true);
         navigate(`/article/${articleId}/${slug}`, { replace: true });
       }
