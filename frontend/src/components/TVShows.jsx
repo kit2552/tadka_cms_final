@@ -8,7 +8,7 @@ import mockData from '../data/comprehensiveMockData';
 const TVShows = ({ articles, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
-  const [activeTab, setActiveTab] = useState('tv');
+  const [activeTab, setActiveTab] = useTabState('tv-shows', 'tv');
   const [tvData, setTvData] = useState({ tv: [], bollywood: [] });
   const [loading, setLoading] = useState(true);
 

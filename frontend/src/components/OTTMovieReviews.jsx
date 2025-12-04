@@ -8,7 +8,7 @@ const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState('general'); // 'general' or 'webseries'
+  const [activeTab, setActiveTab] = useTabState('ott-movie-reviews', 'general'); // 'general' or 'webseries'
   const sliderRef = useRef(null);
 
   // Extract data from props or use fallback sample data
