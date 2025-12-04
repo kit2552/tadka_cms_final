@@ -2428,11 +2428,28 @@ const Dashboard = () => {
                             </h3>
                             <div className="flex flex-wrap gap-2 text-xs text-left">
                               {/* State Badge - Show first if states exist */}
-                              {article.states && (
-                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
-                                  📍 {getStateNames(article.states).join(', ')}
-                                </span>
-                              )}
+                              {article.states && (() => {
+                                try {
+                                  const stateCodes = typeof article.states === 'string' 
+                                    ? JSON.parse(article.states) 
+                                    : article.states;
+                                  if (stateCodes && stateCodes.length > 0) {
+                                    const stateNames = stateCodes.map(code => 
+                                      code === 'all' ? 'All States' : getStateNames().find(name => 
+                                        name.toLowerCase().includes(code.toLowerCase()) ||
+                                        name.split(' ').map(w => w[0]).join('').toLowerCase() === code.toLowerCase()
+                                      ) || code.toUpperCase()
+                                    );
+                                    return (
+                                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                        📍 {stateNames.join(', ')}
+                                      </span>
+                                    );
+                                  }
+                                } catch (e) {
+                                  return null;
+                                }
+                              })()}
                               <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
                                 {categories.find(c => c.slug === article.category)?.name || article.category}
                               </span>
