@@ -4,12 +4,13 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PlaceholderImage } from '../utils/imageUtils';
 import VideoModal from './VideoModal';
+import useTabState from '../hooks/useTabState';
 
 const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses } = useTheme();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('viral-shorts'); // 'viral-shorts' or 'bollywood'
+  const [activeTab, setActiveTab] = useTabState('viral-shorts', 'viral-shorts'); // 'viral-shorts' or 'bollywood'
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   
