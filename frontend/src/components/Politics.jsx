@@ -14,10 +14,26 @@ const Politics = ({ politicsData = {}, onArticleClick, isLoading = false }) => {
   // Filter out future-dated articles (for home page display)
   const filterCurrentArticles = (articles) => {
     const now = new Date();
+    console.log('🕒 Date Filter - Current time:', now.toISOString());
+    
     return articles.filter(article => {
-      if (!article.published_at) return true; // Keep articles without dates
+      if (!article.published_at) {
+        console.log(`  ✅ Article ${article.id}: No date, keeping`);
+        return true;
+      }
+      
       const publishedDate = new Date(article.published_at);
-      return publishedDate <= now; // Exclude future-dated articles
+      const isPast = publishedDate <= now;
+      
+      console.log(`  ${isPast ? '✅' : '❌'} Article ${article.id}:`, {
+        published_at: article.published_at,
+        publishedDate: publishedDate.toISOString(),
+        now: now.toISOString(),
+        isPast,
+        diff: (now - publishedDate) / 1000 / 60, // minutes
+      });
+      
+      return isPast;
     });
   };
 
