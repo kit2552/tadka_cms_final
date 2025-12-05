@@ -522,7 +522,8 @@ const SystemSettings = () => {
                         name="aws_region"
                         value={awsConfig.aws_region}
                         onChange={handleAWSConfigChange}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white"
+                        disabled={!awsConfig.is_enabled}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
                       >
                         <option value="us-east-1">US East (Ohio)</option>
                         <option value="us-east-2">US East (N. Virginia)</option>
