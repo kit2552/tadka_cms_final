@@ -208,8 +208,8 @@ const SystemSettings = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-xl font-semibold text-gray-900">CMS Settings</h1>
+        <div className="mb-6 text-left">
+          <h1 className="text-xl font-semibold text-gray-900 text-left">CMS Settings</h1>
         </div>
 
         {/* Message */}
