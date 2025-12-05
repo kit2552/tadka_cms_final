@@ -19,7 +19,8 @@ from routes.auth_routes import router as auth_router
 # from routes.topics_routes import router as topics_router
 # from routes.gallery_routes import router as gallery_router
 from auth import create_default_admin
-from scheduler_service import article_scheduler
+# TODO: Update scheduler for MongoDB
+# from scheduler_service import article_scheduler
 
 # Create MongoDB indexes on startup
 create_indexes(db)
