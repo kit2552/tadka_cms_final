@@ -257,8 +257,25 @@ const CreateArticle = () => {
     }));
   };
 
-  const handleStateSelection = (stateCode) => {
-    setSelectedState(stateCode);
+  const handleAddState = () => {
+    // Don't add if already selected or if trying to add 'all' when other states exist
+    if (selectedState === 'all') {
+      // If adding 'all', clear all other states
+      setSelectedStates(['all']);
+      return;
+    }
+    
+    if (!selectedStates.includes(selectedState)) {
+      // Remove 'all' if adding a specific state
+      const newStates = selectedStates.filter(s => s !== 'all');
+      setSelectedStates([...newStates, selectedState]);
+    }
+  };
+
+  const handleRemoveState = (stateCode) => {
+    const newStates = selectedStates.filter(s => s !== stateCode);
+    // If no states left, default to 'all'
+    setSelectedStates(newStates.length === 0 ? ['all'] : newStates);
   };
 
   const handleImageUpload = (e) => {
