@@ -2812,7 +2812,7 @@ const Dashboard = () => {
                       
                       {/* Table Content */}
                       <div className="divide-y divide-gray-200">
-                        {Object.entries(relatedArticlesConfig).map(([pageSlug, config], index) => (
+                        {Object.entries(relatedArticlesConfig || {}).map(([pageSlug, config], index) => (
                           <div 
                             key={pageSlug}
                             className={`grid grid-cols-12 gap-4 px-6 py-4 ${
