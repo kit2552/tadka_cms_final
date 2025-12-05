@@ -1388,6 +1388,21 @@ const CreateArticle = () => {
                 Preview
               </button>
 
+              {isEditMode && (
+                <button
+                  type="button"
+                  onClick={handleUnpublish}
+                  disabled={loading}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    formData.is_published
+                      ? 'bg-orange-600 hover:bg-orange-700 text-white'
+                      : 'bg-green-600 hover:bg-green-700 text-white'
+                  } disabled:opacity-50`}
+                >
+                  {formData.is_published ? 'Unpublish' : 'Publish'}
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={handleTranslate}
