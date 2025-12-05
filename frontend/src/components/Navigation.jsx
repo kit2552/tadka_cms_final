@@ -622,13 +622,22 @@ const Navigation = ({ onLayoutModeChange }) => {
                                   Manage Content
                                 </Link>
                                 {user?.role === 'Admin' && (
-                                  <Link
-                                    to="/cms/admin-controls"
-                                    onClick={() => setIsMoreDropdownOpen(false)}
-                                    className="block w-full text-left px-4 py-2 text-sm text-purple-700 hover:bg-purple-50 hover:text-purple-900 transition-colors duration-200"
-                                  >
-                                    ⚙️ Admin Controls
-                                  </Link>
+                                  <>
+                                    <Link
+                                      to="/cms/admin-controls"
+                                      onClick={() => setIsMoreDropdownOpen(false)}
+                                      className="block w-full text-left px-4 py-2 text-sm text-purple-700 hover:bg-purple-50 hover:text-purple-900 transition-colors duration-200"
+                                    >
+                                      ⚙️ Admin Controls
+                                    </Link>
+                                    <Link
+                                      to="/cms/system-settings"
+                                      onClick={() => setIsMoreDropdownOpen(false)}
+                                      className="block w-full text-left px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-50 hover:text-indigo-900 transition-colors duration-200"
+                                    >
+                                      🔧 System Settings
+                                    </Link>
+                                  </>
                                 )}
                                 <button
                                   onClick={() => {
