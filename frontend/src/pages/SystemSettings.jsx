@@ -319,22 +319,60 @@ const SystemSettings = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-8">
             {activeTab === 'aws' && (
-              <form onSubmit={saveAWSConfig} className="space-y-6">
-                {/* Enable S3 */}
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    name="is_enabled"
-                    checked={awsConfig.is_enabled}
-                    onChange={handleAWSConfigChange}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label className="ml-2 block text-sm text-gray-900 font-medium">
-                    Enable AWS S3 Storage
-                  </label>
+              <div className="space-y-8">
+                {/* Section Header */}
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900 mb-1">AWS Storage Settings</h2>
+                    <p className="text-sm text-gray-600">Configure AWS S3 storage for file uploads and media management</p>
+                    <div className="mt-3 flex items-center text-sm text-gray-500">
+                      <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Connection Status Unknown - Test Connection
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAwsConfig(prev => ({ ...prev, is_enabled: false }))}
+                    className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 font-medium text-sm flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Disconnect
+                  </button>
                 </div>
+
+                <form onSubmit={saveAWSConfig} className="space-y-6">
+                  {/* Enable S3 Toggle */}
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-orange-100 rounded-lg">
+                          <svg className="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335c-.072.048-.144.071-.208.071-.08 0-.16-.04-.239-.112-.112-.12-.208-.248-.288-.384-.08-.144-.16-.304-.256-.488-.64.755-1.44 1.135-2.4 1.135-.687 0-1.231-.191-1.64-.583-.408-.392-.616-.911-.616-1.559 0-.695.247-1.255.744-1.695.496-.44 1.151-.664 1.983-.664.272 0 .552.024.855.064.304.04.616.104.936.168v-.559c0-.583-.12-1-.36-1.271-.248-.272-.671-.408-1.279-.408-.28 0-.568.032-.863.104-.296.072-.576.144-.84.24-.128.047-.216.08-.264.095-.048.016-.088.024-.104.024-.096 0-.144-.072-.144-.216v-.336c0-.112.016-.2.056-.256s.112-.104.216-.16c.28-.143.615-.263 1.008-.36s.791-.151 1.199-.151c.911 0 1.575.2 2.007.616.424.416.64 1.047.64 1.903v2.496z"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900 text-base">Enable AWS S3 Storage</h3>
+                          <p className="text-sm text-gray-600">Enable AWS S3 for file uploads and media storage</p>
+                        </div>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="is_enabled"
+                          checked={awsConfig.is_enabled}
+                          onChange={handleAWSConfigChange}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+                      </label>
+                    </div>
+                  </div>
 
                 {/* AWS Credentials */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
