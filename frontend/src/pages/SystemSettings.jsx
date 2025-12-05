@@ -491,7 +491,7 @@ const SystemSettings = () => {
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex gap-3 pt-6 border-t border-gray-200">
+                  <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
                     <button
                       type="submit"
                       disabled={loading}
