@@ -555,7 +555,7 @@ const CreateArticle = () => {
       // For new articles, store in localStorage and show preview
       localStorage.setItem('previewArticle', JSON.stringify({
         ...formData,
-        states: [selectedState] // Convert single state to array for preview compatibility
+        states: selectedStates // Use states array directly for preview compatibility
       }));
       navigate('/cms/preview/new');
     }
