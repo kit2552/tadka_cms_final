@@ -2380,21 +2380,6 @@ const Dashboard = () => {
                           <option value="scheduled">Scheduled</option>
                         </select>
                       </div>
-                      
-                      <div>
-                        <select
-                          value={selectedState}
-                          onChange={(e) => setSelectedState(e.target.value)}
-                          className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                          <option value="">All States</option>
-                          {getStateNames().map(stateName => (
-                            <option key={stateName} value={stateName}>
-                              {stateName}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
                     </div>
                     
                     <div className="flex gap-2">
