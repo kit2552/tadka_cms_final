@@ -150,6 +150,7 @@ function App() {
               <Route path="/cms/dashboard" element={<Dashboard />} />
               <Route path="/cms/create" element={<CreateArticle />} />
               <Route path="/cms/create-article" element={<CreateArticle />} />
+              <Route path="/cms/articles/new" element={<CreateArticle />} />
               <Route path="/cms/edit/:id" element={<CreateArticle />} />
               <Route path="/cms/create-topic" element={<CreateTopic />} />
               <Route path="/cms/preview/:id" element={<ArticlePreview />} />
