@@ -143,20 +143,16 @@ const SystemSettings = () => {
 
       if (response.ok && data.success) {
         setConnectionStatus('connected');
-        setMessage({ type: 'success', text: `✅ ${data.message}` });
-        // Reload config to get the saved test result
-        await loadAWSConfig();
+        setMessage({ type: 'success', text: data.message });
       } else {
         setConnectionStatus('disconnected');
         // Handle error response
         const errorMessage = data.detail || data.message || 'Connection test failed';
-        setMessage({ type: 'error', text: `❌ ${errorMessage}` });
-        // Still reload config to save the failed test
-        await loadAWSConfig();
+        setMessage({ type: 'error', text: errorMessage });
       }
     } catch (error) {
       setConnectionStatus('disconnected');
-      setMessage({ type: 'error', text: `❌ Connection test failed: ${error.message || 'Unknown error'}` });
+      setMessage({ type: 'error', text: error.message || 'Connection test failed. Please try again.' });
     } finally {
       setLoading(false);
     }
