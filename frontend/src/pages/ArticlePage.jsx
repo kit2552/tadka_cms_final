@@ -297,29 +297,206 @@ const ArticlePage = () => {
               </div>
             )}
 
-            {/* Article Content - White background */}
-            <div className="prose prose-lg max-w-none mb-8 bg-white p-6 rounded-lg">
-              <div className={`text-gray-900 leading-relaxed space-y-6 text-justify`}>
-                {article.content ? (
-                  <div dangerouslySetInnerHTML={{ __html: article.content }} />
-                ) : (
-                  <>
-                    <p>
-                      This is the main content of the article. In a real application, this would be 
-                      the full article content retrieved from your backend database.
-                    </p>
-                    <p>
-                      You can add rich text content here including multiple paragraphs, quotes, 
-                      and other formatted content that makes up the complete article.
-                    </p>
-                    <p>
-                      The article content would continue here with additional paragraphs, 
-                      analysis, and conclusions relevant to the topic.
-                    </p>
-                  </>
+            {/* Movie Review Content */}
+            {article.content_type === 'movie_review' ? (
+              <div className="space-y-6 mb-8">
+                {/* Movie Info Card */}
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {article.movie_rating && (
+                      <div>
+                        <span className="text-sm font-semibold text-gray-700">Rating:</span>
+                        <div className="flex items-center mt-1">
+                          {[...Array(5)].map((_, i) => {
+                            const rating = parseFloat(article.movie_rating);
+                            const filled = i < Math.floor(rating);
+                            const half = i === Math.floor(rating) && rating % 1 >= 0.5;
+                            return (
+                              <svg
+                                key={i}
+                                className={`w-5 h-5 ${filled ? 'text-yellow-400' : half ? 'text-yellow-400' : 'text-gray-300'}`}
+                                fill={filled || half ? 'currentColor' : 'none'}
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                {half ? (
+                                  <>
+                                    <defs>
+                                      <linearGradient id={`half-${i}`}>
+                                        <stop offset="50%" stopColor="currentColor" />
+                                        <stop offset="50%" stopColor="rgb(209 213 219)" />
+                                      </linearGradient>
+                                    </defs>
+                                    <path
+                                      fill={`url(#half-${i})`}
+                                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                                    />
+                                  </>
+                                ) : (
+                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                )}
+                              </svg>
+                            );
+                          })}
+                          <span className="ml-2 text-lg font-bold text-gray-900">{article.movie_rating}/5</span>
+                        </div>
+                      </div>
+                    )}
+                    {article.review_runtime && (
+                      <div>
+                        <span className="text-sm font-semibold text-gray-700">Runtime:</span>
+                        <p className="text-gray-900 mt-1">{article.review_runtime}</p>
+                      </div>
+                    )}
+                    {article.review_genre && (
+                      <div>
+                        <span className="text-sm font-semibold text-gray-700">Genre:</span>
+                        <p className="text-gray-900 mt-1">{article.review_genre}</p>
+                      </div>
+                    )}
+                    {article.review_director && (
+                      <div>
+                        <span className="text-sm font-semibold text-gray-700">Director:</span>
+                        <p className="text-gray-900 mt-1">{article.review_director}</p>
+                      </div>
+                    )}
+                  </div>
+                  {article.review_cast && (
+                    <div className="mt-4">
+                      <span className="text-sm font-semibold text-gray-700">Cast:</span>
+                      <p className="text-gray-900 mt-1">{article.review_cast}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Quick Verdict */}
+                {article.review_quick_verdict && (
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border-l-4 border-blue-500 shadow-sm">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Quick Verdict</h3>
+                    <p className="text-lg font-semibold text-blue-900 italic">{article.review_quick_verdict}</p>
+                  </div>
+                )}
+
+                {/* Plot Summary */}
+                {article.review_plot_summary && (
+                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                      <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                      What's It About?
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_plot_summary}</p>
+                  </div>
+                )}
+
+                {/* Performances */}
+                {article.review_performances && (
+                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                      <svg className="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Performances
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_performances}</p>
+                  </div>
+                )}
+
+                {/* What Works */}
+                {article.review_what_works && (
+                  <div className="bg-green-50 p-6 rounded-lg shadow-sm border-l-4 border-green-500">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                      <svg className="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      What Works
+                    </h3>
+                    <div className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_what_works}</div>
+                  </div>
+                )}
+
+                {/* What Doesn't Work */}
+                {article.review_what_doesnt_work && (
+                  <div className="bg-red-50 p-6 rounded-lg shadow-sm border-l-4 border-red-500">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                      <svg className="w-6 h-6 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      What Doesn't Work
+                    </h3>
+                    <div className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_what_doesnt_work}</div>
+                  </div>
+                )}
+
+                {/* Technical Aspects */}
+                {article.review_technical_aspects && (
+                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                      <svg className="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      Technical Aspects
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_technical_aspects}</p>
+                  </div>
+                )}
+
+                {/* Final Verdict */}
+                {article.review_final_verdict && (
+                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg shadow-sm border-l-4 border-gray-600">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                      <svg className="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                      </svg>
+                      Final Verdict
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_final_verdict}</p>
+                  </div>
+                )}
+
+                {/* Trailer */}
+                {article.youtube_url && (
+                  <div className="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">Watch Trailer</h3>
+                    <div className="relative aspect-video w-full rounded-lg overflow-hidden">
+                      <iframe
+                        src={getYouTubeEmbedUrl(article.youtube_url)}
+                        title={`${article.title} Trailer`}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        className="absolute inset-0 w-full h-full"
+                      ></iframe>
+                    </div>
+                  </div>
                 )}
               </div>
-            </div>
+            ) : (
+              /* Regular Article Content - White background */
+              <div className="prose prose-lg max-w-none mb-8 bg-white p-6 rounded-lg">
+                <div className={`text-gray-900 leading-relaxed space-y-6 text-justify`}>
+                  {article.content ? (
+                    <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                  ) : (
+                    <>
+                      <p>
+                        This is the main content of the article. In a real application, this would be 
+                        the full article content retrieved from your backend database.
+                      </p>
+                      <p>
+                        You can add rich text content here including multiple paragraphs, quotes, 
+                        and other formatted content that makes up the complete article.
+                      </p>
+                      <p>
+                        The article content would continue here with additional paragraphs, 
+                        analysis, and conclusions relevant to the topic.
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Share Icons - Bottom of article content */}
             <div className="border-t border-gray-300 pt-4 mb-2 lg:mb-8" style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
