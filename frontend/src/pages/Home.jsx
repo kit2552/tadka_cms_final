@@ -395,7 +395,7 @@ const Home = ({ layoutEditMode = false, onLayoutSave }) => {
   };
 
   // Create section registry with current data, handlers, iPad detection, and loading states
-  const sectionRegistry = createSectionRegistry(data, handlers, isIpad, stateRelatedSectionsLoading);
+  const sectionRegistry = createSectionRegistry(data, handlers, isIpad, stateRelatedSectionsLoading, getSectionHeaderClasses, t);
 
   return (
     <div className="min-h-screen bg-white relative">
