@@ -303,6 +303,9 @@ const CreateArticle = () => {
           // Clear the draft from localStorage after restoring
           localStorage.removeItem('articleDraft');
           
+          // Show notification that draft was restored
+          showNotification('success', 'Draft Restored', 'Your unsaved changes have been restored.');
+          
           console.log('Draft data restored from localStorage');
         } catch (error) {
           console.error('Error restoring draft data:', error);
