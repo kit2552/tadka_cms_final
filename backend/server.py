@@ -725,7 +725,8 @@ async def update_cms_article(
     if not article:
         raise HTTPException(status_code=404, detail="Article not found")
     
-    updated_article = crud.update_article_cms(db, article_id, article_update)
+    # Convert Pydantic model to dict
+    updated_article = crud.update_article_cms(db, article_id, article_update.dict(exclude_unset=True))
     return updated_article
 
 @api_router.delete("/cms/articles/{article_id}")
