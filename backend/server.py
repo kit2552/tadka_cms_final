@@ -115,7 +115,7 @@ async def get_articles_by_category(category_slug: str, skip: int = 0, limit: int
             "summary": article.summary,
             "image_url": article.image,
             "author": article.author,
-            "language": article.language,
+            "language": article.get("article_language", article.get("language", "en")),
             "category": article.category,
             "content_type": article.content_type,  # Add content_type field
             "artists": article.artists,  # Add artists field
@@ -495,7 +495,7 @@ async def get_ott_bollywood_releases(db = Depends(get_db)):
                 "image_url": article.image,
                 "movie_image": article.image,  # Use article image as movie image
                 "author": article.author,
-                "language": article.language or "Hindi",
+                "language": article.get("article_language", article.get("language", "en")) or "Hindi",
                 "category": article.category,
                 "published_at": article.published_at,
                 "release_date": article.published_at,  # Use published date as release date
@@ -791,7 +791,7 @@ async def get_most_read_articles(limit: int = 15, db = Depends(get_db)):
             "summary": article.summary,
             "image_url": article.image,
             "author": article.author,
-            "language": article.language,
+            "language": article.get("article_language", article.get("language", "en")),
             "category": article.category,
             "content_type": article.content_type,  # Add content_type field
             "artists": article.artists,  # Add artists field
@@ -920,7 +920,7 @@ async def get_scheduled_articles(db = Depends(get_db)):
             "title": article.title,
             "short_title": article.short_title,
             "author": article.author,
-            "language": article.language,
+            "language": article.get("article_language", article.get("language", "en")),
             "category": article.category,
             "scheduled_publish_at": article.scheduled_publish_at,
             "created_at": article.created_at
@@ -1003,7 +1003,7 @@ async def get_related_articles_for_page(
                 "summary": article.summary,
                 "image": article.image,
                 "author": article.author,
-                "language": article.language,
+                "language": article.get("article_language", article.get("language", "en")),
                 "category": article.category,
                 "published_at": article.published_at,
                 "view_count": article.view_count
@@ -1267,7 +1267,7 @@ async def get_homepage_theater_bollywood_releases(db = Depends(get_db)):
                 "image_url": article.image,
                 "movie_image": article.image,  # Use article image as movie image
                 "author": article.author,
-                "language": article.language or "Hindi",
+                "language": article.get("article_language", article.get("language", "en")) or "Hindi",
                 "category": article.category,
                 "published_at": article.published_at,
                 "release_date": article.published_at  # Use published date as release date
