@@ -125,24 +125,16 @@ const AdminControls = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-5xl-plus mx-auto px-8 py-6">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-gray-900 text-left">Admin Controls</h1>
-            <button
-              onClick={() => navigate('/cms/dashboard')}
-              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-            >
-              Back to Dashboard
-            </button>
-          </div>
+        <div className="mb-6 text-left">
+          <h1 className="text-xl font-semibold text-gray-900 text-left">Admin Controls</h1>
         </div>
 
         {/* Notification */}
         {notification.message && (
-          <div className={`mb-6 p-4 rounded-md ${
+          <div className={`mb-6 p-4 rounded-lg ${
             notification.type === 'success' 
               ? 'bg-green-50 text-green-800 border border-green-200' 
               : 'bg-red-50 text-red-800 border border-red-200'
@@ -151,9 +143,45 @@ const AdminControls = () => {
           </div>
         )}
 
-        {/* Scheduler Settings */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4 text-left">Post Scheduler Settings</h2>
+        {/* Tabs */}
+        <div className="bg-white rounded-lg shadow-sm">
+          <div className="border-b border-gray-200">
+            <nav className="flex space-x-1 px-6" aria-label="Tabs">
+              <button
+                onClick={() => setActiveTab('scheduler')}
+                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                  activeTab === 'scheduler'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Post Scheduler Settings
+              </button>
+              <button
+                onClick={() => setActiveTab('articles')}
+                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                  activeTab === 'articles'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Scheduled Articles
+              </button>
+            </nav>
+          </div>
+
+          {/* Tab Content */}
+          <div className="p-8">
+            {activeTab === 'scheduler' && (
+              <div className="space-y-6">
+                <div className="text-left">
+                  <h2 className="text-lg font-semibold text-gray-900 text-left mb-4">Post Scheduler Configuration</h2>
           
           <div className="space-y-4">
             <div className="flex items-center space-x-4">
