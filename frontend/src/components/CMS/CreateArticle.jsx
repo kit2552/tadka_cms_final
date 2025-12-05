@@ -64,6 +64,10 @@ const CreateArticle = () => {
 
   const [selectedState, setSelectedState] = useState('all'); // Temporary state for dropdown selection
   const [selectedStates, setSelectedStates] = useState(['all']); // Array of selected states
+  const [stateSearchQuery, setStateSearchQuery] = useState('');
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [categorySearchQuery, setCategorySearchQuery] = useState('');
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState(''); // Changed to single artist (string)
   const [availableArtists, setAvailableArtists] = useState([]); // Available artists from API
   const [showArtistModal, setShowArtistModal] = useState(false); // New state for artist modal
