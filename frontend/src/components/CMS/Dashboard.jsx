@@ -2531,16 +2531,7 @@ const Dashboard = () => {
                               Edit
                             </Link>
                             <Link
-                              to={(() => {
-                                const slug = article.slug || article.title?.toLowerCase().replace(/\s+/g, '-');
-                                if (article.content_type === 'photo') {
-                                  return `/gallery-post/${article.id}`;
-                                } else if (article.content_type === 'video' && article.youtube_url) {
-                                  return `/video/${article.id}`;
-                                } else {
-                                  return `/article/${article.id}/${slug}`;
-                                }
-                              })()}
+                              to={`/cms/preview/${article.id}`}
                               target="_blank"
                               className="text-green-600 hover:text-green-800 text-xs px-2 py-1 rounded border border-green-200 hover:bg-green-50"
                             >
