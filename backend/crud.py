@@ -8,6 +8,24 @@ from bson import ObjectId
 import json
 from models.mongodb_collections import *
 
+
+class DotDict(dict):
+    """Dictionary that supports dot notation access for backward compatibility"""
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            return None
+    
+    def __setattr__(self, key, value):
+        self[key] = value
+    
+    def __delattr__(self, key):
+        try:
+            del self[key]
+        except KeyError:
+            pass
+
 # Helper function to convert ObjectId to string in results
 def serialize_doc(doc):
     """Convert MongoDB document to JSON-serializable format"""
@@ -30,7 +48,7 @@ def serialize_doc(doc):
                 result[key] = serialize_doc(value)
             else:
                 result[key] = value
-        return result
+        return DotDict(result)
     return doc
 
 # ==================== CATEGORY CRUD ====================
@@ -623,7 +641,7 @@ def delete_user(db, user_id: str):
     """Delete user"""
     try:
         result = db['users'].delete_one({"_id": ObjectId(user_id)})
-        return result.deleted_count > 0
+        return DotDict(result).deleted_count > 0
     except:
         return False
 
