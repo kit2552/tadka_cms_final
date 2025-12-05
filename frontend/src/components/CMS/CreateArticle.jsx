@@ -109,6 +109,22 @@ const CreateArticle = () => {
     });
   };
 
+  // Helper function to get full image URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    // If it's already a full URL (S3), return as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+    // If it's a local path, prefix with backend URL
+    if (imagePath.startsWith('/uploads/') || imagePath.startsWith('uploads/')) {
+      const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+      return `${process.env.REACT_APP_BACKEND_URL}${cleanPath}`;
+    }
+    // For base64 or other formats, return as is
+    return imagePath;
+  };
+
   const handleNotificationClose = () => {
     const shouldNavigate = notification.type === 'success' && 
                           (notification.title.includes('Created Successfully') || 
