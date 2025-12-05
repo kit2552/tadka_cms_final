@@ -297,15 +297,6 @@ const ArticlePage = () => {
               </div>
             )}
 
-            {/* Article Summary - White background */}
-            {article.summary && (
-              <div className="mb-6 bg-white">
-                <p className={`text-lg text-gray-600 leading-relaxed italic border-l-4 border-blue-500 pl-4 bg-blue-50 p-4 rounded-r-lg`}>
-                  {article.summary}
-                </p>
-              </div>
-            )}
-
             {/* Article Content - White background */}
             <div className="prose prose-lg max-w-none mb-8 bg-white p-6 rounded-lg">
               <div className={`text-gray-900 leading-relaxed space-y-6 text-justify`}>
