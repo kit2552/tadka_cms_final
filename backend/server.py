@@ -47,8 +47,9 @@ async def root(request: Request):
 @api_router.post("/seed-database")
 async def seed_database_endpoint(db = Depends(get_db)):
     try:
-        seed_data.seed_database(db)
-        return {"message": "Database seeded successfully"}
+        # TODO: Update seed_data for MongoDB
+        # seed_data.seed_database(db)
+        return {"message": "Database seeding not available - MongoDB migration in progress"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
