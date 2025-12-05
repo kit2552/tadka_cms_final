@@ -2377,7 +2377,7 @@ const Dashboard = () => {
                     </div>
                   </div>
 
-                  {/* Second Row: Search, Date Filter, and States Filter */}
+                  {/* Second Row: Search, Date Filter, States Filter, and Status Filter */}
                   <div className="flex items-center gap-3">
                     {/* Search Input */}
                     <div>
@@ -2423,6 +2423,22 @@ const Dashboard = () => {
                             {stateName}
                           </option>
                         ))}
+                      </select>
+                    </div>
+
+                    {/* Status Filter */}
+                    <div>
+                      <select
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                        className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">All Status</option>
+                        <option value="approved">Approved</option>
+                        <option value="draft">Draft</option>
+                        <option value="in_review">In Review</option>
+                        <option value="published">Published</option>
+                        <option value="scheduled">Scheduled</option>
                       </select>
                     </div>
                   </div>
