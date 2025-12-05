@@ -525,17 +525,6 @@ const SystemSettings = () => {
                     >
                       {loading ? 'Saving...' : 'Save Configuration'}
                     </button>
-
-                    {awsConfig.is_enabled && (
-                      <button
-                        type="button"
-                        onClick={testAWSConnection}
-                        disabled={loading}
-                        className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:bg-gray-100 font-medium text-sm transition-colors"
-                      >
-                        Test Connection
-                      </button>
-                    )}
                   </div>
                 </form>
               </div>
