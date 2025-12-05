@@ -812,21 +812,52 @@ const CreateArticle = () => {
                       </div>
                     )}
                     
-                    {/* State Selection Dropdown with Add Button */}
+                    {/* State Selection Searchable Dropdown with Add Button */}
                     <div className="flex gap-2">
-                      <select
-                        value={selectedState}
-                        onChange={(e) => setSelectedState(e.target.value)}
-                        className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      >
-                        {states
-                          .sort((a, b) => a.name.localeCompare(b.name))
-                          .map((state) => (
-                            <option key={state.code} value={state.code}>
-                              {state.name}
-                            </option>
-                          ))}
-                      </select>
+                      <div className="flex-1 relative">
+                        <input
+                          type="text"
+                          value={stateSearchQuery || states.find(s => s.code === selectedState)?.name || ''}
+                          onChange={(e) => {
+                            setStateSearchQuery(e.target.value);
+                            setShowStateDropdown(true);
+                          }}
+                          onFocus={() => setShowStateDropdown(true)}
+                          placeholder="Search or select state..."
+                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        {showStateDropdown && (
+                          <>
+                            <div 
+                              className="fixed inset-0 z-10" 
+                              onClick={() => setShowStateDropdown(false)}
+                            />
+                            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                              {states
+                                .filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase()))
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                                .map((state) => (
+                                  <div
+                                    key={state.code}
+                                    onClick={() => {
+                                      setSelectedState(state.code);
+                                      setStateSearchQuery('');
+                                      setShowStateDropdown(false);
+                                    }}
+                                    className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm ${
+                                      selectedState === state.code ? 'bg-blue-100 text-blue-800' : 'text-gray-900'
+                                    }`}
+                                  >
+                                    {state.name}
+                                  </div>
+                                ))}
+                              {states.filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase())).length === 0 && (
+                                <div className="px-3 py-2 text-sm text-gray-500">No states found</div>
+                              )}
+                            </div>
+                          </>
+                        )}
+                      </div>
                       <button
                         type="button"
                         onClick={handleAddState}
