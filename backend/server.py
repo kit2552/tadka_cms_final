@@ -562,73 +562,7 @@ async def get_travel_pics_articles(limit: int = 4, db = Depends(get_db)):
     articles = crud.get_articles_by_category_slug(db, category_slug="travel-pics", limit=limit)
     return articles
 
-# Helper function to format article response
-def articles:
-    """Helper function to format article list response"""
-    result = []
-    for article in articles:
-        # Get gallery information if article has gallery_id
-        gallery_info = None
-        if hasattr(article, 'gallery_id') and article.gallery_id and db:
-            # Load gallery data  
-            gallery = db.query(models.Gallery).filter(models.Gallery.id == article.gallery_id).first()
-            if gallery and gallery.images:
-                try:
-                    import json
-                    gallery_images = json.loads(gallery.images)
-                    gallery_info = {
-                        "gallery_id": gallery.id,
-                        "gallery_title": gallery.title,
-                        "images": gallery_images,
-                        "first_image": gallery_images[0] if gallery_images else None
-                    }
-                except:
-                    gallery_info = None
-        
-        # Determine the image URL to use
-        image_url = article.image
-        if gallery_info and gallery_info["first_image"]:
-            # Use first gallery image as thumbnail
-            image_url = gallery_info["first_image"].get("url", article.image)
-        
-        result.append({
-            "id": article.id,
-            "title": article.title,
-            "short_title": article.short_title,
-            "content": article.content if hasattr(article, 'content') else "",
-            "summary": article.summary,
-            "slug": article.slug if hasattr(article, 'slug') else "",
-            "image_url": image_url,  # Use gallery first image if available
-            "youtube_url": article.youtube_url,  # Add youtube_url for video content
-            "author": article.author,
-            "language": article.language,
-            "category": article.category,
-            "content_type": article.content_type,  # Add content_type field
-            "artists": article.artists,  # Add artists field
-            "states": article.states,  # Add states field for state-specific filtering
-            "gallery": gallery_info,  # Add gallery information
-            "is_published": article.is_published,
-            "is_scheduled": article.is_scheduled,
-            "scheduled_publish_at": article.scheduled_publish_at,
-            "published_at": article.published_at,
-            "view_count": article.view_count,
-            "created_at": article.created_at if hasattr(article, 'created_at') else None,
-            "updated_at": article.updated_at if hasattr(article, 'updated_at') else None,
-            # Movie Review fields
-            "movie_rating": getattr(article, 'movie_rating', None),
-            "review_quick_verdict": getattr(article, 'review_quick_verdict', None),
-            "review_plot_summary": getattr(article, 'review_plot_summary', None),
-            "review_performances": getattr(article, 'review_performances', None),
-            "review_what_works": getattr(article, 'review_what_works', None),
-            "review_what_doesnt_work": getattr(article, 'review_what_doesnt_work', None),
-            "review_technical_aspects": getattr(article, 'review_technical_aspects', None),
-            "review_final_verdict": getattr(article, 'review_final_verdict', None),
-            "review_cast": getattr(article, 'review_cast', None),
-            "review_director": getattr(article, 'review_director', None),
-            "review_genre": getattr(article, 'review_genre', None),
-            "review_runtime": getattr(article, 'review_runtime', None)
-        })
-    return result
+# Helper function removed - crud functions now return properly serialized data
 
 # CMS API Endpoints
 @api_router.get("/cms/config", response_model=schemas.CMSResponse)
