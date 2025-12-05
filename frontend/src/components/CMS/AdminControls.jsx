@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const AdminControls = () => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('scheduler');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [schedulerSettings, setSchedulerSettings] = useState({
