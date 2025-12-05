@@ -450,7 +450,7 @@ export const dataService = {
       // Get user's actual state preferences from localStorage
       const userStateString = localStorage.getItem('tadka_state') || JSON.stringify(DEFAULT_SELECTED_STATES);
       const userStates = this.parseUserStates(userStateString);
-      const cacheKeyPrefix = `homepage_${userStates.join('_')}`;
+      const cacheKeyPrefix = `${CACHE_VERSION}_homepage_${userStates.join('_')}`;
 
       console.log('🏠 Loading homepage data with caching...');
 
