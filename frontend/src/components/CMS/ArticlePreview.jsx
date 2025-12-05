@@ -18,34 +18,14 @@ const ArticlePreview = () => {
 
   useEffect(() => {
     fetchCMSConfig();
-    if (articleId) {
+    if (articleId === 'new') {
+      // Load from localStorage for new article preview
+      loadPreviewFromLocalStorage();
+    } else if (articleId) {
       fetchArticle(articleId);
       fetchRelatedArticles();
     }
   }, [articleId]);
-
-  // Redirect to appropriate page based on content type
-  useEffect(() => {
-    if (article && !redirecting) {
-      const contentType = article.content_type;
-      const slug = article.slug || article.title?.toLowerCase().replace(/\s+/g, '-');
-      
-      // Redirect based on content type
-      if (contentType === 'photo') {
-        // For photo galleries, use gallery-post route
-        setRedirecting(true);
-        navigate(`/gallery-post/${articleId}`, { replace: true });
-      } else if (contentType === 'video' && article.youtube_url) {
-        // For video content
-        setRedirecting(true);
-        navigate(`/video/${articleId}`, { replace: true });
-      } else if (contentType === 'post' || contentType === 'movie_review' || !contentType) {
-        // For regular posts and movie reviews, use article page
-        setRedirecting(true);
-        navigate(`/article/${articleId}/${slug}`, { replace: true });
-      }
-    }
-  }, [article, articleId, navigate, redirecting]);
 
   // Auto scroll to top when article page loads
   useEffect(() => {
