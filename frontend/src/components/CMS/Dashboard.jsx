@@ -605,20 +605,22 @@ const Dashboard = () => {
       }
 
       // Apply client-side search filter (if needed)
+      // Client-side search filter
+      let filteredData = allData;
       if (searchQuery.trim()) {
-        allData = allData.filter(article => 
+        filteredData = filteredData.filter(article => 
           article.title && article.title.toLowerCase().includes(searchQuery.toLowerCase().trim())
         );
-        console.log(`Search filter applied: ${allData.length} items matching "${searchQuery}"`);
+        console.log(`Search filter applied: ${filteredData.length} items matching "${searchQuery}"`);
       }
       
       // Apply date filter if selected
-      if (selectedDateFilter && allData.length > 0) {
+      if (selectedDateFilter && filteredData.length > 0) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const originalLength = allData.length;
+        const originalLength = filteredData.length;
         
-        allData = allData.filter(article => {
+        filteredData = filteredData.filter(article => {
           const publishDate = new Date(article.published_at || article.created_at);
           const publishDateOnly = new Date(publishDate.getFullYear(), publishDate.getMonth(), publishDate.getDate());
           const scheduleDate = article.scheduled_publish_at ? new Date(article.scheduled_publish_at) : null;
