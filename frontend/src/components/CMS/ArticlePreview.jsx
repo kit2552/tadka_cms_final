@@ -90,6 +90,7 @@ const ArticlePreview = () => {
       // For existing articles, fetch and redirect to appropriate page
       fetchArticleAndRedirect(articleId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [articleId]);
 
   // Auto scroll to top when article page loads
