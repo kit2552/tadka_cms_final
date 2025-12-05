@@ -27,6 +27,25 @@ const ArticlePreview = () => {
     }
   }, [articleId]);
 
+  // Load preview data from localStorage
+  const loadPreviewFromLocalStorage = () => {
+    try {
+      const previewData = localStorage.getItem('previewArticle');
+      if (previewData) {
+        const data = JSON.parse(previewData);
+        setArticle(data);
+        setLoading(false);
+      } else {
+        setError('No preview data found');
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error('Error loading preview:', err);
+      setError('Failed to load preview');
+      setLoading(false);
+    }
+  };
+
   // Auto scroll to top when article page loads
   useEffect(() => {
     window.scrollTo(0, 0);
