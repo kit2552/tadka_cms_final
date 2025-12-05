@@ -2642,7 +2642,10 @@ const Dashboard = () => {
                   {totalPages > 1 && (
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        onClick={() => {
+                          setCurrentPage(prev => Math.max(1, prev - 1));
+                          window.scrollTo(0, 0);
+                        }}
                         disabled={currentPage === 1}
                         className={`px-3 py-1 text-sm rounded-md border ${
                           currentPage === 1
