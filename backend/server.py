@@ -859,14 +859,14 @@ async def create_featured_image(image: schemas.FeaturedImageCreate, db = Depends
 
 # Scheduler Settings endpoints
 @api_router.get("/admin/scheduler-settings", response_model=schemas.SchedulerSettingsResponse)
-async def get_scheduler_settings(db = Depends(get_db)):
+async def get_scheduler_settings_endpoint(db = Depends(get_db)):
     """Get current scheduler settings (Admin only)"""
     settings = crud.get_scheduler_settings(db)
     if not settings:
         # Create default settings if none exist
         settings = crud.create_scheduler_settings(
             db, 
-            schemas.SchedulerSettingsCreate(is_enabled=False, check_frequency_minutes=5)
+            {"is_enabled": False, "check_frequency_minutes": 5}
         )
     return settings
 
