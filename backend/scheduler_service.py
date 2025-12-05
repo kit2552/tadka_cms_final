@@ -3,11 +3,8 @@ from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from pytz import timezone
-from sqlalchemy.orm import Session
-from database import SessionLocal
+from database import db
 import crud
-import schemas
-from models.database_models import SchedulerSettings
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -21,13 +18,12 @@ class ArticleSchedulerService:
         
     def check_and_publish_scheduled_articles(self):
         """Check for scheduled articles that need to be published"""
-        db: Session = SessionLocal()
         try:
             # Get scheduler settings
             settings = crud.get_scheduler_settings(db)
             
             # If scheduler is disabled, return
-            if not settings or not settings.is_enabled:
+            if not settings or not settings.get('is_enabled'):
                 logger.info("Scheduler is disabled, skipping scheduled article check")
                 return
             
@@ -42,18 +38,16 @@ class ArticleSchedulerService:
             published_count = 0
             for article in scheduled_articles:
                 try:
-                    crud.publish_scheduled_article(db, article.id)
+                    crud.publish_scheduled_article(db, article.get('id'))
                     published_count += 1
-                    logger.info(f"Published scheduled article: {article.title} (ID: {article.id})")
+                    logger.info(f"Published scheduled article: {article.get('title')} (ID: {article.get('id')})")
                 except Exception as e:
-                    logger.error(f"Failed to publish scheduled article {article.id}: {str(e)}")
+                    logger.error(f"Failed to publish scheduled article {article.get('id')}: {str(e)}")
             
             logger.info(f"Published {published_count} scheduled articles")
             
         except Exception as e:
             logger.error(f"Error in scheduled article check: {str(e)}")
-        finally:
-            db.close()
     
     def start_scheduler(self):
         """Start the background scheduler"""
@@ -90,7 +84,6 @@ class ArticleSchedulerService:
     
     def initialize_scheduler(self):
         """Initialize scheduler with settings from database"""
-        db: Session = SessionLocal()
         try:
             settings = crud.get_scheduler_settings(db)
             
@@ -98,21 +91,19 @@ class ArticleSchedulerService:
                 # Create default settings if none exist
                 default_settings = crud.create_scheduler_settings(
                     db, 
-                    schemas.SchedulerSettingsCreate(is_enabled=False, check_frequency_minutes=5)
+                    {"is_enabled": False, "check_frequency_minutes": 5}
                 )
                 settings = default_settings
             
             # Set up the scheduler job
-            if settings.is_enabled:
-                self.update_schedule(settings.check_frequency_minutes)
-                logger.info(f"Scheduler initialized with {settings.check_frequency_minutes} minute frequency")
+            if settings.get('is_enabled'):
+                self.update_schedule(settings.get('check_frequency_minutes'))
+                logger.info(f"Scheduler initialized with {settings.get('check_frequency_minutes')} minute frequency")
             else:
                 logger.info("Scheduler initialized but disabled")
                 
         except Exception as e:
             logger.error(f"Failed to initialize scheduler: {str(e)}")
-        finally:
-            db.close()
 
 # Global scheduler instance
 article_scheduler = ArticleSchedulerService()
