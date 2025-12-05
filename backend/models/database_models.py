@@ -58,6 +58,18 @@ class Article(Base):
     seo_title = Column(String)  # New field for SEO optimization
     seo_description = Column(String)  # New field for SEO meta description
     seo_keywords = Column(String)  # New field for SEO keywords
+    # Movie Review specific fields
+    review_quick_verdict = Column(Text)
+    review_plot_summary = Column(Text)
+    review_performances = Column(Text)
+    review_what_works = Column(Text)
+    review_what_doesnt_work = Column(Text)
+    review_technical_aspects = Column(Text)
+    review_final_verdict = Column(Text)
+    review_cast = Column(Text)
+    review_director = Column(String)
+    review_genre = Column(String)
+    review_runtime = Column(String)
     view_count = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
