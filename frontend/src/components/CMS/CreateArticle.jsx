@@ -754,7 +754,7 @@ const CreateArticle = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2 text-left">State Targeting</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Target States</label>
                     
                     {/* Selected States Display */}
                     {selectedStates.length > 0 && (
