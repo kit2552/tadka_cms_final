@@ -136,16 +136,18 @@ const SystemSettings = () => {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (response.ok && data.success) {
         setConnectionStatus('connected');
         setMessage({ type: 'success', text: `✅ ${data.message}` });
       } else {
         setConnectionStatus('disconnected');
-        setMessage({ type: 'error', text: `❌ ${data.message}` });
+        // Handle error response
+        const errorMessage = data.detail || data.message || 'Connection test failed';
+        setMessage({ type: 'error', text: `❌ ${errorMessage}` });
       }
     } catch (error) {
       setConnectionStatus('disconnected');
-      setMessage({ type: 'error', text: 'Connection test failed' });
+      setMessage({ type: 'error', text: `❌ Connection test failed: ${error.message || 'Unknown error'}` });
     } finally {
       setLoading(false);
     }
