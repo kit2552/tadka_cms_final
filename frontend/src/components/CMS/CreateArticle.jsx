@@ -636,6 +636,10 @@ const CreateArticle = () => {
           statusText = 'published';
         }
         
+        // Clear draft data on successful submission
+        localStorage.removeItem('articleDraft');
+        localStorage.removeItem('previewArticle');
+        
         showNotification(
           'success',
           isEditMode ? 'Post Updated Successfully!' : 'Post Created Successfully!',
