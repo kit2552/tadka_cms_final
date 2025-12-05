@@ -162,7 +162,19 @@ const CreateArticle = () => {
           scheduled_publish_at: article.scheduled_publish_at ? new Date(article.scheduled_publish_at).toISOString().slice(0, 16) : '',
           seo_title: article.seo_title || '',
           seo_description: article.seo_description || '',
-          seo_keywords: article.seo_keywords || ''
+          seo_keywords: article.seo_keywords || '',
+          // Movie Review fields
+          review_quick_verdict: article.review_quick_verdict || '',
+          review_plot_summary: article.review_plot_summary || '',
+          review_performances: article.review_performances || '',
+          review_what_works: article.review_what_works || '',
+          review_what_doesnt_work: article.review_what_doesnt_work || '',
+          review_technical_aspects: article.review_technical_aspects || '',
+          review_final_verdict: article.review_final_verdict || '',
+          review_cast: article.review_cast || '',
+          review_director: article.review_director || '',
+          review_genre: article.review_genre || '',
+          review_runtime: article.review_runtime || ''
         });
         
         // Set selected states (multiple selection)
