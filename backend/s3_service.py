@@ -19,19 +19,30 @@ class S3Service:
         self.config = config
         
         if not config or not config.get('is_enabled'):
+            print("S3 initialization failed: Config not provided or not enabled")
+            self.s3_client = None
+            return False
+        
+        # Validate credentials
+        access_key = config.get('aws_access_key_id')
+        secret_key = config.get('aws_secret_access_key')
+        
+        if not access_key or not secret_key:
+            print(f"S3 initialization failed: Missing credentials (access_key: {bool(access_key)}, secret_key: {bool(secret_key)})")
             self.s3_client = None
             return False
         
         try:
             self.s3_client = boto3.client(
                 's3',
-                aws_access_key_id=config.get('aws_access_key_id'),
-                aws_secret_access_key=config.get('aws_secret_access_key'),
+                aws_access_key_id=access_key,
+                aws_secret_access_key=secret_key,
                 region_name=config.get('aws_region', 'us-east-1')
             )
+            print(f"✅ S3 client initialized successfully for region: {config.get('aws_region', 'us-east-1')}")
             return True
         except Exception as e:
-            print(f"Failed to initialize S3 client: {e}")
+            print(f"❌ Failed to initialize S3 client: {e}")
             self.s3_client = None
             return False
     
