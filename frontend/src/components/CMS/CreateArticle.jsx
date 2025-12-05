@@ -863,27 +863,63 @@ const CreateArticle = () => {
               </div>
               {accordionStates.category && (
                 <div className="p-6 space-y-4">
-                  <div>
+                  <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                       Category *
                     </label>
-                    <select
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    >
-                      <option value="">Select Category</option>
-                      {categories
-                        .filter(cat => cat.slug !== 'latest-news' && cat.name.toLowerCase() !== 'latest news')
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map(cat => (
-                          <option key={cat.slug} value={cat.slug}>
-                            {cat.name}
-                          </option>
-                        ))}
-                    </select>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={categorySearchQuery || categories.find(cat => cat.slug === formData.category)?.name || ''}
+                        onChange={(e) => {
+                          setCategorySearchQuery(e.target.value);
+                          setShowCategoryDropdown(true);
+                        }}
+                        onFocus={() => setShowCategoryDropdown(true)}
+                        placeholder="Search or select category..."
+                        className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                      {showCategoryDropdown && (
+                        <>
+                          <div 
+                            className="fixed inset-0 z-10" 
+                            onClick={() => setShowCategoryDropdown(false)}
+                          />
+                          <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                            {categories
+                              .filter(cat => 
+                                cat.slug !== 'latest-news' && 
+                                cat.name.toLowerCase() !== 'latest news' &&
+                                cat.name.toLowerCase().includes(categorySearchQuery.toLowerCase())
+                              )
+                              .sort((a, b) => a.name.localeCompare(b.name))
+                              .map(cat => (
+                                <div
+                                  key={cat.slug}
+                                  onClick={() => {
+                                    handleInputChange({ target: { name: 'category', value: cat.slug } });
+                                    setCategorySearchQuery('');
+                                    setShowCategoryDropdown(false);
+                                  }}
+                                  className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm ${
+                                    formData.category === cat.slug ? 'bg-blue-100 text-blue-800' : 'text-gray-900'
+                                  }`}
+                                >
+                                  {cat.name}
+                                </div>
+                              ))}
+                            {categories.filter(cat => 
+                              cat.slug !== 'latest-news' && 
+                              cat.name.toLowerCase() !== 'latest news' &&
+                              cat.name.toLowerCase().includes(categorySearchQuery.toLowerCase())
+                            ).length === 0 && (
+                              <div className="px-3 py-2 text-sm text-gray-500">No categories found</div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
 
                   <div>
