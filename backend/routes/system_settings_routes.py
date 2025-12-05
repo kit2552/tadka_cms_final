@@ -101,6 +101,8 @@ async def update_aws_configuration(config: AWSConfigUpdate, db = Depends(get_db)
 @router.post("/system-settings/aws-config/test")
 async def test_aws_connection(db = Depends(get_db)):
     """Test AWS S3 connection"""
+    from datetime import datetime
+    
     config = crud.get_aws_config(db)
     
     if not config or not config.get('is_enabled'):
@@ -125,9 +127,18 @@ async def test_aws_connection(db = Depends(get_db)):
     # Test connection
     success, message = s3_service.test_connection()
     
+    # Save connection test result
+    test_result = {
+        "last_test_status": "connected" if success else "disconnected",
+        "last_test_message": message,
+        "last_test_time": datetime.utcnow()
+    }
+    crud.update_aws_config(db, test_result)
+    
     return {
         "success": success,
-        "message": message
+        "message": message,
+        "tested_at": test_result["last_test_time"].isoformat()
     }
 
 @router.post("/system-settings/upload-to-s3")
