@@ -426,8 +426,12 @@ def get_scheduled_articles_for_publishing(db):
     docs = list(db[ARTICLES].find(query, {"_id": 0}))
     return [serialize_doc(doc) for doc in docs]
 
-def publish_scheduled_article(db, article_id: str):
+def publish_scheduled_article(db, article_id):
     """Publish a scheduled article"""
+    # Convert to int if string
+    if isinstance(article_id, str):
+        article_id = int(article_id)
+    
     result = db[ARTICLES].update_one(
         {"id": article_id},
         {
