@@ -470,11 +470,11 @@ const SystemSettings = () => {
                         <input
                           type={showSecretKey ? "text" : "password"}
                           name="aws_secret_access_key"
-                          value={awsConfig.aws_secret_access_key}
+                          value={awsConfig.aws_secret_access_key || ''}
                           onChange={handleAWSConfigChange}
                           disabled={!awsConfig.is_enabled}
                           className="w-full px-4 py-2.5 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono disabled:bg-gray-100 disabled:cursor-not-allowed"
-                          placeholder="••••••••••••••••••••••••••••••••••••••••"
+                          placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
                           required={awsConfig.is_enabled}
                         />
                         <button
