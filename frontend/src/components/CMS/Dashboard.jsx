@@ -2676,6 +2676,7 @@ const Dashboard = () => {
                               onClick={() => {
                                 console.log('Clicking page:', pageNum, 'Current page:', currentPage);
                                 setCurrentPage(pageNum);
+                                window.scrollTo(0, 0);
                               }}
                               className={`px-3 py-1 text-sm rounded-md border ${
                                 currentPage === pageNum
