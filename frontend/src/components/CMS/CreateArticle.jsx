@@ -990,7 +990,7 @@ const CreateArticle = () => {
               {accordionStates.contentType && (
                 <div className="p-6 space-y-4">
                   
-                  {/* Common Fields for All Types: Title, Short Title */}
+                  {/* Common Fields for All Types: Title */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                       Title *
@@ -1002,19 +1002,6 @@ const CreateArticle = () => {
                       onChange={handleInputChange}
                       className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                      Short Title
-                    </label>
-                    <input
-                      type="text"
-                      name="short_title"
-                      value={formData.short_title}
-                      onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
