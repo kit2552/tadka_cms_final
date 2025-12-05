@@ -85,21 +85,21 @@ async def get_articles(
     result = []
     for article in articles:
         result.append({
-            "id": article.id,
-            "title": article.title,
-            "short_title": article.short_title,
-            "summary": article.summary,
-            "image_url": article.image,
-            "author": article.author,
-            "language": article.language,
-            "category": article.category,
-            "content_type": article.content_type,  # Add content_type field
-            "artists": article.artists,  # Add artists field
-            "is_published": article.is_published,
-            "is_scheduled": article.is_scheduled if article.is_scheduled is not None else False,
-            "scheduled_publish_at": article.scheduled_publish_at,
-            "published_at": article.published_at,
-            "view_count": article.view_count if article.view_count is not None else 0
+            "id": article.get("id"),
+            "title": article.get("title"),
+            "short_title": article.get("short_title"),
+            "summary": article.get("summary"),
+            "image_url": article.get("image"),
+            "author": article.get("author"),
+            "language": article.get("article_language", article.get("language", "en")),  # Support both field names
+            "category": article.get("category"),
+            "content_type": article.get("content_type"),
+            "artists": article.get("artists"),
+            "is_published": article.get("is_published"),
+            "is_scheduled": article.get("is_scheduled", False),
+            "scheduled_publish_at": article.get("scheduled_publish_at"),
+            "published_at": article.get("published_at"),
+            "view_count": article.get("view_count", 0)
         })
     return result
 
