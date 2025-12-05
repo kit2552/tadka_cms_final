@@ -34,7 +34,8 @@ def create_indexes(db):
     db[ARTICLES].create_index("is_published")
     db[ARTICLES].create_index("published_at")
     db[ARTICLES].create_index("created_at")
-    db[ARTICLES].create_index([("title", "text"), ("content", "text")])  # Text search
+    # Text search with default language (English)
+    db[ARTICLES].create_index([("title", "text"), ("content", "text")], default_language="english")
     
     # Galleries indexes
     db[GALLERIES].create_index("slug", unique=True)
