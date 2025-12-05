@@ -543,6 +543,40 @@ const CreateArticle = () => {
     alert('Translation feature will be implemented with Google Translate API integration');
   };
 
+  const handleUnpublish = async () => {
+    if (!id || id === 'new') return;
+    
+    const action = formData.is_published ? 'unpublish' : 'publish';
+    const confirmMessage = `Are you sure you want to ${action} this article?`;
+    
+    if (!window.confirm(confirmMessage)) return;
+    
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/articles/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          is_published: !formData.is_published
+        })
+      });
+
+      if (response.ok) {
+        setFormData(prev => ({ ...prev, is_published: !prev.is_published }));
+        showNotification(`Article ${action}ed successfully!`, 'success');
+      } else {
+        throw new Error(`Failed to ${action} article`);
+      }
+    } catch (error) {
+      console.error(`Error ${action}ing article:`, error);
+      showNotification(`Failed to ${action} article. Please try again.`, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <style>
