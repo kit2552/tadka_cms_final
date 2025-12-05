@@ -126,7 +126,29 @@ def create_featured_image(db: Session, image: schemas.FeaturedImageCreate):
     return db_image
 
 # CMS-specific CRUD operations
-def get_articles_for_cms(db: Session, language: str = "en", skip: int = 0, limit: int = 20, category: str = None, state: str = None):
+def get_articles_count_for_cms(db: Session, language: str = "en", category: str = None, state: str = None, content_type: str = None, status: str = None):
+    """Get count of articles for CMS dashboard with filtering"""
+    query = db.query(models.Article).filter(models.Article.language == language)
+    
+    if category:
+        query = query.filter(models.Article.category == category)
+    
+    if content_type:
+        query = query.filter(models.Article.content_type == content_type)
+    
+    if status:
+        if status == 'published':
+            query = query.filter(models.Article.is_published == True)
+        elif status == 'scheduled':
+            query = query.filter(models.Article.is_scheduled == True)
+        elif status == 'draft':
+            query = query.filter(models.Article.is_published == False, models.Article.is_scheduled == False)
+    
+    # State filtering would require JSON parsing - skip for count for performance
+    
+    return query.count()
+
+def get_articles_for_cms(db: Session, language: str = "en", skip: int = 0, limit: int = 20, category: str = None, state: str = None, content_type: str = None, status: str = None):
     """Get articles for CMS dashboard with filtering"""
     query = db.query(models.Article).filter(models.Article.language == language)
     
