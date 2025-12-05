@@ -20,6 +20,7 @@ from routes.topics_routes_mongodb import router as topics_router
 from routes.gallery_routes_mongodb import router as gallery_router
 from auth import create_default_admin
 from scheduler_service import article_scheduler
+from s3_service import s3_service
 
 # Create MongoDB indexes on startup
 try:
