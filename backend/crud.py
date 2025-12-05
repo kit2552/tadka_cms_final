@@ -541,7 +541,7 @@ def get_related_articles_for_page(db, page_slug: str, limit: int = 5):
 # ==================== SYSTEM SETTINGS - AWS CONFIG ====================
 
 def get_aws_config(db):
-    """Get AWS S3 configuration"""
+    """Get AWS S3 configuration (returns full unmasked values)"""
     doc = db['system_settings'].find_one({"type": "aws_config"})
     return serialize_doc(doc) if doc else None
 
