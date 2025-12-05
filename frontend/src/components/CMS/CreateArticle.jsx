@@ -817,14 +817,14 @@ const CreateArticle = () => {
                       <div className="flex-1 relative">
                         <input
                           type="text"
-                          value={stateSearchQuery || states.find(s => s.code === selectedState)?.name || ''}
+                          value={stateSearchQuery || (selectedState ? states.find(s => s.code === selectedState)?.name : '') || ''}
                           onChange={(e) => {
                             setStateSearchQuery(e.target.value);
                             setShowStateDropdown(true);
                           }}
                           onFocus={() => setShowStateDropdown(true)}
-                          placeholder="Search or select state..."
-                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Search..."
+                          className="w-full p-2 border border-gray-300 rounded-md text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400"
                         />
                         {showStateDropdown && (
                           <>
@@ -832,7 +832,7 @@ const CreateArticle = () => {
                               className="fixed inset-0 z-10" 
                               onClick={() => setShowStateDropdown(false)}
                             />
-                            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
                               {states
                                 .filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase()))
                                 .sort((a, b) => a.name.localeCompare(b.name))
@@ -844,7 +844,7 @@ const CreateArticle = () => {
                                       setStateSearchQuery('');
                                       setShowStateDropdown(false);
                                     }}
-                                    className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm ${
+                                    className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left ${
                                       selectedState === state.code ? 'bg-blue-100 text-blue-800' : 'text-gray-900'
                                     }`}
                                   >
@@ -852,7 +852,7 @@ const CreateArticle = () => {
                                   </div>
                                 ))}
                               {states.filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase())).length === 0 && (
-                                <div className="px-3 py-2 text-sm text-gray-500">No states found</div>
+                                <div className="px-3 py-2 text-sm text-gray-500 text-left">No states found</div>
                               )}
                             </div>
                           </>
@@ -861,9 +861,9 @@ const CreateArticle = () => {
                       <button
                         type="button"
                         onClick={handleAddState}
-                        disabled={selectedStates.includes(selectedState)}
+                        disabled={!selectedState || selectedStates.includes(selectedState)}
                         className={`px-4 py-2 rounded-md font-medium ${
-                          selectedStates.includes(selectedState)
+                          !selectedState || selectedStates.includes(selectedState)
                             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                             : 'bg-blue-600 text-white hover:bg-blue-700'
                         }`}
