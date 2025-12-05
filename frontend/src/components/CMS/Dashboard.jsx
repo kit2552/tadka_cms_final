@@ -244,7 +244,11 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState(''); // New search functionality
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(15);
+  const [itemsPerPage, setItemsPerPage] = useState(() => {
+    // Load from localStorage on initial mount
+    const saved = localStorage.getItem('cms_items_per_page');
+    return saved ? parseInt(saved, 10) : 15;
+  });
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [allArticles, setAllArticles] = useState([]); // Store all articles for frontend pagination
