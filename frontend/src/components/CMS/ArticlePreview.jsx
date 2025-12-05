@@ -15,23 +15,6 @@ const ArticlePreview = () => {
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    if (articleId === 'new') {
-      // Load from localStorage and redirect to preview
-      const previewData = localStorage.getItem('previewArticle');
-      if (previewData) {
-        // For new articles, just show the preview in this component
-        loadPreviewFromLocalStorage();
-      } else {
-        setError('No preview data found');
-        setLoading(false);
-      }
-    } else if (articleId) {
-      // For existing articles, fetch and redirect to appropriate page
-      fetchArticleAndRedirect(articleId);
-    }
-  }, [articleId]);
-
   // Fetch article and redirect to appropriate template
   const fetchArticleAndRedirect = async (id) => {
     setLoading(true);
@@ -79,6 +62,23 @@ const ArticlePreview = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (articleId === 'new') {
+      // Load from localStorage and redirect to preview
+      const previewData = localStorage.getItem('previewArticle');
+      if (previewData) {
+        // For new articles, just show the preview in this component
+        loadPreviewFromLocalStorage();
+      } else {
+        setError('No preview data found');
+        setLoading(false);
+      }
+    } else if (articleId) {
+      // For existing articles, fetch and redirect to appropriate page
+      fetchArticleAndRedirect(articleId);
+    }
+  }, [articleId]);
 
   // Auto scroll to top when article page loads
   useEffect(() => {
