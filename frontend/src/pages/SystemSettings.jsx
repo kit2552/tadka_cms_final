@@ -321,29 +321,10 @@ const SystemSettings = () => {
           {/* Tab Content */}
           <div className="p-8">
             {activeTab === 'aws' && (
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {/* Section Header */}
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900 mb-1">AWS Storage Settings</h2>
-                    <p className="text-sm text-gray-600">Configure AWS S3 storage for file uploads and media management</p>
-                    <div className="mt-3 flex items-center text-sm text-gray-500">
-                      <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      Connection Status Unknown - Test Connection
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setAwsConfig(prev => ({ ...prev, is_enabled: false }))}
-                    className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 font-medium text-sm flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    Disconnect
-                  </button>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">AWS Storage Settings</h2>
                 </div>
 
                 <form onSubmit={saveAWSConfig} className="space-y-6">
