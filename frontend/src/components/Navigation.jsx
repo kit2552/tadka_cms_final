@@ -621,7 +621,7 @@ const Navigation = ({ onLayoutModeChange }) => {
                                 >
                                   Manage Content
                                 </Link>
-                                {user?.role === 'Admin' && (
+                                {user?.roles?.includes('Admin') && (
                                   <>
                                     <Link
                                       to="/cms/admin-controls"
