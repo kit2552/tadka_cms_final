@@ -74,7 +74,7 @@ const Movies = ({ moviesData, onArticleClick, isLoading = false }) => {
           msOverflowStyle: 'none'
         }}
       >
-        <style jsx>{`
+        <style>{`
           div::-webkit-scrollbar {
             display: none;
           }

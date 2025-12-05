@@ -74,7 +74,7 @@ const TravelPics = ({ tadkaPicsData = {}, onArticleClick }) => {
           msOverflowStyle: 'none'
         }}
       >
-        <style jsx>{`
+        <style>{`
           div::-webkit-scrollbar {
             display: none;
           }

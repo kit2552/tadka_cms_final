@@ -667,7 +667,7 @@ const ImageGalleryModal = ({ article, onClose, relatedImages = [] }) => {
       }}
       onClick={handleBackdropClick}
     >
-      <style jsx>{`
+      <style>{`
         div::-webkit-scrollbar {
           display: none;
         }
@@ -717,7 +717,7 @@ const ImageGalleryModal = ({ article, onClose, relatedImages = [] }) => {
             onScroll={isMobile ? handleModalScroll : undefined}
           >
             {isMobile && (
-              <style jsx>{`
+              <style>{`
                 div::-webkit-scrollbar {
                   display: none;
                 }
@@ -836,7 +836,7 @@ const ImageGalleryModal = ({ article, onClose, relatedImages = [] }) => {
                     }
                   }}
                 >
-                  <style jsx>{`
+                  <style>{`
                     div::-webkit-scrollbar {
                       display: none;
                     }
@@ -970,7 +970,7 @@ const ImageGalleryModal = ({ article, onClose, relatedImages = [] }) => {
                   minHeight: '320px'
                 }}
               >
-                <style jsx>{`
+                <style>{`
                   div::-webkit-scrollbar {
                     display: none;
                   }

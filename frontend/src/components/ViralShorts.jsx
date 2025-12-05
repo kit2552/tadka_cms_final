@@ -143,7 +143,7 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
         </div>
         
         {/* Custom Scrollbar Styles */}
-        <style jsx>{`
+        <style>{`
           .scrollbar-hide::-webkit-scrollbar {
             display: none;
           }

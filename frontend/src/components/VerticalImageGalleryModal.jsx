@@ -556,7 +556,7 @@ const VerticalImageGalleryModal = ({ article, onClose, relatedImages = [] }) => 
       }}
       onClick={handleBackdropClick}
     >
-      <style jsx>{`
+      <style>{`
         div::-webkit-scrollbar {
           display: none;
         }
@@ -604,7 +604,7 @@ const VerticalImageGalleryModal = ({ article, onClose, relatedImages = [] }) => 
             onScroll={isMobile ? handleModalScroll : undefined}
           >
             {isMobile && (
-              <style jsx>{`
+              <style>{`
                 div::-webkit-scrollbar {
                   display: none;
                 }
@@ -700,7 +700,7 @@ const VerticalImageGalleryModal = ({ article, onClose, relatedImages = [] }) => 
                   msOverflowStyle: 'none'
                 }}
               >
-                <style jsx>{`
+                <style>{`
                   div::-webkit-scrollbar {
                     display: none;
                   }
@@ -849,7 +849,7 @@ const VerticalImageGalleryModal = ({ article, onClose, relatedImages = [] }) => 
                   minHeight: isMobile ? '200px' : '320px' // Reduced height on mobile
                 }}
               >
-                <style jsx>{`
+                <style>{`
                   div::-webkit-scrollbar {
                     display: none;
                   }

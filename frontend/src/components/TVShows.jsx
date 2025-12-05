@@ -117,7 +117,7 @@ const TVShows = ({ articles, onArticleClick }) => {
           msOverflowStyle: 'none'
         }}
       >
-        <style jsx>{`
+        <style>{`
           div::-webkit-scrollbar {
             display: none;
           }

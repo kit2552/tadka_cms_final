@@ -100,7 +100,7 @@ const Sports = ({ reviews, onArticleClick }) => {
           msOverflowStyle: 'none'
         }}
       >
-        <style jsx>{`
+        <style>{`
           div::-webkit-scrollbar {
             display: none;
           }

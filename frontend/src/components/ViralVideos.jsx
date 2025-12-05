@@ -75,7 +75,7 @@ const ViralVideos = ({ viralVideosData = {}, onArticleClick }) => {
           msOverflowStyle: 'none'
         }}
       >
-        <style jsx>{`
+        <style>{`
           div::-webkit-scrollbar {
             display: none;
           }

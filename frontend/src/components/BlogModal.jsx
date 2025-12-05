@@ -380,7 +380,7 @@ const BlogModal = ({ article, onClose, relatedArticles = [] }) => {
       }}
       onClick={handleBackdropClick}
     >
-      <style jsx>{`
+      <style>{`
         div::-webkit-scrollbar {
           display: none;
         }
@@ -432,7 +432,7 @@ const BlogModal = ({ article, onClose, relatedArticles = [] }) => {
             onScroll={isMobile ? handleModalScroll : undefined}
           >
             {isMobile && (
-              <style jsx>{`
+              <style>{`
                 div::-webkit-scrollbar {
                   display: none;
                 }
@@ -506,7 +506,7 @@ const BlogModal = ({ article, onClose, relatedArticles = [] }) => {
                     }
                   } : undefined}
                 >
-                  <style jsx>{`
+                  <style>{`
                     div::-webkit-scrollbar {
                       display: none;
                     }
@@ -665,7 +665,7 @@ const BlogModal = ({ article, onClose, relatedArticles = [] }) => {
                     : (isBreakingNews ? 'calc(265px + 70px)' : 'calc(320px + 70px)')
                 }}
               >
-                <style jsx>{`
+                <style>{`
                   div::-webkit-scrollbar {
                     display: none;
                   }
