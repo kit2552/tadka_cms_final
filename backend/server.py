@@ -700,11 +700,14 @@ async def get_cms_articles(
             "short_title": article.short_title,
             "summary": article.summary,
             "image_url": article.image,
+            "youtube_url": article.youtube_url,
             "author": article.author,
             "language": article.language,
             "category": article.category,
-            "content_type": article.content_type,  # Add content_type field
-            "artists": article.artists,  # Add artists field
+            "content_type": article.content_type,
+            "artists": article.artists,
+            "states": article.states,
+            "gallery": None,  # Can be enhanced later if needed
             "is_published": article.is_published,
             "is_scheduled": article.is_scheduled if article.is_scheduled is not None else False,
             "scheduled_publish_at": article.scheduled_publish_at,
