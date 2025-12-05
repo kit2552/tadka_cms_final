@@ -1502,8 +1502,9 @@ async def search_articles(q: str, db = Depends(get_db)):
 # Include routers
 app.include_router(api_router)
 app.include_router(auth_router)  # Add authentication routes
-app.include_router(topics_router, prefix="/api")  # Add topics routes
-app.include_router(gallery_router, prefix="/api")  # Add gallery routes
+# TODO: Re-enable after updating routes for MongoDB
+# app.include_router(topics_router, prefix="/api")  # Add topics routes
+# app.include_router(gallery_router, prefix="/api")  # Add gallery routes
 
 app.add_middleware(
     CORSMiddleware,
