@@ -23,7 +23,8 @@ from auth import create_default_admin
 # from scheduler_service import article_scheduler
 
 # Create MongoDB indexes on startup
-create_indexes(db)
+# TODO: Fix text index language issue
+# create_indexes(db)
 
 ROOT_DIR = Path(__file__).parent
 UPLOAD_DIR = ROOT_DIR / "uploads"
