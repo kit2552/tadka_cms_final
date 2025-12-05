@@ -419,14 +419,14 @@ const ArticlePage = () => {
             </div>
 
             {/* Related Articles List */}
-            <div className="space-y-0">
-              <div className="space-y-0">
+            <div className="space-y-4">
+              <div className="space-y-4">
                 {relatedArticles.length > 0 ? (
                   relatedArticles.map((relatedArticle, index) => (
                     <div
                       key={relatedArticle.id}
                       onClick={() => handleRelatedArticleClick(relatedArticle)}
-                      className={`group cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
+                      className={`group cursor-pointer hover:bg-gray-50 transition-colors duration-200 pb-4 ${
                         index < relatedArticles.length - 1 ? 'border-b border-gray-200' : ''
                       }`}
                     >
