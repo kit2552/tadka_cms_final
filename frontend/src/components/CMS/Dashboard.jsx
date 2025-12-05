@@ -588,37 +588,23 @@ const Dashboard = () => {
       
       console.log('Received result:', result);
 
-      // Handle response format
+      // Handle new response format with pagination
       let allData = [];
+      let totalFromServer = 0;
+      
       if (result.articles && Array.isArray(result.articles)) {
         allData = result.articles;
+        totalFromServer = result.total || allData.length;
       } else if (Array.isArray(result)) {
+        // Legacy format
         allData = result;
+        totalFromServer = allData.length;
       } else {
         console.error('Unexpected response format:', result);
         allData = [];
       }
-      
-      // Apply content type filter
-      if (selectedContentType) {
-        allData = allData.filter(article => 
-          article.content_type && article.content_type.toLowerCase() === selectedContentType.toLowerCase()
-        );
-        console.log(`Content type filter applied: ${allData.length} items`);
-      }
 
-      // Apply status filter
-      if (selectedStatus) {
-        allData = allData.filter(article => {
-          if (selectedStatus === 'published') {
-            return article.status === 'published' || !article.status;
-          }
-          return article.status && article.status.toLowerCase() === selectedStatus.toLowerCase();
-        });
-        console.log(`Status filter applied: ${allData.length} items`);
-      }
-
-      // Apply search filter (independent of other filters)
+      // Apply client-side search filter (if needed)
       if (searchQuery.trim()) {
         allData = allData.filter(article => 
           article.title && article.title.toLowerCase().includes(searchQuery.toLowerCase().trim())
