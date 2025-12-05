@@ -563,7 +563,7 @@ async def get_travel_pics_articles(limit: int = 4, db = Depends(get_db)):
     return _format_article_response(articles, db)
 
 # Helper function to format article response
-def _format_article_response(articles, db: Session = None):
+def _format_article_response(articles, db = None):
     """Helper function to format article list response"""
     result = []
     for article in articles:
