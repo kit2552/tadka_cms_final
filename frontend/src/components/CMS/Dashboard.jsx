@@ -423,6 +423,11 @@ const Dashboard = () => {
     fetchRelatedArticlesConfig(); // Load related articles config
   }, []);
 
+  // Auto-scroll to top when Dashboard loads
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Clean up old localStorage entries on component mount
   useEffect(() => {
     // Clean up old problematic localStorage entries to prevent quota issues
