@@ -19,27 +19,39 @@ const ArticlePreview = () => {
   const fetchArticleAndRedirect = async (id) => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/articles/${id}`);
+      console.log('Fetching article for preview:', id);
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+      const apiUrl = `${backendUrl}/api/articles/${id}`;
+      console.log('API URL:', apiUrl);
+      
+      const response = await fetch(apiUrl);
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Article data:', data);
         
         // Redirect to appropriate template based on content type
         const slug = data.slug || data.title?.toLowerCase().replace(/\s+/g, '-');
         const contentType = data.content_type;
         
+        let redirectUrl;
         if (contentType === 'photo') {
-          navigate(`/gallery-post/${id}?preview=true`, { replace: true });
+          redirectUrl = `/gallery-post/${id}?preview=true`;
         } else if (contentType === 'video' && data.youtube_url) {
-          navigate(`/video/${id}?preview=true`, { replace: true });
+          redirectUrl = `/video/${id}?preview=true`;
         } else {
-          navigate(`/article/${id}/${slug}?preview=true`, { replace: true });
+          redirectUrl = `/article/${id}/${slug}?preview=true`;
         }
+        
+        console.log('Redirecting to:', redirectUrl);
+        navigate(redirectUrl, { replace: true });
       } else {
-        throw new Error('Failed to fetch article');
+        throw new Error(`Failed to fetch article: ${response.status}`);
       }
     } catch (error) {
       console.error('Error fetching article:', error);
-      setError('Failed to load article for preview');
+      setError('Failed to load article for preview: ' + error.message);
       setLoading(false);
     }
   };
