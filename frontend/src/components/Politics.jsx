@@ -11,49 +11,9 @@ const Politics = ({ politicsData = {}, onArticleClick, isLoading = false }) => {
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
   const [activeTab, setActiveTab] = useTabState('politics', 'state'); // 'state' or 'national'
 
-  // Filter out future-dated articles (for home page display)
-  const filterCurrentArticles = (articles) => {
-    const now = new Date();
-    console.log('🕒 Date Filter - Current time:', now.toISOString());
-    
-    return articles.filter(article => {
-      if (!article.published_at) {
-        console.log(`  ✅ Article ${article.id}: No date, keeping`);
-        return true;
-      }
-      
-      const publishedDate = new Date(article.published_at);
-      // Add a 1-hour buffer to account for timezone differences
-      const oneHourAgo = new Date(now.getTime() - (60 * 60 * 1000));
-      const isPast = publishedDate <= now;
-      
-      console.log(`  ${isPast ? '✅' : '❌'} Article ${article.id}:`, {
-        published_at: article.published_at,
-        publishedDate: publishedDate.toISOString(),
-        now: now.toISOString(),
-        isPast,
-        diff: (now - publishedDate) / 1000 / 60, // minutes
-      });
-      
-      // TEMPORARY: Always return true to bypass date filtering for debugging
-      console.log(`  🔓 BYPASS: Keeping article ${article.id} regardless of date`);
-      return true;
-    });
-  };
-
-  // Extract data from props - now using real API data with date filtering
-  const rawStateArticles = politicsData.state_politics || [];
-  const rawNationalArticles = politicsData.national_politics || [];
-  
-  // Debug logging
-  console.log('Politics Component - Raw State Articles:', rawStateArticles.length, rawStateArticles.map(a => a.id));
-  console.log('Politics Component - Raw National Articles:', rawNationalArticles.length, rawNationalArticles.map(a => a.id));
-  
-  const stateArticles = filterCurrentArticles(rawStateArticles);
-  const nationalArticles = filterCurrentArticles(rawNationalArticles);
-  
-  console.log('Politics Component - Filtered State Articles:', stateArticles.length, stateArticles.map(a => a.id));
-  console.log('Politics Component - Filtered National Articles:', nationalArticles.length, nationalArticles.map(a => a.id));
+  // Extract data from props - backend already filters by is_published and sorts by latest
+  const stateArticles = politicsData.state_politics || [];
+  const nationalArticles = politicsData.national_politics || [];
 
   // Get articles based on active tab
   const getTabArticles = () => {
