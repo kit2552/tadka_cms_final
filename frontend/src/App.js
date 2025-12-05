@@ -154,6 +154,7 @@ function App() {
               <Route path="/cms/create-topic" element={<CreateTopic />} />
               <Route path="/cms/preview/:id" element={<ArticlePreview />} />
               <Route path="/cms/admin-controls" element={<AdminControls />} />
+              <Route path="/cms/system-settings" element={<SystemSettings />} />
               <Route path="/article/:articleId" element={<ArticlePage />} />
               <Route path="/article/:articleId/:slug" element={<ArticlePage />} />
             </Routes>
