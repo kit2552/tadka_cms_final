@@ -525,10 +525,10 @@ const CreateArticle = () => {
   };
 
   const handlePreview = () => {
-    if (articleId && articleId !== 'new') {
+    if (id && id !== 'new') {
       // For existing articles, redirect to actual article page
       const slug = formData.slug || formData.title?.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/article/${articleId}/${slug}?preview=true`);
+      navigate(`/article/${id}/${slug}?preview=true`);
     } else {
       // For new articles, store in localStorage and show preview
       localStorage.setItem('previewArticle', JSON.stringify({
