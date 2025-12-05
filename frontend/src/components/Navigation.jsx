@@ -703,7 +703,7 @@ const Navigation = ({ onLayoutModeChange }) => {
                       </span>
                     )}
                     <button
-                      onClick={() => navigate('/cms/dashboard')}
+                      onClick={() => navigate('/cms/articles/new')}
                       className="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 hover:text-gray-900 transition-all duration-200"
                     >
                       <span className="text-gray-700">Back</span>
