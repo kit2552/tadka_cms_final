@@ -881,17 +881,14 @@ async def update_scheduler_settings(
     # Update the background scheduler
     if settings_update.is_enabled is not None:
         if settings_update.is_enabled:
-            # article_scheduler.start_scheduler()
-            frequency = settings_update.check_frequency_minutes or updated_settings.check_frequency_minutes
-            # article_scheduler.update_schedule(frequency)
-            pass
+            article_scheduler.start_scheduler()
+            frequency = settings_update.check_frequency_minutes or updated_settings.get('check_frequency_minutes', 5)
+            article_scheduler.update_schedule(frequency)
         else:
-            # article_scheduler.stop_scheduler()
-            pass
+            article_scheduler.stop_scheduler()
     
-    if settings_update.check_frequency_minutes is not None and updated_settings.is_enabled:
-        # article_scheduler.update_schedule(settings_update.check_frequency_minutes)
-        pass
+    if settings_update.check_frequency_minutes is not None and updated_settings.get('is_enabled'):
+        article_scheduler.update_schedule(settings_update.check_frequency_minutes)
     
     return updated_settings
 
@@ -899,7 +896,7 @@ async def update_scheduler_settings(
 async def run_scheduler_now():
     """Manually trigger scheduled article publishing (Admin only)"""
     try:
-        # article_scheduler.check_and_publish_scheduled_articles()
+        article_scheduler.check_and_publish_scheduled_articles()
         return {"message": "Scheduler run completed successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Scheduler run failed: {str(e)}")
