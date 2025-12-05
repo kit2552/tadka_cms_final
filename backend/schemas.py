@@ -29,11 +29,13 @@ class CategoryCreate(CategoryBase):
     pass
 
 class Category(CategoryBase):
-    id: int
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
     created_at: datetime
     
     class Config:
-        from_attributes = True
+        populate_by_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
 
 # Article Schemas
 class ArticleBase(BaseModel):
