@@ -562,10 +562,11 @@ const Dashboard = () => {
   const fetchArticles = async () => {
     setLoading(true);
     try {
-      // For reliable pagination, let's fetch all articles and paginate on frontend
+      // Proper server-side pagination
       const params = new URLSearchParams({
         language: selectedLanguage,
-        limit: '1000' // Fetch a large number to get all articles
+        skip: String((currentPage - 1) * itemsPerPage),
+        limit: String(itemsPerPage)
       });
       if (selectedCategory) {
         params.append('category', selectedCategory);
@@ -580,7 +581,7 @@ const Dashboard = () => {
         params.append('state', selectedState);
       }
 
-      console.log('Fetching all articles with params:', params.toString());
+      console.log('Fetching articles with params:', params.toString());
 
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/articles?${params}`);
       let result = await response.json();
