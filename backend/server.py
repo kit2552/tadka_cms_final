@@ -15,6 +15,7 @@ from database import get_db, db
 import schemas, crud
 from models.mongodb_collections import create_indexes
 from routes.auth_routes import router as auth_router
+from routes.system_settings_routes import router as system_settings_router
 # TODO: Update these routes for MongoDB
 # from routes.topics_routes import router as topics_router
 # from routes.gallery_routes import router as gallery_router
