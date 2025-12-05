@@ -816,6 +816,7 @@ const CreateArticle = () => {
                           type="text"
                           value={showStateDropdown ? stateSearchQuery : (selectedState ? states.find(s => s.code === selectedState)?.name : '')}
                           onChange={(e) => {
+                            setSelectedState('');
                             setStateSearchQuery(e.target.value);
                             setShowStateDropdown(true);
                           }}
