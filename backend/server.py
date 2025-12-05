@@ -654,31 +654,9 @@ async def get_cms_articles(
         state=state, content_type=content_type, status=status
     )
     
-    result = []
-    for article in articles:
-        result.append({
-            "id": article.id,
-            "title": article.title,
-            "short_title": article.short_title,
-            "summary": article.summary,
-            "image_url": article.image,
-            "youtube_url": article.youtube_url,
-            "author": article.author,
-            "language": article.language,
-            "category": article.category,
-            "content_type": article.content_type,
-            "artists": article.artists,
-            "states": article.states,
-            "gallery": None,
-            "is_published": article.is_published,
-            "is_scheduled": article.is_scheduled if article.is_scheduled is not None else False,
-            "scheduled_publish_at": article.scheduled_publish_at,
-            "published_at": article.published_at,
-            "view_count": article.view_count if article.view_count is not None else 0
-        })
-    
+    # articles is already a list of properly serialized dicts from crud
     return {
-        "articles": result,
+        "articles": articles,
         "total": total_count,
         "skip": skip,
         "limit": limit
