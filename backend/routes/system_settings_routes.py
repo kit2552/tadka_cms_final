@@ -63,20 +63,32 @@ async def get_aws_configuration(db = Depends(get_db)):
 async def update_aws_configuration(config: AWSConfigUpdate, db = Depends(get_db)):
     """Update AWS S3 configuration"""
     
-    # Don't allow empty credentials if enabling
+    # Get existing config
+    existing_config = crud.get_aws_config(db)
+    
+    # Merge with existing config (only update provided fields)
+    update_data = config.dict(exclude_unset=True)
+    
+    # If enabling, check if we have credentials (either new or existing)
     if config.is_enabled:
-        if not config.aws_access_key_id or not config.aws_secret_access_key or not config.s3_bucket_name:
-            raise HTTPException(
-                status_code=400,
-                detail="AWS credentials and bucket name are required when enabling S3"
-            )
+        # Check access key
+        if not config.aws_access_key_id and (not existing_config or not existing_config.get('aws_access_key_id')):
+            raise HTTPException(status_code=400, detail="AWS Access Key ID is required when enabling S3")
+        
+        # Check secret key
+        if not config.aws_secret_access_key and (not existing_config or not existing_config.get('aws_secret_access_key')):
+            raise HTTPException(status_code=400, detail="AWS Secret Access Key is required when enabling S3")
+        
+        # Check bucket name
+        if not config.s3_bucket_name:
+            raise HTTPException(status_code=400, detail="S3 Bucket Name is required when enabling S3")
     
     # Update in database
-    updated_config = crud.update_aws_config(db, config.dict())
+    updated_config = crud.update_aws_config(db, update_data)
     
-    # Initialize S3 service with new config
-    if config.is_enabled:
-        s3_service.initialize(config.dict())
+    # Initialize S3 service with full config (including existing keys if not updated)
+    if updated_config.get('is_enabled'):
+        s3_service.initialize(updated_config)
     
     # Return masked credentials
     if updated_config.get('aws_secret_access_key'):
