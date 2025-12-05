@@ -97,7 +97,9 @@ class S3Service:
             return url
             
         except Exception as e:
+            import traceback
             print(f"S3 upload failed: {e}")
+            print(f"Traceback: {traceback.format_exc()}")
             return None
     
     def delete_file(self, file_url: str) -> bool:
