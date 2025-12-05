@@ -470,6 +470,26 @@ const Dashboard = () => {
     }
   }, [horizontalGalleries]);
 
+  // Restore scroll position on component mount
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('cms_scroll_position');
+    const savedPage = sessionStorage.getItem('cms_current_page');
+    
+    if (savedScrollPosition) {
+      // Restore page first if saved
+      if (savedPage) {
+        setCurrentPage(parseInt(savedPage));
+      }
+      
+      // Restore scroll position after a short delay to ensure content is loaded
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+        sessionStorage.removeItem('cms_scroll_position');
+        sessionStorage.removeItem('cms_current_page');
+      }, 100);
+    }
+  }, []);
+
   // Main data fetching useEffect
   useEffect(() => {
     fetchCMSConfig();
