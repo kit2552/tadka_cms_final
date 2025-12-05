@@ -79,12 +79,13 @@ class S3Service:
                 content_type = content_type or 'application/octet-stream'
             
             # Upload to S3
+            # Note: ACL is not used as most buckets have Block Public Access enabled
+            # Public access should be configured at the bucket level
             self.s3_client.put_object(
                 Bucket=bucket_name,
                 Key=s3_key,
                 Body=file_content,
-                ContentType=content_type,
-                ACL='public-read'  # Make files publicly readable
+                ContentType=content_type
             )
             
             # Construct and return URL
