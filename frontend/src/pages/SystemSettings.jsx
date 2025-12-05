@@ -357,8 +357,8 @@ const SystemSettings = () => {
 
                   {/* AWS Credentials */}
                   <div className="space-y-5">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="text-left">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
                         AWS Access Key ID <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
