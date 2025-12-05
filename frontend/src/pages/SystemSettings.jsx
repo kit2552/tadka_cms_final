@@ -52,11 +52,6 @@ const SystemSettings = () => {
         setOriginalKeys(prev => ({ ...prev, secretKey: data.aws_secret_access_key }));
       }
       
-      // Load saved connection status
-      if (data.last_test_status) {
-        setConnectionStatus(data.last_test_status);
-      }
-      
       setAwsConfig(data);
     } catch (error) {
       console.error('Failed to load AWS config:', error);
