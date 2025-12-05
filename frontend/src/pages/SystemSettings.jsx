@@ -94,6 +94,7 @@ const SystemSettings = () => {
 
   const testAWSConnection = async () => {
     setLoading(true);
+    setConnectionStatus('testing');
     setMessage({ type: '', text: '' });
 
     try {
@@ -104,11 +105,14 @@ const SystemSettings = () => {
       const data = await response.json();
 
       if (data.success) {
+        setConnectionStatus('connected');
         setMessage({ type: 'success', text: `✅ ${data.message}` });
       } else {
+        setConnectionStatus('disconnected');
         setMessage({ type: 'error', text: `❌ ${data.message}` });
       }
     } catch (error) {
+      setConnectionStatus('disconnected');
       setMessage({ type: 'error', text: 'Connection test failed' });
     } finally {
       setLoading(false);
