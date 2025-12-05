@@ -1012,7 +1012,10 @@ async def get_related_articles_for_page(
 
 # File upload helper functions
 async def save_uploaded_file(upload_file: UploadFile, subfolder: str) -> str:
-    """Save uploaded file and return the file path"""
+    """
+    Save uploaded file using S3 (if enabled) or local storage (fallback)
+    Returns the URL or path to the uploaded file
+    """
     if not upload_file.filename:
         raise HTTPException(status_code=400, detail="No file selected")
     
@@ -1020,18 +1023,35 @@ async def save_uploaded_file(upload_file: UploadFile, subfolder: str) -> str:
     file_extension = os.path.splitext(upload_file.filename)[1]
     unique_filename = f"{uuid.uuid4()}{file_extension}"
     
-    # Create subfolder path
+    # Read file content
+    content = await upload_file.read()
+    
+    # Try S3 upload if enabled
+    if s3_service.is_enabled():
+        # Add subfolder to filename for S3 organization
+        s3_filename = f"{subfolder}/{unique_filename}"
+        s3_url = s3_service.upload_file(
+            file_content=content,
+            filename=s3_filename,
+            content_type=upload_file.content_type
+        )
+        
+        if s3_url:
+            logger.info(f"File uploaded to S3: {s3_url}")
+            return s3_url
+        else:
+            logger.warning("S3 upload failed, falling back to local storage")
+    
+    # Fallback to local storage
     subfolder_path = UPLOAD_DIR / subfolder
     subfolder_path.mkdir(exist_ok=True)
     
-    # Save file
     file_path = subfolder_path / unique_filename
     async with aiofiles.open(file_path, 'wb') as f:
-        content = await upload_file.read()
         await f.write(content)
     
     # Return relative path for storage in database
-    return f"uploads/{subfolder}/{unique_filename}"
+    return f"/uploads/{subfolder}/{unique_filename}"
 
 # Theater Release endpoints
 @api_router.get("/cms/theater-releases", response_model=List[schemas.TheaterReleaseResponse])
