@@ -109,21 +109,21 @@ async def get_articles_by_category(category_slug: str, skip: int = 0, limit: int
     result = []
     for article in articles:
         result.append({
-            "id": article.id,
-            "title": article.title,
-            "short_title": article.short_title,
-            "summary": article.summary,
-            "image_url": article.image,
-            "author": article.author,
+            "id": article.get("id"),
+            "title": article.get("title"),
+            "short_title": article.get("short_title"),
+            "summary": article.get("summary"),
+            "image_url": article.get("image"),
+            "author": article.get("author"),
             "language": article.get("article_language", article.get("language", "en")),
-            "category": article.category,
-            "content_type": article.content_type,  # Add content_type field
-            "artists": article.artists,  # Add artists field
-            "is_published": article.is_published,
-            "is_scheduled": article.is_scheduled,
-            "scheduled_publish_at": article.scheduled_publish_at,
-            "published_at": article.published_at,
-            "view_count": article.view_count
+            "category": article.get("category"),
+            "content_type": article.get("content_type"),
+            "artists": article.get("artists"),
+            "is_published": article.get("is_published"),
+            "is_scheduled": article.get("is_scheduled"),
+            "scheduled_publish_at": article.get("scheduled_publish_at"),
+            "published_at": article.get("published_at"),
+            "view_count": article.get("view_count")
         })
     return result
 
