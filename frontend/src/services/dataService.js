@@ -112,25 +112,11 @@ export const dataService = {
       const stateCodesParam = userStateCodes.length > 0 ? userStateCodes.join(',') : '';
       const apiUrl = `${API_BASE_URL}/articles/sections/politics?limit=20${stateCodesParam ? `&states=${stateCodesParam}` : ''}`;
       
-      console.log('🏛️ Politics API Call:', {
-        userStates,
-        userStateCodes,
-        stateCodesParam,
-        apiUrl
-      });
-      
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error('Failed to fetch politics data');
       }
       const data = await response.json();
-      
-      console.log('🏛️ Politics API Response:', {
-        statePoliticsCount: data.state_politics?.length || 0,
-        nationalPoliticsCount: data.national_politics?.length || 0,
-        statePoliticsIds: data.state_politics?.map(a => a.id) || [],
-        firstArticle: data.state_politics?.[0]
-      });
       
       return {
         state_politics: data.state_politics || [],
