@@ -477,28 +477,96 @@ const SystemSettings = () => {
                     </div>
                   </div>
 
-                {/* Buttons */}
-                <div className="flex gap-4">
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-                  >
-                    {loading ? 'Saving...' : 'Save Configuration'}
-                  </button>
-
-                  {awsConfig.is_enabled && (
+                  {/* Buttons */}
+                  <div className="flex gap-3 pt-4">
                     <button
-                      type="button"
-                      onClick={testAWSConnection}
+                      type="submit"
                       disabled={loading}
-                      className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
+                      className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-medium text-sm transition-colors"
                     >
-                      Test Connection
+                      {loading ? 'Saving...' : 'Save Configuration'}
                     </button>
-                  )}
-                </div>
-              </form>
+
+                    {awsConfig.is_enabled && (
+                      <button
+                        type="button"
+                        onClick={testAWSConnection}
+                        disabled={loading}
+                        className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:bg-gray-100 font-medium text-sm transition-colors"
+                      >
+                        Test Connection
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* Google Tab */}
+            {activeTab === 'google' && (
+              <div className="text-center py-16">
+                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Google Integration</h3>
+                <p className="text-gray-600">Configure Google authentication and services</p>
+              </div>
+            )}
+
+            {/* API Keys Tab */}
+            {activeTab === 'apikeys' && (
+              <div className="text-center py-16">
+                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                </svg>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">API Keys Management</h3>
+                <p className="text-gray-600">Manage third-party API keys and integrations</p>
+              </div>
+            )}
+
+            {/* Placeholders Tab */}
+            {activeTab === 'placeholders' && (
+              <div className="text-center py-16">
+                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                </svg>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Placeholders Configuration</h3>
+                <p className="text-gray-600">Configure placeholder images and defaults</p>
+              </div>
+            )}
+
+            {/* Appearance Tab */}
+            {activeTab === 'appearance' && (
+              <div className="text-center py-16">
+                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                </svg>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Appearance Settings</h3>
+                <p className="text-gray-600">Customize the look and feel of your CMS</p>
+              </div>
+            )}
+
+            {/* Other Settings Tab */}
+            {activeTab === 'other' && (
+              <div className="text-center py-16">
+                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Other Settings</h3>
+                <p className="text-gray-600">Additional CMS configuration options</p>
+              </div>
+            )}
+
+            {/* Notifications Tab */}
+            {activeTab === 'notifications' && (
+              <div className="text-center py-16">
+                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Notifications</h3>
+                <p className="text-gray-600">Configure email and push notifications</p>
+              </div>
             )}
 
             {activeTab === 'users' && (
