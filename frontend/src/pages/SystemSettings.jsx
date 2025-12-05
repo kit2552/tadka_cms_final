@@ -501,7 +501,7 @@ const SystemSettings = () => {
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex gap-3 pt-4">
+                  <div className="flex gap-3 pt-6 border-t border-gray-200">
                     <button
                       type="submit"
                       disabled={loading}
@@ -509,8 +509,67 @@ const SystemSettings = () => {
                     >
                       {loading ? 'Saving...' : 'Save Configuration'}
                     </button>
+                    {awsConfig.is_enabled && (
+                      <button
+                        type="button"
+                        onClick={testAWSConnection}
+                        disabled={loading}
+                        className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:bg-gray-100 font-medium text-sm transition-colors"
+                      >
+                        {loading && connectionStatus === 'testing' ? 'Testing...' : 'Test Connection'}
+                      </button>
+                    )}
                   </div>
                 </form>
+              </div>
+            )}
+
+            {/* Test Connection Result Modal */}
+            {connectionStatus === 'connected' && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+                  <div className="text-center">
+                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                      <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Connection Successful</h3>
+                    <p className="text-sm text-gray-600 mb-6">
+                      Successfully connected to AWS S3. Your bucket is accessible and ready to use.
+                    </p>
+                    <button
+                      onClick={() => setConnectionStatus('unknown')}
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {connectionStatus === 'disconnected' && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+                  <div className="text-center">
+                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                      <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Connection Failed</h3>
+                    <p className="text-sm text-gray-600 mb-6">
+                      {message.text.replace('❌ ', '') || 'Unable to connect to AWS S3. Please check your credentials and try again.'}
+                    </p>
+                    <button
+                      onClick={() => setConnectionStatus('unknown')}
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
