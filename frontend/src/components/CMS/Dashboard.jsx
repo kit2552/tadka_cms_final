@@ -2526,6 +2526,11 @@ const Dashboard = () => {
                             </Link>
                             <Link
                               to={`/cms/preview/${article.id}`}
+                              onClick={() => {
+                                // Save scroll position before navigating
+                                sessionStorage.setItem('cms_scroll_position', window.scrollY.toString());
+                                sessionStorage.setItem('cms_current_page', currentPage.toString());
+                              }}
                               className="text-green-600 hover:text-green-800 text-xs px-2 py-1 rounded border border-green-200 hover:bg-green-50"
                             >
                               Preview
