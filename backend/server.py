@@ -611,7 +611,20 @@ def _format_article_response(articles, db: Session = None):
             "published_at": article.published_at,
             "view_count": article.view_count,
             "created_at": article.created_at if hasattr(article, 'created_at') else None,
-            "updated_at": article.updated_at if hasattr(article, 'updated_at') else None
+            "updated_at": article.updated_at if hasattr(article, 'updated_at') else None,
+            # Movie Review fields
+            "movie_rating": getattr(article, 'movie_rating', None),
+            "review_quick_verdict": getattr(article, 'review_quick_verdict', None),
+            "review_plot_summary": getattr(article, 'review_plot_summary', None),
+            "review_performances": getattr(article, 'review_performances', None),
+            "review_what_works": getattr(article, 'review_what_works', None),
+            "review_what_doesnt_work": getattr(article, 'review_what_doesnt_work', None),
+            "review_technical_aspects": getattr(article, 'review_technical_aspects', None),
+            "review_final_verdict": getattr(article, 'review_final_verdict', None),
+            "review_cast": getattr(article, 'review_cast', None),
+            "review_director": getattr(article, 'review_director', None),
+            "review_genre": getattr(article, 'review_genre', None),
+            "review_runtime": getattr(article, 'review_runtime', None)
         })
     return result
 
