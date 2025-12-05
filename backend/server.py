@@ -16,16 +16,19 @@ import schemas, crud
 from models.mongodb_collections import create_indexes
 from routes.auth_routes import router as auth_router
 from routes.system_settings_routes import router as system_settings_router
-# TODO: Update these routes for MongoDB
-# from routes.topics_routes import router as topics_router
-# from routes.gallery_routes import router as gallery_router
+from routes.topics_routes_mongodb import router as topics_router
+from routes.gallery_routes_mongodb import router as gallery_router
 from auth import create_default_admin
 # TODO: Update scheduler for MongoDB
 # from scheduler_service import article_scheduler
 
 # Create MongoDB indexes on startup
-# TODO: Fix text index language issue
-# create_indexes(db)
+try:
+    create_indexes(db)
+    print("✅ MongoDB indexes created successfully")
+except Exception as e:
+    print(f"⚠️ Warning: Could not create some MongoDB indexes: {e}")
+    # Continue anyway - app can work without text search index
 
 ROOT_DIR = Path(__file__).parent
 UPLOAD_DIR = ROOT_DIR / "uploads"
