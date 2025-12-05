@@ -1514,6 +1514,7 @@ const CreateArticle = () => {
                       Use the toolbar above to format your content with headings, bold, italic, lists, links, and more.
                     </p>
                   </div>
+                  )}
                 </div>
               )}
             </div>
