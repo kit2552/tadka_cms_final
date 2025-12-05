@@ -666,6 +666,30 @@ async def get_cms_articles(
         "limit": limit
     }
 
+@api_router.post("/cms/upload-image")
+async def upload_image(file: UploadFile = File(...)):
+    """
+    Upload image for CMS use (articles, galleries, etc.)
+    Uses S3 if enabled, otherwise local storage
+    Returns the URL to the uploaded image
+    """
+    try:
+        # Validate file type
+        if not file.content_type or not file.content_type.startswith('image/'):
+            raise HTTPException(status_code=400, detail="File must be an image")
+        
+        # Upload file
+        file_url = await save_uploaded_file(file, "articles")
+        
+        return {
+            "success": True,
+            "url": file_url,
+            "storage": "s3" if s3_service.is_enabled() else "local"
+        }
+    except Exception as e:
+        logger.error(f"Image upload failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
 @api_router.post("/cms/articles", response_model=schemas.ArticleResponse)
 async def create_cms_article(article: schemas.ArticleCreate, db = Depends(get_db)):
     """Create new article via CMS"""
