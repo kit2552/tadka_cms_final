@@ -328,10 +328,6 @@ const SystemSettings = () => {
           <div className="p-8">
             {activeTab === 'aws' && (
               <div className="space-y-6">
-                {/* Section Header */}
-                <div className="text-left">
-                  <h2 className="text-lg font-semibold text-gray-900 text-left">AWS Storage Settings</h2>
-                </div>
 
                 {/* Connection Status Banner */}
                 {awsConfig.is_enabled && (
