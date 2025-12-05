@@ -302,28 +302,15 @@ def create_article_cms(db, article, slug: str, seo_title: str, seo_description: 
     return create_article(db, article_dict)
 
 def update_article_cms(db, article_id: int, article: dict):
-    """Update article from CMS - only updates fields that are actually provided"""
-    update_data = {
-        "$set": {
-            "updated_at": datetime.utcnow()
-        }
-    }
-    
-    # Only add fields to update if they exist in the article dict
-    if "title" in article:
-        update_data["$set"]["title"] = article.get("title")
-    if "short_title" in article:
-        update_data["$set"]["short_title"] = article.get("short_title")
-    if "content" in article:
-        update_data["$set"]["content"] = article.get("content")
-    if "summary" in article:
-        update_data["$set"]["summary"] = article.get("summary")
-    if "author" in article:
-        update_data["$set"]["author"] = article.get("author")
-    if "article_language" in article:
-        update_data["$set"]["article_language"] = article.get("article_language") or "en"
-    elif "language" in article:  # Support both field names
-        update_data["$set"]["article_language"] = article.get("language") or "en"
+    """Update article from CMS"""
+    # Build update dict with all possible fields
+    update_fields = {
+        "title": article.get("title"),
+        "short_title": article.get("short_title"),
+        "content": article.get("content"),
+        "summary": article.get("summary"),
+        "author": article.get("author"),
+        "article_language": article.get("article_language") or article.get("language") or "en",
             "states": article.get("states"),
             "category": article.get("category"),
             "content_type": article.get("content_type"),
