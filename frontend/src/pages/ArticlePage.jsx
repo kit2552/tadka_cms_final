@@ -240,9 +240,17 @@ const ArticlePage = () => {
             {/* Article Section Header - Sticky with published date and bottom border */}
             <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
-                <h1 className="text-base font-bold text-black text-left leading-tight mb-1">
-                  {article.title}
-                </h1>
+                <div className="flex items-center gap-3 mb-1">
+                  <h1 className="text-base font-bold text-black text-left leading-tight">
+                    {article.title}
+                  </h1>
+                  {/* Preview Mode Badge */}
+                  {window.location.search.includes('preview=true') && (
+                    <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-300">
+                      Preview Mode
+                    </span>
+                  )}
+                </div>
                 <p className="text-xs text-gray-900 opacity-75 flex items-center">
                   <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
