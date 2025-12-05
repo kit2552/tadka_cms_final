@@ -182,64 +182,79 @@ const AdminControls = () => {
               <div className="space-y-6">
                 <div className="text-left">
                   <h2 className="text-lg font-semibold text-gray-900 text-left mb-4">Post Scheduler Configuration</h2>
-          
-          <div className="space-y-4">
-            <div className="flex items-center space-x-4">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={schedulerSettings.is_enabled}
-                  onChange={(e) => handleSettingsChange('is_enabled', e.target.checked)}
-                  className="form-checkbox h-4 w-4 text-blue-600"
-                />
-                <span className="text-sm font-medium text-gray-700">Enable Auto-Publishing</span>
-              </label>
-            </div>
+                  
+                  <div className="space-y-6">
+                    {/* Enable Toggle */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="text-left">
+                          <h3 className="font-semibold text-gray-900 text-base">Enable Auto-Publishing</h3>
+                          <p className="text-sm text-gray-600">Automatically publish scheduled posts at the specified time</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                          <input
+                            type="checkbox"
+                            checked={schedulerSettings.is_enabled}
+                            onChange={(e) => handleSettingsChange('is_enabled', e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                        </label>
+                      </div>
+                    </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                Check Frequency
-              </label>
-              <select
-                value={schedulerSettings.check_frequency_minutes}
-                onChange={(e) => handleSettingsChange('check_frequency_minutes', parseInt(e.target.value))}
-                disabled={!schedulerSettings.is_enabled}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:opacity-60"
-              >
-                {frequencyOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    Every {option.label}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-gray-600 mt-1">
-                How often the system should check for scheduled posts to publish
-              </p>
-            </div>
+                    {/* Check Frequency */}
+                    <div className="text-left">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                        Check Frequency
+                      </label>
+                      <select
+                        value={schedulerSettings.check_frequency_minutes}
+                        onChange={(e) => handleSettingsChange('check_frequency_minutes', parseInt(e.target.value))}
+                        disabled={!schedulerSettings.is_enabled}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      >
+                        {frequencyOptions.map(option => (
+                          <option key={option.value} value={option.value}>
+                            Every {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-gray-600 mt-2">
+                        How often the system should check for scheduled posts to publish
+                      </p>
+                    </div>
 
-            <div className="flex space-x-4 pt-4">
-              <button
-                onClick={saveSchedulerSettings}
-                disabled={saving}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-md text-sm font-medium"
-              >
-                {saving ? 'Saving...' : 'Save Settings'}
-              </button>
+                    {/* Buttons */}
+                    <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
+                      <button
+                        onClick={saveSchedulerSettings}
+                        disabled={saving}
+                        className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-medium text-sm transition-colors"
+                      >
+                        {saving ? 'Saving...' : 'Save Settings'}
+                      </button>
 
-              <button
-                onClick={runSchedulerNow}
-                disabled={loading}
-                className="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white px-4 py-2 rounded-md text-sm font-medium"
-              >
-                {loading ? 'Running...' : 'Run Scheduler Now'}
-              </button>
-            </div>
-          </div>
-        </div>
+                      <button
+                        onClick={runSchedulerNow}
+                        disabled={loading || !schedulerSettings.is_enabled}
+                        className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 font-medium text-sm transition-colors"
+                      >
+                        {loading ? 'Running...' : 'Run Scheduler Now'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
-        {/* Scheduled Articles */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4 text-left">Scheduled Articles</h2>
+            {/* Scheduled Articles Tab */}
+            {activeTab === 'articles' && (
+              <div className="space-y-4">
+                <div className="text-left mb-4">
+                  <h2 className="text-lg font-semibold text-gray-900 text-left">Scheduled Articles List</h2>
+                  <p className="text-sm text-gray-600 mt-1">View all articles scheduled for automatic publishing</p>
+                </div>
           
           {scheduledArticles.length === 0 ? (
             <p className="text-gray-600 text-center py-8">No articles are currently scheduled for publishing.</p>
