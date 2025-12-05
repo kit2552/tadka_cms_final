@@ -149,7 +149,7 @@ def get_articles_count_for_cms(
     status: str = None
 ):
     """Count articles for CMS with filters"""
-    query = {"language": language}
+    query = {"article_language": language}
     
     if category:
         query["category"] = category
@@ -180,7 +180,7 @@ def get_articles_for_cms(
     status: str = None
 ):
     """Get paginated articles for CMS with filters"""
-    query = {"language": language}
+    query = {"article_language": language}
     
     if category:
         query["category"] = category
