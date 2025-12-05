@@ -16,13 +16,19 @@ const ArticlePreview = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    fetchCMSConfig();
     if (articleId === 'new') {
-      // Load from localStorage for new article preview
-      loadPreviewFromLocalStorage();
+      // Load from localStorage and redirect to preview
+      const previewData = localStorage.getItem('previewArticle');
+      if (previewData) {
+        // For new articles, just show the preview in this component
+        loadPreviewFromLocalStorage();
+      } else {
+        setError('No preview data found');
+        setLoading(false);
+      }
     } else if (articleId) {
-      fetchArticle(articleId);
-      fetchRelatedArticles();
+      // For existing articles, fetch and redirect to appropriate page
+      fetchArticleAndRedirect(articleId);
     }
   }, [articleId]);
 
