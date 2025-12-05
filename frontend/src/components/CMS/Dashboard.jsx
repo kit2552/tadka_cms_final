@@ -506,14 +506,15 @@ const Dashboard = () => {
     setCurrentPage(1);
   }, [selectedLanguage, selectedCategory, selectedContentType, selectedDateFilter, selectedStatus, searchQuery, itemsPerPage]);
 
-  // Handle pagination without refetching all data
+  // Handle pagination without refetching all data (only for client-side pagination with filters)
   useEffect(() => {
-    if (allArticles.length > 0) {
+    // Only do client-side pagination when search or date filters are active
+    if ((searchQuery.trim() || selectedDateFilter) && allArticles.length > 0) {
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
       const currentPageArticles = allArticles.slice(startIndex, endIndex);
       
-      console.log('Updating page view:', {
+      console.log('Client-side pagination - Updating page view:', {
         currentPage,
         startIndex,
         endIndex,
@@ -523,7 +524,7 @@ const Dashboard = () => {
       
       setArticles(currentPageArticles);
     }
-  }, [currentPage, itemsPerPage, allArticles]);
+  }, [currentPage, itemsPerPage, allArticles, searchQuery, selectedDateFilter]);
 
   // Handle releases pagination
   useEffect(() => {
