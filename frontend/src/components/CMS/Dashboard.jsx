@@ -2691,7 +2691,10 @@ const Dashboard = () => {
                       </div>
                       
                       <button
-                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                        onClick={() => {
+                          setCurrentPage(prev => Math.min(totalPages, prev + 1));
+                          window.scrollTo(0, 0);
+                        }}
                         disabled={currentPage === totalPages}
                         className={`px-3 py-1 text-sm rounded-md border ${
                           currentPage === totalPages
