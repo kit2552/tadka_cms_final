@@ -15,8 +15,9 @@ from database import get_db, db
 import schemas, crud
 from models.mongodb_collections import create_indexes
 from routes.auth_routes import router as auth_router
-from routes.topics_routes import router as topics_router
-from routes.gallery_routes import router as gallery_router
+# TODO: Update these routes for MongoDB
+# from routes.topics_routes import router as topics_router
+# from routes.gallery_routes import router as gallery_router
 from auth import create_default_admin
 from scheduler_service import article_scheduler
 
