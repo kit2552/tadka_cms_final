@@ -681,17 +681,30 @@ async def get_cms_config(db: Session = Depends(get_db)):
         "categories": [{"id": cat.id, "name": cat.name, "slug": cat.slug, "description": cat.description} for cat in categories]
     }
 
-@api_router.get("/cms/articles", response_model=List[schemas.ArticleListResponse])
+@api_router.get("/cms/articles")
 async def get_cms_articles(
     language: str = "en",
     skip: int = 0, 
     limit: int = 20,
     category: str = None,
     state: str = None,
+    content_type: str = None,
+    status: str = None,
     db: Session = Depends(get_db)
 ):
-    """Get articles for CMS dashboard with filtering"""
-    articles = crud.get_articles_for_cms(db, language=language, skip=skip, limit=limit, category=category, state=state)
+    """Get articles for CMS dashboard with filtering and pagination"""
+    # Get total count first (without pagination)
+    total_count = crud.get_articles_count_for_cms(
+        db, language=language, category=category, state=state, 
+        content_type=content_type, status=status
+    )
+    
+    # Get paginated articles
+    articles = crud.get_articles_for_cms(
+        db, language=language, skip=skip, limit=limit, category=category, 
+        state=state, content_type=content_type, status=status
+    )
+    
     result = []
     for article in articles:
         result.append({
@@ -707,14 +720,20 @@ async def get_cms_articles(
             "content_type": article.content_type,
             "artists": article.artists,
             "states": article.states,
-            "gallery": None,  # Can be enhanced later if needed
+            "gallery": None,
             "is_published": article.is_published,
             "is_scheduled": article.is_scheduled if article.is_scheduled is not None else False,
             "scheduled_publish_at": article.scheduled_publish_at,
             "published_at": article.published_at,
             "view_count": article.view_count if article.view_count is not None else 0
         })
-    return result
+    
+    return {
+        "articles": result,
+        "total": total_count,
+        "skip": skip,
+        "limit": limit
+    }
 
 @api_router.post("/cms/articles", response_model=schemas.ArticleResponse)
 async def create_cms_article(article: schemas.ArticleCreate, db: Session = Depends(get_db)):
