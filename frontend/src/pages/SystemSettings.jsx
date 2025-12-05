@@ -374,101 +374,108 @@ const SystemSettings = () => {
                     </div>
                   </div>
 
-                {/* AWS Credentials */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      AWS Access Key ID *
-                    </label>
-                    <input
-                      type="text"
-                      name="aws_access_key_id"
-                      value={awsConfig.aws_access_key_id}
-                      onChange={handleAWSConfigChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="AKIAIOSFODNN7EXAMPLE"
-                      required={awsConfig.is_enabled}
-                    />
-                  </div>
+                  {/* AWS Credentials */}
+                  <div className="space-y-5">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        AWS Access Key ID <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="aws_access_key_id"
+                          value={awsConfig.aws_access_key_id}
+                          onChange={handleAWSConfigChange}
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          placeholder="AKIA5XTURFZYPI6B2TZW"
+                          required={awsConfig.is_enabled}
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      AWS Secret Access Key *
-                    </label>
-                    <input
-                      type="password"
-                      name="aws_secret_access_key"
-                      value={awsConfig.aws_secret_access_key}
-                      onChange={handleAWSConfigChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-                      required={awsConfig.is_enabled}
-                    />
-                  </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        AWS Secret Access Key <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="password"
+                          name="aws_secret_access_key"
+                          value={awsConfig.aws_secret_access_key}
+                          onChange={handleAWSConfigChange}
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          placeholder="••••••••••••••••••••••••••••••••••••••••"
+                          required={awsConfig.is_enabled}
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      AWS Region *
-                    </label>
-                    <select
-                      name="aws_region"
-                      value={awsConfig.aws_region}
-                      onChange={handleAWSConfigChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                    >
-                      <option value="us-east-1">US East (N. Virginia)</option>
-                      <option value="us-west-1">US West (N. California)</option>
-                      <option value="us-west-2">US West (Oregon)</option>
-                      <option value="ap-south-1">Asia Pacific (Mumbai)</option>
-                      <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
-                      <option value="eu-west-1">Europe (Ireland)</option>
-                    </select>
-                  </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        AWS Region <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        name="aws_region"
+                        value={awsConfig.aws_region}
+                        onChange={handleAWSConfigChange}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-white"
+                      >
+                        <option value="us-east-1">US East (Ohio)</option>
+                        <option value="us-east-2">US East (N. Virginia)</option>
+                        <option value="us-west-1">US West (N. California)</option>
+                        <option value="us-west-2">US West (Oregon)</option>
+                        <option value="ap-south-1">Asia Pacific (Mumbai)</option>
+                        <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
+                        <option value="eu-west-1">Europe (Ireland)</option>
+                      </select>
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      S3 Bucket Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="s3_bucket_name"
-                      value={awsConfig.s3_bucket_name}
-                      onChange={handleAWSConfigChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="my-bucket-name"
-                      required={awsConfig.is_enabled}
-                    />
-                  </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        S3 Bucket Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="s3_bucket_name"
+                        value={awsConfig.s3_bucket_name}
+                        onChange={handleAWSConfigChange}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        placeholder="prime-pixel-cms-uploads"
+                        required={awsConfig.is_enabled}
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Root Folder Path
-                    </label>
-                    <input
-                      type="text"
-                      name="root_folder_path"
-                      value={awsConfig.root_folder_path}
-                      onChange={handleAWSConfigChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="images/uploads (optional)"
-                    />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Root Folder Path
+                      </label>
+                      <input
+                        type="text"
+                        name="root_folder_path"
+                        value={awsConfig.root_folder_path}
+                        onChange={handleAWSConfigChange}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        placeholder="/"
+                      />
+                    </div>
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Maximum File Size (MB)
-                    </label>
-                    <input
-                      type="number"
-                      name="max_file_size_mb"
-                      value={awsConfig.max_file_size_mb}
-                      onChange={handleAWSConfigChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      min="1"
-                      max="100"
-                    />
-                  </div>
-                </div>
 
                 {/* Buttons */}
                 <div className="flex gap-4">
