@@ -662,11 +662,23 @@ const CreateArticle = () => {
       const slug = formData.slug || formData.title?.toLowerCase().replace(/\s+/g, '-');
       navigate(`/article/${id}/${slug}?preview=true`);
     } else {
-      // For new articles, store in localStorage and show preview
+      // For new articles, store ALL form data in localStorage for restoration
+      const draftData = {
+        formData: formData,
+        selectedStates: selectedStates,
+        selectedArtist: selectedArtist,
+        selectedGallery: selectedGallery
+      };
+      
+      // Save draft for restoration when user returns
+      localStorage.setItem('articleDraft', JSON.stringify(draftData));
+      
+      // Store preview data for preview page
       localStorage.setItem('previewArticle', JSON.stringify({
         ...formData,
         states: selectedStates // Use states array directly for preview compatibility
       }));
+      
       navigate('/cms/preview/new');
     }
   };
