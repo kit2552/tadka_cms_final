@@ -303,17 +303,42 @@ const CreateArticle = () => {
     setSelectedStates(newStates.length === 0 ? ['all'] : newStates);
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFormData(prev => ({
-          ...prev,
-          image: e.target.result
-        }));
-      };
-      reader.readAsDataURL(file);
+      try {
+        setLoading(true);
+        
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // Upload to backend
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/upload-image`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Update form with the returned URL
+          setFormData(prev => ({
+            ...prev,
+            image: data.url
+          }));
+          
+          showNotification('success', 'Image Uploaded', 
+            `Image uploaded successfully using ${data.storage === 's3' ? 'AWS S3' : 'local storage'}`);
+        } else {
+          throw new Error('Upload failed');
+        }
+      } catch (error) {
+        console.error('Image upload error:', error);
+        showNotification('error', 'Upload Failed', 'Failed to upload image. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
