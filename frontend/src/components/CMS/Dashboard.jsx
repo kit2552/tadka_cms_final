@@ -2365,21 +2365,6 @@ const Dashboard = () => {
                           <option value="video">Video</option>
                         </select>
                       </div>
-                      
-                      <div>
-                        <select
-                          value={selectedStatus}
-                          onChange={(e) => setSelectedStatus(e.target.value)}
-                          className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                          <option value="">All Status</option>
-                          <option value="approved">Approved</option>
-                          <option value="draft">Draft</option>
-                          <option value="in_review">In Review</option>
-                          <option value="published">Published</option>
-                          <option value="scheduled">Scheduled</option>
-                        </select>
-                      </div>
                     </div>
                     
                     <div className="flex gap-2">
