@@ -62,8 +62,8 @@ const CreateArticle = () => {
     review_runtime: ''
   });
 
-  const [selectedState, setSelectedState] = useState('all'); // Temporary state for dropdown selection
-  const [selectedStates, setSelectedStates] = useState(['all']); // Array of selected states
+  const [selectedState, setSelectedState] = useState(''); // Temporary state for dropdown selection
+  const [selectedStates, setSelectedStates] = useState([]); // Array of selected states
   const [stateSearchQuery, setStateSearchQuery] = useState('');
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [categorySearchQuery, setCategorySearchQuery] = useState('');
