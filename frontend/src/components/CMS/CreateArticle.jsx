@@ -259,10 +259,7 @@ const CreateArticle = () => {
       setLanguages(data.languages);
       setStates(data.states); // Now uses updated backend states
       setCategories(data.categories);
-      // Only set default category for new articles, not when editing
-      if (data.categories.length > 0 && !isEditMode) {
-        setFormData(prev => ({ ...prev, category: data.categories[0].slug }));
-      }
+      // No default category - user must select one
     } catch (error) {
       console.error('Error fetching CMS config:', error);
     }
