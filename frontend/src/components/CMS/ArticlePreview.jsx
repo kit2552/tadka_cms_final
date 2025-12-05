@@ -32,6 +32,35 @@ const ArticlePreview = () => {
     }
   }, [articleId]);
 
+  // Fetch article and redirect to appropriate template
+  const fetchArticleAndRedirect = async (id) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/articles/${id}`);
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Redirect to appropriate template based on content type
+        const slug = data.slug || data.title?.toLowerCase().replace(/\s+/g, '-');
+        const contentType = data.content_type;
+        
+        if (contentType === 'photo') {
+          navigate(`/gallery-post/${id}?preview=true`, { replace: true });
+        } else if (contentType === 'video' && data.youtube_url) {
+          navigate(`/video/${id}?preview=true`, { replace: true });
+        } else {
+          navigate(`/article/${id}/${slug}?preview=true`, { replace: true });
+        }
+      } else {
+        throw new Error('Failed to fetch article');
+      }
+    } catch (error) {
+      console.error('Error fetching article:', error);
+      setError('Failed to load article for preview');
+      setLoading(false);
+    }
+  };
+
   // Load preview data from localStorage
   const loadPreviewFromLocalStorage = () => {
     try {
