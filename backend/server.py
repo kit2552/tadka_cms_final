@@ -19,8 +19,7 @@ from routes.system_settings_routes import router as system_settings_router
 from routes.topics_routes_mongodb import router as topics_router
 from routes.gallery_routes_mongodb import router as gallery_router
 from auth import create_default_admin
-# TODO: Update scheduler for MongoDB
-# from scheduler_service import article_scheduler
+from scheduler_service import article_scheduler
 
 # Create MongoDB indexes on startup
 try:
