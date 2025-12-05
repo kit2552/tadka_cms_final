@@ -483,7 +483,7 @@ const CreateArticle = () => {
       const submitData = {
         ...formData,
         summary: textContent.substring(0, 200) + '...', // Generate summary from content
-        states: JSON.stringify([selectedState]), // Convert single state to array for backend compatibility
+        states: JSON.stringify(selectedStates), // Convert states array to JSON string
         artists: JSON.stringify(selectedArtist ? [selectedArtist] : []), // Include selected artist as array
         image_gallery: JSON.stringify(formData.image_gallery), // Include image gallery as JSON string
         gallery_id: selectedGallery ? selectedGallery.id : null, // Include selected gallery ID
