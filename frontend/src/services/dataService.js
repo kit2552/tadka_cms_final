@@ -125,6 +125,13 @@ export const dataService = {
       }
       const data = await response.json();
       
+      console.log('🏛️ Politics API Response:', {
+        statePoliticsCount: data.state_politics?.length || 0,
+        nationalPoliticsCount: data.national_politics?.length || 0,
+        statePoliticsIds: data.state_politics?.map(a => a.id) || [],
+        firstArticle: data.state_politics?.[0]
+      });
+      
       return {
         state_politics: data.state_politics || [],
         national_politics: data.national_politics || []
