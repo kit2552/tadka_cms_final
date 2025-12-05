@@ -25,8 +25,15 @@ const Politics = ({ politicsData = {}, onArticleClick, isLoading = false }) => {
   const rawStateArticles = politicsData.state_politics || [];
   const rawNationalArticles = politicsData.national_politics || [];
   
+  // Debug logging
+  console.log('Politics Component - Raw State Articles:', rawStateArticles.length, rawStateArticles.map(a => a.id));
+  console.log('Politics Component - Raw National Articles:', rawNationalArticles.length, rawNationalArticles.map(a => a.id));
+  
   const stateArticles = filterCurrentArticles(rawStateArticles);
   const nationalArticles = filterCurrentArticles(rawNationalArticles);
+  
+  console.log('Politics Component - Filtered State Articles:', stateArticles.length, stateArticles.map(a => a.id));
+  console.log('Politics Component - Filtered National Articles:', nationalArticles.length, nationalArticles.map(a => a.id));
 
   // Get articles based on active tab
   const getTabArticles = () => {
