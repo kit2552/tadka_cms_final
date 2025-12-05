@@ -252,31 +252,8 @@ const ArticlePreview = () => {
 
   return (
     <div className={`min-h-screen ${themeClasses.pageBackground}`}>
-      {/* Header with Preview Mode Badge and Back Button */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-5xl-plus mx-auto px-8 py-3 flex items-center justify-between">
-          {/* Preview Mode Badge */}
-          <div className="flex items-center gap-3">
-            <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full border border-blue-200">
-              Preview Mode
-            </span>
-          </div>
-          
-          {/* Back Button */}
-          <button
-            onClick={() => navigate('/cms/articles/new')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors border border-gray-300 px-3 py-1.5 rounded hover:bg-gray-50"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            <span className="text-sm font-medium">Back</span>
-          </button>
-        </div>
-      </div>
-
       {/* Main Container - Match ArticlePage layout */}
-      <div className="max-w-5xl-plus mx-auto px-8 pb-6">
+      <div className="max-w-5xl-plus mx-auto px-8 pb-6 pt-6">
         
         {/* Two Section Layout with Gap - 60%/40% split like ArticlePage */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
