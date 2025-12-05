@@ -2428,26 +2428,30 @@ const Dashboard = () => {
                             </h3>
                             <div className="flex flex-wrap gap-2 text-xs text-left">
                               {/* State Badge - Show first if states exist */}
-                              {article.states && (() => {
-                                try {
-                                  const stateCodes = typeof article.states === 'string' 
-                                    ? JSON.parse(article.states) 
-                                    : article.states;
-                                  if (stateCodes && stateCodes.length > 0) {
-                                    const stateNames = stateCodes.map(code => {
-                                      if (code === 'all' || code === 'national') return 'All States';
-                                      return getStateNameByCode(code) || code.toUpperCase();
-                                    });
-                                    return (
-                                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
-                                        📍 {stateNames.join(', ')}
-                                      </span>
-                                    );
+                              {article.states && article.states !== 'null' && article.states !== '[]' && (
+                                (() => {
+                                  try {
+                                    const stateCodes = typeof article.states === 'string' 
+                                      ? JSON.parse(article.states) 
+                                      : article.states;
+                                    if (stateCodes && Array.isArray(stateCodes) && stateCodes.length > 0) {
+                                      const stateNames = stateCodes.map(code => {
+                                        if (code === 'all' || code === 'national') return 'All States';
+                                        return getStateNameByCode(code) || code.toUpperCase();
+                                      });
+                                      return (
+                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                          📍 {stateNames.join(', ')}
+                                        </span>
+                                      );
+                                    }
+                                    return null;
+                                  } catch (e) {
+                                    console.error('Error parsing states:', e);
+                                    return null;
                                   }
-                                } catch (e) {
-                                  return null;
-                                }
-                              })()}
+                                })()
+                              )}
                               <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
                                 {categories.find(c => c.slug === article.category)?.name || article.category}
                               </span>
