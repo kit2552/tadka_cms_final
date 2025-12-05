@@ -900,14 +900,8 @@ async def get_article(request: Request, article_id: int, db = Depends(get_db)):
     if article is None:
         raise HTTPException(status_code=404, detail="Article not found")
     
-    print(f"Debug: Article {article_id} has gallery_id: {getattr(article, 'gallery_id', 'MISSING')}")
-    
-    # Use the same formatting function to include gallery information
-    formatted_articles = _format_article_response([article], db)
-    
-    print(f"Debug: Formatted response gallery: {formatted_articles[0].get('gallery') if formatted_articles else 'NO FORMATTED'}")
-    
-    return formatted_articles[0] if formatted_articles else article
+    # Article is already serialized by crud.get_article
+    return article
 
 @api_router.post("/articles", response_model=schemas.ArticleResponse)
 async def create_article(article: schemas.ArticleCreate, db = Depends(get_db)):
