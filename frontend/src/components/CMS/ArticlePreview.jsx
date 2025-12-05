@@ -4,7 +4,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const ArticlePreview = () => {
-  const { articleId } = useParams();
+  const { id: articleId } = useParams();
   const navigate = useNavigate();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
