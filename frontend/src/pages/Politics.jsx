@@ -368,9 +368,12 @@ const Politics = () => {
                 >
                   <div className="flex items-start space-x-3 text-left pr-3">
                     <img
-                      src={article.image_url || 'https://images.unsplash.com/photo-1586339949216-35c890863684?w=300&h=200&fit=crop'}
+                      src={getImageUrl(article.image) || 'https://images.unsplash.com/photo-1586339949216-35c890863684?w=300&h=200&fit=crop'}
                       alt={article.title}
                       className="flex-shrink-0 w-32 h-24 object-cover rounded group-hover:scale-105 transition-transform duration-200"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1586339949216-35c890863684?w=300&h=200&fit=crop';
+                      }}
                     />
                     <div className="flex-1 min-w-0 text-left">
                       <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
