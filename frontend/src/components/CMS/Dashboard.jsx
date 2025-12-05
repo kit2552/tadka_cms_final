@@ -663,29 +663,34 @@ const Dashboard = () => {
           }
         });
         
-        console.log(`Date filter applied: ${originalLength} -> ${allData.length} items`);
+        console.log(`Date filter applied: ${originalLength} -> ${filteredData.length} items`);
       }
       
-      // Store all articles for pagination
-      setAllArticles(allData);
-      setTotalCount(allData.length);
-      setTotalPages(Math.ceil(allData.length / itemsPerPage));
-      
-      // Calculate current page articles
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      const currentPageArticles = allData.slice(startIndex, endIndex);
+      // For search/date filters, we need client-side pagination
+      if (searchQuery.trim() || selectedDateFilter) {
+        // Client-side pagination for filtered data
+        setAllArticles(filteredData);
+        setTotalCount(filteredData.length);
+        setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+        
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentPageArticles = filteredData.slice(startIndex, endIndex);
+        setArticles(currentPageArticles);
+      } else {
+        // Server-side pagination - articles already paginated
+        setAllArticles(filteredData);
+        setArticles(filteredData);
+        setTotalCount(totalFromServer);
+        setTotalPages(Math.ceil(totalFromServer / itemsPerPage));
+      }
       
       console.log('Pagination:', {
-        total: allData.length,
+        total: totalFromServer,
         currentPage,
         itemsPerPage,
-        startIndex,
-        endIndex,
-        currentPageArticles: currentPageArticles.length
+        articlesShown: filteredData.length
       });
-      
-      setArticles(currentPageArticles);
       
     } catch (error) {
       console.error('Error fetching articles:', error);
