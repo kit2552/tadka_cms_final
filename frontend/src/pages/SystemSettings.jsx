@@ -7,6 +7,7 @@ const SystemSettings = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [showSecretKey, setShowSecretKey] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('unknown'); // unknown, testing, connected, disconnected
 
   // AWS Configuration State
   const [awsConfig, setAwsConfig] = useState({
