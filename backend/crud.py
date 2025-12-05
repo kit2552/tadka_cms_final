@@ -303,46 +303,38 @@ def create_article_cms(db, article, slug: str, seo_title: str, seo_description: 
 
 def update_article_cms(db, article_id: int, article: dict):
     """Update article from CMS"""
-    # Build update dict with all possible fields
-    update_fields = {
-        "title": article.get("title"),
-        "short_title": article.get("short_title"),
-        "content": article.get("content"),
-        "summary": article.get("summary"),
-        "author": article.get("author"),
-        "article_language": article.get("article_language") or article.get("language") or "en",
-            "states": article.get("states"),
-            "category": article.get("category"),
-            "content_type": article.get("content_type"),
-            "image": article.get("image"),
-            "image_gallery": article.get("image_gallery"),
-            "gallery_id": article.get("gallery_id"),
-            "youtube_url": article.get("youtube_url"),
-            "tags": article.get("tags"),
-            "artists": article.get("artists"),
-            "movie_rating": article.get("movie_rating"),
-            "is_featured": article.get("is_featured"),
-            "is_published": article.get("is_published"),
-            "is_scheduled": article.get("is_scheduled"),
-            "scheduled_publish_at": article.get("scheduled_publish_at"),
-            "seo_title": article.get("seo_title"),
-            "seo_description": article.get("seo_description"),
-            "seo_keywords": article.get("seo_keywords"),
-            # Movie review fields
-            "review_quick_verdict": article.get("review_quick_verdict"),
-            "review_plot_summary": article.get("review_plot_summary"),
-            "review_performances": article.get("review_performances"),
-            "review_what_works": article.get("review_what_works"),
-            "review_what_doesnt_work": article.get("review_what_doesnt_work"),
-            "review_technical_aspects": article.get("review_technical_aspects"),
-            "review_final_verdict": article.get("review_final_verdict"),
-            "review_cast": article.get("review_cast"),
-            "review_director": article.get("review_director"),
-            "review_genre": article.get("review_genre"),
-            "review_runtime": article.get("review_runtime"),
-            "updated_at": datetime.utcnow()
-        }
-    }
+    # Build update dict - only include fields that are in the article dict
+    update_fields = {}
+    
+    # Map of fields that can be updated
+    allowed_fields = [
+        "title", "short_title", "content", "summary", "author", 
+        "states", "category", "content_type", "image", "image_gallery", 
+        "gallery_id", "youtube_url", "tags", "artists", "movie_rating",
+        "is_featured", "is_published", "is_scheduled", "scheduled_publish_at",
+        "seo_title", "seo_description", "seo_keywords",
+        "review_quick_verdict", "review_plot_summary", "review_performances",
+        "review_what_works", "review_what_doesnt_work", "review_technical_aspects",
+        "review_final_verdict", "review_cast", "review_director", 
+        "review_genre", "review_runtime"
+    ]
+    
+    # Only update fields that are present in the article dict
+    for field in allowed_fields:
+        if field in article:
+            update_fields[field] = article[field]
+    
+    # Handle language field - support both 'language' and 'article_language'
+    if "article_language" in article:
+        update_fields["article_language"] = article["article_language"] or "en"
+    elif "language" in article:
+        update_fields["article_language"] = article["language"] or "en"
+    
+    # Always update timestamp
+    update_fields["updated_at"] = datetime.utcnow()
+    
+    # Build MongoDB update query
+    update_data = {"$set": update_fields}
     
     # Update published_at if publishing
     if article.get("is_published"):
