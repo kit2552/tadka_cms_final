@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useDragDrop } from '../contexts/DragDropContext';
 import { createSEOArticleURL } from '../utils/seoUtils';
 import dataService from '../services/dataService';
