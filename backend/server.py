@@ -974,11 +974,14 @@ async def update_scheduler_settings(
             # article_scheduler.start_scheduler()
             frequency = settings_update.check_frequency_minutes or updated_settings.check_frequency_minutes
             # article_scheduler.update_schedule(frequency)
+            pass
         else:
             # article_scheduler.stop_scheduler()
+            pass
     
     if settings_update.check_frequency_minutes is not None and updated_settings.is_enabled:
         # article_scheduler.update_schedule(settings_update.check_frequency_minutes)
+        pass
     
     return updated_settings
 
