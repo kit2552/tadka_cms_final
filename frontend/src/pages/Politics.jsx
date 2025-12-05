@@ -80,6 +80,22 @@ const Politics = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Helper function to get full image URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    // If it's already a full URL (S3 or external), return as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+    // If it's a local path, prefix with backend URL
+    if (imagePath.startsWith('/uploads/') || imagePath.startsWith('uploads/')) {
+      const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+      return `${process.env.REACT_APP_BACKEND_URL}${cleanPath}`;
+    }
+    // For base64 or other formats, return as is
+    return imagePath;
+  };
+
   // Sample thumbnail images for related topics
   const getThumbnail = (index) => {
     const thumbnails = [
