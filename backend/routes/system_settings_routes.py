@@ -104,10 +104,23 @@ async def test_aws_connection(db = Depends(get_db)):
     config = crud.get_aws_config(db)
     
     if not config or not config.get('is_enabled'):
-        raise HTTPException(status_code=400, detail="AWS S3 is not configured")
+        raise HTTPException(status_code=400, detail="AWS S3 is not configured or disabled")
     
-    # Initialize S3 service
-    s3_service.initialize(config)
+    # Validate required fields
+    if not config.get('aws_access_key_id'):
+        raise HTTPException(status_code=400, detail="AWS Access Key ID is missing")
+    
+    if not config.get('aws_secret_access_key'):
+        raise HTTPException(status_code=400, detail="AWS Secret Access Key is missing")
+    
+    if not config.get('s3_bucket_name'):
+        raise HTTPException(status_code=400, detail="S3 Bucket Name is missing")
+    
+    # Initialize S3 service with full config
+    initialized = s3_service.initialize(config)
+    
+    if not initialized:
+        raise HTTPException(status_code=500, detail="Failed to initialize S3 client. Check your credentials.")
     
     # Test connection
     success, message = s3_service.test_connection()
