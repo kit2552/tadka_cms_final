@@ -134,7 +134,7 @@ async def get_latest_news_articles(request: Request, limit: int = 4, db = Depend
     articles = crud.get_articles_by_category_slug(db, category_slug="latest-news", limit=limit)
     return articles
 
-@api_router.get("/articles/sections/politics", response_model=dict)
+@api_router.get("/articles/sections/politics")
 async def get_politics_articles(
     request: Request,
     limit: int = 4, 
@@ -163,8 +163,8 @@ async def get_politics_articles(
     national_articles = crud.get_articles_by_category_slug(db, category_slug="national-politics", limit=limit)
     
     return {
-        "state_politics": state_articles,
-        "national_politics": national_articles
+        "state_politics": state_articles or [],
+        "national_politics": national_articles or []
     }
 
 @api_router.get("/articles/sections/movies", response_model=dict)
