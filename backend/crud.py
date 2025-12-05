@@ -519,3 +519,114 @@ def get_related_articles_for_page(db, page_slug: str, limit: int = 5):
         .limit(limit)
     )
     return serialize_doc(docs)
+
+# ==================== SYSTEM SETTINGS - AWS CONFIG ====================
+
+def get_aws_config(db):
+    """Get AWS S3 configuration"""
+    doc = db['system_settings'].find_one({"type": "aws_config"})
+    return serialize_doc(doc) if doc else None
+
+def update_aws_config(db, config: dict):
+    """Update AWS S3 configuration"""
+    config_doc = {
+        "type": "aws_config",
+        "is_enabled": config.get("is_enabled", False),
+        "aws_access_key_id": config.get("aws_access_key_id"),
+        "aws_secret_access_key": config.get("aws_secret_access_key"),
+        "aws_region": config.get("aws_region", "us-east-1"),
+        "s3_bucket_name": config.get("s3_bucket_name"),
+        "root_folder_path": config.get("root_folder_path", ""),
+        "max_file_size_mb": config.get("max_file_size_mb", 10),
+        "updated_at": datetime.utcnow()
+    }
+    
+    db['system_settings'].update_one(
+        {"type": "aws_config"},
+        {"$set": config_doc},
+        upsert=True
+    )
+    
+    return get_aws_config(db)
+
+# ==================== USER MANAGEMENT ====================
+
+def get_users(db, skip: int = 0, limit: int = 100):
+    """Get all users (for user management)"""
+    docs = list(
+        db['users']
+        .find({}, {"password": 0})  # Don't return password
+        .sort("created_at", -1)
+        .skip(skip)
+        .limit(limit)
+    )
+    return serialize_doc(docs)
+
+def get_user_by_id(db, user_id: str):
+    """Get user by ID"""
+    try:
+        doc = db['users'].find_one({"_id": ObjectId(user_id)}, {"password": 0})
+        return serialize_doc(doc)
+    except:
+        return None
+
+def get_user_by_username(db, username: str):
+    """Get user by username (includes password for auth)"""
+    doc = db['users'].find_one({"username": username})
+    return serialize_doc(doc)
+
+def create_user(db, user: dict):
+    """Create new user"""
+    user_doc = {
+        "username": user.get("username"),
+        "email": user.get("email"),
+        "password": user.get("password"),  # Should be hashed before calling this
+        "role": user.get("role", "editor"),  # admin, editor, viewer
+        "is_active": user.get("is_active", True),
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow()
+    }
+    
+    result = db['users'].insert_one(user_doc)
+    user_doc["_id"] = result.inserted_id
+    
+    # Return without password
+    doc = db['users'].find_one({"_id": result.inserted_id}, {"password": 0})
+    return serialize_doc(doc)
+
+def update_user(db, user_id: str, user: dict):
+    """Update user"""
+    try:
+        update_data = {
+            "$set": {
+                "email": user.get("email"),
+                "role": user.get("role"),
+                "is_active": user.get("is_active"),
+                "updated_at": datetime.utcnow()
+            }
+        }
+        
+        # Only update password if provided
+        if user.get("password"):
+            update_data["$set"]["password"] = user.get("password")
+        
+        db['users'].update_one(
+            {"_id": ObjectId(user_id)},
+            update_data
+        )
+        
+        return get_user_by_id(db, user_id)
+    except:
+        return None
+
+def delete_user(db, user_id: str):
+    """Delete user"""
+    try:
+        result = db['users'].delete_one({"_id": ObjectId(user_id)})
+        return result.deleted_count > 0
+    except:
+        return False
+
+def count_users(db):
+    """Count total users"""
+    return db['users'].count_documents({})
