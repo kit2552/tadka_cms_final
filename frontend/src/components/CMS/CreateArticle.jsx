@@ -1177,9 +1177,10 @@ const CreateArticle = () => {
                   {/* MOVIE REVIEW Type Fields */}
                   {formData.content_type === 'movie_review' && (
                     <>
+                      {/* Movie Poster Image */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          Main Image
+                          Movie Poster *
                         </label>
                         <input
                           type="file"
@@ -1194,9 +1195,110 @@ const CreateArticle = () => {
                         )}
                       </div>
 
+                      {/* Movie Info Row */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Rating (Stars) *
+                          </label>
+                          <select
+                            name="movie_rating"
+                            value={formData.movie_rating}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          >
+                            <option value="">Select Rating</option>
+                            <option value="0.5">★☆☆☆☆ (0.5)</option>
+                            <option value="1.0">★☆☆☆☆ (1.0)</option>
+                            <option value="1.5">★★☆☆☆ (1.5)</option>
+                            <option value="2.0">★★☆☆☆ (2.0)</option>
+                            <option value="2.5">★★★☆☆ (2.5)</option>
+                            <option value="3.0">★★★☆☆ (3.0)</option>
+                            <option value="3.5">★★★★☆ (3.5)</option>
+                            <option value="4.0">★★★★☆ (4.0)</option>
+                            <option value="4.5">★★★★★ (4.5)</option>
+                            <option value="5.0">★★★★★ (5.0)</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Runtime
+                          </label>
+                          <input
+                            type="text"
+                            name="review_runtime"
+                            value={formData.review_runtime}
+                            onChange={handleInputChange}
+                            placeholder="e.g., 2h 30m"
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Cast (comma-separated)
+                          </label>
+                          <input
+                            type="text"
+                            name="review_cast"
+                            value={formData.review_cast}
+                            onChange={handleInputChange}
+                            placeholder="e.g., Actor 1, Actor 2, Actor 3"
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Director
+                          </label>
+                          <input
+                            type="text"
+                            name="review_director"
+                            value={formData.review_director}
+                            onChange={handleInputChange}
+                            placeholder="Director name"
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          YouTube Video URL
+                          Genre
+                        </label>
+                        <select
+                          name="review_genre"
+                          value={formData.review_genre}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Genre</option>
+                          <option value="Action">Action</option>
+                          <option value="Comedy">Comedy</option>
+                          <option value="Drama">Drama</option>
+                          <option value="Thriller">Thriller</option>
+                          <option value="Horror">Horror</option>
+                          <option value="Romance">Romance</option>
+                          <option value="Sci-Fi">Sci-Fi</option>
+                          <option value="Fantasy">Fantasy</option>
+                          <option value="Crime">Crime</option>
+                          <option value="Family">Family</option>
+                          <option value="Mystery">Mystery</option>
+                          <option value="Adventure">Adventure</option>
+                          <option value="Biography">Biography</option>
+                          <option value="Musical">Musical</option>
+                        </select>
+                      </div>
+
+                      {/* Trailer URL */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                          Trailer YouTube URL
                         </label>
                         <input
                           type="url"
@@ -1208,26 +1310,122 @@ const CreateArticle = () => {
                         />
                       </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          Movie Rating
-                        </label>
-                        <select
-                          name="movie_rating"
-                          value={formData.movie_rating}
-                          onChange={handleInputChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                          <option value="">Select Rating</option>
-                          {Array.from({ length: 21 }, (_, i) => {
-                            const rating = (i * 0.25).toFixed(2);
-                            return (
-                              <option key={rating} value={rating}>
-                                {rating} {rating === '5.00' ? '(Excellent)' : rating === '4.00' ? '(Very Good)' : rating === '3.00' ? '(Good)' : rating === '2.00' ? '(Fair)' : rating === '1.00' ? '(Poor)' : rating === '0.00' ? '(Terrible)' : ''}
-                              </option>
-                            );
-                          })}
-                        </select>
+                      {/* Review Sections */}
+                      <div className="border-t pt-4 mt-4">
+                        <h4 className="text-sm font-semibold text-gray-800 mb-3 text-left">Review Sections</h4>
+                        
+                        {/* Quick Verdict */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Quick Verdict (Tagline) *
+                          </label>
+                          <input
+                            type="text"
+                            name="review_quick_verdict"
+                            value={formData.review_quick_verdict}
+                            onChange={handleInputChange}
+                            placeholder="e.g., A Heartwarming Family Drama"
+                            maxLength="100"
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                          <p className="text-xs text-gray-500 mt-1 text-left">Single impactful line (max 100 characters)</p>
+                        </div>
+
+                        {/* Plot Summary */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Plot Summary (What's It About?) *
+                          </label>
+                          <textarea
+                            name="review_plot_summary"
+                            value={formData.review_plot_summary}
+                            onChange={handleInputChange}
+                            rows="4"
+                            placeholder="Brief overview of the story without spoilers..."
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+
+                        {/* Performances */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Performances *
+                          </label>
+                          <textarea
+                            name="review_performances"
+                            value={formData.review_performances}
+                            onChange={handleInputChange}
+                            rows="4"
+                            placeholder="Highlight key actors and their performances..."
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+
+                        {/* What Works */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            What Works *
+                          </label>
+                          <textarea
+                            name="review_what_works"
+                            value={formData.review_what_works}
+                            onChange={handleInputChange}
+                            rows="4"
+                            placeholder="Strengths and positive aspects of the movie..."
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+
+                        {/* What Doesn't Work */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            What Doesn't Work *
+                          </label>
+                          <textarea
+                            name="review_what_doesnt_work"
+                            value={formData.review_what_doesnt_work}
+                            onChange={handleInputChange}
+                            rows="4"
+                            placeholder="Weaknesses and issues with the movie..."
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+
+                        {/* Technical Aspects */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Technical Aspects (Optional)
+                          </label>
+                          <textarea
+                            name="review_technical_aspects"
+                            value={formData.review_technical_aspects}
+                            onChange={handleInputChange}
+                            rows="3"
+                            placeholder="Music, Cinematography, Direction, etc..."
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+
+                        {/* Final Verdict */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Final Verdict *
+                          </label>
+                          <textarea
+                            name="review_final_verdict"
+                            value={formData.review_final_verdict}
+                            onChange={handleInputChange}
+                            rows="3"
+                            placeholder="Overall recommendation and who should watch this movie..."
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
                       </div>
                     </>
                   )}
