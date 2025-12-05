@@ -898,12 +898,21 @@ const CreateArticle = () => {
                     <div className="relative">
                       <input
                         type="text"
-                        value={categorySearchQuery || (formData.category ? categories.find(cat => cat.slug === formData.category)?.name : '') || ''}
+                        value={showCategoryDropdown ? categorySearchQuery : (formData.category ? categories.find(cat => cat.slug === formData.category)?.name : '')}
                         onChange={(e) => {
                           setCategorySearchQuery(e.target.value);
                           setShowCategoryDropdown(true);
                         }}
-                        onFocus={() => setShowCategoryDropdown(true)}
+                        onFocus={() => {
+                          setCategorySearchQuery('');
+                          setShowCategoryDropdown(true);
+                        }}
+                        onBlur={() => {
+                          // Small delay to allow click on dropdown items
+                          setTimeout(() => {
+                            setCategorySearchQuery('');
+                          }, 200);
+                        }}
                         placeholder="Search..."
                         className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
                         required
@@ -912,7 +921,10 @@ const CreateArticle = () => {
                         <>
                           <div 
                             className="fixed inset-0 z-10" 
-                            onClick={() => setShowCategoryDropdown(false)}
+                            onClick={() => {
+                              setShowCategoryDropdown(false);
+                              setCategorySearchQuery('');
+                            }}
                           />
                           <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
                             {categories
