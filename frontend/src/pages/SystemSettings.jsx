@@ -112,7 +112,6 @@ const SystemSettings = () => {
         }
         
         setMessage({ type: 'success', text: 'AWS configuration saved successfully!' });
-        setConnectionStatus('unknown'); // Reset connection status after config change
       } else {
         const error = await response.json();
         setMessage({ type: 'error', text: error.detail || 'Failed to save configuration' });
