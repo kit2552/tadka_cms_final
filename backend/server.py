@@ -1,8 +1,6 @@
 from fastapi import FastAPI, APIRouter, Depends, HTTPException, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy.orm import Session
-from sqlalchemy import or_, desc
 from typing import List, Optional
 import logging
 from pathlib import Path
@@ -13,9 +11,9 @@ import aiofiles
 # Rate limiting completely disabled for better user experience
 # All rate limiting functionality removed
 
-from database import SessionLocal, engine, get_db, Base
-import models, schemas, crud, seed_data
-from models import Gallery  # Import Gallery specifically
+from database import get_db, db
+import schemas, crud
+from models.mongodb_collections import create_indexes
 from routes.auth_routes import router as auth_router
 from routes.topics_routes import router as topics_router
 from routes.gallery_routes import router as gallery_router
