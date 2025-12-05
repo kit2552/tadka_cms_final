@@ -630,3 +630,346 @@ def delete_user(db, user_id: str):
 def count_users(db):
     """Count total users"""
     return db['users'].count_documents({})
+
+
+# ==================== TOPICS CRUD ====================
+
+def get_topics(db, category: str = None, language: str = None, search: str = None, skip: int = 0, limit: int = 100):
+    """Get topics with optional filtering"""
+    query = {}
+    
+    if category:
+        query["category"] = category
+    
+    if language:
+        query["language"] = language
+    
+    if search:
+        query["$or"] = [
+            {"title": {"$regex": search, "$options": "i"}},
+            {"description": {"$regex": search, "$options": "i"}}
+        ]
+    
+    topics = list(db[TOPICS].find(query, {"_id": 0}).sort("created_at", -1).skip(skip).limit(limit))
+    return topics
+
+def get_topic_by_id(db, topic_id: int):
+    """Get topic by ID"""
+    topic = db[TOPICS].find_one({"id": topic_id}, {"_id": 0})
+    return topic
+
+def get_topic_by_slug(db, slug: str):
+    """Get topic by slug"""
+    topic = db[TOPICS].find_one({"slug": slug}, {"_id": 0})
+    return topic
+
+def create_topic(db, topic_data: dict):
+    """Create new topic"""
+    # Get next ID
+    max_topic = db[TOPICS].find_one(sort=[("id", -1)])
+    next_id = (max_topic["id"] + 1) if max_topic else 1
+    
+    topic_doc = {
+        "id": next_id,
+        "title": topic_data["title"],
+        "slug": topic_data["slug"],
+        "description": topic_data.get("description"),
+        "category": topic_data["category"],
+        "language": topic_data.get("language", "en"),
+        "image": None,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow()
+    }
+    
+    db[TOPICS].insert_one(topic_doc)
+    del topic_doc["_id"]
+    return topic_doc
+
+def update_topic(db, topic_id: int, topic_data: dict):
+    """Update topic"""
+    update_fields = {"updated_at": datetime.utcnow()}
+    
+    if "title" in topic_data:
+        update_fields["title"] = topic_data["title"]
+    if "slug" in topic_data:
+        update_fields["slug"] = topic_data["slug"]
+    if "description" in topic_data:
+        update_fields["description"] = topic_data["description"]
+    if "category" in topic_data:
+        update_fields["category"] = topic_data["category"]
+    if "language" in topic_data:
+        update_fields["language"] = topic_data["language"]
+    if "image" in topic_data:
+        update_fields["image"] = topic_data["image"]
+    
+    db[TOPICS].update_one(
+        {"id": topic_id},
+        {"$set": update_fields}
+    )
+    
+    return get_topic_by_id(db, topic_id)
+
+def delete_topic(db, topic_id: int):
+    """Delete topic and remove all associations"""
+    # Remove article associations
+    db[ARTICLE_TOPICS].delete_many({"topic_id": topic_id})
+    
+    # Remove gallery associations
+    db[GALLERY_TOPICS].delete_many({"topic_id": topic_id})
+    
+    # Delete topic
+    result = db[TOPICS].delete_one({"id": topic_id})
+    return result.deleted_count > 0
+
+def count_topic_articles(db, topic_id: int):
+    """Count articles associated with a topic"""
+    return db[ARTICLE_TOPICS].count_documents({"topic_id": topic_id})
+
+def get_articles_by_topic(db, topic_id: int, skip: int = 0, limit: int = 50):
+    """Get articles associated with a topic"""
+    # Get article IDs from association table
+    associations = list(db[ARTICLE_TOPICS].find({"topic_id": topic_id}, {"_id": 0, "article_id": 1}))
+    article_ids = [assoc["article_id"] for assoc in associations]
+    
+    if not article_ids:
+        return []
+    
+    # Get articles
+    articles = list(db[ARTICLES].find(
+        {"id": {"$in": article_ids}},
+        {"_id": 0}
+    ).sort("created_at", -1).skip(skip).limit(limit))
+    
+    return articles
+
+def associate_article_with_topic(db, article_id: int, topic_id: int):
+    """Associate an article with a topic"""
+    # Check if association already exists
+    existing = db[ARTICLE_TOPICS].find_one({
+        "article_id": article_id,
+        "topic_id": topic_id
+    })
+    
+    if existing:
+        return False
+    
+    db[ARTICLE_TOPICS].insert_one({
+        "article_id": article_id,
+        "topic_id": topic_id,
+        "created_at": datetime.utcnow()
+    })
+    
+    return True
+
+def remove_article_from_topic(db, article_id: int, topic_id: int):
+    """Remove association between article and topic"""
+    result = db[ARTICLE_TOPICS].delete_one({
+        "article_id": article_id,
+        "topic_id": topic_id
+    })
+    
+    return result.deleted_count > 0
+
+def get_topics_by_article(db, article_id: int):
+    """Get topics associated with an article"""
+    # Get topic IDs from association table
+    associations = list(db[ARTICLE_TOPICS].find({"article_id": article_id}, {"_id": 0, "topic_id": 1}))
+    topic_ids = [assoc["topic_id"] for assoc in associations]
+    
+    if not topic_ids:
+        return []
+    
+    # Get topics
+    topics = list(db[TOPICS].find(
+        {"id": {"$in": topic_ids}},
+        {"_id": 0}
+    ).sort("title", 1))
+    
+    return topics
+
+# Topic Categories
+def get_topic_categories(db):
+    """Get all topic categories"""
+    categories = list(db[TOPIC_CATEGORIES].find({}, {"_id": 0}).sort("name", 1))
+    return categories
+
+def create_topic_category(db, name: str, slug: str):
+    """Create new topic category"""
+    # Get next ID
+    max_cat = db[TOPIC_CATEGORIES].find_one(sort=[("id", -1)])
+    next_id = (max_cat["id"] + 1) if max_cat else 1
+    
+    category_doc = {
+        "id": next_id,
+        "name": name,
+        "slug": slug,
+        "created_at": datetime.utcnow()
+    }
+    
+    db[TOPIC_CATEGORIES].insert_one(category_doc)
+    del category_doc["_id"]
+    return category_doc
+
+# Gallery-Topic Associations
+def associate_topic_with_gallery(db, topic_id: int, gallery_id: int):
+    """Associate a topic with a gallery"""
+    # Check if association already exists
+    existing = db[GALLERY_TOPICS].find_one({
+        "gallery_id": gallery_id,
+        "topic_id": topic_id
+    })
+    
+    if existing:
+        return False
+    
+    db[GALLERY_TOPICS].insert_one({
+        "gallery_id": gallery_id,
+        "topic_id": topic_id,
+        "created_at": datetime.utcnow()
+    })
+    
+    return True
+
+def remove_topic_from_gallery(db, topic_id: int, gallery_id: int):
+    """Remove association between topic and gallery"""
+    result = db[GALLERY_TOPICS].delete_one({
+        "gallery_id": gallery_id,
+        "topic_id": topic_id
+    })
+    
+    return result.deleted_count > 0
+
+def get_galleries_by_topic(db, topic_id: int):
+    """Get galleries associated with a topic"""
+    # Get gallery IDs from association table
+    associations = list(db[GALLERY_TOPICS].find({"topic_id": topic_id}, {"_id": 0, "gallery_id": 1}))
+    gallery_ids = [assoc["gallery_id"] for assoc in associations]
+    
+    if not gallery_ids:
+        return []
+    
+    # Get galleries
+    galleries = list(db[GALLERIES].find(
+        {"id": {"$in": gallery_ids}},
+        {"_id": 0}
+    ).sort("created_at", -1))
+    
+    return galleries
+
+def get_topics_by_gallery(db, gallery_id: int):
+    """Get topics associated with a gallery"""
+    # Get topic IDs from association table
+    associations = list(db[GALLERY_TOPICS].find({"gallery_id": gallery_id}, {"_id": 0, "topic_id": 1}))
+    topic_ids = [assoc["topic_id"] for assoc in associations]
+    
+    if not topic_ids:
+        return []
+    
+    # Get topics
+    topics = list(db[TOPICS].find(
+        {"id": {"$in": topic_ids}},
+        {"_id": 0}
+    ).sort("title", 1))
+    
+    return topics
+
+# ==================== GALLERIES CRUD ====================
+
+def get_galleries(db, skip: int = 0, limit: int = 100):
+    """Get paginated galleries"""
+    galleries = list(db[GALLERIES].find({}, {"_id": 0}).sort("created_at", -1).skip(skip).limit(limit))
+    
+    # Parse JSON fields
+    for gallery in galleries:
+        if "artists" in gallery and isinstance(gallery["artists"], str):
+            gallery["artists"] = json.loads(gallery["artists"]) if gallery["artists"] else []
+        if "images" in gallery and isinstance(gallery["images"], str):
+            gallery["images"] = json.loads(gallery["images"]) if gallery["images"] else []
+    
+    return galleries
+
+def get_gallery_by_gallery_id(db, gallery_id: str):
+    """Get gallery by gallery_id"""
+    gallery = db[GALLERIES].find_one({"gallery_id": gallery_id}, {"_id": 0})
+    
+    if gallery:
+        # Parse JSON fields
+        if "artists" in gallery and isinstance(gallery["artists"], str):
+            gallery["artists"] = json.loads(gallery["artists"]) if gallery["artists"] else []
+        if "images" in gallery and isinstance(gallery["images"], str):
+            gallery["images"] = json.loads(gallery["images"]) if gallery["images"] else []
+    
+    return gallery
+
+def get_gallery_by_id(db, id: int):
+    """Get gallery by numeric ID"""
+    gallery = db[GALLERIES].find_one({"id": id}, {"_id": 0})
+    
+    if gallery:
+        # Parse JSON fields
+        if "artists" in gallery and isinstance(gallery["artists"], str):
+            gallery["artists"] = json.loads(gallery["artists"]) if gallery["artists"] else []
+        if "images" in gallery and isinstance(gallery["images"], str):
+            gallery["images"] = json.loads(gallery["images"]) if gallery["images"] else []
+    
+    return gallery
+
+def create_gallery(db, gallery_data: dict):
+    """Create new gallery"""
+    # Get next ID
+    max_gallery = db[GALLERIES].find_one(sort=[("id", -1)])
+    next_id = (max_gallery["id"] + 1) if max_gallery else 1
+    
+    gallery_doc = {
+        "id": next_id,
+        "gallery_id": gallery_data["gallery_id"],
+        "title": gallery_data["title"],
+        "artists": json.dumps(gallery_data["artists"]) if isinstance(gallery_data["artists"], list) else gallery_data["artists"],
+        "images": json.dumps(gallery_data["images"]) if isinstance(gallery_data["images"], list) else gallery_data["images"],
+        "gallery_type": gallery_data.get("gallery_type", "vertical"),
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow()
+    }
+    
+    db[GALLERIES].insert_one(gallery_doc)
+    del gallery_doc["_id"]
+    
+    # Parse JSON for return
+    gallery_doc["artists"] = json.loads(gallery_doc["artists"]) if gallery_doc["artists"] else []
+    gallery_doc["images"] = json.loads(gallery_doc["images"]) if gallery_doc["images"] else []
+    
+    return gallery_doc
+
+def update_gallery(db, gallery_id: str, gallery_data: dict):
+    """Update gallery"""
+    update_fields = {"updated_at": datetime.utcnow()}
+    
+    if "title" in gallery_data:
+        update_fields["title"] = gallery_data["title"]
+    if "artists" in gallery_data:
+        update_fields["artists"] = json.dumps(gallery_data["artists"]) if isinstance(gallery_data["artists"], list) else gallery_data["artists"]
+    if "images" in gallery_data:
+        update_fields["images"] = json.dumps(gallery_data["images"]) if isinstance(gallery_data["images"], list) else gallery_data["images"]
+    if "gallery_type" in gallery_data:
+        update_fields["gallery_type"] = gallery_data["gallery_type"]
+    
+    db[GALLERIES].update_one(
+        {"gallery_id": gallery_id},
+        {"$set": update_fields}
+    )
+    
+    return get_gallery_by_gallery_id(db, gallery_id)
+
+def delete_gallery(db, gallery_id: str):
+    """Delete gallery and remove all associations"""
+    # Get gallery to find numeric ID
+    gallery = db[GALLERIES].find_one({"gallery_id": gallery_id}, {"_id": 0, "id": 1})
+    
+    if gallery:
+        # Remove topic associations
+        db[GALLERY_TOPICS].delete_many({"gallery_id": gallery["id"]})
+    
+    # Delete gallery
+    result = db[GALLERIES].delete_one({"gallery_id": gallery_id})
+    return result.deleted_count > 0
+
