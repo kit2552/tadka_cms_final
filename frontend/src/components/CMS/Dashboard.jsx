@@ -1296,7 +1296,7 @@ const Dashboard = () => {
 
   // Get available pages (exclude already configured ones)
   const getAvailablePages = (includeEditing = false) => {
-    const configuredPages = Object.keys(relatedArticlesConfig);
+    const configuredPages = Object.keys(relatedArticlesConfig || {});
     if (includeEditing && editingRelatedConfig) {
       // When editing, include the page being edited in available options
       return websitePages.filter(page => 
