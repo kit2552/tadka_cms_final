@@ -280,16 +280,22 @@ def create_article(db, article: dict):
     article_doc["_id"] = result.inserted_id
     return serialize_doc(article_doc)
 
-def create_article_cms(db, article: dict, slug: str, seo_title: str, seo_description: str):
+def create_article_cms(db, article, slug: str, seo_title: str, seo_description: str):
     """Create article from CMS"""
-    article["slug"] = slug
-    article["seo_title"] = seo_title
-    article["seo_description"] = seo_description
+    # Convert Pydantic model to dict if needed
+    if hasattr(article, 'dict'):
+        article_dict = article.dict()
+    else:
+        article_dict = dict(article)
     
-    if article.get("is_published") and not article.get("published_at"):
-        article["published_at"] = datetime.utcnow()
+    article_dict["slug"] = slug
+    article_dict["seo_title"] = seo_title
+    article_dict["seo_description"] = seo_description
     
-    return create_article(db, article)
+    if article_dict.get("is_published") and not article_dict.get("published_at"):
+        article_dict["published_at"] = datetime.utcnow()
+    
+    return create_article(db, article_dict)
 
 def update_article_cms(db, article_id: int, article: dict):
     """Update article from CMS"""
