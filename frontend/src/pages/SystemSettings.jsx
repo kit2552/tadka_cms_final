@@ -323,8 +323,8 @@ const SystemSettings = () => {
             {activeTab === 'aws' && (
               <div className="space-y-6">
                 {/* Section Header */}
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900">AWS Storage Settings</h2>
+                <div className="text-left">
+                  <h2 className="text-lg font-semibold text-gray-900 text-left">AWS Storage Settings</h2>
                 </div>
 
                 <form onSubmit={saveAWSConfig} className="space-y-6">
