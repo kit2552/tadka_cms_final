@@ -43,7 +43,7 @@ async def root(request: Request):
 
 # Seed database endpoint (for development)
 @api_router.post("/seed-database")
-async def seed_database_endpoint(db: Session = Depends(get_db)):
+async def seed_database_endpoint(db = Depends(get_db)):
     try:
         seed_data.seed_database(db)
         return {"message": "Database seeded successfully"}
@@ -52,12 +52,12 @@ async def seed_database_endpoint(db: Session = Depends(get_db)):
 
 # Category endpoints
 @api_router.get("/categories", response_model=List[schemas.Category])
-async def get_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_categories(skip: int = 0, limit: int = 100, db = Depends(get_db)):
     categories = crud.get_categories(db, skip=skip, limit=limit)
     return categories
 
 @api_router.post("/categories", response_model=schemas.Category)
-async def create_category(category: schemas.CategoryCreate, db: Session = Depends(get_db)):
+async def create_category(category: schemas.CategoryCreate, db = Depends(get_db)):
     db_category = crud.get_category_by_slug(db, slug=category.slug)
     if db_category:
         raise HTTPException(status_code=400, detail="Category with this slug already exists")
@@ -71,7 +71,7 @@ async def get_articles(
     limit: int = 100, 
     category_id: Optional[int] = None,
     is_featured: Optional[bool] = None,
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     articles = crud.get_articles(db, skip=skip, limit=limit, is_featured=is_featured)
     result = []
@@ -96,7 +96,7 @@ async def get_articles(
     return result
 
 @api_router.get("/articles/category/{category_slug}", response_model=List[schemas.ArticleListResponse])
-async def get_articles_by_category(category_slug: str, skip: int = 0, limit: int = 15, db: Session = Depends(get_db)):
+async def get_articles_by_category(category_slug: str, skip: int = 0, limit: int = 15, db = Depends(get_db)):
     articles = crud.get_articles_by_category_slug(db, category_slug=category_slug, skip=skip, limit=limit)
     result = []
     for article in articles:
@@ -121,7 +121,7 @@ async def get_articles_by_category(category_slug: str, skip: int = 0, limit: int
 
 # New section-specific endpoints for frontend sections
 @api_router.get("/articles/sections/latest-news", response_model=List[schemas.ArticleListResponse])
-async def get_latest_news_articles(request: Request, limit: int = 4, db: Session = Depends(get_db)):
+async def get_latest_news_articles(request: Request, limit: int = 4, db = Depends(get_db)):
     """Get articles for Latest News/Top Stories section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="latest-news", limit=limit)
     return _format_article_response(articles, db)
@@ -131,7 +131,7 @@ async def get_politics_articles(
     request: Request,
     limit: int = 4, 
     states: str = None,  # Comma-separated list of state codes: "ap,ts"
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Get articles for Politics section with State and National tabs
     
@@ -160,7 +160,7 @@ async def get_politics_articles(
     }
 
 @api_router.get("/articles/sections/movies", response_model=dict)
-async def get_movies_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_movies_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Movies section with Movie News and Movie News Bollywood tabs"""
     movie_news_articles = crud.get_articles_by_category_slug(db, category_slug="movie-news", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="movie-news-bollywood", limit=limit)
@@ -171,7 +171,7 @@ async def get_movies_articles(limit: int = 4, db: Session = Depends(get_db)):
     }
 
 @api_router.get("/articles/sections/hot-topics", response_model=dict)
-async def get_hot_topics_articles(limit: int = 4, states: str = None, db: Session = Depends(get_db)):
+async def get_hot_topics_articles(limit: int = 4, states: str = None, db = Depends(get_db)):
     """Get articles for Hot Topics section with Hot Topics (state-specific) and Hot Topics Bollywood tabs"""
     # For hot topics tab - apply state filtering if provided (similar to politics filtering)
     if states:
@@ -192,7 +192,7 @@ async def get_hot_topics_articles(limit: int = 4, states: str = None, db: Sessio
 
 
 @api_router.get("/articles/sections/ai-stock", response_model=dict)
-async def get_ai_stock_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_ai_stock_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for AI & Stock Market section"""
     ai_articles = crud.get_articles_by_category_slug(db, category_slug="ai", limit=limit)
     stock_articles = crud.get_articles_by_category_slug(db, category_slug="stock-market", limit=limit)
@@ -203,7 +203,7 @@ async def get_ai_stock_articles(limit: int = 4, db: Session = Depends(get_db)):
     }
 
 @api_router.get("/articles/sections/fashion-beauty", response_model=dict)
-async def get_fashion_beauty_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_fashion_beauty_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Fashion & Beauty section (now Fashion & Travel)"""
     fashion_articles = crud.get_articles_by_category_slug(db, category_slug="fashion", limit=limit)
     travel_articles = crud.get_articles_by_category_slug(db, category_slug="travel", limit=limit)
@@ -214,7 +214,7 @@ async def get_fashion_beauty_articles(limit: int = 4, db: Session = Depends(get_
     }
 
 @api_router.get("/articles/sections/sports", response_model=dict)
-async def get_sports_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_sports_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Sports section with Cricket and Other Sports tabs"""
     cricket_articles = crud.get_articles_by_category_slug(db, category_slug="cricket", limit=limit)
     other_sports_articles = crud.get_articles_by_category_slug(db, category_slug="other-sports", limit=limit)
@@ -225,7 +225,7 @@ async def get_sports_articles(limit: int = 4, db: Session = Depends(get_db)):
     }
 
 @api_router.get("/articles/sections/hot-topics-gossip", response_model=dict)
-async def get_hot_topics_gossip_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_hot_topics_gossip_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Hot Topics & Gossip section"""
     hot_topics_articles = crud.get_articles_by_category_slug(db, category_slug="hot-topics", limit=limit)
     gossip_articles = crud.get_articles_by_category_slug(db, category_slug="gossip", limit=limit)
@@ -236,7 +236,7 @@ async def get_hot_topics_gossip_articles(limit: int = 4, db: Session = Depends(g
     }
 
 @api_router.get("/articles/sections/box-office", response_model=dict)
-async def get_box_office_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Box Office section with Box Office and Bollywood-Box Office tabs"""
     box_office_articles = crud.get_articles_by_category_slug(db, category_slug="box-office", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="bollywood-box-office", limit=limit)
@@ -247,7 +247,7 @@ async def get_box_office_articles(limit: int = 4, db: Session = Depends(get_db))
     }
 
 @api_router.get("/articles/sections/trending-videos", response_model=dict)
-async def get_trending_videos_articles(limit: int = 20, states: str = None, db: Session = Depends(get_db)):
+async def get_trending_videos_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
     """Get articles for Trending Videos section with Trending Videos and Bollywood-Trending Videos tabs
     
     Args:
@@ -286,7 +286,7 @@ async def get_trending_videos_articles(limit: int = 20, states: str = None, db: 
 
 # USA and ROW video sections endpoint
 @api_router.get("/articles/sections/usa-row-videos", response_model=dict)
-async def get_usa_row_videos_sections(limit: int = 20, db: Session = Depends(get_db)):
+async def get_usa_row_videos_sections(limit: int = 20, db = Depends(get_db)):
     """Get articles for Viral Videos section with USA and ROW tabs"""
     usa_articles = crud.get_articles_by_category_slug(db, category_slug="usa", limit=limit)
     row_articles = crud.get_articles_by_category_slug(db, category_slug="row", limit=limit)
@@ -297,7 +297,7 @@ async def get_usa_row_videos_sections(limit: int = 20, db: Session = Depends(get
     }
 
 @api_router.get("/articles/sections/viral-shorts", response_model=dict)
-async def get_viral_shorts_articles(limit: int = 20, states: str = None, db: Session = Depends(get_db)):
+async def get_viral_shorts_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
     """Get articles for Viral Shorts section with Viral Shorts and Bollywood tabs
     
     Args:
@@ -363,7 +363,7 @@ async def get_viral_shorts_articles(limit: int = 20, states: str = None, db: Ses
     }
 
 @api_router.get("/articles/sections/ott-movie-reviews", response_model=dict)
-async def get_ott_movie_reviews_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_ott_movie_reviews_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for OTT Reviews section with OTT Reviews and Bollywood tabs"""
     ott_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="ott-reviews", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="ott-reviews-bollywood", limit=limit)
@@ -374,7 +374,7 @@ async def get_ott_movie_reviews_articles(limit: int = 4, db: Session = Depends(g
     }
 
 @api_router.get("/articles/sections/events-interviews", response_model=dict)
-async def get_events_interviews_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_events_interviews_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Events & Interviews section with Events & Interviews and Events Interviews Bollywood tabs"""
     events_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews-bollywood", limit=limit)
@@ -385,7 +385,7 @@ async def get_events_interviews_articles(limit: int = 4, db: Session = Depends(g
     }
 
 @api_router.get("/articles/sections/new-video-songs", response_model=dict)
-async def get_new_video_songs_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_new_video_songs_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for New Video Songs section with Video Songs and Bollywood tabs"""
     video_songs_articles = crud.get_articles_by_category_slug(db, category_slug="new-video-songs", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="new-video-songs-bollywood", limit=limit)
@@ -396,7 +396,7 @@ async def get_new_video_songs_articles(limit: int = 4, db: Session = Depends(get
     }
 
 @api_router.get("/articles/sections/movie-reviews", response_model=dict)
-async def get_movie_reviews_articles(limit: int = 20, db: Session = Depends(get_db)):
+async def get_movie_reviews_articles(limit: int = 20, db = Depends(get_db)):
     """Get articles for Movie Reviews section with Movie Reviews and Bollywood tabs - latest 20 from each category"""
     movie_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews-bollywood", limit=limit)
@@ -407,7 +407,7 @@ async def get_movie_reviews_articles(limit: int = 20, db: Session = Depends(get_
     }
 
 @api_router.get("/articles/sections/trailers-teasers", response_model=dict)
-async def get_trailers_teasers_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_trailers_teasers_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Trailers & Teasers section with Trailers and Bollywood tabs"""
     trailers_articles = crud.get_articles_by_category_slug(db, category_slug="trailers-teasers", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="trailers-teasers-bollywood", limit=limit)
@@ -418,7 +418,7 @@ async def get_trailers_teasers_articles(limit: int = 4, db: Session = Depends(ge
     }
 
 @api_router.get("/articles/sections/box-office", response_model=dict)
-async def get_box_office_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Box Office section with Box Office and Bollywood tabs"""
     box_office_articles = crud.get_articles_by_category_slug(db, category_slug="box-office", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="box-office-bollywood", limit=limit)
@@ -429,7 +429,7 @@ async def get_box_office_articles(limit: int = 4, db: Session = Depends(get_db))
     }
 
 @api_router.get("/articles/sections/events-interviews", response_model=dict)
-async def get_events_interviews_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_events_interviews_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Events & Interviews section with Events and Bollywood tabs"""
     events_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews-bollywood", limit=limit)
@@ -440,7 +440,7 @@ async def get_events_interviews_articles(limit: int = 4, db: Session = Depends(g
     }
 
 @api_router.get("/articles/sections/tv-shows", response_model=dict)
-async def get_tv_shows_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_tv_shows_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for TV Shows section with TV Shows and Bollywood tabs"""
     tv_articles = crud.get_articles_by_category_slug(db, category_slug="tv-shows", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="tv-shows-bollywood", limit=limit)
@@ -452,7 +452,7 @@ async def get_tv_shows_articles(limit: int = 4, db: Session = Depends(get_db)):
 
 # Frontend endpoint for OTT releases with Bollywood
 @api_router.get("/releases/ott-bollywood")
-async def get_ott_bollywood_releases(db: Session = Depends(get_db)):
+async def get_ott_bollywood_releases(db = Depends(get_db)):
     """Get OTT and Bollywood OTT releases for homepage display"""
     this_week_ott = crud.get_this_week_ott_releases(db, limit=4)
     upcoming_ott = crud.get_upcoming_ott_releases(db, limit=4)
@@ -507,13 +507,13 @@ async def get_ott_bollywood_releases(db: Session = Depends(get_db)):
     }
 
 @api_router.get("/articles/sections/trailers", response_model=List[schemas.ArticleListResponse])
-async def get_trailers_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_trailers_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Trailers & Teasers section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="trailers", limit=limit)
     return _format_article_response(articles)
 
 @api_router.get("/articles/sections/top-stories", response_model=dict)
-async def get_top_stories_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_top_stories_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Top Stories section with regular and national tabs"""
     top_stories_articles = crud.get_articles_by_category_slug(db, category_slug="top-stories", limit=limit)
     national_articles = crud.get_articles_by_category_slug(db, category_slug="national-top-stories", limit=limit)
@@ -524,7 +524,7 @@ async def get_top_stories_articles(limit: int = 4, db: Session = Depends(get_db)
     }
 
 @api_router.get("/articles/sections/nri-news", response_model=List[schemas.ArticleListResponse])
-async def get_nri_news_articles(limit: int = 4, states: str = None, db: Session = Depends(get_db)):
+async def get_nri_news_articles(limit: int = 4, states: str = None, db = Depends(get_db)):
     """Get articles for NRI News section with state filtering"""
     # Parse state codes from query parameter
     state_codes = []
@@ -541,19 +541,19 @@ async def get_nri_news_articles(limit: int = 4, states: str = None, db: Session 
     return _format_article_response(articles)
 
 @api_router.get("/articles/sections/world-news", response_model=List[schemas.ArticleListResponse])
-async def get_world_news_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_world_news_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for World News section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="world-news", limit=limit)
     return _format_article_response(articles)
 
 @api_router.get("/articles/sections/photoshoots", response_model=List[schemas.ArticleListResponse])
-async def get_photoshoots_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_photoshoots_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Photoshoots section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="photoshoots", limit=limit)
     return _format_article_response(articles, db)
 
 @api_router.get("/articles/sections/travel-pics", response_model=List[schemas.ArticleListResponse])
-async def get_travel_pics_articles(limit: int = 4, db: Session = Depends(get_db)):
+async def get_travel_pics_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Travel Pics section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="travel-pics", limit=limit)
     return _format_article_response(articles, db)
@@ -628,7 +628,7 @@ def _format_article_response(articles, db: Session = None):
 
 # CMS API Endpoints
 @api_router.get("/cms/config", response_model=schemas.CMSResponse)
-async def get_cms_config(db: Session = Depends(get_db)):
+async def get_cms_config(db = Depends(get_db)):
     """Get CMS configuration including languages, states, and categories"""
     categories = crud.get_all_categories(db)
     
@@ -701,7 +701,7 @@ async def get_cms_articles(
     state: str = None,
     content_type: str = None,
     status: str = None,
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Get articles for CMS dashboard with filtering and pagination"""
     # Get total count first (without pagination)
@@ -747,7 +747,7 @@ async def get_cms_articles(
     }
 
 @api_router.post("/cms/articles", response_model=schemas.ArticleResponse)
-async def create_cms_article(article: schemas.ArticleCreate, db: Session = Depends(get_db)):
+async def create_cms_article(article: schemas.ArticleCreate, db = Depends(get_db)):
     """Create new article via CMS"""
     # Generate slug from title
     import re
@@ -763,7 +763,7 @@ async def create_cms_article(article: schemas.ArticleCreate, db: Session = Depen
     return db_article
 
 @api_router.get("/cms/articles/{article_id}", response_model=schemas.ArticleResponse)
-async def get_cms_article(article_id: int, db: Session = Depends(get_db)):
+async def get_cms_article(article_id: int, db = Depends(get_db)):
     """Get single article for editing"""
     article = crud.get_article_by_id(db, article_id)
     if not article:
@@ -774,7 +774,7 @@ async def get_cms_article(article_id: int, db: Session = Depends(get_db)):
 async def update_cms_article(
     article_id: int, 
     article_update: schemas.ArticleUpdate, 
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Update article via CMS"""
     article = crud.get_article_by_id(db, article_id)
@@ -785,7 +785,7 @@ async def update_cms_article(
     return updated_article
 
 @api_router.delete("/cms/articles/{article_id}")
-async def delete_cms_article(article_id: int, db: Session = Depends(get_db)):
+async def delete_cms_article(article_id: int, db = Depends(get_db)):
     """Delete article via CMS"""
     article = crud.get_article_by_id(db, article_id)
     if not article:
@@ -795,7 +795,7 @@ async def delete_cms_article(article_id: int, db: Session = Depends(get_db)):
     return {"message": "Article deleted successfully"}
 
 @api_router.get("/articles/{article_id}/related-videos")
-async def get_article_related_videos(article_id: int, db: Session = Depends(get_db)):
+async def get_article_related_videos(article_id: int, db = Depends(get_db)):
     """Get related videos for an article"""
     article = crud.get_article_by_id(db, article_id)
     if not article:
@@ -809,7 +809,7 @@ async def get_article_related_videos(article_id: int, db: Session = Depends(get_
 async def update_article_related_videos(
     article_id: int, 
     request: dict,
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Update related videos for an article"""
     article = crud.get_article_by_id(db, article_id)
@@ -847,7 +847,7 @@ async def update_article_related_videos(
 async def translate_article(
     article_id: int,
     translation_request: schemas.TranslationRequest,
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Create translated version of article"""
     original_article = crud.get_article_by_id(db, article_id)
@@ -860,7 +860,7 @@ async def translate_article(
     return translated_article
 
 @api_router.get("/articles/most-read", response_model=List[schemas.ArticleListResponse])
-async def get_most_read_articles(limit: int = 15, db: Session = Depends(get_db)):
+async def get_most_read_articles(limit: int = 15, db = Depends(get_db)):
     articles = crud.get_most_read_articles(db, limit=limit)
     result = []
     for article in articles:
@@ -884,14 +884,14 @@ async def get_most_read_articles(limit: int = 15, db: Session = Depends(get_db))
     return result
 
 @api_router.get("/articles/featured", response_model=schemas.ArticleResponse)
-async def get_featured_article(db: Session = Depends(get_db)):
+async def get_featured_article(db = Depends(get_db)):
     articles = crud.get_articles(db, limit=1, is_featured=True)
     if not articles:
         raise HTTPException(status_code=404, detail="No featured article found")
     return articles[0]
 
 @api_router.get("/articles/{article_id}", response_model=schemas.ArticleResponse)
-async def get_article(request: Request, article_id: int, db: Session = Depends(get_db)):
+async def get_article(request: Request, article_id: int, db = Depends(get_db)):
     article = crud.get_article(db, article_id=article_id)
     if article is None:
         raise HTTPException(status_code=404, detail="Article not found")
@@ -906,12 +906,12 @@ async def get_article(request: Request, article_id: int, db: Session = Depends(g
     return formatted_articles[0] if formatted_articles else article
 
 @api_router.post("/articles", response_model=schemas.ArticleResponse)
-async def create_article(article: schemas.ArticleCreate, db: Session = Depends(get_db)):
+async def create_article(article: schemas.ArticleCreate, db = Depends(get_db)):
     return crud.create_article(db=db, article=article)
 
 # Movie Review endpoints
 @api_router.get("/movie-reviews", response_model=List[schemas.MovieReviewListResponse])
-async def get_movie_reviews(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+async def get_movie_reviews(skip: int = 0, limit: int = 10, db = Depends(get_db)):
     reviews = crud.get_movie_reviews(db, skip=skip, limit=limit)
     result = []
     for review in reviews:
@@ -925,28 +925,28 @@ async def get_movie_reviews(skip: int = 0, limit: int = 10, db: Session = Depend
     return result
 
 @api_router.get("/movie-reviews/{review_id}", response_model=schemas.MovieReview)
-async def get_movie_review(review_id: int, db: Session = Depends(get_db)):
+async def get_movie_review(review_id: int, db = Depends(get_db)):
     review = crud.get_movie_review(db, review_id=review_id)
     if review is None:
         raise HTTPException(status_code=404, detail="Movie review not found")
     return review
 
 @api_router.post("/movie-reviews", response_model=schemas.MovieReview)
-async def create_movie_review(review: schemas.MovieReviewCreate, db: Session = Depends(get_db)):
+async def create_movie_review(review: schemas.MovieReviewCreate, db = Depends(get_db)):
     return crud.create_movie_review(db=db, review=review)
 
 # Featured Images endpoints
 @api_router.get("/featured-images", response_model=List[schemas.FeaturedImage])
-async def get_featured_images(limit: int = 5, db: Session = Depends(get_db)):
+async def get_featured_images(limit: int = 5, db = Depends(get_db)):
     return crud.get_featured_images(db, limit=limit)
 
 @api_router.post("/featured-images", response_model=schemas.FeaturedImage)
-async def create_featured_image(image: schemas.FeaturedImageCreate, db: Session = Depends(get_db)):
+async def create_featured_image(image: schemas.FeaturedImageCreate, db = Depends(get_db)):
     return crud.create_featured_image(db=db, image=image)
 
 # Scheduler Settings endpoints
 @api_router.get("/admin/scheduler-settings", response_model=schemas.SchedulerSettingsResponse)
-async def get_scheduler_settings(db: Session = Depends(get_db)):
+async def get_scheduler_settings(db = Depends(get_db)):
     """Get current scheduler settings (Admin only)"""
     settings = crud.get_scheduler_settings(db)
     if not settings:
@@ -960,7 +960,7 @@ async def get_scheduler_settings(db: Session = Depends(get_db)):
 @api_router.put("/admin/scheduler-settings", response_model=schemas.SchedulerSettingsResponse)
 async def update_scheduler_settings(
     settings_update: schemas.SchedulerSettingsUpdate,
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Update scheduler settings (Admin only)"""
     updated_settings = crud.update_scheduler_settings(db, settings_update)
@@ -989,7 +989,7 @@ async def run_scheduler_now():
         raise HTTPException(status_code=500, detail=f"Scheduler run failed: {str(e)}")
 
 @api_router.get("/cms/scheduled-articles")
-async def get_scheduled_articles(db: Session = Depends(get_db)):
+async def get_scheduled_articles(db = Depends(get_db)):
     """Get all scheduled articles"""
     scheduled_articles = db.query(models.Article).filter(
         models.Article.is_scheduled == True,
@@ -1035,7 +1035,7 @@ async def track_analytics(tracking_data: dict):
 
 # Related Articles Configuration endpoints
 @api_router.get("/cms/related-articles-config")
-async def get_related_articles_config(page: str = None, db: Session = Depends(get_db)):
+async def get_related_articles_config(page: str = None, db = Depends(get_db)):
     """Get related articles configuration for a specific page or all pages"""
     try:
         config = crud.get_related_articles_config(db, page_slug=page)
@@ -1046,7 +1046,7 @@ async def get_related_articles_config(page: str = None, db: Session = Depends(ge
 @api_router.post("/cms/related-articles-config")
 async def create_related_articles_config(
     config_data: schemas.RelatedArticlesConfigCreate,
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Create or update related articles configuration"""
     try:
@@ -1056,7 +1056,7 @@ async def create_related_articles_config(
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.delete("/cms/related-articles-config/{page_slug}")
-async def delete_related_articles_config(page_slug: str, db: Session = Depends(get_db)):
+async def delete_related_articles_config(page_slug: str, db = Depends(get_db)):
     """Delete related articles configuration for a page"""
     try:
         deleted_config = crud.delete_related_articles_config(db, page_slug)
@@ -1070,7 +1070,7 @@ async def delete_related_articles_config(page_slug: str, db: Session = Depends(g
 async def get_related_articles_for_page(
     page_slug: str,
     limit: int = None,
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Get related articles for a specific page based on its configuration"""
     try:
@@ -1121,13 +1121,13 @@ async def save_uploaded_file(upload_file: UploadFile, subfolder: str) -> str:
 
 # Theater Release endpoints
 @api_router.get("/cms/theater-releases", response_model=List[schemas.TheaterReleaseResponse])
-async def get_theater_releases(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_theater_releases(skip: int = 0, limit: int = 100, db = Depends(get_db)):
     """Get all theater releases for CMS"""
     releases = crud.get_theater_releases(db, skip=skip, limit=limit)
     return releases
 
 @api_router.get("/cms/theater-releases/{release_id}", response_model=schemas.TheaterReleaseResponse)
-async def get_theater_release(release_id: int, db: Session = Depends(get_db)):
+async def get_theater_release(release_id: int, db = Depends(get_db)):
     """Get single theater release"""
     release = crud.get_theater_release(db, release_id)
     if not release:
@@ -1142,7 +1142,7 @@ async def create_theater_release(
     release_date: date = Form(...),
     created_by: str = Form(...),
     movie_image: UploadFile = File(None),
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Create new theater release with file uploads"""
     try:
@@ -1174,7 +1174,7 @@ async def update_theater_release(
     language: Optional[str] = Form(None),  # Added language field
     release_date: Optional[date] = Form(None),
     movie_image: UploadFile = File(None),
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Update theater release"""
     try:
@@ -1204,7 +1204,7 @@ async def update_theater_release(
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.delete("/cms/theater-releases/{release_id}")
-async def delete_theater_release(release_id: int, db: Session = Depends(get_db)):
+async def delete_theater_release(release_id: int, db = Depends(get_db)):
     """Delete theater release"""
     release = crud.get_theater_release(db, release_id)
     if not release:
@@ -1215,13 +1215,13 @@ async def delete_theater_release(release_id: int, db: Session = Depends(get_db))
 
 # OTT Release endpoints
 @api_router.get("/cms/ott-releases", response_model=List[schemas.OTTReleaseResponse])
-async def get_ott_releases(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_ott_releases(skip: int = 0, limit: int = 100, db = Depends(get_db)):
     """Get all OTT releases for CMS"""
     releases = crud.get_ott_releases(db, skip=skip, limit=limit)
     return releases
 
 @api_router.get("/cms/ott-releases/{release_id}", response_model=schemas.OTTReleaseResponse)
-async def get_ott_release(release_id: int, db: Session = Depends(get_db)):
+async def get_ott_release(release_id: int, db = Depends(get_db)):
     """Get single OTT release"""
     release = crud.get_ott_release(db, release_id)
     if not release:
@@ -1241,7 +1241,7 @@ async def create_ott_release(
     release_date: date = Form(...),
     created_by: str = Form(...),
     movie_image: UploadFile = File(None),
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Create new OTT release with file upload"""
     try:
@@ -1272,7 +1272,7 @@ async def update_ott_release(
     language: Optional[str] = Form(None),  # Added language field
     release_date: Optional[date] = Form(None),
     movie_image: UploadFile = File(None),
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Update OTT release"""
     try:
@@ -1302,7 +1302,7 @@ async def update_ott_release(
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.delete("/cms/ott-releases/{release_id}")
-async def delete_ott_release(release_id: int, db: Session = Depends(get_db)):
+async def delete_ott_release(release_id: int, db = Depends(get_db)):
     """Delete OTT release"""
     release = crud.get_ott_release(db, release_id)
     if not release:
@@ -1313,7 +1313,7 @@ async def delete_ott_release(release_id: int, db: Session = Depends(get_db)):
 
 # Frontend endpoints for homepage with Bollywood theater releases
 @api_router.get("/releases/theater-bollywood")
-async def get_homepage_theater_bollywood_releases(db: Session = Depends(get_db)):
+async def get_homepage_theater_bollywood_releases(db = Depends(get_db)):
     """Get theater and Bollywood theater releases for homepage display"""
     this_week_theater = crud.get_this_week_theater_releases(db, limit=4)
     upcoming_theater = crud.get_upcoming_theater_releases(db, limit=4)
@@ -1370,7 +1370,7 @@ async def get_homepage_theater_bollywood_releases(db: Session = Depends(get_db))
 
 # Original endpoint kept for backward compatibility
 @api_router.get("/releases/theater-ott")
-async def get_homepage_releases(db: Session = Depends(get_db)):
+async def get_homepage_releases(db = Depends(get_db)):
     """Get theater and OTT releases for homepage display"""
     this_week_theater = crud.get_this_week_theater_releases(db, limit=4)
     upcoming_theater = crud.get_upcoming_theater_releases(db, limit=4)
@@ -1414,7 +1414,7 @@ async def get_theater_ott_page_releases(
     filter_type: str = "upcoming",  # "upcoming", "this_month", "all"
     skip: int = 0,
     limit: int = 20,
-    db: Session = Depends(get_db)
+    db = Depends(get_db)
 ):
     """Get releases for theater-ott-releases page with filters"""
     try:
@@ -1467,7 +1467,7 @@ async def get_theater_ott_page_releases(
 
 # Movie content endpoints
 @api_router.get("/articles/movie/{movie_name}")
-async def get_articles_by_movie_name(movie_name: str, db: Session = Depends(get_db)):
+async def get_articles_by_movie_name(movie_name: str, db = Depends(get_db)):
     """Get all articles tagged with a specific movie name"""
     try:
         # Search for articles by movie name in title or tags
@@ -1483,7 +1483,7 @@ async def get_articles_by_movie_name(movie_name: str, db: Session = Depends(get_
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/articles/search")
-async def search_articles(q: str, db: Session = Depends(get_db)):
+async def search_articles(q: str, db = Depends(get_db)):
     """Search articles by query in title, content, or tags"""
     try:
         articles = db.query(models.Article).filter(
