@@ -474,6 +474,11 @@ const Dashboard = () => {
     }
   }, [horizontalGalleries]);
 
+  // Save itemsPerPage to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cms_items_per_page', itemsPerPage.toString());
+  }, [itemsPerPage]);
+
   // Restore scroll position on component mount
   useEffect(() => {
     const savedScrollPosition = sessionStorage.getItem('cms_scroll_position');
