@@ -303,14 +303,17 @@ def create_article_cms(db, article, slug: str, seo_title: str, seo_description: 
 
 def update_article_cms(db, article_id: int, article: dict):
     """Update article from CMS"""
-    update_data = {
-        "$set": {
-            "title": article.get("title"),
-            "short_title": article.get("short_title"),
-            "content": article.get("content"),
-            "summary": article.get("summary"),
-            "author": article.get("author"),
-            "article_language": article.get("article_language"),
+    # Build update data, only including fields that are present in the article dict
+    update_fields = {}
+    
+    # Always update these if present
+    field_mapping = {
+        "title": article.get("title"),
+        "short_title": article.get("short_title"),
+        "content": article.get("content"),
+        "summary": article.get("summary"),
+        "author": article.get("author"),
+        "article_language": article.get("article_language") or "en",  # Default to 'en' if not provided
             "states": article.get("states"),
             "category": article.get("category"),
             "content_type": article.get("content_type"),
