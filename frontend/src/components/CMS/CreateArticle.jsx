@@ -263,8 +263,52 @@ const CreateArticle = () => {
     fetchCMSConfig();
     fetchAvailableArtists(); // Fetch available artists
     fetchGalleries(); // Fetch available galleries
+    
     if (isEditMode && id) {
       loadArticle(id);
+    } else {
+      // Check if we're returning from preview (draft data exists in localStorage)
+      const draftData = localStorage.getItem('articleDraft');
+      if (draftData) {
+        try {
+          const draft = JSON.parse(draftData);
+          
+          // Restore form data
+          setFormData(draft.formData);
+          
+          // Restore selected states
+          if (draft.selectedStates) {
+            setSelectedStates(draft.selectedStates);
+          }
+          
+          // Restore selected artist
+          if (draft.selectedArtist) {
+            setSelectedArtist(draft.selectedArtist);
+          }
+          
+          // Restore selected gallery
+          if (draft.selectedGallery) {
+            setSelectedGallery(draft.selectedGallery);
+          }
+          
+          // Restore editor content
+          if (draft.formData.content) {
+            const contentBlock = htmlToDraft(draft.formData.content);
+            if (contentBlock) {
+              const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+              setEditorState(EditorState.createWithContent(contentState));
+            }
+          }
+          
+          // Clear the draft from localStorage after restoring
+          localStorage.removeItem('articleDraft');
+          
+          console.log('Draft data restored from localStorage');
+        } catch (error) {
+          console.error('Error restoring draft data:', error);
+          localStorage.removeItem('articleDraft');
+        }
+      }
     }
   }, [isEditMode, id]);
 
