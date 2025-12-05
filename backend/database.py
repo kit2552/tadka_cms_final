@@ -1,20 +1,29 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import MongoClient
 import os
-from pathlib import Path
 
-ROOT_DIR = Path(__file__).parent
-DATABASE_URL = f"sqlite:///{ROOT_DIR}/blog_cms.db"
+# Get MongoDB URL from environment variable
+MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017/')
+DATABASE_NAME = "tadka_cms"
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Synchronous client for non-async operations
+mongo_client = MongoClient(MONGO_URL)
+db = mongo_client[DATABASE_NAME]
 
-Base = declarative_base()
+# Async client for FastAPI async endpoints
+async_mongo_client = AsyncIOMotorClient(MONGO_URL)
+async_db = async_mongo_client[DATABASE_NAME]
 
 def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    """
+    Dependency for synchronous database operations.
+    Returns the MongoDB database instance.
+    """
+    return db
+
+def get_async_db():
+    """
+    Dependency for async database operations.
+    Returns the async MongoDB database instance.
+    """
+    return async_db
