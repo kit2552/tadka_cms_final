@@ -428,8 +428,8 @@ const SystemSettings = () => {
                       </select>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="text-left">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
                         S3 Bucket Name <span className="text-red-500">*</span>
                       </label>
                       <input
