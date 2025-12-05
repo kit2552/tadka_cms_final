@@ -499,7 +499,7 @@ const Dashboard = () => {
     if (activeTab === 'releases') {
       fetchReleases(); // Use new pagination-enabled function
     }
-  }, [selectedLanguage, selectedCategory, selectedContentType, selectedDateFilter, selectedStatus, selectedState, searchQuery, itemsPerPage, activeTab, releaseActiveTab, releasesItemsPerPage]);
+  }, [selectedLanguage, selectedCategory, selectedContentType, selectedDateFilter, selectedStatus, selectedState, searchQuery, itemsPerPage, activeTab, releaseActiveTab, releasesItemsPerPage, currentPage]);
 
   // Reset to page 1 when filters change (but not when page changes)
   useEffect(() => {
