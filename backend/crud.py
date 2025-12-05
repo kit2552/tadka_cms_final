@@ -546,22 +546,34 @@ def get_aws_config(db):
     return serialize_doc(doc) if doc else None
 
 def update_aws_config(db, config: dict):
-    """Update AWS S3 configuration"""
-    config_doc = {
-        "type": "aws_config",
-        "is_enabled": config.get("is_enabled", False),
-        "aws_access_key_id": config.get("aws_access_key_id"),
-        "aws_secret_access_key": config.get("aws_secret_access_key"),
-        "aws_region": config.get("aws_region", "us-east-1"),
-        "s3_bucket_name": config.get("s3_bucket_name"),
-        "root_folder_path": config.get("root_folder_path", ""),
-        "max_file_size_mb": config.get("max_file_size_mb", 10),
-        "updated_at": datetime.utcnow()
-    }
+    """Update AWS S3 configuration - only updates provided fields"""
+    # Build update document with only provided fields
+    update_fields = {"type": "aws_config", "updated_at": datetime.utcnow()}
+    
+    if "is_enabled" in config:
+        update_fields["is_enabled"] = config["is_enabled"]
+    
+    if "aws_access_key_id" in config and config["aws_access_key_id"]:
+        update_fields["aws_access_key_id"] = config["aws_access_key_id"]
+    
+    if "aws_secret_access_key" in config and config["aws_secret_access_key"]:
+        update_fields["aws_secret_access_key"] = config["aws_secret_access_key"]
+    
+    if "aws_region" in config:
+        update_fields["aws_region"] = config.get("aws_region", "us-east-1")
+    
+    if "s3_bucket_name" in config:
+        update_fields["s3_bucket_name"] = config["s3_bucket_name"]
+    
+    if "root_folder_path" in config:
+        update_fields["root_folder_path"] = config.get("root_folder_path", "")
+    
+    if "max_file_size_mb" in config:
+        update_fields["max_file_size_mb"] = config.get("max_file_size_mb", 10)
     
     db['system_settings'].update_one(
         {"type": "aws_config"},
-        {"$set": config_doc},
+        {"$set": update_fields},
         upsert=True
     )
     
