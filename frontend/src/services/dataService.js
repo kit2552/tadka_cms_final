@@ -112,6 +112,13 @@ export const dataService = {
       const stateCodesParam = userStateCodes.length > 0 ? userStateCodes.join(',') : '';
       const apiUrl = `${API_BASE_URL}/articles/sections/politics?limit=20${stateCodesParam ? `&states=${stateCodesParam}` : ''}`;
       
+      console.log('🏛️ Politics API Call:', {
+        userStates,
+        userStateCodes,
+        stateCodesParam,
+        apiUrl
+      });
+      
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error('Failed to fetch politics data');
