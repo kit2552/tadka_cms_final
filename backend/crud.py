@@ -396,6 +396,49 @@ def update_scheduler_settings(db, settings: dict):
     )
     return get_scheduler_settings(db)
 
+def create_scheduler_settings(db, settings: dict):
+    """Create scheduler settings"""
+    doc = {
+        "is_enabled": settings.get("is_enabled", False),
+        "check_frequency_minutes": settings.get("check_frequency_minutes", 5),
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow()
+    }
+    db[SCHEDULER_SETTINGS].insert_one(doc)
+    return serialize_doc(doc)
+
+def get_scheduled_articles_for_publishing(db):
+    """Get articles that are scheduled and ready to be published"""
+    from pytz import timezone
+    ist = timezone('Asia/Kolkata')
+    current_time_ist = datetime.now(ist).replace(tzinfo=None)
+    
+    query = {
+        "is_scheduled": True,
+        "is_published": False,
+        "scheduled_publish_at": {"$lte": current_time_ist}
+    }
+    
+    docs = list(db[ARTICLES].find(query, {"_id": 0}))
+    return [serialize_doc(doc) for doc in docs]
+
+def publish_scheduled_article(db, article_id: str):
+    """Publish a scheduled article"""
+    result = db[ARTICLES].update_one(
+        {"id": article_id},
+        {
+            "$set": {
+                "is_scheduled": False,
+                "is_published": True,
+                "published_at": datetime.utcnow()
+            }
+        }
+    )
+    
+    if result.modified_count > 0:
+        return db[ARTICLES].find_one({"id": article_id}, {"_id": 0})
+    return None
+
 # ==================== RELEASES ====================
 
 def get_theater_releases(db, language: str = None):
