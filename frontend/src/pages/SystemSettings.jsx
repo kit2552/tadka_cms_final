@@ -82,16 +82,37 @@ const SystemSettings = () => {
     setMessage({ type: '', text: '' });
 
     try {
+      // Prepare config for sending - don't send masked values
+      const configToSend = { ...awsConfig };
+      
+      // If keys are masked (haven't been changed), don't send them
+      if (configToSend.aws_access_key_id && configToSend.aws_access_key_id.includes('****')) {
+        delete configToSend.aws_access_key_id;
+      }
+      if (configToSend.aws_secret_access_key && configToSend.aws_secret_access_key.includes('****')) {
+        delete configToSend.aws_secret_access_key;
+      }
+
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/aws-config`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(awsConfig)
+        body: JSON.stringify(configToSend)
       });
 
       if (response.ok) {
         const data = await response.json();
         setAwsConfig(data);
+        
+        // Store new masked values
+        if (data.aws_access_key_id && data.aws_access_key_id.includes('****')) {
+          setOriginalKeys(prev => ({ ...prev, accessKeyId: data.aws_access_key_id }));
+        }
+        if (data.aws_secret_access_key && data.aws_secret_access_key.includes('****')) {
+          setOriginalKeys(prev => ({ ...prev, secretKey: data.aws_secret_access_key }));
+        }
+        
         setMessage({ type: 'success', text: 'AWS configuration saved successfully!' });
+        setConnectionStatus('unknown'); // Reset connection status after config change
       } else {
         const error = await response.json();
         setMessage({ type: 'error', text: error.detail || 'Failed to save configuration' });
