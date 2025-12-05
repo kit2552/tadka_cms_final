@@ -814,12 +814,21 @@ const CreateArticle = () => {
                       <div className="flex-1 relative">
                         <input
                           type="text"
-                          value={stateSearchQuery || (selectedState ? states.find(s => s.code === selectedState)?.name : '') || ''}
+                          value={showStateDropdown ? stateSearchQuery : (selectedState ? states.find(s => s.code === selectedState)?.name : '')}
                           onChange={(e) => {
                             setStateSearchQuery(e.target.value);
                             setShowStateDropdown(true);
                           }}
-                          onFocus={() => setShowStateDropdown(true)}
+                          onFocus={() => {
+                            setStateSearchQuery('');
+                            setShowStateDropdown(true);
+                          }}
+                          onBlur={() => {
+                            // Small delay to allow click on dropdown items
+                            setTimeout(() => {
+                              setStateSearchQuery('');
+                            }, 200);
+                          }}
                           placeholder="Search..."
                           className="w-full p-2 border border-gray-300 rounded-md text-left focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400"
                         />
@@ -827,7 +836,10 @@ const CreateArticle = () => {
                           <>
                             <div 
                               className="fixed inset-0 z-10" 
-                              onClick={() => setShowStateDropdown(false)}
+                              onClick={() => {
+                                setShowStateDropdown(false);
+                                setStateSearchQuery('');
+                              }}
                             />
                             <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
                               {states
