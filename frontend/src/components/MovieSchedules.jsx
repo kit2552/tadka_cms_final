@@ -127,7 +127,7 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                           {release.movie_image ? (
                             <>
                               <img
-                                src={`${process.env.REACT_APP_BACKEND_URL}/${release.movie_image}`}
+                                src={release.movie_image.startsWith('http') ? release.movie_image : `${process.env.REACT_APP_BACKEND_URL}/${release.movie_image}`}
                                 alt={release.movie_name}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 onError={(e) => {
