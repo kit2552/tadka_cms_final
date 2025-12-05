@@ -1,7 +1,4 @@
 import React from 'react';
-import { useTheme } from '../contexts/ThemeContext';
-import { useLanguage } from '../contexts/LanguageContext';
-import useIpadDetection from '../hooks/useIpadDetection';
 import TadkaPics from '../components/TadkaPics';
 import TopStoriesWithTabs from '../components/TopStoriesWithTabs';
 import NewVideoSongs from '../components/NewVideoSongs';
