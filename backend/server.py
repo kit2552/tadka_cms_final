@@ -641,7 +641,7 @@ async def get_cms_config(db: Session = Depends(get_db)):
     ]
     
     states = [
-        {"code": "all", "name": "All States"},
+        {"code": "all", "name": "All States (National & Bollywood)"},
         {"code": "ap", "name": "Andhra Pradesh"},
         {"code": "ar", "name": "Arunachal Pradesh"},
         {"code": "as", "name": "Assam"},
