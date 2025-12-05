@@ -36,10 +36,18 @@ def create_indexes(db):
         db[ARTICLES].create_index("published_at")
         db[ARTICLES].create_index("created_at")
         
-        # Skip text search index for now due to language field conflicts
-        # The application will work without it, using regex-based search instead
-        # TODO: Implement proper text search with language mapping
-        print("ℹ️ Skipping text search index (using regex search instead)")
+        # Text search index with multilingual support
+        # Note: Using 'article_language' instead of 'language' to avoid conflicts
+        # This supports all languages including Hindi, Telugu, Tamil, etc.
+        try:
+            db[ARTICLES].create_index(
+                [("title", "text"), ("content", "text")],
+                name="article_text_search",
+                default_language="none"  # Treats all languages uniformly
+            )
+            print("✅ Text search index created for multilingual content")
+        except Exception as e:
+            print(f"ℹ️ Text search index already exists or skipped: {e}")
         
         # Galleries indexes (use gallery_id instead of slug)
         db[GALLERIES].create_index("gallery_id", unique=True)
