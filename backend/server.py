@@ -1443,11 +1443,11 @@ async def startup_event():
     await create_default_admin()
     
     # Initialize the article scheduler
-    # article_scheduler.initialize_scheduler()
-    # article_scheduler.start_scheduler()
+    article_scheduler.initialize_scheduler()
+    article_scheduler.start_scheduler()
 
 @app.on_event("shutdown")
 async def shutdown_event():
     logger.info("Blog CMS API shutting down...")
     # Stop the article scheduler
-    # article_scheduler.stop_scheduler()
+    article_scheduler.stop_scheduler()
