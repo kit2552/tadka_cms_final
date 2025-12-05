@@ -80,6 +80,18 @@ class ArticleUpdate(BaseModel):
     is_published: Optional[bool] = None
     is_scheduled: Optional[bool] = None
     scheduled_publish_at: Optional[datetime] = None
+    # Movie Review specific fields
+    review_quick_verdict: Optional[str] = None
+    review_plot_summary: Optional[str] = None
+    review_performances: Optional[str] = None
+    review_what_works: Optional[str] = None
+    review_what_doesnt_work: Optional[str] = None
+    review_technical_aspects: Optional[str] = None
+    review_final_verdict: Optional[str] = None
+    review_cast: Optional[str] = None
+    review_director: Optional[str] = None
+    review_genre: Optional[str] = None
+    review_runtime: Optional[str] = None
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
