@@ -755,19 +755,63 @@ const CreateArticle = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 text-left">State Targeting</label>
-                    <select
-                      value={selectedState}
-                      onChange={(e) => handleStateSelection(e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      {states
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((state) => (
-                          <option key={state.code} value={state.code}>
-                            {state.name}
-                          </option>
-                        ))}
-                    </select>
+                    
+                    {/* Selected States Display */}
+                    {selectedStates.length > 0 && (
+                      <div className="mb-3 flex flex-wrap gap-2">
+                        {selectedStates.map((stateCode) => {
+                          const stateName = states.find(s => s.code === stateCode)?.name || stateCode;
+                          return (
+                            <span
+                              key={stateCode}
+                              className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200"
+                            >
+                              {stateName}
+                              {stateCode !== 'all' && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveState(stateCode)}
+                                  className="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none"
+                                >
+                                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                  </svg>
+                                </button>
+                              )}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                    
+                    {/* State Selection Dropdown with Add Button */}
+                    <div className="flex gap-2">
+                      <select
+                        value={selectedState}
+                        onChange={(e) => setSelectedState(e.target.value)}
+                        className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        {states
+                          .sort((a, b) => a.name.localeCompare(b.name))
+                          .map((state) => (
+                            <option key={state.code} value={state.code}>
+                              {state.name}
+                            </option>
+                          ))}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={handleAddState}
+                        disabled={selectedStates.includes(selectedState)}
+                        className={`px-4 py-2 rounded-md font-medium ${
+                          selectedStates.includes(selectedState)
+                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                        }`}
+                      >
+                        Add
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
