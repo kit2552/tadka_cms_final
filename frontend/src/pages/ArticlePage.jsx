@@ -312,10 +312,6 @@ const ArticlePage = () => {
                       You can add rich text content here including multiple paragraphs, quotes, 
                       and other formatted content that makes up the complete article.
                     </p>
-                    <blockquote className={`border-l-4 border-blue-500 pl-4 italic text-gray-600 bg-blue-50 p-4 rounded-r-lg`}>
-                      "This is an example quote that might appear in the article to highlight 
-                      important information or provide expert opinions."
-                    </blockquote>
                     <p>
                       The article content would continue here with additional paragraphs, 
                       analysis, and conclusions relevant to the topic.
