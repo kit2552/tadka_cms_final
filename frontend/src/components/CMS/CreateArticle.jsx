@@ -312,6 +312,24 @@ const CreateArticle = () => {
     }
   }, [isEditMode, id]);
 
+  // Auto-save draft data every 30 seconds for new articles
+  useEffect(() => {
+    if (!isEditMode && formData.title) {
+      const autoSaveInterval = setInterval(() => {
+        const draftData = {
+          formData: formData,
+          selectedStates: selectedStates,
+          selectedArtist: selectedArtist,
+          selectedGallery: selectedGallery
+        };
+        localStorage.setItem('articleDraft', JSON.stringify(draftData));
+        console.log('Draft auto-saved');
+      }, 30000); // Save every 30 seconds
+
+      return () => clearInterval(autoSaveInterval);
+    }
+  }, [formData, selectedStates, selectedArtist, selectedGallery, isEditMode]);
+
   const fetchCMSConfig = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/config`);
