@@ -347,10 +347,16 @@ const Home = ({ layoutEditMode = false, onLayoutSave }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mb-4 mx-auto"></div>
-          <p className="text-lg font-medium text-gray-800">Loading Personalized Content</p>
+      <div className="min-h-screen bg-white relative">
+        {/* Modal Overlay */}
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          {/* Compact Modal */}
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-xs">
+            <div className="flex flex-col items-center">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-3"></div>
+              <p className="text-sm font-medium text-gray-700">Loading Personalized Content</p>
+            </div>
+          </div>
         </div>
       </div>
     );
