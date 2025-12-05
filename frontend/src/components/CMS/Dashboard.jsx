@@ -2407,7 +2407,7 @@ const Dashboard = () => {
                     </div>
                   </div>
 
-                  {/* Second Row: Search and Date Filter */}
+                  {/* Second Row: Search, Date Filter, and States Filter */}
                   <div className="flex items-center gap-3">
                     {/* Search Input */}
                     <div>
@@ -2437,6 +2437,22 @@ const Dashboard = () => {
                         <option value="halfYear">Last 6 Months</option>
                         <option value="year">Last Year</option>
                         <option value="future_scheduled">Future Scheduled</option>
+                      </select>
+                    </div>
+
+                    {/* States Filter */}
+                    <div>
+                      <select
+                        value={selectedState}
+                        onChange={(e) => setSelectedState(e.target.value)}
+                        className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">All States</option>
+                        {getStateNames().map(stateName => (
+                          <option key={stateName} value={stateName}>
+                            {stateName}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
