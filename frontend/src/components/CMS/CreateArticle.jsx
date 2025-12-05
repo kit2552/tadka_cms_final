@@ -153,17 +153,21 @@ const CreateArticle = () => {
           seo_keywords: article.seo_keywords || ''
         });
         
-        // Set selected state (single selection)
+        // Set selected states (multiple selection)
         if (article.states && article.states !== 'all') {
           try {
             const statesArray = JSON.parse(article.states);
-            // Take the first state if array exists, otherwise use 'all'
-            setSelectedState(statesArray && statesArray.length > 0 ? statesArray[0] : 'all');
+            if (Array.isArray(statesArray) && statesArray.length > 0) {
+              setSelectedStates(statesArray); // Set all states
+            } else {
+              setSelectedStates(['all']);
+            }
           } catch (e) {
-            setSelectedState('all');
+            console.error('Error parsing states:', e);
+            setSelectedStates(['all']);
           }
         } else {
-          setSelectedState('all');
+          setSelectedStates(['all']);
         }
         
         // Set selected artist (single selection)
