@@ -871,12 +871,12 @@ async def get_scheduler_settings_endpoint(db = Depends(get_db)):
     return settings
 
 @api_router.put("/admin/scheduler-settings", response_model=schemas.SchedulerSettingsResponse)
-async def update_scheduler_settings(
+async def update_scheduler_settings_endpoint(
     settings_update: schemas.SchedulerSettingsUpdate,
     db = Depends(get_db)
 ):
     """Update scheduler settings (Admin only)"""
-    updated_settings = crud.update_scheduler_settings(db, settings_update)
+    updated_settings = crud.update_scheduler_settings(db, settings_update.dict(exclude_unset=True))
     
     # Update the background scheduler
     if settings_update.is_enabled is not None:
