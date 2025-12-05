@@ -14,7 +14,6 @@ const ArticlePreview = () => {
   const [error, setError] = useState(null);
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
     fetchCMSConfig();
