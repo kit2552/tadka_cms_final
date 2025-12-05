@@ -820,6 +820,29 @@ const CreateArticle = () => {
                     />
                   </div>
 
+                  {/* State Targeting Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      State Targeting
+                    </label>
+                    <select
+                      value={selectedState}
+                      onChange={(e) => handleStateSelection(e.target.value)}
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {states
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((state) => (
+                          <option key={state.code} value={state.code}>
+                            {state.name}
+                          </option>
+                        ))}
+                    </select>
+                    <p className="mt-1 text-xs text-gray-500 text-left">
+                      Select which state this content targets. Choose "All States" for national content.
+                    </p>
+                  </div>
+
                   {/* POST Type Fields */}
                   {formData.content_type === 'post' && (
                     <>
