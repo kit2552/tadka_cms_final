@@ -128,7 +128,7 @@ async def get_articles_by_category(category_slug: str, skip: int = 0, limit: int
 async def get_latest_news_articles(request: Request, limit: int = 4, db = Depends(get_db)):
     """Get articles for Latest News/Top Stories section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="latest-news", limit=limit)
-    return _format_article_response(articles, db)
+    return articles
 
 @api_router.get("/articles/sections/politics", response_model=dict)
 async def get_politics_articles(
@@ -159,8 +159,8 @@ async def get_politics_articles(
     national_articles = crud.get_articles_by_category_slug(db, category_slug="national-politics", limit=limit)
     
     return {
-        "state_politics": _format_article_response(state_articles, db),
-        "national_politics": _format_article_response(national_articles, db)
+        "state_politics": state_articles,
+        "national_politics": national_articles
     }
 
 @api_router.get("/articles/sections/movies", response_model=dict)
@@ -170,8 +170,8 @@ async def get_movies_articles(limit: int = 4, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="movie-news-bollywood", limit=limit)
     
     return {
-        "movies": _format_article_response(movie_news_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "movies": movie_news_articles,
+        "bollywood": bollywood_articles
     }
 
 @api_router.get("/articles/sections/hot-topics", response_model=dict)
@@ -189,8 +189,8 @@ async def get_hot_topics_articles(limit: int = 4, states: str = None, db = Depen
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="hot-topics-bollywood", limit=limit)
     
     return {
-        "hot_topics": _format_article_response(hot_topics_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "hot_topics": hot_topics_articles,
+        "bollywood": bollywood_articles
     }
 
 
@@ -202,8 +202,8 @@ async def get_ai_stock_articles(limit: int = 4, db = Depends(get_db)):
     stock_articles = crud.get_articles_by_category_slug(db, category_slug="stock-market", limit=limit)
     
     return {
-        "ai": _format_article_response(ai_articles, db),
-        "stock_market": _format_article_response(stock_articles, db)
+        "ai": ai_articles,
+        "stock_market": stock_articles
     }
 
 @api_router.get("/articles/sections/fashion-beauty", response_model=dict)
@@ -213,8 +213,8 @@ async def get_fashion_beauty_articles(limit: int = 4, db = Depends(get_db)):
     travel_articles = crud.get_articles_by_category_slug(db, category_slug="travel", limit=limit)
     
     return {
-        "fashion": _format_article_response(fashion_articles, db),
-        "travel": _format_article_response(travel_articles, db)
+        "fashion": fashion_articles,
+        "travel": travel_articles
     }
 
 @api_router.get("/articles/sections/sports", response_model=dict)
@@ -224,8 +224,8 @@ async def get_sports_articles(limit: int = 4, db = Depends(get_db)):
     other_sports_articles = crud.get_articles_by_category_slug(db, category_slug="other-sports", limit=limit)
     
     return {
-        "cricket": _format_article_response(cricket_articles, db),
-        "other_sports": _format_article_response(other_sports_articles, db)
+        "cricket": cricket_articles,
+        "other_sports": other_sports_articles
     }
 
 @api_router.get("/articles/sections/hot-topics-gossip", response_model=dict)
@@ -235,8 +235,8 @@ async def get_hot_topics_gossip_articles(limit: int = 4, db = Depends(get_db)):
     gossip_articles = crud.get_articles_by_category_slug(db, category_slug="gossip", limit=limit)
     
     return {
-        "hot_topics": _format_article_response(hot_topics_articles, db),
-        "gossip": _format_article_response(gossip_articles, db)
+        "hot_topics": hot_topics_articles,
+        "gossip": gossip_articles
     }
 
 @api_router.get("/articles/sections/box-office", response_model=dict)
@@ -246,8 +246,8 @@ async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="bollywood-box-office", limit=limit)
     
     return {
-        "box_office": _format_article_response(box_office_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "box_office": box_office_articles,
+        "bollywood": bollywood_articles
     }
 
 @api_router.get("/articles/sections/trending-videos", response_model=dict)
@@ -284,8 +284,8 @@ async def get_trending_videos_articles(limit: int = 20, states: str = None, db =
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="bollywood-trending-videos", limit=limit)
     
     return {
-        "trending_videos": _format_article_response(trending_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "trending_videos": trending_articles,
+        "bollywood": bollywood_articles
     }
 
 # USA and ROW video sections endpoint
@@ -296,8 +296,8 @@ async def get_usa_row_videos_sections(limit: int = 20, db = Depends(get_db)):
     row_articles = crud.get_articles_by_category_slug(db, category_slug="row", limit=limit)
     
     return {
-        "usa": _format_article_response(usa_articles, db),
-        "row": _format_article_response(row_articles, db)
+        "usa": usa_articles,
+        "row": row_articles
     }
 
 @api_router.get("/articles/sections/viral-shorts", response_model=dict)
@@ -362,8 +362,8 @@ async def get_viral_shorts_articles(limit: int = 20, states: str = None, db = De
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="viral-shorts-bollywood", limit=limit)
     
     return {
-        "viral_shorts": _format_article_response(viral_shorts_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "viral_shorts": viral_shorts_articles,
+        "bollywood": bollywood_articles
     }
 
 @api_router.get("/articles/sections/ott-movie-reviews", response_model=dict)
@@ -373,8 +373,8 @@ async def get_ott_movie_reviews_articles(limit: int = 4, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="ott-reviews-bollywood", limit=limit)
     
     return {
-        "ott_movie_reviews": _format_article_response(ott_reviews_articles, db),
-        "web_series": _format_article_response(bollywood_articles, db)
+        "ott_movie_reviews": ott_reviews_articles,
+        "web_series": bollywood_articles
     }
 
 @api_router.get("/articles/sections/events-interviews", response_model=dict)
@@ -384,8 +384,8 @@ async def get_events_interviews_articles(limit: int = 4, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews-bollywood", limit=limit)
     
     return {
-        "events_interviews": _format_article_response(events_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "events_interviews": events_articles,
+        "bollywood": bollywood_articles
     }
 
 @api_router.get("/articles/sections/new-video-songs", response_model=dict)
@@ -395,8 +395,8 @@ async def get_new_video_songs_articles(limit: int = 4, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="new-video-songs-bollywood", limit=limit)
     
     return {
-        "video_songs": _format_article_response(video_songs_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "video_songs": video_songs_articles,
+        "bollywood": bollywood_articles
     }
 
 @api_router.get("/articles/sections/movie-reviews", response_model=dict)
@@ -406,8 +406,8 @@ async def get_movie_reviews_articles(limit: int = 20, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews-bollywood", limit=limit)
     
     return {
-        "movie_reviews": _format_article_response(movie_reviews_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "movie_reviews": movie_reviews_articles,
+        "bollywood": bollywood_articles
     }
 
 @api_router.get("/articles/sections/trailers-teasers", response_model=dict)
@@ -417,8 +417,8 @@ async def get_trailers_teasers_articles(limit: int = 4, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="trailers-teasers-bollywood", limit=limit)
     
     return {
-        "trailers": _format_article_response(trailers_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "trailers": trailers_articles,
+        "bollywood": bollywood_articles
     }
 
 @api_router.get("/articles/sections/box-office", response_model=dict)
@@ -428,8 +428,8 @@ async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="box-office-bollywood", limit=limit)
     
     return {
-        "box_office": _format_article_response(box_office_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "box_office": box_office_articles,
+        "bollywood": bollywood_articles
     }
 
 @api_router.get("/articles/sections/events-interviews", response_model=dict)
@@ -439,8 +439,8 @@ async def get_events_interviews_articles(limit: int = 4, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews-bollywood", limit=limit)
     
     return {
-        "events": _format_article_response(events_articles, db),
-        "bollywood": _format_article_response(bollywood_articles, db)
+        "events": events_articles,
+        "bollywood": bollywood_articles
     }
 
 @api_router.get("/articles/sections/tv-shows", response_model=dict)
@@ -450,8 +450,8 @@ async def get_tv_shows_articles(limit: int = 4, db = Depends(get_db)):
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="tv-shows-bollywood", limit=limit)
     
     return {
-        "tv": _format_article_response(tv_articles),
-        "bollywood": _format_article_response(bollywood_articles)
+        "tv": tv_articles,
+        "bollywood": bollywood_articles
     }
 
 # Frontend endpoint for OTT releases with Bollywood
@@ -514,7 +514,7 @@ async def get_ott_bollywood_releases(db = Depends(get_db)):
 async def get_trailers_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Trailers & Teasers section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="trailers", limit=limit)
-    return _format_article_response(articles)
+    return articles
 
 @api_router.get("/articles/sections/top-stories", response_model=dict)
 async def get_top_stories_articles(limit: int = 4, db = Depends(get_db)):
@@ -523,8 +523,8 @@ async def get_top_stories_articles(limit: int = 4, db = Depends(get_db)):
     national_articles = crud.get_articles_by_category_slug(db, category_slug="national-top-stories", limit=limit)
     
     return {
-        "top_stories": _format_article_response(top_stories_articles),
-        "national": _format_article_response(national_articles)
+        "top_stories": top_stories_articles,
+        "national": national_articles
     }
 
 @api_router.get("/articles/sections/nri-news", response_model=List[schemas.ArticleListResponse])
@@ -542,28 +542,28 @@ async def get_nri_news_articles(limit: int = 4, states: str = None, db = Depends
         # If no states specified, get all NRI news articles
         articles = crud.get_articles_by_category_slug(db, category_slug="nri-news", limit=limit)
     
-    return _format_article_response(articles)
+    return articles
 
 @api_router.get("/articles/sections/world-news", response_model=List[schemas.ArticleListResponse])
 async def get_world_news_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for World News section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="world-news", limit=limit)
-    return _format_article_response(articles)
+    return articles
 
 @api_router.get("/articles/sections/photoshoots", response_model=List[schemas.ArticleListResponse])
 async def get_photoshoots_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Photoshoots section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="photoshoots", limit=limit)
-    return _format_article_response(articles, db)
+    return articles
 
 @api_router.get("/articles/sections/travel-pics", response_model=List[schemas.ArticleListResponse])
 async def get_travel_pics_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Travel Pics section"""
     articles = crud.get_articles_by_category_slug(db, category_slug="travel-pics", limit=limit)
-    return _format_article_response(articles, db)
+    return articles
 
 # Helper function to format article response
-def _format_article_response(articles, db = None):
+def articles:
     """Helper function to format article list response"""
     result = []
     for article in articles:
