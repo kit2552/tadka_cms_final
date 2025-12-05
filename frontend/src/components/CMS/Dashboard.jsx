@@ -2525,9 +2525,11 @@ const Dashboard = () => {
                               <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
                                 {categories.find(c => c.slug === article.category)?.name || article.category}
                               </span>
-                              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                                {languages.find(l => l.code === article.language)?.native_name || article.language}
-                              </span>
+                              {article.language && (
+                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                  {languages.find(l => l.code === article.language)?.native_name || article.language}
+                                </span>
+                              )}
                               <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-50 text-gray-700 border border-gray-200">
                                 {article.content_type === 'video' ? 'Video' : 
                                  article.content_type === 'photo' ? 'Photo Gallery' : 
