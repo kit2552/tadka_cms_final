@@ -39,6 +39,7 @@ import VerticalImageGalleryModal from '../components/VerticalImageGalleryModal';
 const Home = ({ layoutEditMode = false, onLayoutSave }) => {
   const navigate = useNavigate();
   const { getSectionHeaderClasses } = useTheme();
+  const { t } = useLanguage();
   const { sectionOrder, moveSectionToIndex } = useDragDrop();
   const isIpad = useIpadDetection();
   const [data, setData] = useState(null);
