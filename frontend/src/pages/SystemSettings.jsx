@@ -6,6 +6,7 @@ const SystemSettings = () => {
   const [activeTab, setActiveTab] = useState('aws');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [showSecretKey, setShowSecretKey] = useState(false);
 
   // AWS Configuration State
   const [awsConfig, setAwsConfig] = useState({
