@@ -1306,6 +1306,43 @@ const Dashboard = () => {
     });
   };
 
+  const handleUnpublishArticle = async (articleId, isPublished) => {
+    const article = articles.find(a => a.id === articleId);
+    const articleTitle = article?.title || 'this article';
+    const action = isPublished ? 'unpublish' : 'publish';
+    const actionTitle = isPublished ? 'Unpublish' : 'Publish';
+    
+    showModal(
+      'warning',
+      `${actionTitle} Article`,
+      `Are you sure you want to ${action} "${articleTitle}"?`,
+      true,
+      async () => {
+        try {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/articles/${articleId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              is_published: !isPublished
+            })
+          });
+          
+          if (response.ok) {
+            showModal('success', 'Success', `Article ${action}ed successfully.`);
+            fetchArticles(); // Refresh list
+          } else {
+            throw new Error(`Failed to ${action} article`);
+          }
+        } catch (error) {
+          console.error(`Error ${action}ing article:`, error);
+          showModal('error', `${actionTitle} Failed`, `Failed to ${action} article. Please try again.`);
+        }
+      }
+    );
+  };
+
   const handleDeleteArticle = async (articleId) => {
     const article = articles.find(a => a.id === articleId);
     const articleTitle = article?.title || 'this article';
