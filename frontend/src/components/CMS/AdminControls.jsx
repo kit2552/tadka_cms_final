@@ -255,65 +255,74 @@ const AdminControls = () => {
                   <h2 className="text-lg font-semibold text-gray-900 text-left">Scheduled Articles List</h2>
                   <p className="text-sm text-gray-600 mt-1">View all articles scheduled for automatic publishing</p>
                 </div>
-          
-          {scheduledArticles.length === 0 ? (
-            <p className="text-gray-600 text-center py-8">No articles are currently scheduled for publishing.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Article
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Author
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Scheduled Time (IST)
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {scheduledArticles.map((article, index) => (
-                    <tr 
-                      key={article.id}
-                      className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}
-                    >
-                      <td className="px-4 py-4">
-                        <div className="text-left">
-                          <h3 className="text-sm font-medium text-gray-900">
-                            {article.title}
-                          </h3>
-                          {article.short_title && (
-                            <p className="text-xs text-gray-600 mt-1">{article.short_title}</p>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 text-sm text-gray-700">
-                        {article.author}
-                      </td>
-                      <td className="px-4 py-4 text-sm text-gray-700">
-                        {formatDateTime(article.scheduled_publish_at)}
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
-                          new Date(article.scheduled_publish_at) <= new Date()
-                            ? 'bg-green-50 text-green-700 border border-green-200'
-                            : 'bg-orange-50 text-orange-700 border border-orange-200'
-                        }`}>
-                          {new Date(article.scheduled_publish_at) <= new Date() ? 'Ready to Publish' : 'Scheduled'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                
+                {scheduledArticles.length === 0 ? (
+                  <div className="text-center py-16">
+                    <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No Scheduled Articles</h3>
+                    <p className="text-gray-600">No articles are currently scheduled for publishing.</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Article
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Author
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Scheduled Time (IST)
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {scheduledArticles.map((article) => (
+                          <tr 
+                            key={article.id}
+                            className="hover:bg-gray-50 transition-colors"
+                          >
+                            <td className="px-6 py-4">
+                              <div className="text-left">
+                                <h3 className="text-sm font-medium text-gray-900">
+                                  {article.title}
+                                </h3>
+                                {article.short_title && (
+                                  <p className="text-xs text-gray-600 mt-1">{article.short_title}</p>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-700">
+                              {article.author}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-700">
+                              {formatDateTime(article.scheduled_publish_at)}
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                                new Date(article.scheduled_publish_at) <= new Date()
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-orange-100 text-orange-800'
+                              }`}>
+                                {new Date(article.scheduled_publish_at) <= new Date() ? 'Ready to Publish' : 'Scheduled'}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
