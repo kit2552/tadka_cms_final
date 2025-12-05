@@ -1484,6 +1484,17 @@ async def startup_event():
     # Create default admin user
     await create_default_admin()
     
+    # Initialize S3 service with stored configuration
+    try:
+        aws_config = crud.get_aws_config(db)
+        if aws_config and aws_config.get('is_enabled'):
+            s3_service.initialize(aws_config)
+            logger.info("✅ S3 service initialized")
+        else:
+            logger.info("ℹ️ S3 not enabled, using local storage")
+    except Exception as e:
+        logger.warning(f"⚠️ S3 initialization failed: {e}. Using local storage.")
+    
     # Initialize the article scheduler
     article_scheduler.initialize_scheduler()
     article_scheduler.start_scheduler()
