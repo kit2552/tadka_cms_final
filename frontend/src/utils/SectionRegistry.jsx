@@ -26,9 +26,7 @@ import StockMarket from '../components/StockMarket';
 import Fashion from '../components/Fashion';
 import SponsoredAds from '../components/SponsoredAds';
 
-export const createSectionRegistry = (data, handlers, isIpad = false, stateRelatedSectionsLoading = false) => {
-  const { getSectionHeaderClasses } = useTheme();
-  const { t } = useLanguage();
+export const createSectionRegistry = (data, handlers, isIpad = false, stateRelatedSectionsLoading = false, getSectionHeaderClasses, t) => {
   
   return {
     'tadka-pics': {
