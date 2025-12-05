@@ -1086,7 +1086,7 @@ const CreateArticle = () => {
                         />
                         {formData.image && (
                           <div className="mt-2">
-                            <img src={formData.image} alt="Preview" className="w-32 h-20 object-cover rounded" />
+                            <img src={getImageUrl(formData.image)} alt="Preview" className="w-32 h-20 object-cover rounded" />
                           </div>
                         )}
                       </div>
@@ -1323,7 +1323,7 @@ const CreateArticle = () => {
                         />
                         {formData.image && (
                           <div className="mt-2">
-                            <img src={formData.image} alt="Preview" className="w-32 h-20 object-cover rounded" />
+                            <img src={getImageUrl(formData.image)} alt="Preview" className="w-32 h-20 object-cover rounded" />
                           </div>
                         )}
                       </div>
