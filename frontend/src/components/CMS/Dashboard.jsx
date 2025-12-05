@@ -2789,7 +2789,7 @@ const Dashboard = () => {
                   {/* Related Posts List */}
                   {(() => {
                     console.log('Current relatedArticlesConfig:', relatedArticlesConfig); // Debug log
-                    return Object.keys(relatedArticlesConfig).length === 0;
+                    return Object.keys(relatedArticlesConfig || {}).length === 0;
                   })() ? (
                     <div className="p-8 text-center">
                       <div className="text-gray-400 mb-4">
