@@ -443,8 +443,8 @@ const SystemSettings = () => {
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="text-left">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
                         Root Folder Path
                       </label>
                       <input
