@@ -613,6 +613,7 @@ const CreateArticle = () => {
       
       const submitData = {
         ...formData,
+        article_language: formData.language || 'en', // Map language to article_language for backend
         summary: textContent.substring(0, 200) + '...', // Generate summary from content
         states: JSON.stringify(selectedStates), // Convert states array to JSON string
         artists: JSON.stringify(selectedArtist ? [selectedArtist] : []), // Include selected artist as array
