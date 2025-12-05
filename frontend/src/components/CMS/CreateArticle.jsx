@@ -50,7 +50,8 @@ const CreateArticle = () => {
     seo_keywords: ''
   });
 
-  const [selectedState, setSelectedState] = useState('all'); // Changed to single state selection
+  const [selectedState, setSelectedState] = useState('all'); // Temporary state for dropdown selection
+  const [selectedStates, setSelectedStates] = useState(['all']); // Array of selected states
   const [selectedArtist, setSelectedArtist] = useState(''); // Changed to single artist (string)
   const [availableArtists, setAvailableArtists] = useState([]); // Available artists from API
   const [showArtistModal, setShowArtistModal] = useState(false); // New state for artist modal
