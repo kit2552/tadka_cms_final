@@ -200,6 +200,17 @@ def get_articles_for_cms(db: Session, language: str = "en", skip: int = 0, limit
             models.Article.states.like(f'%"{state_code}"%')
         )
     
+    if content_type:
+        query = query.filter(models.Article.content_type == content_type)
+    
+    if status:
+        if status == 'published':
+            query = query.filter(models.Article.is_published == True)
+        elif status == 'scheduled':
+            query = query.filter(models.Article.is_scheduled == True)
+        elif status == 'draft':
+            query = query.filter(models.Article.is_published == False, models.Article.is_scheduled == False)
+    
     return query.order_by(desc(models.Article.created_at)).offset(skip).limit(limit).all()
 
 def create_article_cms(db: Session, article: schemas.ArticleCreate, slug: str, seo_title: str, seo_description: str):
