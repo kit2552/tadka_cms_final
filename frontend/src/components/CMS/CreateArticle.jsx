@@ -525,12 +525,18 @@ const CreateArticle = () => {
   };
 
   const handlePreview = () => {
-    // Store form data in localStorage for preview
-    localStorage.setItem('previewArticle', JSON.stringify({
-      ...formData,
-      states: [selectedState] // Convert single state to array for preview compatibility
-    }));
-    window.open('/cms/preview/new', '_blank');
+    if (articleId && articleId !== 'new') {
+      // For existing articles, redirect to actual article page
+      const slug = formData.slug || formData.title?.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/article/${articleId}/${slug}?preview=true`);
+    } else {
+      // For new articles, store in localStorage and show preview
+      localStorage.setItem('previewArticle', JSON.stringify({
+        ...formData,
+        states: [selectedState] // Convert single state to array for preview compatibility
+      }));
+      navigate('/cms/preview/new');
+    }
   };
 
   const handleTranslate = () => {
