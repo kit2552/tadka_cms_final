@@ -43,6 +43,15 @@ const SystemSettings = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/aws-config`);
       const data = await response.json();
+      
+      // Store masked values as placeholders but keep original if exists
+      if (data.aws_access_key_id && data.aws_access_key_id.includes('****')) {
+        setOriginalKeys(prev => ({ ...prev, accessKeyId: data.aws_access_key_id }));
+      }
+      if (data.aws_secret_access_key && data.aws_secret_access_key.includes('****')) {
+        setOriginalKeys(prev => ({ ...prev, secretKey: data.aws_secret_access_key }));
+      }
+      
       setAwsConfig(data);
     } catch (error) {
       console.error('Failed to load AWS config:', error);
