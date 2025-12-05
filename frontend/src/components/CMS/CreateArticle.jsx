@@ -171,7 +171,7 @@ const CreateArticle = () => {
           states: article.states || 'all',
           category: article.category || '',
           content_type: article.content_type || 'post', // Load content type
-          image: article.main_image_url || '',
+          image: article.image || article.main_image_url || '',
           image_gallery: article.image_gallery ? JSON.parse(article.image_gallery) : [], // Load image gallery safely
           youtube_url: article.youtube_url || '',
           tags: article.tags || '',
