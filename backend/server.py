@@ -970,14 +970,14 @@ async def update_scheduler_settings(
     # Update the background scheduler
     if settings_update.is_enabled is not None:
         if settings_update.is_enabled:
-            article_scheduler.start_scheduler()
+            # article_scheduler.start_scheduler()
             frequency = settings_update.check_frequency_minutes or updated_settings.check_frequency_minutes
-            article_scheduler.update_schedule(frequency)
+            # article_scheduler.update_schedule(frequency)
         else:
-            article_scheduler.stop_scheduler()
+            # article_scheduler.stop_scheduler()
     
     if settings_update.check_frequency_minutes is not None and updated_settings.is_enabled:
-        article_scheduler.update_schedule(settings_update.check_frequency_minutes)
+        # article_scheduler.update_schedule(settings_update.check_frequency_minutes)
     
     return updated_settings
 
@@ -985,7 +985,7 @@ async def update_scheduler_settings(
 async def run_scheduler_now():
     """Manually trigger scheduled article publishing (Admin only)"""
     try:
-        article_scheduler.check_and_publish_scheduled_articles()
+        # article_scheduler.check_and_publish_scheduled_articles()
         return {"message": "Scheduler run completed successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Scheduler run failed: {str(e)}")
@@ -1529,11 +1529,11 @@ async def startup_event():
     await create_default_admin()
     
     # Initialize the article scheduler
-    article_scheduler.initialize_scheduler()
-    article_scheduler.start_scheduler()
+    # article_scheduler.initialize_scheduler()
+    # article_scheduler.start_scheduler()
 
 @app.on_event("shutdown")
 async def shutdown_event():
     logger.info("Blog CMS API shutting down...")
     # Stop the article scheduler
-    article_scheduler.stop_scheduler()
+    # article_scheduler.stop_scheduler()
