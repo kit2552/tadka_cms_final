@@ -387,7 +387,7 @@ const SystemSettings = () => {
                           name="aws_secret_access_key"
                           value={awsConfig.aws_secret_access_key}
                           onChange={handleAWSConfigChange}
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          className="w-full px-4 py-2.5 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono"
                           placeholder="••••••••••••••••••••••••••••••••••••••••"
                           required={awsConfig.is_enabled}
                         />
