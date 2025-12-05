@@ -703,7 +703,7 @@ const CreateArticle = () => {
                 className="px-6 py-4 border-b border-gray-200 cursor-pointer flex items-center justify-between hover:bg-gray-50"
                 onClick={() => toggleAccordion('authorTargeting')}
               >
-                <h3 className="text-lg font-medium text-gray-900 text-left">Author & Targeting</h3>
+                <h3 className="text-base font-bold text-gray-900 text-left">Author & Targeting</h3>
                 <svg 
                   className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${accordionStates.authorTargeting ? 'transform rotate-180' : ''}`}
                   fill="none" 
