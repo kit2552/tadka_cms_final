@@ -544,7 +544,8 @@ const SystemSettings = () => {
                         name="s3_bucket_name"
                         value={awsConfig.s3_bucket_name}
                         onChange={handleAWSConfigChange}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        disabled={!awsConfig.is_enabled}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                         placeholder="prime-pixel-cms-uploads"
                         required={awsConfig.is_enabled}
                       />
@@ -559,7 +560,8 @@ const SystemSettings = () => {
                         name="root_folder_path"
                         value={awsConfig.root_folder_path}
                         onChange={handleAWSConfigChange}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        disabled={!awsConfig.is_enabled}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                         placeholder="/"
                       />
                     </div>
