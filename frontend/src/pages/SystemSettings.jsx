@@ -7,7 +7,7 @@ const SystemSettings = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [showSecretKey, setShowSecretKey] = useState(false);
-  const [showAccessKeyId, setShowAccessKeyId] = useState(false);
+  const [showAccessKeyId, setShowAccessKeyId] = useState(true); // Start with visible
   const [connectionStatus, setConnectionStatus] = useState('unknown'); // unknown, testing, connected, disconnected
   const [originalKeys, setOriginalKeys] = useState({ accessKeyId: '', secretKey: '' }); // Store original unmasked values
 
