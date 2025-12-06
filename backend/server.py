@@ -678,7 +678,8 @@ async def get_cms_articles(
 async def upload_image(
     file: UploadFile = File(...), 
     content_type: str = Form("articles"),
-    folder_path: str = Form(None)
+    folder_path: str = Form(None),
+    image_number: int = Form(None)
 ):
     """
     Upload image for CMS use (articles, galleries, tadka-pics)
@@ -688,15 +689,27 @@ async def upload_image(
     Args:
         file: The image file to upload
         content_type: Type of content - "articles", "galleries", or "tadka-pics"
-        folder_path: Optional folder path for galleries (e.g., "actor/kirti_sanon/1")
+        folder_path: Optional folder path for galleries (e.g., "actor/kirti_sanon/h/1")
+        image_number: Sequential number for gallery images (e.g., 1, 2, 3)
     """
     try:
         # Validate file type
         if not file.content_type or not file.content_type.startswith('image/'):
             raise HTTPException(status_code=400, detail="File must be an image")
         
-        # If folder_path is provided and content_type is galleries, use it
-        if folder_path and content_type == "galleries":
+        # Get file extension
+        original_filename = file.filename
+        file_extension = os.path.splitext(original_filename)[1].lower()
+        if not file_extension:
+            file_extension = '.jpg'  # Default to jpg
+        
+        # For galleries with folder_path and image_number, rename the file
+        if folder_path and content_type == "galleries" and image_number is not None:
+            # Rename file to sequential number
+            new_filename = f"{image_number}{file_extension}"
+            file.filename = new_filename
+            content_type = f"galleries/{folder_path}"
+        elif folder_path and content_type == "galleries":
             content_type = f"galleries/{folder_path}"
         
         # Upload file with specified content type
@@ -706,7 +719,8 @@ async def upload_image(
             "success": True,
             "url": file_url,
             "storage": "s3" if s3_service.is_enabled() else "local",
-            "content_type": content_type
+            "content_type": content_type,
+            "image_number": image_number
         }
     except Exception as e:
         logger.error(f"Image upload failed: {e}")
