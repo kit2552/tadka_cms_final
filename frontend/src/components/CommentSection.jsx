@@ -127,17 +127,15 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
           {comments.map((comment) => (
             <div
               key={comment.id}
-              className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm"
+              className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm text-left"
             >
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h4 className="font-semibold text-gray-900 text-sm">{comment.name}</h4>
-                  <p className="text-xs text-gray-500">
-                    {formatDate(comment.created_at)}
-                  </p>
-                </div>
+              <div className="mb-2">
+                <h4 className="font-semibold text-gray-900 text-sm">{comment.name}</h4>
+                <p className="text-[10px] text-gray-500 mt-0.5">
+                  {formatDate(comment.created_at)}
+                </p>
               </div>
-              <p className="text-gray-700 text-sm whitespace-pre-wrap">{comment.comment}</p>
+              <p className="text-gray-700 text-sm whitespace-pre-wrap text-left">{comment.comment}</p>
             </div>
           ))}
         </div>
