@@ -4761,7 +4761,7 @@ const Dashboard = () => {
                               }`} style={{ transform: 'scale(0.6)' }}>
                                 <img
                                   src={image.data}
-                                  alt={image.name}
+                                  alt={`Image ${image.imageNumber || image.name.split('.')[0]}`}
                                   className="w-full h-full object-cover"
                                 />
                               </div>
