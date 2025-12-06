@@ -4711,36 +4711,45 @@ const Dashboard = () => {
                       <p className="text-xs text-gray-500 mt-1">Select multiple images (JPG, PNG, GIF)</p>
                     </div>
 
-                    {/* Uploaded Images List */}
+                    {/* Uploaded Images Grid */}
                     {galleryForm.images.length > 0 && (
-                      <div className="space-y-2 max-h-60 overflow-y-auto">
-                        <h4 className="text-sm font-medium text-gray-700 text-left">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 text-left mb-3">
                           Uploaded Images ({galleryForm.images.length})
                         </h4>
-                        {galleryForm.images.map((image) => (
-                          <div key={image.id} className="flex items-center justify-between p-2 bg-gray-50 rounded border">
-                            <div className="flex items-center space-x-3">
-                              <img
-                                src={image.data}
-                                alt={image.name}
-                                className="w-12 h-12 object-cover rounded"
-                              />
-                              <div className="text-left">
-                                <p className="text-sm font-medium text-gray-900">{image.name}</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-96 overflow-y-auto p-2">
+                          {galleryForm.images.map((image) => (
+                            <div key={image.id} className="relative group">
+                              <div className="aspect-square rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors">
+                                <img
+                                  src={image.data}
+                                  alt={image.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              {/* Image Number Badge */}
+                              <div className="absolute top-1 left-1 bg-black bg-opacity-70 text-white text-xs px-2 py-0.5 rounded">
+                                {image.imageNumber || image.name.split('.')[0]}
+                              </div>
+                              {/* Delete Button */}
+                              <button
+                                type="button"
+                                onClick={() => handleImageDelete(image.id)}
+                                className="absolute top-1 right-1 bg-red-600 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-700 transition-all duration-200 shadow-lg"
+                                title="Delete image"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                              {/* Image Info */}
+                              <div className="mt-1 text-left">
+                                <p className="text-xs font-medium text-gray-900 truncate">{image.name}</p>
                                 <p className="text-xs text-gray-500">{(image.size / 1024).toFixed(1)} KB</p>
                               </div>
                             </div>
-                            <button
-                              type="button"
-                              onClick={() => handleImageDelete(image.id)}
-                              className="text-red-600 hover:text-red-800 transition-colors duration-200"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                            </button>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
