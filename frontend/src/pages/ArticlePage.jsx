@@ -583,7 +583,7 @@ const ArticlePage = () => {
                     </p>
                   </div>
                 </div>
-                <div className="overflow-y-auto pr-4" style={{ maxHeight: '400px' }}>
+                <div className="pr-4">
                   <CommentSection articleId={article.id} commentType="review" />
                 </div>
               </div>
@@ -602,7 +602,7 @@ const ArticlePage = () => {
                     </p>
                   </div>
                 </div>
-                <div className="overflow-y-auto pr-4" style={{ maxHeight: '400px' }}>
+                <div className="pr-4">
                   <CommentSection articleId={article.id} commentType="regular" />
                 </div>
               </div>
