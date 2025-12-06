@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular' }) => {
+const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular', existingReview = null, isEditing = false }) => {
   const [formData, setFormData] = useState({
     name: '',
     comment: '',
@@ -8,6 +8,23 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular' }) =>
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Load existing review data when editing
+  React.useEffect(() => {
+    if (isEditing && existingReview) {
+      setFormData({
+        name: existingReview.name || '',
+        comment: existingReview.comment || '',
+        rating: existingReview.rating ? String(existingReview.rating) : ''
+      });
+    } else {
+      setFormData({
+        name: '',
+        comment: '',
+        rating: ''
+      });
+    }
+  }, [isEditing, existingReview]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
