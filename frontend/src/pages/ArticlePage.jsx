@@ -372,87 +372,71 @@ const ArticlePage = () => {
 
                 {/* Quick Verdict */}
                 {article.review_quick_verdict && (
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border-l-4 border-blue-500 shadow-sm">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">Quick Verdict</h3>
-                    <p className="text-lg font-semibold text-blue-900 italic">{article.review_quick_verdict}</p>
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">Quick Verdict</h3>
+                    </div>
+                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_quick_verdict}</p>
                   </div>
                 )}
 
                 {/* Plot Summary */}
                 {article.review_plot_summary && (
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                      <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                      </svg>
-                      What's It About?
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_plot_summary}</p>
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">What's It About?</h3>
+                    </div>
+                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_plot_summary}</p>
                   </div>
                 )}
 
                 {/* Performances */}
                 {article.review_performances && (
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                      <svg className="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      Performances
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_performances}</p>
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">Performances</h3>
+                    </div>
+                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_performances}</p>
                   </div>
                 )}
 
                 {/* What Works */}
                 {article.review_what_works && (
-                  <div className="bg-green-50 p-6 rounded-lg shadow-sm border-l-4 border-green-500">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                      <svg className="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      What Works
-                    </h3>
-                    <div className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_what_works}</div>
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">What Works</h3>
+                    </div>
+                    <div className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_what_works}</div>
                   </div>
                 )}
 
                 {/* What Doesn't Work */}
                 {article.review_what_doesnt_work && (
-                  <div className="bg-red-50 p-6 rounded-lg shadow-sm border-l-4 border-red-500">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                      <svg className="w-6 h-6 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      What Doesn't Work
-                    </h3>
-                    <div className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_what_doesnt_work}</div>
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">What Doesn't Work</h3>
+                    </div>
+                    <div className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_what_doesnt_work}</div>
                   </div>
                 )}
 
                 {/* Technical Aspects */}
                 {article.review_technical_aspects && (
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                      <svg className="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      Technical Aspects
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_technical_aspects}</p>
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">Technical Aspects</h3>
+                    </div>
+                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_technical_aspects}</p>
                   </div>
                 )}
 
                 {/* Final Verdict */}
                 {article.review_final_verdict && (
-                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg shadow-sm border-l-4 border-gray-600">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                      <svg className="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                      </svg>
-                      Final Verdict
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{article.review_final_verdict}</p>
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">Final Verdict</h3>
+                    </div>
+                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_final_verdict}</p>
                   </div>
                 )}
 
