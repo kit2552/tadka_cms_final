@@ -1995,11 +1995,19 @@ const Dashboard = () => {
       const orientationFolder = galleryType === 'horizontal' ? 'h' : 'v';
       const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
       
+      // Prepare image data - only send metadata, not base64 data
+      const imageMetadata = galleryForm.images.map(img => ({
+        url: img.url,
+        s3_key: img.s3_key,
+        name: img.name,
+        size: img.size
+      }));
+      
       const galleryData = {
         gallery_id: editingGallery ? editingGallery.gallery_id : generateGalleryId(),
         title: galleryForm.title,
         artists: [selectedEntity], // Use entity name as artist for compatibility
-        images: galleryForm.images,
+        images: imageMetadata,
         gallery_type: galleryType,
         category_type: galleryCategory,
         entity_name: selectedEntity,
