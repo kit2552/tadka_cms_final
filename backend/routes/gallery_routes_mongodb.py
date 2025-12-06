@@ -74,6 +74,14 @@ async def get_galleries(skip: int = 0, limit: int = 100, db = Depends(get_db)):
     
     return [GalleryResponse(**gallery) for gallery in galleries]
 
+@router.get("/galleries/tadka-pics", response_model=List[GalleryResponse])
+async def get_tadka_pics_galleries(limit: int = 20, db = Depends(get_db)):
+    """Get latest Tadka Pics enabled galleries"""
+    
+    galleries = crud.get_tadka_pics_galleries(db, limit=limit)
+    
+    return [GalleryResponse(**gallery) for gallery in galleries]
+
 @router.get("/galleries/{gallery_id}", response_model=GalleryResponse)
 async def get_gallery(gallery_id: str, db = Depends(get_db)):
     """Get a specific gallery by gallery_id"""
