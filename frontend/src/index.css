@@ -307,24 +307,17 @@ code {
 .prose p,
 .prose div,
 .prose span,
-.prose li,
-.prose a,
-.prose blockquote {
-  font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  font-weight: 400 !important;
-}
-
 .prose h1,
 .prose h2,
 .prose h3,
 .prose h4,
 .prose h5,
-.prose h6 {
-  font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
-}
-
+.prose h6,
+.prose li,
+.prose a,
 .prose strong,
-.prose em {
+.prose em,
+.prose blockquote {
   font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
@@ -333,5 +326,33 @@ code {
 [style*="Proxima Nova"],
 [style*="font-family"] {
   font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  font-weight: 400 !important;
+}
+
+/* Allow font-weight variations (400-700) for bold text */
+.prose strong,
+.prose b,
+.prose [style*="font-weight: 700"],
+.prose [style*="font-weight: bold"] {
+  font-weight: 700 !important;
+}
+
+/* Allow font sizes from 1rem to 2rem */
+.prose [style*="font-size: 1rem"] {
+  font-size: 1rem !important;
+}
+
+.prose [style*="font-size: 1.25rem"] {
+  font-size: 1.25rem !important;
+}
+
+.prose [style*="font-size: 1.5rem"] {
+  font-size: 1.5rem !important;
+}
+
+.prose [style*="font-size: 1.75rem"] {
+  font-size: 1.75rem !important;
+}
+
+.prose [style*="font-size: 2rem"] {
+  font-size: 2rem !important;
 }
