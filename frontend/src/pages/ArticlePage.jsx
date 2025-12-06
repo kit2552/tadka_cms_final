@@ -565,10 +565,10 @@ const ArticlePage = () => {
             </div>
 
             {/* Comment Section */}
-            {article.content_type === 'movie_review' && article.review_comments_enabled && (
+            {article.content_type === 'movie_review' && (article.review_comments_enabled !== false) && (
               <CommentSection articleId={article.id} commentType="review" />
             )}
-            {article.content_type !== 'movie_review' && article.comments_enabled && (
+            {article.content_type !== 'movie_review' && (article.comments_enabled !== false) && (
               <CommentSection articleId={article.id} commentType="regular" />
             )}
 
