@@ -20,7 +20,10 @@ class AWSConfigUpdate(BaseModel):
     aws_secret_access_key: Optional[str] = None
     aws_region: str = "us-east-1"
     s3_bucket_name: Optional[str] = None
-    root_folder_path: str = ""
+    root_folder_path: str = ""  # Legacy field, kept for backwards compatibility
+    articles_root_folder: str = "articles"
+    galleries_root_folder: str = "galleries"
+    tadka_pics_root_folder: str = "tadka-pics"
     max_file_size_mb: int = 10
 
 # ==================== User Management Models ====================
