@@ -1042,13 +1042,15 @@ async def get_related_articles_for_page(
 # File upload helper functions
 def get_next_image_filename(date: datetime = None) -> tuple:
     """
-    Get the next available filename for the given date
+    Get the next available filename for the given date (IST timezone)
     Returns (date_path, next_number) tuple
     For S3: Path structure is YYYY/MM/DD/N.ext (root folder 'images' is added by S3 config)
     For Local: Path structure is images/YYYY/MM/DD/N.ext
     """
     if date is None:
-        date = datetime.now()
+        # Use IST timezone for consistency
+        ist = pytz_timezone('Asia/Kolkata')
+        date = datetime.now(ist)
     
     # Create date-based path
     year = date.strftime("%Y")
