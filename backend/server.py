@@ -1109,26 +1109,28 @@ def get_next_image_filename(date: datetime = None) -> tuple:
 
 async def save_uploaded_file(upload_file: UploadFile, subfolder: str = None) -> str:
     """
-    Save uploaded file using S3 (if enabled) or local storage (fallback)
+    Save uploaded file using date-based structure: images/YYYY/MM/DD/N.ext
+    Uses S3 (if enabled) or local storage (fallback)
     Returns the URL or path to the uploaded file
     """
     if not upload_file.filename:
         raise HTTPException(status_code=400, detail="No file selected")
     
-    # Generate unique filename
-    file_extension = os.path.splitext(upload_file.filename)[1]
-    unique_filename = f"{uuid.uuid4()}{file_extension}"
+    # Get file extension
+    file_extension = os.path.splitext(upload_file.filename)[1] or '.jpg'
+    
+    # Get next filename using date-based structure
+    date_path, next_num = get_next_image_filename()
+    filename_with_path = f"{date_path}/{next_num}{file_extension}"
     
     # Read file content
     content = await upload_file.read()
     
     # Try S3 upload if enabled
     if s3_service.is_enabled():
-        # Add subfolder to filename for S3 organization
-        s3_filename = f"{subfolder}/{unique_filename}"
         s3_url = s3_service.upload_file(
             file_content=content,
-            filename=s3_filename,
+            filename=filename_with_path,
             content_type=upload_file.content_type
         )
         
@@ -1139,15 +1141,15 @@ async def save_uploaded_file(upload_file: UploadFile, subfolder: str = None) -> 
             logger.warning("S3 upload failed, falling back to local storage")
     
     # Fallback to local storage
-    subfolder_path = UPLOAD_DIR / subfolder
-    subfolder_path.mkdir(exist_ok=True)
+    local_path = UPLOAD_DIR / date_path
+    local_path.mkdir(parents=True, exist_ok=True)
     
-    file_path = subfolder_path / unique_filename
+    file_path = local_path / f"{next_num}{file_extension}"
     async with aiofiles.open(file_path, 'wb') as f:
         await f.write(content)
     
     # Return relative path for storage in database
-    return f"/uploads/{subfolder}/{unique_filename}"
+    return f"/uploads/{date_path}/{next_num}{file_extension}"
 
 # Theater Release endpoints
 @api_router.get("/cms/theater-releases", response_model=List[schemas.TheaterReleaseResponse])
