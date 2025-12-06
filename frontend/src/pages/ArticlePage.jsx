@@ -369,6 +369,17 @@ const ArticlePage = () => {
                           <span className="text-white font-medium text-xs leading-relaxed">{article.review_cast}</span>
                         </div>
                       )}
+                      {article.platform && (
+                        <div className="flex items-center gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Platform</span>
+                          <span className="text-white font-medium text-xs">
+                            {article.platform === 'OTT' && article.ott_platform 
+                              ? `${article.platform} - ${article.ott_platform}`
+                              : article.platform
+                            }
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Right Side - Rating */}
