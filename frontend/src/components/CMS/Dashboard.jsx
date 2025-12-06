@@ -4549,36 +4549,6 @@ const Dashboard = () => {
                     </div>
                   )}
 
-                  {/* Artist Field */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                      Artist *
-                    </label>
-                    <div className="flex gap-2">
-                      <select
-                        value={selectedGalleryArtist || ''}
-                        onChange={(e) => setSelectedGalleryArtist(e.target.value)}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        required
-                      >
-                        <option value="">Select an artist</option>
-                        {availableArtists.map(artist => (
-                          <option key={artist} value={artist}>
-                            {artist}
-                          </option>
-                        ))}
-                      </select>
-                      <button
-                        type="button"
-                        onClick={() => setShowGalleryArtistModal(true)}
-                        className="w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium transition-colors duration-200 flex items-center justify-center flex-shrink-0"
-                        title="Add New Artist"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
                   {/* Image Upload Section */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
