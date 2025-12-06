@@ -406,8 +406,8 @@ def create_scheduler_settings(db, settings: dict):
 def get_scheduled_articles_for_publishing(db):
     """Get articles that are scheduled and ready to be published"""
     from pytz import timezone
-    ist = timezone('Asia/Kolkata')
-    current_time_ist = datetime.now(ist).replace(tzinfo=None)
+    est = timezone('America/New_York')
+    current_time_est = datetime.now(est).replace(tzinfo=None)
     
     query = {
         "is_scheduled": True,
