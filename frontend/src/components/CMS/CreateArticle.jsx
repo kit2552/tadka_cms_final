@@ -89,6 +89,11 @@ const CreateArticle = () => {
   const [newImageUrl, setNewImageUrl] = useState(''); // For adding new images to gallery
   const [editingImageIndex, setEditingImageIndex] = useState(null); // Index of image being edited
 
+  // OTT Platform states
+  const [ottPlatforms, setOttPlatforms] = useState([]);
+  const [showOttModal, setShowOttModal] = useState(false);
+  const [newOttPlatformName, setNewOttPlatformName] = useState('');
+
   // Accordion states
   const [accordionStates, setAccordionStates] = useState({
     authorTargeting: true,
