@@ -19,6 +19,12 @@ ARTICLE_TOPICS = "article_topics"
 GALLERIES = "galleries"
 GALLERY_TOPICS = "gallery_topics"
 OTT_PLATFORMS = "ott_platforms"
+GALLERY_ACTORS = "gallery_actors"
+GALLERY_ACTRESSES = "gallery_actresses"
+GALLERY_EVENTS = "gallery_events"
+GALLERY_POLITICS = "gallery_politics"
+GALLERY_TRAVEL = "gallery_travel"
+GALLERY_OTHERS = "gallery_others"
 
 def create_indexes(db):
     """
