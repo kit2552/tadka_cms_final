@@ -4747,18 +4747,23 @@ const Dashboard = () => {
                         <h4 className="text-sm font-medium text-gray-700 text-left mb-3">
                           Uploaded Images ({galleryForm.images.length})
                         </h4>
-                        <div className={`grid gap-2 max-h-96 overflow-y-auto p-1 ${
-                          galleryType === 'horizontal' 
-                            ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' 
-                            : 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7'
-                        }`}>
+                        <div 
+                          className="max-h-96 overflow-y-auto"
+                          style={{ 
+                            display: 'grid',
+                            gap: '5px',
+                            gridTemplateColumns: galleryType === 'horizontal' 
+                              ? 'repeat(auto-fill, minmax(180px, 1fr))'
+                              : 'repeat(auto-fill, minmax(100px, 1fr))'
+                          }}
+                        >
                           {galleryForm.images.map((image) => (
                             <div key={image.id} className="relative">
                               <div className={`rounded overflow-hidden border border-gray-300 hover:border-blue-400 transition-colors ${
                                 galleryType === 'horizontal' 
                                   ? 'aspect-[16/9]'  // Horizontal format
                                   : 'aspect-[9/16]'  // Vertical format
-                              }`} style={{ transform: 'scale(0.6)' }}>
+                              }`}>
                                 <img
                                   src={image.data}
                                   alt={`Image ${image.imageNumber || image.name.split('.')[0]}`}
