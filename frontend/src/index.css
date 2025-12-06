@@ -369,12 +369,20 @@ code {
   font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
-/* Default font weight for article main content */
+/* Default font weight and size for article main content */
 .prose p,
 .prose div,
 .prose span,
 .prose li {
+  font-size: 1rem !important;
   font-weight: 400;
+}
+
+/* Override any inline font-size styles */
+.prose p[style*="font-size"],
+.prose div[style*="font-size"],
+.prose span[style*="font-size"] {
+  font-size: 1rem !important;
 }
 
 /* Good paragraph spacing and line height for readability */
