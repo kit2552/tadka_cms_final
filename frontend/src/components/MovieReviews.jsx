@@ -95,11 +95,9 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
     }
   };
 
-  // Generate random rating for each movie (between 1.0 and 5.0)
-  const getRandomRating = (index) => {
-    // Use index to ensure consistent ratings for each movie
-    const ratings = [4.2, 3.8, 4.5, 2.9, 3.6, 4.1, 3.3, 4.7, 2.5, 3.9, 4.0, 3.2, 4.4, 2.8, 3.7];
-    return ratings[index % ratings.length];
+  // Get movie rating from article or return default
+  const getMovieRating = (item) => {
+    return item.movie_rating || '3.5';
   };
 
   const nextSlide = () => {
