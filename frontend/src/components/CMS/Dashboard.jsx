@@ -4806,7 +4806,7 @@ const Dashboard = () => {
                                   : 'aspect-[9/16]'  // Vertical format
                               }`}>
                                 <img
-                                  src={image.data}
+                                  src={image.url || image.data}
                                   alt={`Image ${image.imageNumber || image.name.split('.')[0]}`}
                                   className="w-full h-full object-cover"
                                 />
@@ -4816,7 +4816,7 @@ const Dashboard = () => {
                                   <button
                                     type="button"
                                     onClick={() => {
-                                      setPreviewImage(image.data);
+                                      setPreviewImage(image.url || image.data);
                                       setShowImagePreview(true);
                                     }}
                                     className="bg-black bg-opacity-30 text-white p-2 rounded-full hover:bg-opacity-50 transition-all"
