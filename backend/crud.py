@@ -1057,6 +1057,10 @@ def create_gallery(db, gallery_data: dict):
         "artists": json.dumps(gallery_data["artists"]) if isinstance(gallery_data["artists"], list) else gallery_data["artists"],
         "images": json.dumps(gallery_data["images"]) if isinstance(gallery_data["images"], list) else gallery_data["images"],
         "gallery_type": gallery_data.get("gallery_type", "vertical"),
+        "category_type": gallery_data.get("category_type"),  # Actor, Actress, Events, etc.
+        "entity_name": gallery_data.get("entity_name"),  # Selected actor/actress/event name
+        "entity_id": gallery_data.get("entity_id"),  # ID of the selected entity
+        "folder_path": gallery_data.get("folder_path"),  # Full folder path for images
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
     }
