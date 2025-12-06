@@ -376,7 +376,7 @@ const ArticlePage = () => {
                       <div className="flex flex-col items-center justify-center border-l border-gray-700 pl-4 flex-shrink-0">
                         <div className="text-4xl font-bold text-white leading-none">{article.movie_rating}</div>
                         <div className="text-xs text-gray-400 mb-1">/5</div>
-                        <div className="flex items-center gap-0.5">
+                        <div className="flex items-center gap-0.5 mb-3">
                           {[...Array(5)].map((_, i) => {
                             const rating = parseFloat(article.movie_rating);
                             const filled = i < Math.floor(rating);
@@ -392,6 +392,40 @@ const ArticlePage = () => {
                             );
                           })}
                         </div>
+
+                        {/* Divider */}
+                        <div className="w-full border-t border-gray-700 mb-3"></div>
+
+                        {/* User Rating */}
+                        {userRating ? (
+                          <div className="flex flex-col items-center">
+                            <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">User Rating</div>
+                            <div className="text-2xl font-bold text-white leading-none">{userRating}</div>
+                            <div className="text-[10px] text-gray-400 mb-1">/5</div>
+                            <div className="flex items-center gap-0.5">
+                              {[...Array(5)].map((_, i) => {
+                                const rating = parseFloat(userRating);
+                                const filled = i < Math.floor(rating);
+                                return (
+                                  <svg
+                                    key={i}
+                                    className={`w-2.5 h-2.5 ${filled ? 'text-yellow-400' : 'text-gray-600'}`}
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                  </svg>
+                                );
+                              })}
+                            </div>
+                            <div className="text-[10px] text-gray-400 mt-1">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</div>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center">
+                            <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">User Rating</div>
+                            <div className="text-xs text-gray-500">No reviews yet</div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
