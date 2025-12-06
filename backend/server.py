@@ -674,7 +674,11 @@ async def get_cms_articles(
     }
 
 @api_router.post("/cms/upload-image")
-async def upload_image(file: UploadFile = File(...), content_type: str = Form("articles")):
+async def upload_image(
+    file: UploadFile = File(...), 
+    content_type: str = Form("articles"),
+    folder_path: str = Form(None)
+):
     """
     Upload image for CMS use (articles, galleries, tadka-pics)
     Uses S3 if enabled, otherwise local storage
@@ -683,11 +687,16 @@ async def upload_image(file: UploadFile = File(...), content_type: str = Form("a
     Args:
         file: The image file to upload
         content_type: Type of content - "articles", "galleries", or "tadka-pics"
+        folder_path: Optional folder path for galleries (e.g., "actor/kirti_sanon/1")
     """
     try:
         # Validate file type
         if not file.content_type or not file.content_type.startswith('image/'):
             raise HTTPException(status_code=400, detail="File must be an image")
+        
+        # If folder_path is provided and content_type is galleries, use it
+        if folder_path and content_type == "galleries":
+            content_type = f"galleries/{folder_path}"
         
         # Upload file with specified content type
         file_url = await save_uploaded_file(file, content_type=content_type)
