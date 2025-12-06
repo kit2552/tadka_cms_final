@@ -321,6 +321,14 @@ code {
   font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
+/* Default font weight for article main content */
+.prose p,
+.prose div,
+.prose span,
+.prose li {
+  font-weight: 400;
+}
+
 /* Override ProximaNova font specifically */
 [style*="ProximaNova"],
 [style*="Proxima Nova"],
@@ -328,15 +336,27 @@ code {
   font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
-/* Allow font-weight variations (400-700) for bold text */
-.prose strong,
-.prose b,
+/* Allow inline font-weight variations (400-700) from rich text editor */
+.prose [style*="font-weight: 400"] {
+  font-weight: 400 !important;
+}
+
+.prose [style*="font-weight: 500"] {
+  font-weight: 500 !important;
+}
+
+.prose [style*="font-weight: 600"] {
+  font-weight: 600 !important;
+}
+
 .prose [style*="font-weight: 700"],
-.prose [style*="font-weight: bold"] {
+.prose [style*="font-weight: bold"],
+.prose strong,
+.prose b {
   font-weight: 700 !important;
 }
 
-/* Allow font sizes from 1rem to 2rem */
+/* Allow font sizes from 1rem to 2rem from rich text editor */
 .prose [style*="font-size: 1rem"] {
   font-size: 1rem !important;
 }
