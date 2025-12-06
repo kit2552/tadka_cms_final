@@ -88,7 +88,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
               {headerTitle}
             </h2>
             <p className="text-xs text-gray-900 opacity-75 text-left">
-              Share your thoughts on this article (no account required)
+              Share your thoughts (no account required)
             </p>
           </div>
           <button
