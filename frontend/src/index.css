@@ -300,6 +300,45 @@ code {
   border-color: #e1e1e1; /* Darker border so it's visible against #f9fafa background */
 }
 
+/* Rich Text Editor Default Styles */
+.rdw-editor-main,
+.DraftEditor-root,
+.public-DraftEditor-content {
+  font-size: 16px !important;
+  font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  min-height: 300px;
+}
+
+.rdw-editor-toolbar {
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 0;
+}
+
+/* Ensure link button is visible and functional */
+.rdw-link-wrapper,
+.rdw-image-wrapper {
+  display: inline-flex !important;
+}
+
+.rdw-option-wrapper {
+  border: 1px solid #e5e7eb;
+  min-width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.rdw-option-wrapper:hover {
+  box-shadow: 1px 1px 0 #bfbdbd;
+  background-color: #f3f4f6;
+}
+
+.rdw-option-active {
+  background-color: #e5e7eb;
+}
+
 
 /* Force Merriweather Sans on all prose content - Override any inline styles */
 .prose,
