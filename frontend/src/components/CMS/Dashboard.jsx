@@ -5156,19 +5156,21 @@ const Dashboard = () => {
           onClick={() => setShowImagePreview(false)}
         >
           <div className="relative max-w-4xl max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={() => setShowImagePreview(false)}
-              className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors"
-            >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
             <img
               src={previewImage}
               alt="Preview"
               className="max-w-full max-h-[90vh] object-contain rounded-lg"
             />
+            {/* Close Button - On Image Top Right */}
+            <button
+              onClick={() => setShowImagePreview(false)}
+              className="absolute top-2 right-2 bg-black bg-opacity-60 text-white p-2 rounded hover:bg-opacity-80 transition-all shadow-lg"
+              title="Close preview"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
         </div>
       )}
