@@ -196,7 +196,9 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                           onError={(e) => {
                             // Fallback to regular image if YouTube thumbnail fails
                             e.target.style.display = 'none';
-                            e.target.nextSibling?.style.display = 'block';
+                            if (e.target.nextSibling) {
+                              e.target.nextSibling.style.display = 'block';
+                            }
                           }}
                         />
                       ) : null}
