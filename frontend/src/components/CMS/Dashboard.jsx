@@ -1802,50 +1802,83 @@ const Dashboard = () => {
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
     
+    if (!galleryCategory || !selectedEntity || !galleryType) {
+      showModal('warning', 'Missing Information', 'Please select Gallery Type, Category, and Entity before uploading images.');
+      return;
+    }
+    
     // Get current image count to determine starting number
     let currentCount = galleryForm.images.length;
     
-    // If we have folder path, fetch the actual next number from backend
-    if (galleryCategory && selectedEntity && galleryType) {
-      const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
-      const orientationFolder = galleryType === 'horizontal' ? 'h' : 'v';
-      const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
-      
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-next-image-number?folder_path=${encodeURIComponent(folderPath)}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          currentCount = data.current_count;
-        }
-      } catch (error) {
-        console.error('Error fetching next image number:', error);
+    // Create folder path
+    const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
+    const orientationFolder = galleryType === 'horizontal' ? 'h' : 'v';
+    const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
+    
+    // Fetch the actual next number from backend
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-next-image-number?folder_path=${encodeURIComponent(folderPath)}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        currentCount = data.current_count;
       }
+    } catch (error) {
+      console.error('Error fetching next image number:', error);
     }
     
-    files.forEach((file, index) => {
+    // Upload files to S3
+    for (let index = 0; index < files.length; index++) {
+      const file = files[index];
       if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const imageNumber = currentCount + index + 1;
-          const fileExtension = file.name.split('.').pop();
-          const newImage = {
-            id: Date.now() + Math.random(),
-            name: `${imageNumber}.${fileExtension}`,
-            originalName: file.name,
-            data: e.target.result,
-            size: file.size,
-            imageNumber: imageNumber
-          };
-          setGalleryForm(prev => ({
-            ...prev,
-            images: [...prev.images, newImage]
-          }));
-        };
-        reader.readAsDataURL(file);
+        const imageNumber = currentCount + index + 1;
+        const fileExtension = file.name.split('.').pop();
+        
+        try {
+          // Create FormData for upload
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('folder_path', folderPath);
+          formData.append('image_number', imageNumber);
+          
+          // Upload to S3
+          const uploadResponse = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/api/cms/upload-gallery-image`,
+            {
+              method: 'POST',
+              body: formData
+            }
+          );
+          
+          if (uploadResponse.ok) {
+            const uploadData = await uploadResponse.json();
+            
+            // Add image with S3 URL to form
+            const newImage = {
+              id: Date.now() + Math.random(),
+              name: uploadData.filename,
+              originalName: file.name,
+              url: uploadData.url,
+              s3_key: uploadData.s3_key,
+              size: file.size,
+              imageNumber: imageNumber
+            };
+            
+            setGalleryForm(prev => ({
+              ...prev,
+              images: [...prev.images, newImage]
+            }));
+          } else {
+            const errorData = await uploadResponse.json();
+            showModal('error', 'Upload Failed', errorData.detail || `Failed to upload ${file.name}`);
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          showModal('error', 'Upload Error', `Error uploading ${file.name}: ${error.message}`);
+        }
       }
-    });
+    }
   };
 
   const handleImageDelete = async (imageId) => {
