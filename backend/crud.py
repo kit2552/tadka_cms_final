@@ -1185,6 +1185,16 @@ def update_gallery(db, gallery_id: str, gallery_data: dict):
         update_fields["images"] = json.dumps(gallery_data["images"]) if isinstance(gallery_data["images"], list) else gallery_data["images"]
     if "gallery_type" in gallery_data:
         update_fields["gallery_type"] = gallery_data["gallery_type"]
+    if "category_type" in gallery_data:
+        update_fields["category_type"] = gallery_data["category_type"]
+    if "entity_name" in gallery_data:
+        update_fields["entity_name"] = gallery_data["entity_name"]
+    if "entity_id" in gallery_data:
+        update_fields["entity_id"] = gallery_data["entity_id"]
+    if "folder_path" in gallery_data:
+        update_fields["folder_path"] = gallery_data["folder_path"]
+    if "tadka_pics_enabled" in gallery_data:
+        update_fields["tadka_pics_enabled"] = gallery_data["tadka_pics_enabled"]
     
     db[GALLERIES].update_one(
         {"gallery_id": gallery_id},
