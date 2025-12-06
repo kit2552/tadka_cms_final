@@ -82,11 +82,11 @@ def get_comments(article_id: str, comment_type: Optional[str] = None):
     return {"comments": comments, "count": len(comments)}
 
 @router.delete("/api/articles/{article_id}/comments/{comment_id}")
-async def delete_comment(article_id: str, comment_id: str):
+def delete_comment(article_id: str, comment_id: str):
     """Delete a comment (admin only)"""
     from server import db
     
-    result = await db.comments.delete_one({
+    result = db.comments.delete_one({
         "id": comment_id,
         "article_id": article_id
     })
