@@ -4,12 +4,11 @@
 
 body {
     margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
         "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
         "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 code {
@@ -191,8 +190,8 @@ code {
     }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 400; /* Normal weight for Inter */
+    font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
     }
 }
 
@@ -266,13 +265,13 @@ code {
   background-color: #f9fafa; /* Same background as other themes */
 }
 
-/* Inter font utility */
-.font-inter {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+/* Merriweather Sans font utility */
+.font-merriweather {
+  font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.font-inter-medium {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+.font-merriweather-medium {
+  font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
 }
 
