@@ -408,8 +408,8 @@ async def get_new_video_songs_articles(limit: int = 4, db = Depends(get_db)):
         "bollywood": bollywood_articles
     }
 
-@api_router.get("/articles/sections/movie-reviews", response_model=dict)
-async def get_movie_reviews_articles(limit: int = 20, db = Depends(get_db)):
+@api_router.get("/articles/sections/movie-reviews")
+def get_movie_reviews_articles(limit: int = 20, db = Depends(get_db)):
     """Get articles for Movie Reviews section with Movie Reviews and Bollywood tabs - latest 20 from each category"""
     movie_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews-bollywood", limit=limit)
