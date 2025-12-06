@@ -1976,6 +1976,20 @@ const Dashboard = () => {
             updatedAt: newGallery.updated_at
           };
           setVerticalGalleries(prev => [...prev, galleryForState]);
+          
+          // Renumber images in the gallery folder to ensure sequential numbering
+          try {
+            await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/renumber-gallery-images`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: `folder_path=${encodeURIComponent(folderPath)}`
+            });
+          } catch (renumberError) {
+            console.error('Error renumbering images:', renumberError);
+          }
+          
           showModal('success', 'Gallery Created', `Gallery has been created successfully! ID: ${galleryData.gallery_id}`);
         } else {
           throw new Error('Failed to create gallery');
