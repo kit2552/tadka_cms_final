@@ -499,8 +499,8 @@ const ArticlePage = () => {
             )}
 
             {/* Share Icons - Bottom of article content */}
-            <div className="border-t border-gray-300 pt-4 mb-2 lg:mb-8" style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
-              <div className="pt-4 pb-2 lg:py-4 flex justify-start space-x-2.5">
+            <div className="border-t border-gray-300 mb-2 lg:mb-8" style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+              <div className="py-3 flex justify-start space-x-2.5">
                 <button
                   onClick={() => handleShare('facebook')}
                   className="w-6 h-6 bg-blue-600 text-white rounded-md flex items-center justify-center hover:bg-blue-700 transition-colors duration-200"
