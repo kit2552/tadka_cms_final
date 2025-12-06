@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CommentModal from './CommentModal';
 
-const CommentSection = ({ articleId, commentType = 'regular' }) => {
+const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Comments' }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
