@@ -1856,25 +1856,27 @@ const Dashboard = () => {
 
   const handleGallerySubmit = async (e) => {
     e.preventDefault();
-    if (!galleryForm.title || !galleryCategory || !selectedEntity || galleryForm.images.length === 0) {
+    if (!galleryForm.title || !galleryType || !galleryCategory || !selectedEntity || galleryForm.images.length === 0) {
       showModal('warning', 'Missing Fields', 'Please fill in all required fields and upload at least one image.');
       return;
     }
 
     try {
-      // Create folder path for images
+      // Create folder path for images with h/v subfolder
       const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
-      const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${nextGalleryNumber}`;
+      const orientationFolder = galleryType === 'horizontal' ? 'h' : 'v';
+      const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
       
       const galleryData = {
         gallery_id: editingGallery ? editingGallery.gallery_id : generateGalleryId(),
         title: galleryForm.title,
         artists: [selectedEntity], // Use entity name as artist for compatibility
         images: galleryForm.images,
-        gallery_type: "vertical",
+        gallery_type: galleryType,
         category_type: galleryCategory,
         entity_name: selectedEntity,
-        folder_path: folderPath
+        folder_path: folderPath,
+        tadka_pics_enabled: galleryType === 'vertical' ? tadkaPicsEnabled : false
       };
 
       if (editingGallery) {
