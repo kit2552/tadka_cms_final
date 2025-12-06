@@ -11,6 +11,25 @@ module.exports = {
                         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
                         inter: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                 },
+                typography: {
+                        DEFAULT: {
+                                css: {
+                                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        h1: {
+                                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        h2: {
+                                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        h3: {
+                                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        h4: {
+                                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                },
+                        },
+                },
                 borderRadius: {
                         lg: 'var(--radius)',
                         md: 'calc(var(--radius) - 2px)',
