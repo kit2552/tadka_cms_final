@@ -1707,25 +1707,34 @@ const Dashboard = () => {
     });
     
     // Set gallery type (horizontal/vertical)
-    if (gallery.gallery_type) {
-      setGalleryType(gallery.gallery_type);
-    }
+    setGalleryType(gallery.gallery_type || '');
     
-    // Set gallery category (Actor, Actress, etc.)
+    // Set Tadka Pics enabled (check both boolean and undefined)
+    setTadkaPicsEnabled(gallery.tadka_pics_enabled === true);
+    
+    // Set gallery category and fetch entities
     if (gallery.category_type) {
       setGalleryCategory(gallery.category_type);
-      // Fetch entities for this category
-      await fetchGalleryEntities(gallery.category_type);
-    }
-    
-    // Set selected entity
-    if (gallery.entity_name) {
-      setSelectedEntity(gallery.entity_name);
-    }
-    
-    // Set Tadka Pics enabled
-    if (gallery.tadka_pics_enabled !== undefined) {
-      setTadkaPicsEnabled(gallery.tadka_pics_enabled);
+      // Fetch entities for this category first
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${gallery.category_type.toLowerCase()}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setAvailableEntities(data.entities || []);
+          
+          // Now set selected entity after entities are loaded
+          if (gallery.entity_name) {
+            // Use setTimeout to ensure state is updated
+            setTimeout(() => {
+              setSelectedEntity(gallery.entity_name);
+            }, 100);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching entities for edit:', error);
+      }
     }
     
     // Set selected artist for backwards compatibility
