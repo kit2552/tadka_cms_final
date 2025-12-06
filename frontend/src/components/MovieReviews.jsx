@@ -182,7 +182,7 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                 <div
                   key={item.id}
                   className="flex-shrink-0"
-                  style={{ minWidth: '200px' }}
+                  style={{ minWidth: '220px' }}
                 >
                   <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group cursor-pointer"
                        onClick={() => handleArticleClick(item)}>
@@ -192,14 +192,14 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                           src={getYouTubeThumbnail(item.youtube_url)}
                           alt={item.title || item.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          style={{ width: '200px', height: '120px' }}
+                          style={{ width: '220px', height: '132px' }}
                         />
                       ) : (
                         <ArticleImage
                           src={item.image_url || item.image}
                           alt={item.title || item.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          style={{ width: '200px', height: '120px' }}
+                          style={{ width: '220px', height: '132px' }}
                           contentType={activeTab === 'bollywood' ? 'movie-reviews-bollywood' : 'movie-reviews'}
                         />
                       )}
@@ -209,8 +209,8 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                         {getRandomRating(currentIndex + index)}
                       </div>
                       
-                      {/* Title Overlay */}
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2">
+                      {/* Title Overlay with Black Transparent Banner */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
                         <h3 className="text-white font-bold text-xs text-center leading-tight">
                           {item.title || item.name}
                         </h3>
