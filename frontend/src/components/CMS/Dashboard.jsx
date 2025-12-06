@@ -1893,7 +1893,8 @@ const Dashboard = () => {
             gallery_type: galleryData.gallery_type,
             category_type: galleryData.category_type,
             entity_name: galleryData.entity_name,
-            folder_path: galleryData.folder_path
+            folder_path: galleryData.folder_path,
+            tadka_pics_enabled: galleryData.tadka_pics_enabled
           }),
         });
 
