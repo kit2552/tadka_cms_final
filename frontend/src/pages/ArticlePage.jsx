@@ -539,7 +539,7 @@ const ArticlePage = () => {
             {article.content_type === 'movie_review' && (article.review_comments_enabled !== false) && (
               <div className="mb-6">
                 <div className="pr-4">
-                  <CommentSection articleId={article.id} commentType="review" headerTitle="Movie Review Comments" />
+                  <CommentSection articleId={article.id} commentType="review" headerTitle="User Reviews" />
                 </div>
               </div>
             )}
