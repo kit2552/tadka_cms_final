@@ -1939,10 +1939,12 @@ const Dashboard = () => {
       setEditingGallery(null);
       setGalleryForm({ title: '', images: [] });
       setSelectedGalleryArtist('');
+      setGalleryType('');
       setGalleryCategory('');
       setSelectedEntity('');
       setAvailableEntities([]);
       setNextGalleryNumber(1);
+      setTadkaPicsEnabled(false);
     } catch (error) {
       console.error('Error saving gallery:', error);
       showModal('error', 'Save Failed', 'Failed to save gallery. Please try again.');
