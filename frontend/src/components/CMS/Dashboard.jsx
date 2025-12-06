@@ -359,13 +359,15 @@ const Dashboard = () => {
   // Single artist selection for galleries (replacing multiple artists)
   const [selectedGalleryArtist, setSelectedGalleryArtist] = useState('');
   
-  // Gallery category states
-  const [galleryCategory, setGalleryCategory] = useState('');
+  // Gallery type and category states
+  const [galleryType, setGalleryType] = useState('');  // horizontal or vertical
+  const [galleryCategory, setGalleryCategory] = useState('');  // Actor, Actress, Events, etc.
   const [selectedEntity, setSelectedEntity] = useState('');
   const [availableEntities, setAvailableEntities] = useState([]);
   const [showEntityModal, setShowEntityModal] = useState(false);
   const [newEntityName, setNewEntityName] = useState('');
   const [nextGalleryNumber, setNextGalleryNumber] = useState(1);
+  const [tadkaPicsEnabled, setTadkaPicsEnabled] = useState(false);
   const [selectedHorizontalGalleryArtist, setSelectedHorizontalGalleryArtist] = useState('');
   
   // Horizontal gallery artist modal states
