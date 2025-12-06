@@ -61,7 +61,11 @@ async def create_gallery(gallery: GalleryCreate, db = Depends(get_db)):
         "title": gallery.title,
         "artists": gallery.artists,
         "images": gallery.images,
-        "gallery_type": gallery.gallery_type
+        "gallery_type": gallery.gallery_type,
+        "category_type": gallery.category_type,
+        "entity_name": gallery.entity_name,
+        "folder_path": gallery.folder_path,
+        "tadka_pics_enabled": gallery.tadka_pics_enabled
     })
     
     return GalleryResponse(**new_gallery)
