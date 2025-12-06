@@ -372,23 +372,39 @@ code {
   font-weight: 700 !important;
 }
 
-/* Allow font sizes from 1rem to 2rem from rich text editor */
-.prose [style*="font-size: 1rem"] {
-  font-size: 1rem !important;
+/* Allow font sizes from rich text editor (px values) */
+.prose [style*="font-size: 12px"] {
+  font-size: 12px !important;
 }
 
-.prose [style*="font-size: 1.25rem"] {
-  font-size: 1.25rem !important;
+.prose [style*="font-size: 14px"] {
+  font-size: 14px !important;
 }
 
-.prose [style*="font-size: 1.5rem"] {
-  font-size: 1.5rem !important;
+.prose [style*="font-size: 16px"] {
+  font-size: 16px !important;
 }
 
-.prose [style*="font-size: 1.75rem"] {
-  font-size: 1.75rem !important;
+.prose [style*="font-size: 18px"] {
+  font-size: 18px !important;
 }
 
-.prose [style*="font-size: 2rem"] {
-  font-size: 2rem !important;
+.prose [style*="font-size: 20px"] {
+  font-size: 20px !important;
+}
+
+.prose [style*="font-size: 22px"] {
+  font-size: 22px !important;
+}
+
+.prose [style*="font-size: 24px"] {
+  font-size: 24px !important;
+}
+
+.prose [style*="font-size: 28px"] {
+  font-size: 28px !important;
+}
+
+.prose [style*="font-size: 32px"] {
+  font-size: 32px !important;
 }
