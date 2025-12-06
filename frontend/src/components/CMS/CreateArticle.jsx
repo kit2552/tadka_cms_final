@@ -59,7 +59,10 @@ const CreateArticle = () => {
     review_cast: '',
     review_director: '',
     review_genre: '',
-    review_runtime: ''
+    review_runtime: '',
+    // Comment settings
+    comments_enabled: true,
+    review_comments_enabled: true
   });
 
   const [selectedState, setSelectedState] = useState(''); // Temporary state for dropdown selection
