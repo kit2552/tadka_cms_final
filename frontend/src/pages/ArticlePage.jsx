@@ -4,6 +4,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { extractArticleIdFromURL, createSEOArticleURL } from '../utils/seoUtils';
 import { PlaceholderImage } from '../utils/imageUtils';
+import CommentSection from '../components/CommentSection';
 
 const ArticlePage = () => {
   const { articleId, slug } = useParams();
