@@ -268,13 +268,13 @@ code {
   background-color: #f9fafa; /* Same background as other themes */
 }
 
-/* Poppins font utility */
-.font-poppins {
-  font-family: 'Poppins', sans-serif;
+/* Inter font utility */
+.font-inter {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.font-poppins-medium {
-  font-family: 'Poppins', sans-serif;
+.font-inter-medium {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
 }
 
