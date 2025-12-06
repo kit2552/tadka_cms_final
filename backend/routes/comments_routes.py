@@ -44,6 +44,7 @@ def add_comment(article_id: str, comment: CommentCreate, request: Request):
         "name": comment.name,
         "comment": comment.comment,
         "comment_type": comment.comment_type,
+        "rating": comment.rating,
         "ip_address": ip_address,
         "device_info": device_info,
         "created_at": datetime.now(timezone.utc).isoformat(),
@@ -61,6 +62,7 @@ def add_comment(article_id: str, comment: CommentCreate, request: Request):
             "name": comment_doc["name"],
             "comment": comment_doc["comment"],
             "comment_type": comment_doc["comment_type"],
+            "rating": comment_doc["rating"],
             "ip_address": comment_doc["ip_address"],
             "device_info": comment_doc["device_info"],
             "created_at": comment_doc["created_at"]
