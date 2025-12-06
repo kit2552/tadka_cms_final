@@ -40,6 +40,11 @@ class GalleryResponse(BaseModel):
     artists: List[str]
     images: List[dict]
     gallery_type: str
+    category_type: Optional[str] = None
+    entity_name: Optional[str] = None
+    entity_id: Optional[int] = None
+    folder_path: Optional[str] = None
+    tadka_pics_enabled: Optional[bool] = False
     created_at: datetime
     updated_at: datetime
 
