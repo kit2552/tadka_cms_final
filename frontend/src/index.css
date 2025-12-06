@@ -193,8 +193,8 @@ code {
     }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500; /* Medium weight */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400; /* Normal weight for Inter */
     }
 }
 
