@@ -21,6 +21,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
       if (response.ok) {
         const data = await response.json();
         setComments(data.comments || []);
+        setTotalCount(data.count || 0);
       }
     } catch (error) {
       console.error('Error fetching comments:', error);
