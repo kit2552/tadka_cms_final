@@ -197,7 +197,10 @@ const CreateArticle = () => {
           review_cast: article.review_cast || '',
           review_director: article.review_director || '',
           review_genre: article.review_genre || '',
-          review_runtime: article.review_runtime || ''
+          review_runtime: article.review_runtime || '',
+          // Comment settings
+          comments_enabled: article.comments_enabled !== undefined ? article.comments_enabled : true,
+          review_comments_enabled: article.review_comments_enabled !== undefined ? article.review_comments_enabled : true
         });
         
         // Set selected states (multiple selection)
