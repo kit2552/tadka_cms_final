@@ -19,6 +19,9 @@ const SystemSettings = () => {
     aws_region: 'us-east-1',
     s3_bucket_name: '',
     root_folder_path: '',
+    articles_root_folder: 'articles',
+    galleries_root_folder: 'galleries',
+    tadka_pics_root_folder: 'tadka-pics',
     max_file_size_mb: 10
   });
 
