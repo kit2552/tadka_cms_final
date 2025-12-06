@@ -60,13 +60,10 @@ class S3Service:
         
         try:
             bucket_name = self.config.get('s3_bucket_name')
-            root_folder = self.config.get('root_folder_path', '').strip('/')
             
-            # Construct S3 key (path)
-            if root_folder:
-                s3_key = f"{root_folder}/{filename}"
-            else:
-                s3_key = filename
+            # Use filename as-is - it already contains the full path
+            # (e.g., "articles/2025/12/05/1.png" or "galleries/2025/12/05/1.png")
+            s3_key = filename
             
             # Check file size limit
             max_size = self.config.get('max_file_size_mb', 10) * 1024 * 1024  # Convert to bytes
