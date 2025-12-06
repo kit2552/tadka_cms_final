@@ -28,6 +28,33 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   
   const movieReviews = filterCurrentArticles(rawMovieReviews);
   const bollywoodReviews = filterCurrentArticles(rawBollywoodReviews);
+
+  // Get YouTube thumbnail URL from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    try {
+      // Extract video ID from various YouTube URL formats
+      let videoId = null;
+      
+      if (youtubeUrl.includes('youtube.com/watch?v=')) {
+        videoId = youtubeUrl.split('v=')[1]?.split('&')[0];
+      } else if (youtubeUrl.includes('youtu.be/')) {
+        videoId = youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+      } else if (youtubeUrl.includes('youtube.com/embed/')) {
+        videoId = youtubeUrl.split('embed/')[1]?.split('?')[0];
+      }
+      
+      if (videoId) {
+        // Use high quality thumbnail (maxresdefault for best quality, mqdefault as fallback)
+        return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+      }
+    } catch (error) {
+      console.error('Error extracting YouTube thumbnail:', error);
+    }
+    
+    return null;
+  };
   
   const itemsPerSlide = 6; // Show 6 items per slide
   const getCurrentData = () => {
