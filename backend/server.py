@@ -1088,15 +1088,15 @@ def get_next_image_filename(date: datetime = None) -> tuple:
                         continue
             
             next_num = max_num + 1
-            return (date_path, next_num)
+            return (s3_date_path, next_num)
             
         except Exception as e:
             logger.error(f"Error checking S3 for next filename: {e}")
-            return (date_path, 1)
+            return (s3_date_path, 1)
     
     # For local storage, check filesystem
     else:
-        local_path = UPLOAD_DIR / date_path
+        local_path = UPLOAD_DIR / local_date_path
         local_path.mkdir(parents=True, exist_ok=True)
         
         # Find highest numbered file
