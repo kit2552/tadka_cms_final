@@ -476,6 +476,48 @@ const CreateArticle = () => {
     }
   };
 
+  // Handle gallery image upload with folder structure
+  const handleGalleryImageUpload = async (file) => {
+    if (!file || !galleryCategory || !selectedEntity) {
+      showNotification('error', 'Missing Information', 'Please select gallery type and entity first');
+      return null;
+    }
+
+    try {
+      setLoading(true);
+      
+      // Create folder path: {category_type}/{entity_folder_name}/{gallery_number}
+      const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
+      const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${nextGalleryNumber}`;
+      
+      // Create FormData for file upload
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+      uploadFormData.append('content_type', 'galleries');
+      uploadFormData.append('folder_path', folderPath);
+      
+      // Upload to backend
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/upload-image`, {
+        method: 'POST',
+        body: uploadFormData
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        showNotification('success', 'Image Uploaded', 'Image uploaded successfully');
+        return data.url;
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      console.error('Gallery image upload error:', error);
+      showNotification('error', 'Upload Failed', 'Failed to upload image. Please try again.');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePublishChange = (e) => {
     const isChecked = e.target.checked;
     setFormData(prev => ({
