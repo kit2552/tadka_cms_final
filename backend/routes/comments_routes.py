@@ -107,6 +107,32 @@ def get_comments(article_id: str, comment_type: Optional[str] = None):
     
     return {"comments": comments, "count": len(comments)}
 
+@router.get("/api/articles/{article_id}/check-review")
+def check_existing_review(article_id: str, request: Request):
+    """Check if the current user has already submitted a review"""
+    from server import db
+    
+    # Get IP address
+    ip_address = request.client.host
+    if "x-forwarded-for" in request.headers:
+        ip_address = request.headers["x-forwarded-for"].split(",")[0].strip()
+    
+    # Check for existing review
+    existing_review = db.comments.find_one({
+        "article_id": article_id,
+        "ip_address": ip_address,
+        "comment_type": "review",
+        "is_approved": True
+    }, {"_id": 0})
+    
+    if existing_review:
+        return {
+            "has_reviewed": True,
+            "review": existing_review
+        }
+    
+    return {"has_reviewed": False}
+
 @router.put("/api/articles/{article_id}/comments/{comment_id}")
 def update_comment(article_id: str, comment_id: str, comment: CommentCreate, request: Request):
     """Update an existing comment/review"""
