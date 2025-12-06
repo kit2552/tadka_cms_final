@@ -720,18 +720,21 @@ const CreateArticle = () => {
   };
 
   // Image gallery management handlers
-  const handleAddImageToGallery = () => {
-    if (newImageUrl.trim()) {
+  const handleAddImageToGallery = (e, uploadedUrl = null) => {
+    const urlToAdd = uploadedUrl || newImageUrl.trim();
+    if (urlToAdd) {
       const newImage = {
         id: Date.now(), // Simple ID for the image
-        url: newImageUrl.trim(),
+        url: urlToAdd,
         alt: `Gallery image ${formData.image_gallery.length + 1}`
       };
       setFormData(prev => ({
         ...prev,
         image_gallery: [...prev.image_gallery, newImage]
       }));
-      setNewImageUrl('');
+      if (!uploadedUrl) {
+        setNewImageUrl('');
+      }
     }
   };
 
