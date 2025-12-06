@@ -671,24 +671,29 @@ async def get_cms_articles(
     }
 
 @api_router.post("/cms/upload-image")
-async def upload_image(file: UploadFile = File(...)):
+async def upload_image(file: UploadFile = File(...), content_type: str = "articles"):
     """
-    Upload image for CMS use (articles, galleries, etc.)
+    Upload image for CMS use (articles, galleries, tadka-pics)
     Uses S3 if enabled, otherwise local storage
     Returns the URL to the uploaded image
+    
+    Args:
+        file: The image file to upload
+        content_type: Type of content - "articles", "galleries", or "tadka-pics"
     """
     try:
         # Validate file type
         if not file.content_type or not file.content_type.startswith('image/'):
             raise HTTPException(status_code=400, detail="File must be an image")
         
-        # Upload file
-        file_url = await save_uploaded_file(file, "articles")
+        # Upload file with specified content type
+        file_url = await save_uploaded_file(file, content_type=content_type)
         
         return {
             "success": True,
             "url": file_url,
-            "storage": "s3" if s3_service.is_enabled() else "local"
+            "storage": "s3" if s3_service.is_enabled() else "local",
+            "content_type": content_type
         }
     except Exception as e:
         logger.error(f"Image upload failed: {e}")
