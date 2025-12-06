@@ -4976,6 +4976,65 @@ const Dashboard = () => {
           entityName="Gallery"
         />
       )}
+
+      {/* Gallery Entity Management Modal */}
+      {showEntityModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="border-b px-6 py-4 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-gray-900">Add New {galleryCategory}</h3>
+              <button
+                onClick={() => {
+                  setShowEntityModal(false);
+                  setNewEntityName('');
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                {galleryCategory} Name
+              </label>
+              <input
+                type="text"
+                value={newEntityName}
+                onChange={(e) => setNewEntityName(e.target.value)}
+                placeholder={`Enter ${galleryCategory.toLowerCase()} name`}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddEntity();
+                  }
+                }}
+              />
+            </div>
+
+            <div className="bg-gray-50 px-6 py-4 border-t flex gap-2 justify-end">
+              <button
+                onClick={() => {
+                  setShowEntityModal(false);
+                  setNewEntityName('');
+                }}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddEntity}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
