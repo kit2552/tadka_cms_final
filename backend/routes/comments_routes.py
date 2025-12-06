@@ -34,6 +34,28 @@ def add_comment(article_id: str, comment: CommentCreate, request: Request):
     if "x-forwarded-for" in request.headers:
         ip_address = request.headers["x-forwarded-for"].split(",")[0].strip()
     
+    # Check if user already has a review for this article (only for review type)
+    if comment.comment_type == "review":
+        existing_review = db.comments.find_one({
+            "article_id": article_id,
+            "ip_address": ip_address,
+            "comment_type": "review",
+            "is_approved": True
+        })
+        
+        if existing_review:
+            return {
+                "success": False,
+                "message": "You have already submitted a review for this movie. Please edit your existing review.",
+                "existing_review": {
+                    "id": existing_review["id"],
+                    "name": existing_review["name"],
+                    "comment": existing_review["comment"],
+                    "rating": existing_review.get("rating"),
+                    "created_at": existing_review["created_at"]
+                }
+            }
+    
     # Get device info (user agent)
     device_info = request.headers.get("user-agent", "Unknown")
     
