@@ -1689,7 +1689,7 @@ const CreateArticle = () => {
                         editorClassName="editor-class"
                         toolbarClassName="toolbar-class"
                         toolbar={{
-                          options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'link', 'image', 'history'],
+                          options: ['inline', 'blockType', 'list', 'textAlign', 'link', 'image', 'history'],
                           inline: {
                             inDropdown: false,
                             options: ['bold', 'italic', 'underline', 'strikethrough']
@@ -1697,9 +1697,6 @@ const CreateArticle = () => {
                           blockType: {
                             inDropdown: true,
                             options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote']
-                          },
-                          fontSize: {
-                            options: [12, 14, 16, 18, 20, 22, 24, 28, 32]
                           },
                           list: {
                             inDropdown: false,
