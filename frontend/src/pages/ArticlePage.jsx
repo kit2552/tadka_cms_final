@@ -439,25 +439,6 @@ const ArticlePage = () => {
                     <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_final_verdict}</p>
                   </div>
                 )}
-
-                {/* Trailer */}
-                {article.youtube_url && (
-                  <div className="mb-6">
-                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
-                      <h3 className="text-base font-bold text-black text-left leading-tight">Watch Trailer</h3>
-                    </div>
-                    <div className="relative aspect-video w-full rounded-lg overflow-hidden">
-                      <iframe
-                        src={getYouTubeEmbedUrl(article.youtube_url)}
-                        title={`${article.title} Trailer`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                        className="absolute inset-0 w-full h-full"
-                      ></iframe>
-                    </div>
-                  </div>
-                )}
               </div>
             ) : (
               /* Regular Article Content - No background, no horizontal padding */
