@@ -1973,6 +1973,9 @@ const Dashboard = () => {
         folder_path: folderPath,
         tadka_pics_enabled: galleryType === 'vertical' ? tadkaPicsEnabled : false
       };
+      
+      console.log('=== SUBMITTING GALLERY ===');
+      console.log('Gallery data being saved:', galleryData);
 
       if (editingGallery) {
         // Update existing gallery via API
