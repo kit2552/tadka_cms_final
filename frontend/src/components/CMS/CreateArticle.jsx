@@ -280,6 +280,7 @@ const CreateArticle = () => {
     fetchCMSConfig();
     fetchAvailableArtists(); // Fetch available artists
     fetchGalleries(); // Fetch available galleries
+    fetchOttPlatforms(); // Fetch OTT platforms
     
     if (isEditMode && id) {
       loadArticle(id);
