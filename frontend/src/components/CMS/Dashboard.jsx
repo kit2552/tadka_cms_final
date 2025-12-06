@@ -1854,18 +1854,25 @@ const Dashboard = () => {
 
   const handleGallerySubmit = async (e) => {
     e.preventDefault();
-    if (!galleryForm.title || !selectedGalleryArtist || galleryForm.images.length === 0) {
-      showModal('warning', 'Missing Fields', 'Please fill in all required fields, select an artist, and upload at least one image.');
+    if (!galleryForm.title || !galleryCategory || !selectedEntity || galleryForm.images.length === 0) {
+      showModal('warning', 'Missing Fields', 'Please fill in all required fields and upload at least one image.');
       return;
     }
 
     try {
+      // Create folder path for images
+      const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
+      const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${nextGalleryNumber}`;
+      
       const galleryData = {
         gallery_id: editingGallery ? editingGallery.gallery_id : generateGalleryId(),
         title: galleryForm.title,
-        artists: [selectedGalleryArtist], // Single artist as array for backend compatibility
+        artists: [selectedEntity], // Use entity name as artist for compatibility
         images: galleryForm.images,
-        gallery_type: "vertical"
+        gallery_type: "vertical",
+        category_type: galleryCategory,
+        entity_name: selectedEntity,
+        folder_path: folderPath
       };
 
       if (editingGallery) {
