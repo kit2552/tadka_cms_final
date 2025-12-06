@@ -1490,21 +1490,49 @@ const CreateArticle = () => {
                         </label>
                         
                         {/* Add new image */}
-                        <div className="mb-3 flex gap-2">
-                          <input
-                            type="url"
-                            value={newImageUrl}
-                            onChange={(e) => setNewImageUrl(e.target.value)}
-                            placeholder="Enter image URL"
-                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
-                          <button
-                            type="button"
-                            onClick={handleAddImageToGallery}
-                            className="px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            Add
-                          </button>
+                        <div className="mb-3 space-y-2">
+                          {/* URL Input */}
+                          <div className="flex gap-2">
+                            <input
+                              type="url"
+                              value={newImageUrl}
+                              onChange={(e) => setNewImageUrl(e.target.value)}
+                              placeholder="Enter image URL"
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleAddImageToGallery}
+                              className="px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              Add URL
+                            </button>
+                          </div>
+                          
+                          {/* File Upload */}
+                          <div className="flex gap-2">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={async (e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                  const url = await handleGalleryImageUpload(file);
+                                  if (url) {
+                                    handleAddImageToGallery({ target: { value: '' } }, url);
+                                    e.target.value = ''; // Reset file input
+                                  }
+                                }
+                              }}
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              disabled={!galleryCategory || !selectedEntity}
+                            />
+                          </div>
+                          {(!galleryCategory || !selectedEntity) && (
+                            <p className="text-xs text-red-500 text-left">
+                              Please select Gallery Type and {galleryCategory || 'Entity'} before uploading images
+                            </p>
+                          )}
                         </div>
 
                         {/* Gallery images list */}
