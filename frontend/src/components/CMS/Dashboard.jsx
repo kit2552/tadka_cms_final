@@ -1750,17 +1750,44 @@ const Dashboard = () => {
     );
   };
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
-    files.forEach(file => {
+    
+    // Get current image count to determine starting number
+    let currentCount = galleryForm.images.length;
+    
+    // If we have folder path, fetch the actual next number from backend
+    if (galleryCategory && selectedEntity && galleryType) {
+      const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
+      const orientationFolder = galleryType === 'horizontal' ? 'h' : 'v';
+      const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
+      
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-next-image-number?folder_path=${encodeURIComponent(folderPath)}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          currentCount = data.current_count;
+        }
+      } catch (error) {
+        console.error('Error fetching next image number:', error);
+      }
+    }
+    
+    files.forEach((file, index) => {
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = (e) => {
+          const imageNumber = currentCount + index + 1;
+          const fileExtension = file.name.split('.').pop();
           const newImage = {
             id: Date.now() + Math.random(),
-            name: file.name,
+            name: `${imageNumber}.${fileExtension}`,
+            originalName: file.name,
             data: e.target.result,
-            size: file.size
+            size: file.size,
+            imageNumber: imageNumber
           };
           setGalleryForm(prev => ({
             ...prev,
@@ -1772,11 +1799,30 @@ const Dashboard = () => {
     });
   };
 
-  const handleImageDelete = (imageId) => {
+  const handleImageDelete = async (imageId) => {
+    // Remove the image
     setGalleryForm(prev => ({
       ...prev,
       images: prev.images.filter(img => img.id !== imageId)
     }));
+    
+    // After deletion, renumber remaining images
+    setTimeout(() => {
+      setGalleryForm(prev => {
+        const renumberedImages = prev.images.map((img, index) => {
+          const fileExtension = img.name.split('.').pop();
+          return {
+            ...img,
+            name: `${index + 1}.${fileExtension}`,
+            imageNumber: index + 1
+          };
+        });
+        return {
+          ...prev,
+          images: renumberedImages
+        };
+      });
+    }, 100);
   };
 
   // Gallery Category handlers
