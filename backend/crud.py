@@ -274,6 +274,7 @@ def create_article(db, article: dict):
         "review_director": article.get("review_director"),
         "review_genre": article.get("review_genre"),
         "review_runtime": article.get("review_runtime"),
+        "movie_language": article.get("movie_language"),
         "view_count": 0,
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow(),
