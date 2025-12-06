@@ -1111,7 +1111,7 @@ def get_next_image_filename(date: datetime = None) -> tuple:
                         continue
         
         next_num = max_num + 1
-        return (date_path, next_num)
+        return (local_date_path, next_num)
 
 async def save_uploaded_file(upload_file: UploadFile, subfolder: str = None) -> str:
     """
