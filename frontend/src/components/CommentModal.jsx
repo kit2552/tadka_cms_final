@@ -41,7 +41,8 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular' }) =>
       setError('');
       onClose();
     } catch (err) {
-      setError('Failed to submit comment. Please try again.');
+      console.error('Modal error:', err);
+      setError(err.message || 'Failed to submit comment. Please try again.');
     } finally {
       setLoading(false);
     }
