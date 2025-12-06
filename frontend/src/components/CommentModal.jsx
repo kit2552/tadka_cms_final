@@ -51,78 +51,75 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular' }) =>
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full flex flex-col max-h-[90vh]">
+        {/* Sticky Header - Compact */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 flex-shrink-0">
+          <h3 className="text-base font-semibold text-gray-900 text-left">
             {commentType === 'review' ? 'Add Movie Review Comment' : 'Add Comment'}
           </h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4">
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
-              {error}
+        {/* Scrollable Form Content */}
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+          <div className="overflow-y-auto px-4 py-4 flex-1">
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600 text-left">
+                {error}
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                Your Name *
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 text-left"
+                disabled={loading}
+                maxLength={100}
+              />
             </div>
-          )}
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Your Name *
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={loading}
-              maxLength={100}
-            />
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                Your Comment *
+              </label>
+              <textarea
+                name="comment"
+                value={formData.comment}
+                onChange={handleChange}
+                placeholder="Write your comment here..."
+                rows="5"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 text-left"
+                disabled={loading}
+                maxLength={1000}
+              />
+              <p className="text-xs text-gray-500 mt-1 text-left">
+                {formData.comment.length}/1000 characters
+              </p>
+            </div>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Your Comment *
-            </label>
-            <textarea
-              name="comment"
-              value={formData.comment}
-              onChange={handleChange}
-              placeholder="Write your comment here..."
-              rows="5"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={loading}
-              maxLength={1000}
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              {formData.comment.length}/1000 characters
-            </p>
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-              disabled={loading}
-            >
-              Cancel
-            </button>
+          {/* Sticky Footer - Compact */}
+          <div className="border-t border-gray-200 px-4 py-3 flex-shrink-0">
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="w-full px-4 py-2 bg-gray-700 text-white rounded-md text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
               disabled={loading}
             >
-              {loading ? 'Submitting...' : 'Submit Comment'}
+              {loading ? 'Submitting...' : 'Submit'}
             </button>
           </div>
         </form>
