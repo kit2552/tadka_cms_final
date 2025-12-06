@@ -1698,7 +1698,7 @@ const Dashboard = () => {
     setSelectedGalleryArtist('');
   };
 
-  const handleEditGallery = (gallery) => {
+  const handleEditGallery = async (gallery) => {
     setShowGalleryForm(true);
     setEditingGallery(gallery);
     setGalleryForm({
@@ -1706,9 +1706,31 @@ const Dashboard = () => {
       images: [...gallery.images]
     });
     
-    // Set selected artist for editing - handle artists array
+    // Set gallery type (horizontal/vertical)
+    if (gallery.gallery_type) {
+      setGalleryType(gallery.gallery_type);
+    }
+    
+    // Set gallery category (Actor, Actress, etc.)
+    if (gallery.category_type) {
+      setGalleryCategory(gallery.category_type);
+      // Fetch entities for this category
+      await fetchGalleryEntities(gallery.category_type);
+    }
+    
+    // Set selected entity
+    if (gallery.entity_name) {
+      setSelectedEntity(gallery.entity_name);
+    }
+    
+    // Set Tadka Pics enabled
+    if (gallery.tadka_pics_enabled !== undefined) {
+      setTadkaPicsEnabled(gallery.tadka_pics_enabled);
+    }
+    
+    // Set selected artist for backwards compatibility
     if (gallery.artists && gallery.artists.length > 0) {
-      setSelectedGalleryArtist(gallery.artists[0]); // Take first artist
+      setSelectedGalleryArtist(gallery.artists[0]);
     } else {
       setSelectedGalleryArtist('');
     }
