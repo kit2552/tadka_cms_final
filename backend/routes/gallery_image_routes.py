@@ -7,6 +7,52 @@ import crud
 
 router = APIRouter()
 
+@router.post("/api/cms/upload-gallery-image")
+async def upload_gallery_image(
+    file: UploadFile = File(...),
+    folder_path: str = Form(...),
+    image_number: int = Form(...),
+    db = Depends(get_db)
+):
+    """Upload a gallery image to S3 with proper folder structure"""
+    from server import s3_service
+    
+    try:
+        # Get AWS config
+        config = crud.get_aws_config(db)
+        
+        if not config or not config.get('is_enabled'):
+            raise HTTPException(status_code=400, detail="AWS S3 is not enabled")
+        
+        # Initialize S3 service
+        s3_service.initialize(config)
+        
+        # Read file content
+        file_content = await file.read()
+        
+        # Get file extension
+        file_extension = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
+        
+        # Create S3 key with gallery folder structure: galleries/{folder_path}/{number}.ext
+        s3_key = f"galleries/{folder_path}/{image_number}.{file_extension}"
+        
+        # Upload to S3
+        url = s3_service.upload_file(file_content, s3_key, file.content_type)
+        
+        if not url:
+            raise HTTPException(status_code=500, detail="Failed to upload image to S3")
+        
+        return {
+            "success": True,
+            "url": url,
+            "s3_key": s3_key,
+            "filename": f"{image_number}.{file_extension}"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
 @router.get("/api/cms/gallery-next-image-number")
 async def get_next_image_number(folder_path: str):
     """Get the next available image number in a gallery folder"""
