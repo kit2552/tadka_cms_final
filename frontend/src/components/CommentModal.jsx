@@ -117,7 +117,7 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular' }) =>
           <div className="border-t border-gray-200 px-4 py-3 flex-shrink-0">
             <button
               type="submit"
-              className="w-full px-4 py-2 bg-gray-400 text-white rounded-md text-sm font-medium hover:bg-gray-500 transition-colors disabled:opacity-50"
+              className="w-full px-4 py-2 bg-gray-200 text-black rounded-md text-sm font-medium hover:bg-gray-300 transition-colors disabled:opacity-50"
               disabled={loading}
             >
               {loading ? 'Submitting...' : 'Submit'}
