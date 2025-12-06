@@ -300,6 +300,29 @@ code {
   border-color: #e1e1e1; /* Darker border so it's visible against #f9fafa background */
 }
 
+/* Custom Scrollbar - Invisible/Very Thin */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.3);
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.5);
+}
+
 /* Rich Text Editor Default Styles */
 .rdw-editor-main,
 .DraftEditor-root,
