@@ -671,7 +671,7 @@ async def get_cms_articles(
     }
 
 @api_router.post("/cms/upload-image")
-async def upload_image(file: UploadFile = File(...), content_type: str = "articles"):
+async def upload_image(file: UploadFile = File(...), content_type: str = Form("articles")):
     """
     Upload image for CMS use (articles, galleries, tadka-pics)
     Uses S3 if enabled, otherwise local storage
