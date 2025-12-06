@@ -107,6 +107,51 @@ def get_comments(article_id: str, comment_type: Optional[str] = None):
     
     return {"comments": comments, "count": len(comments)}
 
+@router.put("/api/articles/{article_id}/comments/{comment_id}")
+def update_comment(article_id: str, comment_id: str, comment: CommentCreate, request: Request):
+    """Update an existing comment/review"""
+    from server import db
+    
+    # Get IP address
+    ip_address = request.client.host
+    if "x-forwarded-for" in request.headers:
+        ip_address = request.headers["x-forwarded-for"].split(",")[0].strip()
+    
+    # Find existing comment
+    existing_comment = db.comments.find_one({
+        "id": comment_id,
+        "article_id": article_id
+    })
+    
+    if not existing_comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    
+    # Verify IP address matches (security check)
+    if existing_comment.get("ip_address") != ip_address:
+        raise HTTPException(status_code=403, detail="You can only edit your own review")
+    
+    # Update the comment
+    update_data = {
+        "name": comment.name,
+        "comment": comment.comment,
+        "rating": comment.rating,
+        "updated_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    db.comments.update_one(
+        {"id": comment_id, "article_id": article_id},
+        {"$set": update_data}
+    )
+    
+    # Get updated comment
+    updated_comment = db.comments.find_one({"id": comment_id}, {"_id": 0})
+    
+    return {
+        "success": True,
+        "message": "Review updated successfully",
+        "comment": updated_comment
+    }
+
 @router.delete("/api/articles/{article_id}/comments/{comment_id}")
 def delete_comment(article_id: str, comment_id: str):
     """Delete a comment (admin only)"""
