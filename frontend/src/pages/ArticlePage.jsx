@@ -234,7 +234,7 @@ const ArticlePage = () => {
       <div className="max-w-5xl-plus mx-auto px-8 pb-6">
         
         {/* Two Section Layout with Gap - 60%/40% split */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8" style={{ height: 'calc(100vh - 120px)' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4" style={{ height: 'calc(100vh - 120px)' }}>
           
           {/* Article Section - 60% width - Scrollable */}
           <div className="lg:col-span-3 overflow-y-auto custom-scrollbar" style={{ height: '100%', paddingRight: '14px' }}>
