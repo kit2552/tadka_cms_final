@@ -1861,6 +1861,7 @@ const Dashboard = () => {
           if (uploadResponse.ok) {
             const uploadData = await uploadResponse.json();
             console.log('✅ Image uploaded to S3:', uploadData.url);
+            console.log('✅ S3 Key:', uploadData.s3_key);
             
             // Add image with S3 URL to form
             const newImage = {
@@ -1873,16 +1874,21 @@ const Dashboard = () => {
               imageNumber: imageNumber
             };
             
+            console.log('✅ Adding image to form:', newImage);
+            
             setGalleryForm(prev => ({
               ...prev,
               images: [...prev.images, newImage]
             }));
           } else {
             const errorData = await uploadResponse.json();
+            console.error('❌ Upload failed:', errorData);
+            alert(`Upload failed: ${errorData.detail || 'Unknown error'}`);
             showModal('error', 'Upload Failed', errorData.detail || `Failed to upload ${file.name}`);
           }
         } catch (error) {
-          console.error('Error uploading image:', error);
+          console.error('❌ Error uploading image:', error);
+          alert(`Error: ${error.message}`);
           showModal('error', 'Upload Error', `Error uploading ${file.name}: ${error.message}`);
         }
       }
