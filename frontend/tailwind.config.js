@@ -15,6 +15,10 @@ module.exports = {
                         DEFAULT: {
                                 css: {
                                         fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        color: '#111827',
+                                        p: {
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
                                         h1: {
                                                 fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
                                         },
@@ -25,6 +29,27 @@ module.exports = {
                                                 fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
                                         },
                                         h4: {
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        h5: {
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        h6: {
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        strong: {
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        em: {
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        a: {
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        li: {
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        },
+                                        blockquote: {
                                                 fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
                                         },
                                 },
