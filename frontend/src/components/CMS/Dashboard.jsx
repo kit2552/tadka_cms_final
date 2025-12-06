@@ -4753,7 +4753,7 @@ const Dashboard = () => {
                             : 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7'
                         }`}>
                           {galleryForm.images.map((image) => (
-                            <div key={image.id} className="relative group">
+                            <div key={image.id} className="relative">
                               <div className={`rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors ${
                                 galleryType === 'horizontal' 
                                   ? 'aspect-[16/9]'  // Horizontal format
@@ -4765,12 +4765,8 @@ const Dashboard = () => {
                                   className="w-full h-full object-cover"
                                 />
                               </div>
-                              {/* Image Number Badge */}
-                              <div className="absolute top-1 left-1 bg-black bg-opacity-70 text-white text-xs px-2 py-0.5 rounded z-10">
-                                {image.imageNumber || image.name.split('.')[0]}
-                              </div>
-                              {/* Action Buttons on Hover */}
-                              <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10">
+                              {/* Action Buttons - Always Visible as Overlay */}
+                              <div className="absolute top-2 right-2 flex gap-1 z-10">
                                 {/* Preview Button */}
                                 <button
                                   type="button"
@@ -4778,7 +4774,7 @@ const Dashboard = () => {
                                     setPreviewImage(image.data);
                                     setShowImagePreview(true);
                                   }}
-                                  className="bg-blue-600 text-white p-1.5 rounded-full hover:bg-blue-700 shadow-lg"
+                                  className="bg-blue-600 bg-opacity-80 text-white p-1.5 rounded-full hover:bg-opacity-100 shadow-lg transition-all"
                                   title="Preview image"
                                 >
                                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -4790,7 +4786,7 @@ const Dashboard = () => {
                                 <button
                                   type="button"
                                   onClick={() => handleImageDelete(image.id)}
-                                  className="bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700 shadow-lg"
+                                  className="bg-red-600 bg-opacity-80 text-white p-1.5 rounded-full hover:bg-opacity-100 shadow-lg transition-all"
                                   title="Delete image"
                                 >
                                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
