@@ -18,6 +18,7 @@ TOPIC_CATEGORIES = "topic_categories"
 ARTICLE_TOPICS = "article_topics"
 GALLERIES = "galleries"
 GALLERY_TOPICS = "gallery_topics"
+OTT_PLATFORMS = "ott_platforms"
 
 def create_indexes(db):
     """
