@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://movie-buzz-3.preview.emergentagent.com"
+BACKEND_URL = "https://movierate-hub-1.preview.emergentagent.com"
 
 def test_theater_bollywood_endpoint():
     """Test the new Theater-Bollywood API endpoint"""
