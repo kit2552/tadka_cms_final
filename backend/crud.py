@@ -412,7 +412,7 @@ def get_scheduled_articles_for_publishing(db):
     query = {
         "is_scheduled": True,
         "is_published": False,
-        "scheduled_publish_at": {"$lte": current_time_ist}
+        "scheduled_publish_at": {"$lte": current_time_est}
     }
     
     docs = list(db[ARTICLES].find(query, {"_id": 0}))
