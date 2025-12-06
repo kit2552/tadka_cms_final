@@ -1956,10 +1956,12 @@ const Dashboard = () => {
     setEditingGallery(null);
     setGalleryForm({ title: '', images: [] });
     setSelectedGalleryArtist('');
+    setGalleryType('');
     setGalleryCategory('');
     setSelectedEntity('');
     setAvailableEntities([]);
     setNextGalleryNumber(1);
+    setTadkaPicsEnabled(false);
   };
 
   // Horizontal Gallery management functions
