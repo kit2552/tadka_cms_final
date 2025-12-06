@@ -64,6 +64,11 @@ const ArticlePage = () => {
           const data = await response.json();
           setArticle(data);
           
+          // Fetch user ratings for movie reviews
+          if (data.content_type === 'movie_review') {
+            fetchUserRatings(articleId);
+          }
+          
           // Fetch related articles based on category
           if (data.category) {
             const relatedResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/articles/category/${data.category}?limit=10`);
@@ -87,6 +92,26 @@ const ArticlePage = () => {
       fetchArticle();
     }
   }, [articleId]);
+
+  const fetchUserRatings = async (articleId) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/articles/${articleId}/comments?comment_type=review`);
+      if (response.ok) {
+        const data = await response.json();
+        const comments = data.comments || [];
+        
+        // Filter comments with ratings and calculate average
+        const ratingsOnly = comments.filter(c => c.rating).map(c => parseInt(c.rating));
+        if (ratingsOnly.length > 0) {
+          const average = ratingsOnly.reduce((sum, rating) => sum + rating, 0) / ratingsOnly.length;
+          setUserRating(average.toFixed(1));
+          setReviewCount(ratingsOnly.length);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching user ratings:', err);
+    }
+  };
 
   // Auto scroll to top when article page loads
   useEffect(() => {
