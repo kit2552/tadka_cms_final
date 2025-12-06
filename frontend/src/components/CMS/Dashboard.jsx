@@ -4516,10 +4516,27 @@ const Dashboard = () => {
                     />
                   </div>
 
-                  {/* Gallery Type Dropdown */}
+                  {/* Gallery Type (Horizontal/Vertical) */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
                       Gallery Type *
+                    </label>
+                    <select
+                      value={galleryType}
+                      onChange={(e) => setGalleryType(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      required
+                    >
+                      <option value="">Select Gallery Type</option>
+                      <option value="horizontal">Horizontal</option>
+                      <option value="vertical">Vertical</option>
+                    </select>
+                  </div>
+
+                  {/* Gallery Category Dropdown */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                      Gallery Category *
                     </label>
                     <select
                       value={galleryCategory}
@@ -4527,7 +4544,7 @@ const Dashboard = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                       required
                     >
-                      <option value="">Select Gallery Type</option>
+                      <option value="">Select Gallery Category</option>
                       <option value="Actor">Actor</option>
                       <option value="Actress">Actress</option>
                       <option value="Events">Events</option>
