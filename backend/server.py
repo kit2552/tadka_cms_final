@@ -1116,7 +1116,7 @@ def get_next_image_filename(date: datetime = None) -> tuple:
         next_num = max_num + 1
         return (local_date_path, next_num)
 
-async def save_uploaded_file(upload_file: UploadFile, subfolder: str = None) -> str:
+async def save_uploaded_file(upload_file: UploadFile, subfolder: str = None, content_type: str = "articles") -> str:
     """
     Save uploaded file using date-based structure: images/YYYY/MM/DD/N.ext
     Uses S3 (if enabled) or local storage (fallback)
