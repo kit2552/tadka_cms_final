@@ -4726,10 +4726,18 @@ const Dashboard = () => {
                         <h4 className="text-sm font-medium text-gray-700 text-left mb-3">
                           Uploaded Images ({galleryForm.images.length})
                         </h4>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-96 overflow-y-auto p-2">
+                        <div className={`grid gap-3 max-h-96 overflow-y-auto p-2 ${
+                          galleryType === 'horizontal' 
+                            ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' 
+                            : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
+                        }`}>
                           {galleryForm.images.map((image) => (
                             <div key={image.id} className="relative group">
-                              <div className="aspect-square rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors">
+                              <div className={`rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors ${
+                                galleryType === 'horizontal' 
+                                  ? 'aspect-[16/9]'  // Horizontal format
+                                  : 'aspect-[9/16]'  // Vertical format
+                              }`}>
                                 <img
                                   src={image.data}
                                   alt={image.name}
