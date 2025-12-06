@@ -11,6 +11,7 @@ class CommentCreate(BaseModel):
     name: str
     comment: str
     comment_type: str = "regular"  # regular or review
+    rating: Optional[int] = None  # 1-5 stars for reviews
 
 class CommentResponse(BaseModel):
     id: str
@@ -18,6 +19,7 @@ class CommentResponse(BaseModel):
     name: str
     comment: str
     comment_type: str
+    rating: Optional[int] = None
     ip_address: str
     device_info: str
     created_at: str
