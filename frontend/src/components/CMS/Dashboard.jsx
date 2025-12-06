@@ -4593,6 +4593,26 @@ const Dashboard = () => {
                     </div>
                   )}
 
+                  {/* Tadka Pics Toggle - Only for Vertical Galleries */}
+                  {galleryType === 'vertical' && (
+                    <div>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={tadkaPicsEnabled}
+                          onChange={(e) => setTadkaPicsEnabled(e.target.checked)}
+                          className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          Enable for Tadka Pics
+                        </span>
+                      </label>
+                      <p className="text-xs text-gray-500 mt-1 text-left ml-6">
+                        When enabled, this gallery will appear in the Tadka Pics section on the homepage (latest 20 galleries)
+                      </p>
+                    </div>
+                  )}
+
                   {/* Image Upload Section */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
