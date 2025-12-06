@@ -187,11 +187,24 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                   <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group cursor-pointer"
                        onClick={() => handleArticleClick(item)}>
                     <div className="relative">
+                      {item.youtube_url ? (
+                        <img
+                          src={getYouTubeThumbnail(item.youtube_url)}
+                          alt={item.title || item.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          style={{ width: '200px', height: '120px' }}
+                          onError={(e) => {
+                            // Fallback to regular image if YouTube thumbnail fails
+                            e.target.style.display = 'none';
+                            e.target.nextSibling?.style.display = 'block';
+                          }}
+                        />
+                      ) : null}
                       <ArticleImage
                         src={item.image_url || item.image}
                         alt={item.title || item.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        style={{ width: '200px', height: '120px' }}
+                        style={{ width: '200px', height: '120px', display: item.youtube_url ? 'none' : 'block' }}
                         contentType={activeTab === 'bollywood' ? 'movie-reviews-bollywood' : 'movie-reviews'}
                       />
                       
