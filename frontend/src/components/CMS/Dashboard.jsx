@@ -4758,7 +4758,7 @@ const Dashboard = () => {
                           }}
                         >
                           {galleryForm.images.map((image) => (
-                            <div key={image.id} className="relative">
+                            <div key={image.id} className="relative group">
                               <div className={`rounded overflow-hidden border border-gray-300 hover:border-blue-400 transition-colors ${
                                 galleryType === 'horizontal' 
                                   ? 'aspect-[16/9]'  // Horizontal format
@@ -4769,24 +4769,27 @@ const Dashboard = () => {
                                   alt={`Image ${image.imageNumber || image.name.split('.')[0]}`}
                                   className="w-full h-full object-cover"
                                 />
-                                {/* Action Buttons - Directly on Image */}
-                                <div className="absolute top-1 right-1 flex gap-0.5 z-10">
-                                  {/* Preview Button */}
+                                
+                                {/* Preview Button - Center, Show on Hover */}
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
                                   <button
                                     type="button"
                                     onClick={() => {
                                       setPreviewImage(image.data);
                                       setShowImagePreview(true);
                                     }}
-                                    className="bg-blue-600 bg-opacity-70 text-white p-1 rounded hover:bg-opacity-90 shadow transition-all"
+                                    className="bg-blue-600 bg-opacity-80 text-white p-3 rounded-full hover:bg-opacity-100 shadow-lg transition-all"
                                     title="Preview image"
                                   >
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                   </button>
-                                  {/* Delete Button */}
+                                </div>
+                                
+                                {/* Delete Button - Top Right, Always Visible */}
+                                <div className="absolute top-1 right-1 z-10">
                                   <button
                                     type="button"
                                     onClick={() => handleImageDelete(image.id)}
