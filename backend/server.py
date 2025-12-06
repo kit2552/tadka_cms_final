@@ -21,6 +21,9 @@ from routes.gallery_routes_mongodb import router as gallery_router
 from auth import create_default_admin
 from scheduler_service import article_scheduler
 from s3_service import s3_service
+from datetime import datetime
+import os
+from pathlib import Path
 
 # Create MongoDB indexes on startup
 try:
