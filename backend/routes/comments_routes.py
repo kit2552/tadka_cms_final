@@ -66,7 +66,7 @@ def add_comment(article_id: str, comment: CommentCreate, request: Request):
     }
 
 @router.get("/api/articles/{article_id}/comments")
-async def get_comments(article_id: str, comment_type: Optional[str] = None):
+def get_comments(article_id: str, comment_type: Optional[str] = None):
     """Get all comments for an article"""
     from server import db
     
@@ -74,10 +74,10 @@ async def get_comments(article_id: str, comment_type: Optional[str] = None):
     if comment_type:
         query["comment_type"] = comment_type
     
-    comments = await db.comments.find(
+    comments = list(db.comments.find(
         query,
         {"_id": 0}
-    ).sort("created_at", -1).to_list(1000)
+    ).sort("created_at", -1).limit(1000))
     
     return {"comments": comments, "count": len(comments)}
 
