@@ -20,7 +20,7 @@ from datetime import datetime
 import os
 
 # Get backend URL from environment
-BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://news-cms-update.preview.emergentagent.com')
+BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://movie-buzz-3.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
 class TopicsAPITester:
