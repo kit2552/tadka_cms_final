@@ -85,14 +85,14 @@ const CommentSection = ({ articleId, commentType = 'regular' }) => {
       </div>
 
       {loading ? (
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="text-gray-600 mt-2">Loading comments...</p>
+        <div className="text-center py-4">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-600 mt-2 text-sm">Loading...</p>
         </div>
       ) : comments.length === 0 ? (
-        <div className="text-center py-8 bg-gray-50 rounded-lg">
+        <div className="text-center py-6 bg-gray-50 rounded-lg">
           <svg
-            className="w-12 h-12 text-gray-400 mx-auto mb-2"
+            className="w-10 h-10 text-gray-400 mx-auto mb-2"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -104,24 +104,24 @@ const CommentSection = ({ articleId, commentType = 'regular' }) => {
               d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
             />
           </svg>
-          <p className="text-gray-600">No comments yet. Be the first to comment!</p>
+          <p className="text-gray-600 text-sm">No comments yet. Be the first!</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {comments.map((comment) => (
             <div
               key={comment.id}
-              className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm"
+              className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm"
             >
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <h4 className="font-semibold text-gray-900">{comment.name}</h4>
+                  <h4 className="font-semibold text-gray-900 text-sm">{comment.name}</h4>
                   <p className="text-xs text-gray-500">
                     {formatDate(comment.created_at)}
                   </p>
                 </div>
               </div>
-              <p className="text-gray-700 whitespace-pre-wrap">{comment.comment}</p>
+              <p className="text-gray-700 text-sm whitespace-pre-wrap">{comment.comment}</p>
             </div>
           ))}
         </div>
