@@ -1586,6 +1586,29 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def initialize_ott_platforms():
+    """Initialize default OTT platforms if they don't exist"""
+    try:
+        # Check if any platforms exist
+        existing_count = db.ott_platforms.count_documents({})
+        if existing_count == 0:
+            default_platforms = [
+                {"id": 1, "name": "Amazon Prime Video", "is_active": True},
+                {"id": 2, "name": "Netflix", "is_active": True},
+                {"id": 3, "name": "Disney+ Hotstar", "is_active": True},
+                {"id": 4, "name": "Aha", "is_active": True},
+                {"id": 5, "name": "Zee5", "is_active": True},
+                {"id": 6, "name": "SonyLIV", "is_active": True},
+                {"id": 7, "name": "JioCinema", "is_active": True},
+                {"id": 8, "name": "Apple TV+", "is_active": True},
+                {"id": 9, "name": "MX Player", "is_active": True},
+                {"id": 10, "name": "Voot", "is_active": True},
+            ]
+            db.ott_platforms.insert_many(default_platforms)
+            logger.info("✅ Default OTT platforms initialized")
+    except Exception as e:
+        logger.warning(f"⚠️ OTT platforms initialization failed: {e}")
+
 @app.on_event("startup")
 async def startup_event():
     logger.info("Blog CMS API starting up...")
