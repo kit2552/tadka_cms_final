@@ -329,6 +329,22 @@ code {
   font-weight: 400;
 }
 
+/* Good paragraph spacing and line height for readability */
+.prose p {
+  margin-bottom: 1.25em;
+  line-height: 1.75;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* Line height for better readability */
+.prose div,
+.prose span {
+  line-height: 1.75;
+}
+
 /* Override ProximaNova font specifically */
 [style*="ProximaNova"],
 [style*="Proxima Nova"],
