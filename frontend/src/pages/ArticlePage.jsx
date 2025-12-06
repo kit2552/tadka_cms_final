@@ -309,7 +309,7 @@ const ArticlePage = () => {
                       {article.title && (
                         <div className="flex items-start gap-4">
                           <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Movie</span>
-                          <span className="text-white font-bold text-sm">{article.title.replace(' Movie Review', '')}</span>
+                          <span className="text-white font-medium text-xs">{article.title.replace(' Movie Review', '')}</span>
                         </div>
                       )}
                       {article.movie_language && (
