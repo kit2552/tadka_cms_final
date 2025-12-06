@@ -12,8 +12,6 @@ const CreateArticle = () => {
   const { id } = useParams(); // Changed from articleId to id to match the route
   const isEditMode = Boolean(id);
   
-  console.log('✅ CreateArticle component loaded - VERSION 2.0 with new toolbar config');
-  
   const [loading, setLoading] = useState(false);
   const [loadingArticle, setLoadingArticle] = useState(false);
   const [languages, setLanguages] = useState([]);
