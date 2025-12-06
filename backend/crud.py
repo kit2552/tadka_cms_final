@@ -957,6 +957,52 @@ def get_topics_by_gallery(db, gallery_id: int):
     
     return topics
 
+# ==================== OTT PLATFORMS CRUD ====================
+
+def get_ott_platforms(db):
+    """Get all OTT platforms"""
+    platforms = list(db[OTT_PLATFORMS].find({}, {"_id": 0}).sort("name", 1))
+    return platforms
+
+def create_ott_platform(db, platform_data: dict):
+    """Create new OTT platform"""
+    # Get next ID
+    max_platform = db[OTT_PLATFORMS].find_one(sort=[("id", -1)])
+    next_id = (max_platform["id"] + 1) if max_platform else 1
+    
+    platform_doc = {
+        "id": next_id,
+        "name": platform_data["name"],
+        "is_active": platform_data.get("is_active", True),
+        "created_at": datetime.utcnow()
+    }
+    
+    db[OTT_PLATFORMS].insert_one(platform_doc)
+    del platform_doc["_id"]
+    return platform_doc
+
+def update_ott_platform(db, platform_id: int, platform_data: dict):
+    """Update OTT platform"""
+    update_fields = {}
+    
+    if "name" in platform_data:
+        update_fields["name"] = platform_data["name"]
+    if "is_active" in platform_data:
+        update_fields["is_active"] = platform_data["is_active"]
+    
+    db[OTT_PLATFORMS].update_one(
+        {"id": platform_id},
+        {"$set": update_fields}
+    )
+    
+    platform = db[OTT_PLATFORMS].find_one({"id": platform_id}, {"_id": 0})
+    return platform
+
+def delete_ott_platform(db, platform_id: int):
+    """Delete OTT platform"""
+    result = db[OTT_PLATFORMS].delete_one({"id": platform_id})
+    return result.deleted_count > 0
+
 # ==================== GALLERIES CRUD ====================
 
 def get_galleries(db, skip: int = 0, limit: int = 100):
