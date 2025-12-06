@@ -1802,6 +1802,8 @@ const Dashboard = () => {
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
     
+    console.log('🚀 NEW S3 UPLOAD CODE IS RUNNING!');
+    
     if (!galleryCategory || !selectedEntity || !galleryType) {
       showModal('warning', 'Missing Information', 'Please select Gallery Type, Category, and Entity before uploading images.');
       return;
