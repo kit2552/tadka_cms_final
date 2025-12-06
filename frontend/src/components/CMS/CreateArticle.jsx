@@ -61,6 +61,8 @@ const CreateArticle = () => {
     review_genre: '',
     review_runtime: '',
     movie_language: '',
+    platform: '',
+    ott_platform: '',
     // Comment settings
     comments_enabled: true,
     review_comments_enabled: true
