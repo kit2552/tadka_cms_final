@@ -60,6 +60,7 @@ const CreateArticle = () => {
     review_director: '',
     review_genre: '',
     review_runtime: '',
+    movie_language: '',
     // Comment settings
     comments_enabled: true,
     review_comments_enabled: true
