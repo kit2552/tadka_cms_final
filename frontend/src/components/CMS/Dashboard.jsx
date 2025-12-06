@@ -1800,22 +1800,23 @@ const Dashboard = () => {
   };
 
   const handleImageUpload = async (event) => {
-    const files = Array.from(event.target.files);
-    
-    console.log('🚀 NEW S3 UPLOAD CODE IS RUNNING!');
-    console.log('Files selected:', files.length);
-    console.log('Gallery Type:', galleryType);
-    console.log('Category:', galleryCategory);
-    console.log('Entity:', selectedEntity);
-    
-    if (!galleryCategory || !selectedEntity || !galleryType) {
-      alert('Please select Gallery Type, Category, and Entity before uploading images.');
-      showModal('warning', 'Missing Information', 'Please select Gallery Type, Category, and Entity before uploading images.');
-      return;
-    }
-    
-    // Get current image count to determine starting number
-    let currentCount = galleryForm.images.length;
+    try {
+      const files = Array.from(event.target.files);
+      
+      console.log('🚀 NEW S3 UPLOAD CODE IS RUNNING!');
+      console.log('Files selected:', files.length);
+      console.log('Gallery Type:', galleryType);
+      console.log('Category:', galleryCategory);
+      console.log('Entity:', selectedEntity);
+      
+      if (!galleryCategory || !selectedEntity || !galleryType) {
+        alert('Please select Gallery Type, Category, and Entity before uploading images.');
+        showModal('warning', 'Missing Information', 'Please select Gallery Type, Category, and Entity before uploading images.');
+        return;
+      }
+      
+      // Get current image count to determine starting number
+      let currentCount = galleryForm.images.length;
     
     // Create folder path
     const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
