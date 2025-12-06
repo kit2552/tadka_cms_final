@@ -316,7 +316,7 @@ def update_article_cms(db, article_id: int, article: dict):
         "review_quick_verdict", "review_plot_summary", "review_performances",
         "review_what_works", "review_what_doesnt_work", "review_technical_aspects",
         "review_final_verdict", "review_cast", "review_director", 
-        "review_genre", "review_runtime",
+        "review_genre", "review_runtime", "movie_language",
         "comments_enabled", "review_comments_enabled"
     ]
     
