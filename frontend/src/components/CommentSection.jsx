@@ -6,6 +6,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     fetchComments();
