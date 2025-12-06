@@ -122,6 +122,58 @@ class S3Service:
         
         return False
     
+    def list_objects(self, prefix: str = "") -> list:
+        """List objects in S3 bucket with given prefix"""
+        if not self.is_enabled():
+            return []
+        
+        try:
+            bucket_name = self.config.get('s3_bucket_name')
+            response = self.s3_client.list_objects_v2(
+                Bucket=bucket_name,
+                Prefix=prefix
+            )
+            
+            return response.get('Contents', [])
+        except Exception as e:
+            print(f"S3 list objects failed: {e}")
+            return []
+    
+    def copy_object(self, source_key: str, dest_key: str) -> bool:
+        """Copy object within S3 bucket"""
+        if not self.is_enabled():
+            return False
+        
+        try:
+            bucket_name = self.config.get('s3_bucket_name')
+            
+            self.s3_client.copy_object(
+                Bucket=bucket_name,
+                CopySource={'Bucket': bucket_name, 'Key': source_key},
+                Key=dest_key
+            )
+            return True
+        except Exception as e:
+            print(f"S3 copy object failed: {e}")
+            return False
+    
+    def delete_object(self, key: str) -> bool:
+        """Delete object from S3 bucket by key"""
+        if not self.is_enabled():
+            return False
+        
+        try:
+            bucket_name = self.config.get('s3_bucket_name')
+            
+            self.s3_client.delete_object(
+                Bucket=bucket_name,
+                Key=key
+            )
+            return True
+        except Exception as e:
+            print(f"S3 delete object failed: {e}")
+            return False
+    
     def test_connection(self) -> tuple[bool, str]:
         """Test S3 connection and permissions"""
         if not self.s3_client:
