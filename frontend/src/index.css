@@ -408,6 +408,14 @@ code {
   font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
+/* Override inline font-size to always use 1rem for body text */
+.prose [style*="font-size: 20px"],
+.prose [style*="font-size: 18px"],
+.prose [style*="font-size: 22px"],
+.prose [style*="font-size: 24px"] {
+  font-size: 1rem !important;
+}
+
 /* Allow bold text from rich text editor */
 .prose strong,
 .prose b,
