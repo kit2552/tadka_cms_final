@@ -182,7 +182,7 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                 <div
                   key={item.id}
                   className="flex-shrink-0"
-                  style={{ minWidth: '220px' }}
+                  style={{ minWidth: '242px' }}
                 >
                   <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group cursor-pointer"
                        onClick={() => handleArticleClick(item)}>
@@ -192,14 +192,14 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                           src={getYouTubeThumbnail(item.youtube_url)}
                           alt={item.title || item.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          style={{ width: '220px', height: '132px' }}
+                          style={{ width: '242px', height: '145px' }}
                         />
                       ) : (
                         <ArticleImage
                           src={item.image_url || item.image}
                           alt={item.title || item.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          style={{ width: '220px', height: '132px' }}
+                          style={{ width: '242px', height: '145px' }}
                           contentType={activeTab === 'bollywood' ? 'movie-reviews-bollywood' : 'movie-reviews'}
                         />
                       )}
