@@ -1603,6 +1603,9 @@ async def startup_event():
     except Exception as e:
         logger.warning(f"⚠️ S3 initialization failed: {e}. Using local storage.")
     
+    # Initialize default OTT platforms
+    initialize_ott_platforms()
+    
     # Initialize the article scheduler
     article_scheduler.initialize_scheduler()
     article_scheduler.start_scheduler()
