@@ -207,6 +207,8 @@ const CreateArticle = () => {
           review_genre: article.review_genre || '',
           review_runtime: article.review_runtime || '',
           movie_language: article.movie_language || '',
+          platform: article.platform || '',
+          ott_platform: article.ott_platform || '',
           // Comment settings
           comments_enabled: article.comments_enabled !== undefined ? article.comments_enabled : true,
           review_comments_enabled: article.review_comments_enabled !== undefined ? article.review_comments_enabled : true
