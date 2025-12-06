@@ -23,7 +23,7 @@ class CommentResponse(BaseModel):
     created_at: str
 
 @router.post("/api/articles/{article_id}/comments")
-async def add_comment(article_id: str, comment: CommentCreate, request: Request):
+def add_comment(article_id: str, comment: CommentCreate, request: Request):
     """Add a comment to an article"""
     from server import db
     
@@ -48,7 +48,7 @@ async def add_comment(article_id: str, comment: CommentCreate, request: Request)
         "is_approved": True  # Auto-approve for now
     }
     
-    await db.comments.insert_one(comment_doc)
+    db.comments.insert_one(comment_doc)
     
     return {
         "success": True,
