@@ -199,6 +199,7 @@ const CreateArticle = () => {
           review_director: article.review_director || '',
           review_genre: article.review_genre || '',
           review_runtime: article.review_runtime || '',
+          movie_language: article.movie_language || '',
           // Comment settings
           comments_enabled: article.comments_enabled !== undefined ? article.comments_enabled : true,
           review_comments_enabled: article.review_comments_enabled !== undefined ? article.review_comments_enabled : true
