@@ -1623,6 +1623,60 @@ const CreateArticle = () => {
                       </div>
 
                       {/* Trailer URL */}
+                      
+                      {/* Platform Selection */}
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                          Platform
+                        </label>
+                        <select
+                          name="platform"
+                          value={formData.platform}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Platform</option>
+                          <option value="Theater">Theater</option>
+                          <option value="OTT">OTT</option>
+                          <option value="YouTube">YouTube</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+
+                      {/* OTT Platform Selection - Show only when Platform is OTT */}
+                      {formData.platform === 'OTT' && (
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-sm font-medium text-gray-700 text-left">
+                              OTT Platform
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() => setShowOttModal(true)}
+                              className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                              Manage OTT Platforms
+                            </button>
+                          </div>
+                          <select
+                            name="ott_platform"
+                            value={formData.ott_platform}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">Select OTT Platform</option>
+                            {ottPlatforms
+                              .filter(p => p.is_active)
+                              .map(platform => (
+                                <option key={platform.id} value={platform.name}>
+                                  {platform.name}
+                                </option>
+                              ))
+                            }
+                          </select>
+                        </div>
+                      )}
+                      
                       {/* Review Sections */}
                       <div className="border-t pt-4 mt-4">
                         <h4 className="text-sm font-semibold text-gray-800 mb-3 text-left">Review Sections</h4>
