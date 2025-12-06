@@ -4963,7 +4963,7 @@ const Dashboard = () => {
                           <div key={image.id} className="flex items-center justify-between p-2 bg-gray-50 rounded border">
                             <div className="flex items-center space-x-3">
                               <img
-                                src={image.data}
+                                src={image.url || image.data}
                                 alt={image.name}
                                 className="w-12 h-12 object-cover rounded"
                               />
