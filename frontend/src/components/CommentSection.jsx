@@ -134,12 +134,12 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
               className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm text-left"
             >
               <div className="mb-2 flex items-center justify-between">
-                <h4 className="font-semibold text-gray-900 text-sm">{comment.name}</h4>
+                <h4 className="font-semibold text-gray-900 text-xs">{comment.name}</h4>
                 <p className="text-[10px] text-gray-500 text-right">
                   {formatDate(comment.created_at)}
                 </p>
               </div>
-              <p className="text-gray-700 text-sm whitespace-pre-wrap text-left">{comment.comment}</p>
+              <p className="text-gray-700 text-xs whitespace-pre-wrap text-left">{comment.comment}</p>
             </div>
           ))}
         </div>
