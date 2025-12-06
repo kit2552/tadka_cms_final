@@ -263,7 +263,7 @@ const ArticlePage = () => {
             {/* Main Image or YouTube Video - White background */}
             {article.content_type === 'video' && article.youtube_url ? (
               <div className="mb-6 bg-white">
-                <div className="relative aspect-video w-full rounded-lg overflow-hidden shadow-sm">
+                <div className="relative aspect-video w-full overflow-hidden">
                   <iframe
                     src={getYouTubeEmbedUrl(article.youtube_url)}
                     title={article.title}
@@ -279,10 +279,10 @@ const ArticlePage = () => {
                 <img
                   src={article.image}
                   alt={article.title}
-                  className="w-full h-96 object-cover rounded-lg shadow-sm"
+                  className="w-full h-96 object-cover"
                   onError={(e) => {
                     const placeholder = document.createElement('div');
-                    placeholder.className = 'w-full h-96 bg-gray-500 flex items-center justify-center rounded-lg shadow-sm';
+                    placeholder.className = 'w-full h-96 bg-gray-500 flex items-center justify-center';
                     placeholder.innerHTML = `<span class="text-white font-bold text-6xl">${article.content_type === 'video' ? 'V' : article.content_type === 'photo' ? 'P' : article.content_type === 'movie_review' ? 'M' : 'A'}</span>`;
                     e.target.parentNode.replaceChild(placeholder, e.target);
                   }}
@@ -292,7 +292,7 @@ const ArticlePage = () => {
               <div className="mb-6 bg-white">
                 <PlaceholderImage 
                   contentType={article.content_type || 'post'} 
-                  className="w-full h-96 rounded-lg shadow-sm"
+                  className="w-full h-96"
                 />
               </div>
             )}
