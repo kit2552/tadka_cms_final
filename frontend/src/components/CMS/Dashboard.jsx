@@ -2028,7 +2028,7 @@ const Dashboard = () => {
           body: JSON.stringify({
             title: galleryData.title,
             artists: galleryData.artists,
-            images: galleryData.images,
+            images: imageMetadata,
             gallery_type: galleryData.gallery_type,
             category_type: galleryData.category_type,
             entity_name: galleryData.entity_name,
