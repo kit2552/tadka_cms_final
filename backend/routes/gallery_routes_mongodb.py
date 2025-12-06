@@ -124,6 +124,14 @@ async def update_gallery(gallery_id: str, gallery_update: GalleryUpdate, db = De
         update_data["images"] = gallery_update.images
     if gallery_update.gallery_type is not None:
         update_data["gallery_type"] = gallery_update.gallery_type
+    if gallery_update.category_type is not None:
+        update_data["category_type"] = gallery_update.category_type
+    if gallery_update.entity_name is not None:
+        update_data["entity_name"] = gallery_update.entity_name
+    if gallery_update.folder_path is not None:
+        update_data["folder_path"] = gallery_update.folder_path
+    if gallery_update.tadka_pics_enabled is not None:
+        update_data["tadka_pics_enabled"] = gallery_update.tadka_pics_enabled
     
     updated_gallery = crud.update_gallery(db, gallery_id, update_data)
     
