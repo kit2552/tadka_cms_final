@@ -1097,6 +1097,25 @@ def get_galleries(db, skip: int = 0, limit: int = 100):
     
     return galleries
 
+def get_tadka_pics_galleries(db, limit: int = 20):
+    """Get latest Tadka Pics enabled galleries"""
+    galleries = list(db[GALLERIES].find(
+        {
+            "gallery_type": "vertical",
+            "tadka_pics_enabled": True
+        }, 
+        {"_id": 0}
+    ).sort("created_at", -1).limit(limit))
+    
+    # Parse JSON fields
+    for gallery in galleries:
+        if "artists" in gallery and isinstance(gallery["artists"], str):
+            gallery["artists"] = json.loads(gallery["artists"]) if gallery["artists"] else []
+        if "images" in gallery and isinstance(gallery["images"], str):
+            gallery["images"] = json.loads(gallery["images"]) if gallery["images"] else []
+    
+    return galleries
+
 def get_gallery_by_gallery_id(db, gallery_id: str):
     """Get gallery by gallery_id"""
     gallery = db[GALLERIES].find_one({"gallery_id": gallery_id}, {"_id": 0})
