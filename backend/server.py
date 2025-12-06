@@ -1040,12 +1040,13 @@ async def get_related_articles_for_page(
         raise HTTPException(status_code=500, detail=str(e))
 
 # File upload helper functions
-def get_next_image_filename(date: datetime = None) -> tuple:
+def get_next_image_filename(date: datetime = None, content_type: str = "articles") -> tuple:
     """
     Get the next available filename for the given date (EST timezone)
     Returns (date_path, next_number) tuple
-    For S3: Path structure is YYYY/MM/DD/N.ext (root folder 'images' is added by S3 config)
-    For Local: Path structure is images/YYYY/MM/DD/N.ext
+    content_type: "articles", "galleries", or "tadka-pics"
+    For S3: Path structure is content_type/YYYY/MM/DD/N.ext
+    For Local: Path structure is content_type/YYYY/MM/DD/N.ext
     """
     if date is None:
         # Use EST timezone (America/New_York handles EST/EDT automatically)
@@ -1057,11 +1058,26 @@ def get_next_image_filename(date: datetime = None) -> tuple:
     month = date.strftime("%m")
     day = date.strftime("%d")
     
-    # For S3: Use date path without 'images' prefix (root folder handles it)
-    s3_date_path = f"{year}/{month}/{day}"
+    # Get root folder from S3 config based on content type
+    root_folder = ""
+    if s3_service.is_enabled() and s3_service.config:
+        if content_type == "articles":
+            root_folder = s3_service.config.get('articles_root_folder', 'articles')
+        elif content_type == "galleries":
+            root_folder = s3_service.config.get('galleries_root_folder', 'galleries')
+        elif content_type == "tadka-pics":
+            root_folder = s3_service.config.get('tadka_pics_root_folder', 'tadka-pics')
+        else:
+            root_folder = content_type
+    else:
+        # For local storage, use content type directly
+        root_folder = content_type
     
-    # For Local: Use date path with 'images' prefix
-    local_date_path = f"images/{year}/{month}/{day}"
+    # For S3: Use root_folder/date path
+    s3_date_path = f"{root_folder}/{year}/{month}/{day}"
+    
+    # For Local: Same structure
+    local_date_path = f"{root_folder}/{year}/{month}/{day}"
     
     # For S3, check existing files via API
     if s3_service.is_enabled():
