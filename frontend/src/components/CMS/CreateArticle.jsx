@@ -591,6 +591,81 @@ const CreateArticle = () => {
     }
   };
 
+  // Gallery Category handlers
+  const fetchGalleryEntities = async (categoryType) => {
+    if (!categoryType) return;
+    
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${categoryType.toLowerCase()}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableEntities(data.entities || []);
+      }
+    } catch (error) {
+      console.error('Error fetching entities:', error);
+    }
+  };
+
+  const handleGalleryCategoryChange = (category) => {
+    setGalleryCategory(category);
+    setSelectedEntity('');
+    setNextGalleryNumber(1);
+    if (category) {
+      fetchGalleryEntities(category);
+    } else {
+      setAvailableEntities([]);
+    }
+  };
+
+  const handleEntitySelection = async (entityName) => {
+    setSelectedEntity(entityName);
+    
+    if (entityName && galleryCategory) {
+      // Fetch next gallery number for this entity
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-next-number/${galleryCategory}/${entityName}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setNextGalleryNumber(data.next_number);
+        }
+      } catch (error) {
+        console.error('Error fetching next gallery number:', error);
+      }
+    }
+  };
+
+  const handleAddEntity = async () => {
+    if (!newEntityName.trim() || !galleryCategory) return;
+    
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${galleryCategory.toLowerCase()}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: newEntityName.trim() })
+        }
+      );
+      
+      if (response.ok) {
+        await fetchGalleryEntities(galleryCategory);
+        setNewEntityName('');
+        setShowEntityModal(false);
+        showNotification('success', 'Added', `${galleryCategory} added successfully`);
+      } else {
+        const data = await response.json();
+        showNotification('error', 'Error', data.detail || 'Failed to add entity');
+      }
+    } catch (error) {
+      console.error('Error adding entity:', error);
+      showNotification('error', 'Error', 'Failed to add entity');
+    }
+  };
+
   // Gallery selection handlers
   const handleGallerySelect = (gallery) => {
     setSelectedGallery(gallery);
