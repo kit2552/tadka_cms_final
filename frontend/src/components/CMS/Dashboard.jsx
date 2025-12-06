@@ -1703,6 +1703,13 @@ const Dashboard = () => {
   };
 
   const handleEditGallery = async (gallery) => {
+    console.log('=== EDITING GALLERY ===');
+    console.log('Gallery data:', gallery);
+    console.log('gallery_type:', gallery.gallery_type);
+    console.log('category_type:', gallery.category_type);
+    console.log('entity_name:', gallery.entity_name);
+    console.log('tadka_pics_enabled:', gallery.tadka_pics_enabled);
+    
     setShowGalleryForm(true);
     setEditingGallery(gallery);
     setGalleryForm({
@@ -1711,13 +1718,16 @@ const Dashboard = () => {
     });
     
     // Set gallery type (horizontal/vertical)
+    console.log('Setting gallery type to:', gallery.gallery_type || '');
     setGalleryType(gallery.gallery_type || '');
     
     // Set Tadka Pics enabled (check both boolean and undefined)
+    console.log('Setting tadka pics to:', gallery.tadka_pics_enabled === true);
     setTadkaPicsEnabled(gallery.tadka_pics_enabled === true);
     
     // Set gallery category and fetch entities
     if (gallery.category_type) {
+      console.log('Setting category to:', gallery.category_type);
       setGalleryCategory(gallery.category_type);
       // Fetch entities for this category first
       try {
@@ -1726,10 +1736,12 @@ const Dashboard = () => {
         );
         if (response.ok) {
           const data = await response.json();
+          console.log('Fetched entities:', data.entities);
           setAvailableEntities(data.entities || []);
           
           // Now set selected entity after entities are loaded
           if (gallery.entity_name) {
+            console.log('Setting entity to:', gallery.entity_name);
             // Use setTimeout to ensure state is updated
             setTimeout(() => {
               setSelectedEntity(gallery.entity_name);
@@ -1739,6 +1751,8 @@ const Dashboard = () => {
       } catch (error) {
         console.error('Error fetching entities for edit:', error);
       }
+    } else {
+      console.log('WARNING: No category_type found in gallery!');
     }
     
     // Set selected artist for backwards compatibility
