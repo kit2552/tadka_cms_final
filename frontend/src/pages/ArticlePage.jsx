@@ -564,6 +564,13 @@ const ArticlePage = () => {
               </div>
             </div>
 
+            {/* Comment Section */}
+            {article.content_type === 'movie_review' && article.review_comments_enabled && (
+              <CommentSection articleId={article.id} commentType="review" />
+            )}
+            {article.content_type !== 'movie_review' && article.comments_enabled && (
+              <CommentSection articleId={article.id} commentType="regular" />
+            )}
 
           </div>
 
