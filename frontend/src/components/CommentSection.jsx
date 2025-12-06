@@ -31,6 +31,15 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
   const handleAddComment = async (commentData) => {
     try {
       setSubmitting(true);
+      const payload = {
+        article_id: articleId,
+        name: commentData.name,
+        comment: commentData.comment,
+        comment_type: commentData.comment_type
+      };
+      
+      console.log('Submitting comment:', payload);
+      
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/api/articles/${articleId}/comments`,
         {
@@ -38,20 +47,20 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            article_id: articleId,
-            name: commentData.name,
-            comment: commentData.comment,
-            comment_type: commentData.comment_type
-          })
+          body: JSON.stringify(payload)
         }
       );
 
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Comment added:', data);
         setComments(prev => [data.comment, ...prev]);
       } else {
-        throw new Error('Failed to submit comment');
+        const errorData = await response.text();
+        console.error('Error response:', errorData);
+        throw new Error(`Failed to submit comment: ${response.status}`);
       }
     } catch (error) {
       console.error('Error submitting comment:', error);
