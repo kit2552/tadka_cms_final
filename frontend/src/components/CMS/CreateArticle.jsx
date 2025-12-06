@@ -1600,7 +1600,7 @@ const CreateArticle = () => {
                         {/* Plot Summary */}
                         <div className="mb-4">
                           <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Plot Summary (What's It About?) *
+                            Main Plot *
                           </label>
                           <textarea
                             name="review_plot_summary"
