@@ -35,7 +35,8 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
         article_id: String(articleId),
         name: commentData.name,
         comment: commentData.comment,
-        comment_type: commentData.comment_type
+        comment_type: commentData.comment_type,
+        rating: commentData.rating || null
       };
       
       const response = await fetch(
