@@ -75,6 +75,8 @@ class ArticleBase(BaseModel):
     review_genre: Optional[str] = None
     review_runtime: Optional[str] = None
     movie_language: Optional[str] = None
+    platform: Optional[str] = None
+    ott_platform: Optional[str] = None
 
 class ArticleCreate(ArticleBase):
     pass
