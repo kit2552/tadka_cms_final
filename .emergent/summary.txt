@@ -1,92 +1,87 @@
 <analysis>**original_problem_statement:**
-The initial request was to stabilize the Tadka news portal after a major database migration to MongoDB and implement several new features and UI improvements.
+The user's initial goal was to stabilize the Tadka news portal after a MongoDB migration and implement several new features and bug fixes.
 
-During this session, the user's requests included:
+During this session, the user requested the following:
 - **Bug Fixes:**
-    - Fix a missing System Settings link in the admin navigation.
-    - Resolve a Cannot convert undefined or null to object frontend error.
-    - Fix a backend error that prevented article creation.
-    - Correct the navigation behavior of the Back button on the article preview page to prevent content loss.
-    - Fix a bug in searchable dropdowns where deleting search text was not working correctly.
+  - Fix a bug in searchable dropdowns where clearing the search text was not possible.
+  - Fix data loss when using the Back button on the article preview page.
+  - Correct the navigation of the Back button in the preview header.
+  - Fix an issue where newly created posts were not appearing on the homepage's State Politics section due to client-side filtering and caching.
+  - Resolve an error that occurred when updating an existing post.
+  - Fix an issue where updating a post caused data loss (e.g., image URL, language).
+  - Fix an issue where articles disappeared from the Manage Content page due to incorrect language code filtering.
 - **Feature Enhancements & UI/UX:**
-    - Complete the MongoDB migration by refactoring and re-enabling the  and  modules.
-    - Implement a fully functional Test Connection feature for the AWS S3 settings, including credential validation and status updates.
-    - Redesign the System Settings and Admin Controls pages to use a modern, consistent tabbed layout based on a user-provided image.
-    - Numerous UI tweaks on the System Settings page, including left-aligning content, adjusting titles, removing icons/text, and adding password visibility toggles.
-    - Reorganize the filters on the Manage Content page into a single row for a cleaner UI.
-    - Implement searchable dropdowns for Target States and Category in the article creation form to improve usability with long lists.
-    - Remove the Short Title field from the article creation form.
-- **Technical Improvements:**
-    - Implement a robust, multilingual text search solution in MongoDB, resolving complex index creation errors related to inconsistent language codes in the source data.
+  - Complete the MongoDB migration by refactoring and re-enabling the .
+  - Complete the AWS S3 integration for all file uploads.
+  - Implement a new, organized image storage structure based on date and content type (e.g., ).
+  - Make the timezone for all date-based operations (uploads, scheduling) configurable to EST.
+  - Add settings in the UI to configure different S3 root folders for Articles, Galleries, and Tadka Pics.
+  - Change the website's font to a consistent, Mac-like font (Inter) and self-host it for performance and reliability.
+  - Ensure the Manage Content page automatically scrolls to the top on load.
+  - The user then requested to change the font again from sans-serif (Inter) to a serif font for all content.
+- **Data Management:**
+  - Delete all old mock/seed data from the articles, galleries, and topics collections to start with a clean slate.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The application is a full-stack news portal (React frontend, FastAPI backend) running on MongoDB. The migration from SQLite is mostly complete, with the  and  modules now functional. The backend text search is fully multilingual.
-
-The System Settings and Admin Controls pages have been completely redesigned with a consistent, user-approved tabbed layout. The AWS S3 configuration page is fully functional, with features for testing connections, viewing secret keys, and persisting settings. The article creation form has been enhanced with searchable dropdowns, and the main content management dashboard has an improved filter layout.
+The application is a stable full-stack news portal (React/FastAPI/MongoDB). The scheduler for publishing posts is fully functional with MongoDB. The AWS S3 integration is complete, with a robust, date-based, and content-type-specific folder structure for all image uploads (, , etc.). These root folders are configurable via the System Settings UI. All date-related operations now use the EST timezone. The application's font has been changed to a self-hosted Inter font for a consistent look, although the user has just requested another change. Numerous critical bugs related to data persistence, filtering, and caching have been resolved. The database has been cleaned of all old mock data.
 
 **Last working item**:
-- **Last item agent was working:** The user reported a bug in the new searchable dropdowns for Target States and Category in . When a user tries to delete the text in the search input to find a new item, the input field gets repopulated with the previously selected value, preventing a new search.
+- **Last item agent was working:** The user, after approving the switch to the Inter (sans-serif) font, decided they prefer a serif font for all content (titles and body). The agent acknowledged this change of direction and was in the process of confirming which serif font to implement.
 - **Status:** IN PROGRESS
 - **Agent Testing Done:** N
-- **Which testing method agent to use?** Frontend testing agent
-- **User Testing Done:** Y
+- **Which testing method agent to use?** screenshot tool
+- **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
-- **Issue 1 (P0):** Searchable dropdowns are not clearable for a new search.
-
+- **Issue 1 (P0):** Implement a site-wide serif font.
   **Issues Detail:**
-  - **Issue 1:** In the  form, after selecting an item from the searchable Category or Target States dropdown, the user cannot clear the input field to search for and select a different item. Deleting the last character of the search query causes the component to repopulate the input with the old value.
-      - **Attempted fixes:** The agent correctly identified the issue and implemented a fix for the Category dropdown. The fix involves updating the  handler to clear the underlying form data value () while updating the separate search query state ().
+  - **Issue 1:** The user wants to replace the recently implemented Inter sans-serif font with a serif font (e.g., Merriweather, Playfair Display) for all text content across the website to achieve a different aesthetic.
+      - **Attempted fixes:** The agent just finished implementing the Inter font. No fixes have been attempted for the new serif font request.
       - **Next debug checklist:**
-          1. Apply the same successful logic from the Category dropdown fix to the Target States dropdown in .
-          2. The agent has already started on this by applying a search/replace and just needs to complete the logic for the States component.
-      - **Why fix this issue and what will be achieved with the fix?** This is a significant usability bug that prevents users from changing their selection in two critical form fields, effectively blocking article creation/editing.
-      - **Status:** IN PROGRESS
+          1. Get confirmation from the user on which serif font to use (agent suggested Merriweather or Playfair Display).
+          2. Download the chosen font files (e.g., from Google Fonts).
+          3. Replace the existing  font files in  with the new serif font files.
+          4. Update  with the correct  declarations for the new font.
+          5. Update the  file to set the new serif font as the default  and  family.
+          6. Verify the font is applied globally.
+      - **Why fix this issue and what will be achieved with the fix?** To align the application's typography with the user's aesthetic preference.
+      - **Status:** NOT STARTED
       - **Is recurring issue?** N
       - **Should Test frontend/backend/both after fix?** Frontend
       - **Blocked on other issue:** None
 
 **In progress Task List**:
-- **Task 1 (P1):** Finalize MongoDB Migration
-    - **Where to resume:** The  is still commented out in . It needs to be refactored to use the MongoDB  functions and then re-enabled.
-    - **What will be achieved with this?** The scheduled publishing feature will be restored, completing the backend migration.
-    - **Status:** IN PROGRESS
-    - **Should Test frontend/backend/both after fix?** Backend
-    - **Blocked on something:** None
-
-- **Task 2 (P2):** Complete AWS S3 Integration
-    - **Where to resume:** The backend APIs and frontend UI for configuring S3 are complete. The next step is to modify the application's file upload logic (e.g., in the article creation form) to use the functions in  for uploading and serving images.
-    - **What will be achieved with this?** All media uploads will be stored in and served from AWS S3, making the application scalable and production-ready.
-    - **Status:** IN PROGRESS
-    - **Should Test frontend/backend/both after fix?** Both
-    - **Blocked on something:** None
+- None.
 
 **Upcoming and Future Tasks**
-- **P1: Implement User Management:** Build the frontend UI in the Users tab of the  page to list, add, edit, and delete users using the existing backend APIs.
-- **P2: Full Regression Testing:** After the MongoDB migration and S3 integration are fully stable, perform a comprehensive regression test of the entire application to identify any remaining issues.
+- **P1: Implement User Management:** Build the frontend UI in the Users tab of the  page to list, add, edit, and delete users.
+- **P2: Delete Unused Files:** Remove old SQLite-related files (, ) and unused route files to clean up the codebase.
+- **P3: Full Regression Testing:** After the font change and other work is stable, perform a comprehensive regression test of the entire application.
 
 **Completed work in this session**
-- **MongoDB Migration & Search:**
-  - Fixed and re-enabled the  and  modules to work with MongoDB.
-  - Implemented a robust, multilingual text search index, resolving complex errors by renaming the conflicting  field to  and ensuring data consistency.
-- **UI/UX Overhaul:**
-  - Redesigned System Settings () and Admin Controls () pages with a modern, consistent tabbed layout.
-  - Implemented a fully functional AWS S3 Test Connection feature with credential validation and status modals.
-  - Fixed numerous bugs related to saving, viewing, and editing AWS credentials, including conditional field editing and password visibility.
-  - Reorganized the filters on the Manage Content page () into a single, clean row.
-- **Bug Fixes:**
-  - Fixed the missing System Settings link in the admin navigation dropdown by correcting the role-checking logic and creating the missing admin user in the new DB.
-  - Resolved a backend  that was blocking article creation.
-  - Fixed a critical navigation bug on the article preview page that caused content loss when using the back button.
-  - Patched a Cannot convert undefined or null to object frontend error.
-- **Feature Enhancements:**
-  - Implemented searchable dropdowns for Category and Target States in the article creation form.
-  - Removed the redundant Short Title field from the article creation form.
+- **Scheduler Migration:** Successfully refactored  to use MongoDB, fully tested, and re-enabled the scheduled publishing feature.
+- **S3 Integration & File Uploads:**
+    - Completed the AWS S3 integration for all image uploads.
+    - Implemented a date-based () and auto-incrementing () file naming structure.
+    - Implemented configurable root folders for different content types (Articles, Galleries, Tadka Pics) managed via the UI.
+    - Standardized all date-based operations to the EST timezone.
+- **Critical Bug Fixes:**
+    - Fixed searchable dropdowns in the article creation form.
+    - Resolved data loss on article updates by making the backend update logic more robust.
+    - Fixed data preservation when navigating back from the article preview page.
+    - Corrected navigation bugs in the preview page header.
+    - Fixed articles disappearing from Manage Content by correcting language code handling on creation and updates.
+    - Resolved a major bug where homepage content wasn't updating due to incorrect client-side date filtering and caching.
+- **Data Cleanup:** Deleted all mock/seed data from articles, galleries, and topics collections.
+- **Font & UI Overhaul:**
+    - Changed the site-wide font to Inter for a consistent, Mac-like appearance.
+    - Self-hosted the font for improved performance and reliability.
+    - Fixed font inconsistencies between titles and body content by customizing Tailwind's typography plugin.
 
 **Earlier issues found/mentioned but not fixed**
-- None.
+- The refactoring task to delete old SQLite-related files is still pending from the previous session's handoff.
 
 **Known issue recurrence from previous fork**
 - None.
@@ -95,74 +90,72 @@ The System Settings and Admin Controls pages have been completely redesigned wit
 
 
 **Key Technical Concepts**
-- **MongoDB Text Search:** Advanced implementation of multilingual text indexing, including debugging language code inconsistencies and renaming schema fields ( -> ) to resolve conflicts.
-- **React State Management:** Complex state handling for forms with dynamic, searchable components, conditional rendering, and persisting UI state (e.g., AWS settings).
-- **API and UI Co-development:** Tightly coupled work between the FastAPI backend and React frontend to implement features like the S3 connection test, requiring changes in , , and .
-- **Component Refactoring:** Significant redesign of existing React components (, , ) to match new UX patterns.
+- **Robust MongoDB Updates:** Refactored CRUD operations to prevent  values from overwriting existing data fields during updates.
+- **Timezone Management:** Standardized all backend services (, file uploads) to use a specific timezone (EST) using the  library.
+- **Dynamic File Path Generation:** Implemented a system to generate hierarchical, date-based folder paths and auto-incrementing filenames for uploads to S3 and local storage.
+- **Font Self-Hosting:** Downloaded font files, configured  rules, and linked them locally to remove reliance on external services like Google Fonts.
+- **FastAPI Form Data:** Correctly handled multipart form data by using  for non-file fields alongside .
+- **Client vs. Server-Side Logic:** Debugged and resolved a critical issue by moving filtering logic (for published articles) from the client (React) to the server (API), where it was already correctly implemented.
 
 **key DB schema**
-- **system_settings:** This collection (document type ) was updated to store  (boolean) and  (string).
-- **articles:** The  field was renamed to  to allow for the creation of a text search index without conflicting with MongoDB's internal language override mechanism.
+- **system_settings:** The  document was updated to include , , and  fields (all strings).
 
 **changes in tech stack**
-- No new technologies were added, but the use of MongoDB was deepened with the implementation of advanced text search indexing.
+- No new technologies were added, but fonts are now self-hosted within the application instead of being fetched from Google Fonts.  is used for timezone handling.
 
 **All files of reference**
-- : **(current focus)** Contains the bug with the searchable dropdowns for States and Category.
-- : Contains all MongoDB logic, including the new functions for topics/galleries and the fixes for AWS config saving.
-- : The heavily modified page for AWS settings.
-- : The main server file where the  is still commented out.
-- : Contains the logic for the S3 connection test.
+- : **(next focus)** Will need to be updated with the new serif font family.
+- : **(next focus)** Will need to be updated with  rules for the new serif font.
+- : Contains the new date-based file path and upload logic.
+- : Contains the fixed  function and scheduler-related MongoDB functions.
+- : Contains fixes for data persistence and data loss.
+- : Where the incorrect client-side date filtering was removed.
 
 **Areas that need refactoring**:
-- The original route files (, ) are still present but commented out in . They should be deleted to avoid confusion with the new  versions.
-- The old SQLite-related files (, , ) should be deleted.
+- The original SQLite route files (, ) and helper files (, ) should be deleted to finalize the migration and reduce clutter.
 
 **key api endpoints**
-- : A new endpoint to test S3 credentials. It was implemented and debugged.
-- The endpoints for Topics and Galleries are now fully functional and backed by MongoDB.
+- : A new, robust endpoint for file uploads that accepts a  to determine the S3 storage path.
+- , , : These scheduler endpoints were re-enabled and tested.
+- : This endpoint was fixed to correctly handle Pydantic models and prevent data loss.
 
 **Critical Info for New Agent**
-- The immediate priority is to fix the usability bug in the searchable dropdowns in the article creation form. The fix has already been successfully applied to one of the two dropdowns; you just need to replicate it for the second one.
-- The MongoDB migration is nearly complete, with only the  remaining to be refactored and re-enabled.
-- The AWS S3 integration is halfway done. The configuration part is finished and robust. The next major step is to integrate the actual file upload endpoints to use the S3 service.
+- The immediate priority is to switch the application's font from the recently-implemented Inter (sans-serif) to a new serif font, as per the user's latest request. You must first get confirmation from the user on which serif font they prefer.
+- All major backend systems (S3 uploads, scheduler) are now stable and feature-complete.
+- The most common source of bugs in this session was data loss during updates (both on the frontend form and backend CRUD) and client-side filtering/caching that conflicted with server-side truth. Most of these have been resolved with robust backend logic and simplified frontend logic.
 
 **documents created in this job**
-- None.
+- : Documents the self-hosted Inter font setup.
+- : Defines the  rules for self-hosted fonts.
 
 **Last 10 User Messages and any pending user messages**
-1. **User:** Requests searchable dropdowns for Target States and Category. **Status:** Implemented.
-2. **User:** Requests placeholder text and left-alignment for the new dropdowns. **Status:** Implemented.
-3. **User:** Requests removal of the default Latest News selection. **Status:** Implemented.
-4. **User:** Requests removal of the Short Title field. **Status:** Implemented.
-5. **User:** Reports a bug where searchable dropdowns cannot be cleared for a new search. **Status:** IN PROGRESS (current task).
-6. **User:** Acknowledges the fix for the dropdown bug and asks to proceed.
-7. **User:** Asks to remove the icon from the Enable AWS S3 Storage label. **Status:** Completed.
-8. **User:** Asks for the secret key preview to work. **Status:** Completed.
-9. **User:** Reports the preview shows only the last few letters of the key. **Status:** Completed.
-10. **User:** Reports a series of issues with saving and testing AWS credentials, including persistence, disabled fields, and truncated keys. **Status:** All issues were resolved in a multi-step fix.
+1. **User:** Asks to set up date-based image storage structure. **Status:** Completed.
+2. **User:** Clarifies that new date folders should be created based on the current date. **Status:** Completed & Explained (Timezone issue).
+3. **User:** Requests to use EST timezone for everything. **Status:** Completed.
+4. **User:** Requests configurable root folders for different content types in S3. **Status:** Completed.
+5. **User:** Asks about the website's font family and requests a consistent, Mac-like font. **Status:** Completed (Inter font implemented).
+6. **User:** Requests to self-host the fonts. **Status:** Completed.
+7. **User:** Reports a webpack/CSS error after self-hosting. **Status:** Completed (fixed by moving CSS to public folder).
+8. **User:** Reports article title font is different from content font. **Status:** Completed (fixed via Tailwind Typography config).
+9. **User:** Changes their mind and now wants a serif font for all content. **Status:** IN PROGRESS.
+10. **Agent:** Asks the user to choose a serif font (Merriweather or Playfair Display). **Status:** USER VERIFICATION PENDING.
 
 **Project Health Check:**
-- **Broken:**
-    - The  (scheduled publishing feature) is disabled.
-    - Application-wide file uploads are not yet integrated with AWS S3.
-    - The searchable dropdowns in the article creation form have a critical usability bug (currently being fixed).
-- **Mocked:**
-    - None.
+- **Broken:** None.
+- **Mocked:** None. All mock data has been deleted.
 
 **3rd Party Integrations**:
-- **MongoDB:** Now the primary database. Advanced text search features are enabled.
-- **AWS S3 (via ):** Integration is in progress. The backend is configured, tested, and can store credentials, but file upload logic is not yet using S3.
+- **MongoDB:** Primary database.
+- **AWS S3 (via ):** Fully integrated for file storage with a custom date/type-based folder structure.
 
 **Testing status**
 - **Testing agent used after significant changes:** NO
 - **Troubleshoot agent used after agent stuck in loop:** NO
 - **Test files created:** None
-- **Known regressions:** The scheduled post functionality is disabled due to the incomplete migration of .
+- **Known regressions:** None.
 
 **Credentials to test flow:**
 - **Admin Login:** username=, password=
 
 **What agent forgot to execute**
-- The agent has not yet deleted the old SQLite-related files (, etc.) or the now-unused original route files for topics and galleries.
-- The migration of  is still pending from the original migration task.</analysis>
+- The agent has not yet deleted the old SQLite-related files (, etc.) or the now-unused original route files for topics and galleries, as noted in the initial handoff summary.</analysis>
