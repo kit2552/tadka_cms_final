@@ -4489,6 +4489,66 @@ const Dashboard = () => {
                     />
                   </div>
 
+                  {/* Gallery Type Dropdown */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                      Gallery Type *
+                    </label>
+                    <select
+                      value={galleryCategory}
+                      onChange={(e) => handleGalleryCategoryChange(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      required
+                    >
+                      <option value="">Select Gallery Type</option>
+                      <option value="Actor">Actor</option>
+                      <option value="Actress">Actress</option>
+                      <option value="Events">Events</option>
+                      <option value="Politics">Politics</option>
+                      <option value="Travel">Travel</option>
+                      <option value="Others">Others</option>
+                    </select>
+                  </div>
+
+                  {/* Entity Dropdown - Shows based on Gallery Type */}
+                  {galleryCategory && (
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="block text-sm font-medium text-gray-700 text-left">
+                          Select {galleryCategory} *
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setShowEntityModal(true)}
+                          className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                          Add New {galleryCategory}
+                        </button>
+                      </div>
+                      <select
+                        value={selectedEntity}
+                        onChange={(e) => handleEntitySelection(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        required
+                      >
+                        <option value="">Select {galleryCategory}</option>
+                        {availableEntities
+                          .filter(e => e.is_active)
+                          .map(entity => (
+                            <option key={entity.id} value={entity.name}>
+                              {entity.name}
+                            </option>
+                          ))
+                        }
+                      </select>
+                      {selectedEntity && (
+                        <p className="text-xs text-gray-500 mt-1 text-left">
+                          This will be gallery #{nextGalleryNumber} for {selectedEntity}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   {/* Artist Field */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
