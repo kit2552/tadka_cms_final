@@ -1920,7 +1920,7 @@ const Dashboard = () => {
           // Add to local state with compatibility fields
           const galleryForState = {
             ...newGallery,
-            artist: selectedGalleryArtist, // For compatibility with current frontend
+            artist: selectedEntity, // For compatibility with current frontend
             createdAt: newGallery.created_at,
             updatedAt: newGallery.updated_at
           };
