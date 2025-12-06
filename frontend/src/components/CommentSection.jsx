@@ -204,9 +204,15 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
 
       <CommentModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setIsEditing(false);
+          setExistingReview(null);
+        }}
         onSubmit={handleAddComment}
         commentType={commentType}
+        existingReview={existingReview}
+        isEditing={isEditing}
       />
     </div>
   );
