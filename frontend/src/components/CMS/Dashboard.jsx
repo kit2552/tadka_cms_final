@@ -368,6 +368,10 @@ const Dashboard = () => {
   const [newEntityName, setNewEntityName] = useState('');
   const [nextGalleryNumber, setNextGalleryNumber] = useState(1);
   const [tadkaPicsEnabled, setTadkaPicsEnabled] = useState(false);
+  
+  // Image preview states
+  const [showImagePreview, setShowImagePreview] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
   const [selectedHorizontalGalleryArtist, setSelectedHorizontalGalleryArtist] = useState('');
   
   // Horizontal gallery artist modal states
