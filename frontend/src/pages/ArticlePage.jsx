@@ -15,6 +15,8 @@ const ArticlePage = () => {
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userRating, setUserRating] = useState(null);
+  const [reviewCount, setReviewCount] = useState(0);
 
   // Update page title and meta tags for SEO
   useEffect(() => {
