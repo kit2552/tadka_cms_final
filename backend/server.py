@@ -1042,18 +1042,17 @@ async def get_related_articles_for_page(
 def get_next_image_filename(date: datetime = None) -> tuple:
     """
     Get the next available filename for the given date
-    Returns (full_path, filename) tuple
-    Path structure: YYYY/MM/DD/N.ext where N is auto-incremented
-    Note: S3 root folder already has 'images' prefix configured
+    Returns (date_path, next_number) tuple
+    For S3: Path structure is YYYY/MM/DD/N.ext (root folder 'images' is added by S3 config)
+    For Local: Path structure is images/YYYY/MM/DD/N.ext
     """
     if date is None:
         date = datetime.now()
     
-    # Create date-based path (without 'images' prefix as S3 root folder handles that)
+    # Create date-based path
     year = date.strftime("%Y")
     month = date.strftime("%m")
     day = date.strftime("%d")
-    date_path = f"{year}/{month}/{day}"
     
     # For S3, check existing files via API
     if s3_service.is_enabled():
