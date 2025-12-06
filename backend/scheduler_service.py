@@ -14,7 +14,7 @@ class ArticleSchedulerService:
     def __init__(self):
         self.scheduler = BackgroundScheduler()
         self.job_id = "publish_scheduled_articles"
-        self.ist = timezone('Asia/Kolkata')
+        self.est = timezone('America/New_York')
         
     def check_and_publish_scheduled_articles(self):
         """Check for scheduled articles that need to be published"""
