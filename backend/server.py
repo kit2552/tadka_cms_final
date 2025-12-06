@@ -1039,7 +1039,75 @@ async def get_related_articles_for_page(
         raise HTTPException(status_code=500, detail=str(e))
 
 # File upload helper functions
-async def save_uploaded_file(upload_file: UploadFile, subfolder: str) -> str:
+def get_next_image_filename(date: datetime = None) -> tuple:
+    """
+    Get the next available filename for the given date
+    Returns (full_path, filename) tuple
+    Path structure: images/YYYY/MM/DD/N.ext where N is auto-incremented
+    """
+    if date is None:
+        date = datetime.now()
+    
+    # Create date-based path
+    year = date.strftime("%Y")
+    month = date.strftime("%m")
+    day = date.strftime("%d")
+    date_path = f"images/{year}/{month}/{day}"
+    
+    # For S3, check existing files via API
+    if s3_service.is_enabled():
+        try:
+            bucket_name = s3_service.config.get('s3_bucket_name')
+            root_folder = s3_service.config.get('root_folder_path', '').strip('/')
+            
+            # List objects with this prefix
+            prefix = f"{root_folder}/{date_path}/" if root_folder else f"{date_path}/"
+            
+            response = s3_service.s3_client.list_objects_v2(
+                Bucket=bucket_name,
+                Prefix=prefix
+            )
+            
+            # Find the highest number
+            max_num = 0
+            if 'Contents' in response:
+                for obj in response['Contents']:
+                    # Extract filename from key
+                    filename = obj['Key'].split('/')[-1]
+                    # Try to extract number (e.g., "5.jpg" -> 5)
+                    try:
+                        num = int(filename.split('.')[0])
+                        max_num = max(max_num, num)
+                    except (ValueError, IndexError):
+                        continue
+            
+            next_num = max_num + 1
+            return (date_path, next_num)
+            
+        except Exception as e:
+            logger.error(f"Error checking S3 for next filename: {e}")
+            return (date_path, 1)
+    
+    # For local storage, check filesystem
+    else:
+        local_path = UPLOAD_DIR / date_path
+        local_path.mkdir(parents=True, exist_ok=True)
+        
+        # Find highest numbered file
+        max_num = 0
+        if local_path.exists():
+            for file in local_path.iterdir():
+                if file.is_file():
+                    try:
+                        num = int(file.stem)  # stem is filename without extension
+                        max_num = max(max_num, num)
+                    except (ValueError, TypeError):
+                        continue
+        
+        next_num = max_num + 1
+        return (date_path, next_num)
+
+async def save_uploaded_file(upload_file: UploadFile, subfolder: str = None) -> str:
     """
     Save uploaded file using S3 (if enabled) or local storage (fallback)
     Returns the URL or path to the uploaded file
