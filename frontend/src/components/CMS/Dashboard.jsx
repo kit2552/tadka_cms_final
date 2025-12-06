@@ -1886,7 +1886,10 @@ const Dashboard = () => {
             title: galleryData.title,
             artists: galleryData.artists,
             images: galleryData.images,
-            gallery_type: galleryData.gallery_type
+            gallery_type: galleryData.gallery_type,
+            category_type: galleryData.category_type,
+            entity_name: galleryData.entity_name,
+            folder_path: galleryData.folder_path
           }),
         });
 
@@ -1895,7 +1898,7 @@ const Dashboard = () => {
           // Update local state
           setVerticalGalleries(prev => prev.map(g => 
             g.gallery_id === editingGallery.gallery_id 
-              ? { ...updatedGallery, id: updatedGallery.id, artist: selectedGalleryArtist }
+              ? { ...updatedGallery, id: updatedGallery.id, artist: selectedEntity }
               : g
           ));
           showModal('success', 'Gallery Updated', 'Gallery has been updated successfully!');
