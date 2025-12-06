@@ -299,3 +299,31 @@ code {
 .border-dark-section {
   border-color: #e1e1e1; /* Darker border so it's visible against #f9fafa background */
 }
+
+
+/* Force Merriweather Sans on all prose content - Override any inline styles */
+.prose,
+.prose *,
+.prose p,
+.prose div,
+.prose span,
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6,
+.prose li,
+.prose a,
+.prose strong,
+.prose em,
+.prose blockquote {
+  font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+/* Override ProximaNova font specifically */
+[style*="ProximaNova"],
+[style*="Proxima Nova"],
+[style*="font-family"] {
+  font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
