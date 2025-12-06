@@ -367,6 +367,8 @@ code {
 .prose em,
 .prose blockquote {
   font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background-color: transparent !important;
+  background: none !important;
 }
 
 /* Default font weight and size for article main content */
