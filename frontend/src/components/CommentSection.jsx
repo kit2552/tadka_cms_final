@@ -92,7 +92,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
         <div className="pl-0 pr-4 py-4 flex items-center justify-between gap-2">
           <div className="flex-1">
             <h2 className="text-base font-bold text-black text-left leading-tight mb-1">
-              {headerTitle}
+              {headerTitle} {totalCount > 0 && `(${totalCount})`}
             </h2>
             <p className="text-xs text-gray-900 opacity-75 text-left">
               {commentType === 'review' ? 'Share your review (no account required)' : 'Share your thoughts (no account required)'}
