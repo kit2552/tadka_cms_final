@@ -111,6 +111,7 @@ class ArticleUpdate(BaseModel):
     review_director: Optional[str] = None
     review_genre: Optional[str] = None
     review_runtime: Optional[str] = None
+    movie_language: Optional[str] = None
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
