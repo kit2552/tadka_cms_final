@@ -1894,6 +1894,10 @@ const Dashboard = () => {
         }
       }
     }
+    } catch (outerError) {
+      console.error('❌ CRITICAL ERROR in handleImageUpload:', outerError);
+      alert(`Critical error: ${outerError.message}`);
+    }
   };
 
   const handleImageDelete = async (imageId) => {
