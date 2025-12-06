@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular' }) => {
   const [formData, setFormData] = useState({
     name: '',
-    comment: ''
+    comment: '',
+    rating: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -26,7 +27,12 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular' }) =>
     }
     
     if (!formData.comment.trim()) {
-      setError('Please enter your comment');
+      setError(commentType === 'review' ? 'Please enter your review' : 'Please enter your comment');
+      return;
+    }
+
+    if (commentType === 'review' && !formData.rating) {
+      setError('Please select a rating');
       return;
     }
     
@@ -35,9 +41,10 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular' }) =>
       await onSubmit({
         name: formData.name.trim(),
         comment: formData.comment.trim(),
-        comment_type: commentType
+        comment_type: commentType,
+        rating: commentType === 'review' ? formData.rating : null
       });
-      setFormData({ name: '', comment: '' });
+      setFormData({ name: '', comment: '', rating: '' });
       setError('');
       onClose();
     } catch (err) {
