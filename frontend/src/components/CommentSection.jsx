@@ -63,25 +63,41 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleString('en-IN', {
-      timeZone: 'Asia/Kolkata',
+    const options = {
       year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
-    });
+      minute: '2-digit',
+      hour12: true
+    };
+    
+    const formattedDate = date.toLocaleString('en-US', options);
+    const timezoneName = date.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop();
+    
+    return `${formattedDate} ${timezoneName}`;
   };
 
   return (
     <div>
-      <div className="mb-4">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors w-full"
-        >
-          Add Comment
-        </button>
+      {/* Sticky Header with Add Comment Button */}
+      <div className={`sticky top-0 z-30 border-b-2 border-gray-300 mb-4`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+        <div className="pl-0 pr-4 py-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-base font-bold text-black text-left leading-tight mb-1">
+              {headerTitle}
+            </h2>
+            <p className="text-xs text-gray-900 opacity-75 text-left">
+              Share your thoughts
+            </p>
+          </div>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="px-3 py-1.5 bg-gray-700 text-white rounded text-xs font-medium hover:bg-gray-800 transition-colors whitespace-nowrap"
+          >
+            Add Comment
+          </button>
+        </div>
       </div>
 
       {loading ? (
