@@ -1569,6 +1569,7 @@ app.include_router(system_settings_router, prefix="/api")  # System settings rou
 app.include_router(topics_router, prefix="/api")  # Add topics routes
 app.include_router(gallery_router, prefix="/api")  # Add gallery routes
 app.include_router(comments_router)  # Add comments routes
+app.include_router(ott_platforms_router)  # Add OTT platforms routes
 
 app.add_middleware(
     CORSMiddleware,
