@@ -301,63 +301,58 @@ const ArticlePage = () => {
             {/* Movie Review Content */}
             {article.content_type === 'movie_review' ? (
               <div className="space-y-6 mb-8">
-                {/* Modern Movie Info Sidebar - Dark Theme */}
-                <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl shadow-2xl border border-gray-700">
-                  {/* Rating Section - Prominent */}
-                  {article.movie_rating && (
-                    <div className="text-center pb-6 border-b border-gray-700">
-                      <div className="text-6xl font-bold text-white mb-2">{article.movie_rating}<span className="text-3xl text-gray-400">/5</span></div>
-                      <div className="flex items-center justify-center gap-1">
-                        {[...Array(5)].map((_, i) => {
-                          const rating = parseFloat(article.movie_rating);
-                          const filled = i < Math.floor(rating);
-                          const half = i === Math.floor(rating) && rating % 1 >= 0.5;
-                          return (
-                            <svg
-                              key={i}
-                              className={`w-6 h-6 ${filled ? 'text-yellow-400' : half ? 'text-yellow-400' : 'text-gray-600'}`}
-                              fill={filled || half ? 'currentColor' : 'none'}
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                            </svg>
-                          );
-                        })}
-                      </div>
+                {/* Compact Movie Info Card - Dark Theme */}
+                <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 rounded-lg shadow-xl border border-gray-700">
+                  <div className="flex items-center justify-between gap-4">
+                    {/* Left Side - Movie Details */}
+                    <div className="flex-1 space-y-2 text-left">
+                      {article.review_runtime && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider w-16">Runtime</span>
+                          <span className="text-white font-medium text-xs">{article.review_runtime}</span>
+                        </div>
+                      )}
+                      {article.review_genre && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider w-16">Genre</span>
+                          <span className="text-white font-medium text-xs">{article.review_genre}</span>
+                        </div>
+                      )}
+                      {article.review_cast && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider w-16">Cast</span>
+                          <span className="text-white font-medium text-xs line-clamp-1">{article.review_cast}</span>
+                        </div>
+                      )}
+                      {article.review_director && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider w-16">Director</span>
+                          <span className="text-white font-medium text-xs">{article.review_director}</span>
+                        </div>
+                      )}
                     </div>
-                  )}
 
-                  {/* Movie Details Grid */}
-                  <div className="space-y-4 mt-6 text-left">
-                    {article.review_runtime && (
-                      <div className="flex items-start gap-3">
-                        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider min-w-[80px]">Runtime</span>
-                        <span className="text-white font-medium text-sm">{article.review_runtime}</span>
-                      </div>
-                    )}
-                    {article.review_genre && (
-                      <div className="flex items-start gap-3">
-                        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider min-w-[80px]">Genre</span>
-                        <span className="text-white font-medium text-sm">{article.review_genre}</span>
-                      </div>
-                    )}
-                    {article.published_at && (
-                      <div className="flex items-start gap-3">
-                        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider min-w-[80px]">Release</span>
-                        <span className="text-white font-medium text-sm">{new Date(article.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-                      </div>
-                    )}
-                    {article.review_cast && (
-                      <div className="flex items-start gap-3">
-                        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider min-w-[80px]">Cast</span>
-                        <span className="text-white font-medium text-sm leading-relaxed">{article.review_cast}</span>
-                      </div>
-                    )}
-                    {article.review_director && (
-                      <div className="flex items-start gap-3">
-                        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider min-w-[80px]">Director</span>
-                        <span className="text-white font-medium text-sm">{article.review_director}</span>
+                    {/* Right Side - Rating */}
+                    {article.movie_rating && (
+                      <div className="flex flex-col items-center justify-center border-l border-gray-700 pl-4">
+                        <div className="text-4xl font-bold text-white leading-none">{article.movie_rating}</div>
+                        <div className="text-xs text-gray-400 mb-1">/5</div>
+                        <div className="flex items-center gap-0.5">
+                          {[...Array(5)].map((_, i) => {
+                            const rating = parseFloat(article.movie_rating);
+                            const filled = i < Math.floor(rating);
+                            return (
+                              <svg
+                                key={i}
+                                className={`w-3 h-3 ${filled ? 'text-yellow-400' : 'text-gray-600'}`}
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                              </svg>
+                            );
+                          })}
+                        </div>
                       </div>
                     )}
                   </div>
