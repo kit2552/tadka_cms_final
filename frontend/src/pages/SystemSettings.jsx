@@ -479,17 +479,50 @@ const SystemSettings = () => {
 
                     <div className="text-left">
                       <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                        Root Folder Path
+                        Articles Root Folder
                       </label>
                       <input
                         type="text"
-                        name="root_folder_path"
-                        value={awsConfig.root_folder_path}
+                        name="articles_root_folder"
+                        value={awsConfig.articles_root_folder}
                         onChange={handleAWSConfigChange}
                         disabled={!awsConfig.is_enabled}
                         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
-                        placeholder="/"
+                        placeholder="articles"
                       />
+                      <p className="mt-1 text-xs text-gray-500">Path: {awsConfig.articles_root_folder}/YYYY/MM/DD/N.ext</p>
+                    </div>
+
+                    <div className="text-left">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                        Galleries Root Folder
+                      </label>
+                      <input
+                        type="text"
+                        name="galleries_root_folder"
+                        value={awsConfig.galleries_root_folder}
+                        onChange={handleAWSConfigChange}
+                        disabled={!awsConfig.is_enabled}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
+                        placeholder="galleries"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">Path: {awsConfig.galleries_root_folder}/YYYY/MM/DD/N.ext</p>
+                    </div>
+
+                    <div className="text-left">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                        Tadka Pics Root Folder
+                      </label>
+                      <input
+                        type="text"
+                        name="tadka_pics_root_folder"
+                        value={awsConfig.tadka_pics_root_folder}
+                        onChange={handleAWSConfigChange}
+                        disabled={!awsConfig.is_enabled}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
+                        placeholder="tadka-pics"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">Path: {awsConfig.tadka_pics_root_folder}/YYYY/MM/DD/N.ext</p>
                     </div>
                   </div>
 
