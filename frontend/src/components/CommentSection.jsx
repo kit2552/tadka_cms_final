@@ -55,6 +55,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
       if (response.ok) {
         const data = await response.json();
         setComments(prev => [data.comment, ...prev]);
+        setTotalCount(prev => prev + 1);
       } else {
         const errorData = await response.text();
         console.error('Error response:', errorData);
