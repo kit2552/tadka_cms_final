@@ -94,6 +94,14 @@ const CreateArticle = () => {
   const [showOttModal, setShowOttModal] = useState(false);
   const [newOttPlatformName, setNewOttPlatformName] = useState('');
 
+  // Gallery Category states
+  const [galleryCategory, setGalleryCategory] = useState('');
+  const [selectedEntity, setSelectedEntity] = useState('');
+  const [availableEntities, setAvailableEntities] = useState([]);
+  const [showEntityModal, setShowEntityModal] = useState(false);
+  const [newEntityName, setNewEntityName] = useState('');
+  const [nextGalleryNumber, setNextGalleryNumber] = useState(1);
+
   // Accordion states
   const [accordionStates, setAccordionStates] = useState({
     authorTargeting: true,
