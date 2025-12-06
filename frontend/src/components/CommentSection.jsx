@@ -93,14 +93,14 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
               {headerTitle}
             </h2>
             <p className="text-xs text-gray-900 opacity-75 text-left">
-              Share your thoughts (no account required)
+              {commentType === 'review' ? 'Share your review (no account required)' : 'Share your thoughts (no account required)'}
             </p>
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
             className="px-3 h-[22px] flex items-center bg-gray-700 text-white rounded text-xs font-medium hover:bg-gray-800 transition-colors whitespace-nowrap flex-shrink-0"
           >
-            Add Comment
+            {commentType === 'review' ? 'Add Review' : 'Add Comment'}
           </button>
         </div>
       </div>
