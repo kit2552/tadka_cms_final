@@ -1547,20 +1547,6 @@ const CreateArticle = () => {
                       </div>
 
                       {/* Trailer URL */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          Trailer YouTube URL
-                        </label>
-                        <input
-                          type="url"
-                          name="youtube_url"
-                          value={formData.youtube_url}
-                          onChange={handleInputChange}
-                          className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="https://www.youtube.com/watch?v=..."
-                        />
-                      </div>
-
                       {/* Review Sections */}
                       <div className="border-t pt-4 mt-4">
                         <h4 className="text-sm font-semibold text-gray-800 mb-3 text-left">Review Sections</h4>
