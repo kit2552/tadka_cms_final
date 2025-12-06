@@ -384,6 +384,33 @@ const CreateArticle = () => {
     setSelectedStates(newStates.length === 0 ? ['all'] : newStates);
   };
 
+
+  // Upload callback for rich text editor images
+  const uploadImageCallback = async (file) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('content_type', 'articles');
+        
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/upload-image`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          resolve({ data: { link: data.url } });
+        } else {
+          reject('Upload failed');
+        }
+      } catch (error) {
+        console.error('Editor image upload error:', error);
+        reject(error);
+      }
+    });
+  };
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
