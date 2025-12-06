@@ -1855,6 +1855,7 @@ const Dashboard = () => {
           
           if (uploadResponse.ok) {
             const uploadData = await uploadResponse.json();
+            console.log('✅ Image uploaded to S3:', uploadData.url);
             
             // Add image with S3 URL to form
             const newImage = {
