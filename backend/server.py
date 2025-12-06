@@ -18,6 +18,7 @@ from routes.auth_routes import router as auth_router
 from routes.system_settings_routes import router as system_settings_router
 from routes.topics_routes_mongodb import router as topics_router
 from routes.gallery_routes_mongodb import router as gallery_router
+from routes.comments_routes import router as comments_router
 from auth import create_default_admin
 from scheduler_service import article_scheduler
 from s3_service import s3_service
