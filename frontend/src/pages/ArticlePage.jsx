@@ -571,7 +571,7 @@ const ArticlePage = () => {
             {/* Comment Section */}
             {article.content_type === 'movie_review' && (article.review_comments_enabled !== false) && (
               <div className="mb-6">
-                <div className={`sticky top-16 z-30 border-b-2 border-gray-300 mb-4`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+                <div className={`sticky top-0 z-30 border-b-2 border-gray-300 mb-4`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
                   <div className="pl-0 pr-4 py-4">
                     <div className="mb-1">
                       <h2 className="text-base font-bold text-black text-left leading-tight">
