@@ -387,6 +387,7 @@ const CreateArticle = () => {
 
   // Upload callback for rich text editor images
   const uploadImageCallback = async (file) => {
+    console.log('✅ NEW VERSION: uploadImageCallback called with file:', file.name);
     return new Promise(async (resolve, reject) => {
       try {
         const formData = new FormData();
