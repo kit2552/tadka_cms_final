@@ -1053,6 +1053,8 @@ def get_next_image_filename(date: datetime = None, content_type: str = "articles
     For S3: Path structure is content_type/YYYY/MM/DD/N.ext
     For Local: Path structure is content_type/YYYY/MM/DD/N.ext
     """
+    logger.info(f"📁 get_next_image_filename called with content_type='{content_type}'")
+    
     if date is None:
         # Use EST timezone (America/New_York handles EST/EDT automatically)
         est = pytz_timezone('America/New_York')
