@@ -80,7 +80,10 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular', exis
         {/* Sticky Header - Compact */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-600 flex-shrink-0 bg-gray-700">
           <h3 className="text-base font-semibold text-white text-left">
-            {commentType === 'review' ? 'Add User Review' : 'Add Comment'}
+            {isEditing 
+              ? (commentType === 'review' ? 'Edit Your Review' : 'Edit Comment')
+              : (commentType === 'review' ? 'Add User Review' : 'Add Comment')
+            }
           </h3>
           <button
             onClick={onClose}
