@@ -8,24 +8,24 @@ module.exports = {
   theme: {
         extend: {
                 fontFamily: {
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                        inter: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        sans: ['Merriweather Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        merriweather: ['Merriweather Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                 },
                 typography: {
                         DEFAULT: {
                                 css: {
-                                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
                                         h1: {
-                                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
                                         },
                                         h2: {
-                                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
                                         },
                                         h3: {
-                                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
                                         },
                                         h4: {
-                                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                                fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
                                         },
                                 },
                         },
