@@ -1144,8 +1144,8 @@ async def save_uploaded_file(upload_file: UploadFile, subfolder: str = None, con
     # Get file extension
     file_extension = os.path.splitext(upload_file.filename)[1] or '.jpg'
     
-    # Get next filename using date-based structure
-    date_path, next_num = get_next_image_filename()
+    # Get next filename using date-based structure with content type
+    date_path, next_num = get_next_image_filename(content_type=content_type)
     filename_with_path = f"{date_path}/{next_num}{file_extension}"
     
     # Read file content
