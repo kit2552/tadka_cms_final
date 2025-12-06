@@ -262,7 +262,7 @@ const ArticlePage = () => {
             </div>
 
             {/* Main Image or YouTube Video - White background */}
-            {article.content_type === 'video' && article.youtube_url ? (
+            {(article.content_type === 'video' || article.content_type === 'movie_review') && article.youtube_url ? (
               <div className="mb-3 bg-white">
                 <div className="relative aspect-video w-full overflow-hidden">
                   <iframe
