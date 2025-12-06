@@ -32,6 +32,30 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
     }
   };
 
+  const handleOpenModal = async () => {
+    // Check if user has already reviewed (only for review type)
+    if (commentType === 'review') {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/articles/${articleId}/check-review`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.has_reviewed) {
+            setExistingReview(data.review);
+            setIsEditing(true);
+          } else {
+            setExistingReview(null);
+            setIsEditing(false);
+          }
+        }
+      } catch (error) {
+        console.error('Error checking existing review:', error);
+      }
+    }
+    setIsModalOpen(true);
+  };
+
   const handleAddComment = async (commentData) => {
     try {
       setSubmitting(true);
@@ -43,25 +67,36 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
         rating: commentData.rating || null
       };
       
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/articles/${articleId}/comments`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        }
-      );
+      // Use PUT for editing, POST for new
+      const url = isEditing 
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/articles/${articleId}/comments/${existingReview.id}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/articles/${articleId}/comments`;
       
-      if (response.ok) {
-        const data = await response.json();
-        setComments(prev => [data.comment, ...prev]);
-        setTotalCount(prev => prev + 1);
+      const method = isEditing ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        if (isEditing) {
+          // Update existing comment in list
+          setComments(prev => prev.map(c => c.id === existingReview.id ? data.comment : c));
+        } else {
+          // Add new comment
+          setComments(prev => [data.comment, ...prev]);
+          setTotalCount(prev => prev + 1);
+        }
+        setIsEditing(false);
+        setExistingReview(null);
       } else {
-        const errorData = await response.text();
-        console.error('Error response:', errorData);
-        throw new Error(`Failed to submit comment: ${response.status}`);
+        throw new Error(data.message || `Failed to submit comment: ${response.status}`);
       }
     } catch (error) {
       console.error('Error submitting comment:', error);
