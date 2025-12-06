@@ -202,15 +202,20 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                         />
                       )}
                       
-                      {/* Rating Badge - Yellow Square Background */}
+                      {/* Movie Review Badge - Red Background on Left */}
+                      <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
+                        Movie Review
+                      </div>
+                      
+                      {/* Rating Badge - Yellow Square Background on Right */}
                       <div className="absolute top-2 right-2 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded shadow-lg">
-                        {getRandomRating(currentIndex + index)}
+                        {getMovieRating(item)}
                       </div>
                       
                       {/* Title Overlay with Black Transparent Banner */}
                       <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
                         <h3 className="text-white font-bold text-xs text-center leading-tight">
-                          {item.title || item.name}
+                          {(item.title || item.name).replace(' Movie Review', '')}
                         </h3>
                       </div>
                     </div>
