@@ -17,13 +17,21 @@ class GalleryCreate(BaseModel):
     title: str
     artists: List[str]
     images: List[dict]  # List of image objects with id, name, data, size
-    gallery_type: Optional[str] = "vertical"
+    gallery_type: Optional[str] = "vertical"  # horizontal or vertical
+    category_type: Optional[str] = None  # Actor, Actress, Events, etc.
+    entity_name: Optional[str] = None
+    folder_path: Optional[str] = None
+    tadka_pics_enabled: Optional[bool] = False
 
 class GalleryUpdate(BaseModel):
     title: Optional[str] = None
     artists: Optional[List[str]] = None
     images: Optional[List[dict]] = None
     gallery_type: Optional[str] = None
+    category_type: Optional[str] = None
+    entity_name: Optional[str] = None
+    folder_path: Optional[str] = None
+    tadka_pics_enabled: Optional[bool] = None
 
 class GalleryResponse(BaseModel):
     id: int
