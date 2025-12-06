@@ -1054,6 +1054,12 @@ def get_next_image_filename(date: datetime = None) -> tuple:
     month = date.strftime("%m")
     day = date.strftime("%d")
     
+    # For S3: Use date path without 'images' prefix (root folder handles it)
+    s3_date_path = f"{year}/{month}/{day}"
+    
+    # For Local: Use date path with 'images' prefix
+    local_date_path = f"images/{year}/{month}/{day}"
+    
     # For S3, check existing files via API
     if s3_service.is_enabled():
         try:
@@ -1061,7 +1067,7 @@ def get_next_image_filename(date: datetime = None) -> tuple:
             root_folder = s3_service.config.get('root_folder_path', '').strip('/')
             
             # List objects with this prefix
-            prefix = f"{root_folder}/{date_path}/" if root_folder else f"{date_path}/"
+            prefix = f"{root_folder}/{s3_date_path}/" if root_folder else f"{s3_date_path}/"
             
             response = s3_service.s3_client.list_objects_v2(
                 Bucket=bucket_name,
