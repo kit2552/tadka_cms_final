@@ -303,38 +303,50 @@ const ArticlePage = () => {
               <div className="space-y-6 mb-8">
                 {/* Compact Movie Info Card - Dark Theme */}
                 <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 rounded-lg shadow-xl border border-gray-700">
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-start justify-between gap-6">
                     {/* Left Side - Movie Details */}
                     <div className="flex-1 space-y-2 text-left">
+                      {article.title && (
+                        <div className="flex items-start gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Movie</span>
+                          <span className="text-white font-bold text-sm">{article.title.replace(' Movie Review', '')}</span>
+                        </div>
+                      )}
+                      {article.language && (
+                        <div className="flex items-start gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Language</span>
+                          <span className="text-white font-medium text-xs">{article.language}</span>
+                        </div>
+                      )}
                       {article.review_runtime && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider w-16">Runtime</span>
+                        <div className="flex items-start gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Runtime</span>
                           <span className="text-white font-medium text-xs">{article.review_runtime}</span>
                         </div>
                       )}
                       {article.review_genre && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider w-16">Genre</span>
+                        <div className="flex items-start gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Genre</span>
                           <span className="text-white font-medium text-xs">{article.review_genre}</span>
                         </div>
                       )}
-                      {article.review_cast && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider w-16">Cast</span>
-                          <span className="text-white font-medium text-xs line-clamp-1">{article.review_cast}</span>
+                      {article.review_director && (
+                        <div className="flex items-start gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Director</span>
+                          <span className="text-white font-medium text-xs">{article.review_director}</span>
                         </div>
                       )}
-                      {article.review_director && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider w-16">Director</span>
-                          <span className="text-white font-medium text-xs">{article.review_director}</span>
+                      {article.review_cast && (
+                        <div className="flex items-start gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Cast</span>
+                          <span className="text-white font-medium text-xs leading-relaxed">{article.review_cast}</span>
                         </div>
                       )}
                     </div>
 
                     {/* Right Side - Rating */}
                     {article.movie_rating && (
-                      <div className="flex flex-col items-center justify-center border-l border-gray-700 pl-4">
+                      <div className="flex flex-col items-center justify-center border-l border-gray-700 pl-4 flex-shrink-0">
                         <div className="text-4xl font-bold text-white leading-none">{article.movie_rating}</div>
                         <div className="text-xs text-gray-400 mb-1">/5</div>
                         <div className="flex items-center gap-0.5">
