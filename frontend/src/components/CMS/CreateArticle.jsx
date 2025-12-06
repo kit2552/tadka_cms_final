@@ -1659,7 +1659,7 @@ const CreateArticle = () => {
                         editorClassName="editor-class"
                         toolbarClassName="toolbar-class"
                         toolbar={{
-                          options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'link', 'image', 'history'],
+                          options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'link', 'image', 'history'],
                           inline: {
                             inDropdown: false,
                             options: ['bold', 'italic', 'underline', 'strikethrough']
@@ -1669,7 +1669,10 @@ const CreateArticle = () => {
                             options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote']
                           },
                           fontSize: {
-                            options: [8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96]
+                            options: [12, 14, 16, 18, 20, 22, 24, 28, 32]
+                          },
+                          fontFamily: {
+                            options: ['Merriweather Sans', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana']
                           },
                           list: {
                             inDropdown: false,
@@ -1682,15 +1685,20 @@ const CreateArticle = () => {
                           link: {
                             inDropdown: false,
                             showOpenOptionOnHover: true,
-                            defaultTargetOption: '_self',
+                            defaultTargetOption: '_blank',
                             options: ['link', 'unlink']
                           },
                           image: {
                             urlEnabled: true,
-                            uploadEnabled: false,
+                            uploadEnabled: true,
+                            uploadCallback: uploadImageCallback,
                             previewImage: true,
                             inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
-                            alt: { present: false, mandatory: false }
+                            alt: { present: true, mandatory: false },
+                            defaultSize: {
+                              height: 'auto',
+                              width: '100%'
+                            }
                           },
                           history: {
                             inDropdown: false,
