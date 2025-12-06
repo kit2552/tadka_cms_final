@@ -1003,6 +1003,85 @@ def delete_ott_platform(db, platform_id: int):
     result = db[OTT_PLATFORMS].delete_one({"id": platform_id})
     return result.deleted_count > 0
 
+# ==================== GALLERY ENTITIES CRUD ====================
+
+def get_gallery_entities(db, entity_type: str):
+    """Get all entities for a specific gallery type"""
+    collection_map = {
+        "actor": GALLERY_ACTORS,
+        "actress": GALLERY_ACTRESSES,
+        "events": GALLERY_EVENTS,
+        "politics": GALLERY_POLITICS,
+        "travel": GALLERY_TRAVEL,
+        "others": GALLERY_OTHERS
+    }
+    
+    collection = collection_map.get(entity_type.lower())
+    if not collection:
+        return []
+    
+    entities = list(db[collection].find({}, {"_id": 0}).sort("name", 1))
+    return entities
+
+def create_gallery_entity(db, entity_type: str, entity_data: dict):
+    """Create new gallery entity"""
+    collection_map = {
+        "actor": GALLERY_ACTORS,
+        "actress": GALLERY_ACTRESSES,
+        "events": GALLERY_EVENTS,
+        "politics": GALLERY_POLITICS,
+        "travel": GALLERY_TRAVEL,
+        "others": GALLERY_OTHERS
+    }
+    
+    collection = collection_map.get(entity_type.lower())
+    if not collection:
+        raise ValueError(f"Invalid entity type: {entity_type}")
+    
+    # Get next ID
+    max_entity = db[collection].find_one(sort=[("id", -1)])
+    next_id = (max_entity["id"] + 1) if max_entity else 1
+    
+    # Create folder name (lowercase, replace spaces with underscores)
+    folder_name = entity_data["name"].lower().replace(" ", "_").replace("-", "_")
+    
+    entity_doc = {
+        "id": next_id,
+        "name": entity_data["name"],
+        "folder_name": folder_name,
+        "is_active": entity_data.get("is_active", True),
+        "created_at": datetime.utcnow()
+    }
+    
+    db[collection].insert_one(entity_doc)
+    del entity_doc["_id"]
+    return entity_doc
+
+def get_next_gallery_number(db, category_type: str, entity_name: str):
+    """Get the next gallery number for an entity"""
+    # Find all galleries for this entity
+    galleries = list(db[GALLERIES].find({
+        "category_type": category_type,
+        "entity_name": entity_name
+    }, {"gallery_id": 1, "_id": 0}))
+    
+    if not galleries:
+        return 1
+    
+    # Extract numbers from gallery_id and find max
+    numbers = []
+    for g in galleries:
+        gallery_id = g.get("gallery_id", "")
+        # Try to extract the last number from gallery_id
+        parts = gallery_id.split("_")
+        if parts:
+            try:
+                numbers.append(int(parts[-1]))
+            except ValueError:
+                pass
+    
+    return max(numbers) + 1 if numbers else 1
+
 # ==================== GALLERIES CRUD ====================
 
 def get_galleries(db, skip: int = 0, limit: int = 100):
