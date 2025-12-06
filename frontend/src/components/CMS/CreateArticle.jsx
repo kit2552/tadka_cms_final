@@ -1520,32 +1520,58 @@ const CreateArticle = () => {
                         </div>
                       </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          Genre
-                        </label>
-                        <select
-                          name="review_genre"
-                          value={formData.review_genre}
-                          onChange={handleInputChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option value="">Select Genre</option>
-                          <option value="Action">Action</option>
-                          <option value="Comedy">Comedy</option>
-                          <option value="Drama">Drama</option>
-                          <option value="Thriller">Thriller</option>
-                          <option value="Horror">Horror</option>
-                          <option value="Romance">Romance</option>
-                          <option value="Sci-Fi">Sci-Fi</option>
-                          <option value="Fantasy">Fantasy</option>
-                          <option value="Crime">Crime</option>
-                          <option value="Family">Family</option>
-                          <option value="Mystery">Mystery</option>
-                          <option value="Adventure">Adventure</option>
-                          <option value="Biography">Biography</option>
-                          <option value="Musical">Musical</option>
-                        </select>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Genre
+                          </label>
+                          <select
+                            name="review_genre"
+                            value={formData.review_genre}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">Select Genre</option>
+                            <option value="Action">Action</option>
+                            <option value="Comedy">Comedy</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Sci-Fi">Sci-Fi</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Crime">Crime</option>
+                            <option value="Family">Family</option>
+                            <option value="Mystery">Mystery</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Biography">Biography</option>
+                            <option value="Musical">Musical</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Language
+                          </label>
+                          <select
+                            name="movie_language"
+                            value={formData.movie_language}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">Select Language</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Telugu">Telugu</option>
+                            <option value="Tamil">Tamil</option>
+                            <option value="English">English</option>
+                            <option value="Malayalam">Malayalam</option>
+                            <option value="Kannada">Kannada</option>
+                            <option value="Marathi">Marathi</option>
+                            <option value="Bengali">Bengali</option>
+                            <option value="Punjabi">Punjabi</option>
+                            <option value="Gujarati">Gujarati</option>
+                          </select>
+                        </div>
                       </div>
 
                       {/* Trailer URL */}
