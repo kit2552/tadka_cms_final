@@ -564,18 +564,50 @@ const ArticlePage = () => {
               </div>
             </div>
 
-            {/* Comment Section */}
-            {article.content_type === 'movie_review' && (article.review_comments_enabled !== false) && (
-              <CommentSection articleId={article.id} commentType="review" />
-            )}
-            {article.content_type !== 'movie_review' && (article.comments_enabled !== false) && (
-              <CommentSection articleId={article.id} commentType="regular" />
-            )}
-
           </div>
 
-          {/* Related Articles Section - 40% width */}
+          {/* Right Sidebar - Comments & Related Articles Section - 40% width */}
           <div className="lg:col-span-2 border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0">
+            {/* Comment Section */}
+            {article.content_type === 'movie_review' && (article.review_comments_enabled !== false) && (
+              <div className="mb-6">
+                <div className={`sticky top-16 z-30 border-b-2 border-gray-300 mb-4`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+                  <div className="pl-0 pr-4 py-4">
+                    <div className="mb-1">
+                      <h2 className="text-base font-bold text-black text-left leading-tight">
+                        Movie Review Comments
+                      </h2>
+                    </div>
+                    <p className="text-xs text-gray-900 opacity-75 text-left">
+                      Share your thoughts
+                    </p>
+                  </div>
+                </div>
+                <div className="overflow-y-auto pr-4" style={{ maxHeight: '400px' }}>
+                  <CommentSection articleId={article.id} commentType="review" />
+                </div>
+              </div>
+            )}
+            {article.content_type !== 'movie_review' && (article.comments_enabled !== false) && (
+              <div className="mb-6">
+                <div className={`sticky top-16 z-30 border-b-2 border-gray-300 mb-4`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+                  <div className="pl-0 pr-4 py-4">
+                    <div className="mb-1">
+                      <h2 className="text-base font-bold text-black text-left leading-tight">
+                        Comments
+                      </h2>
+                    </div>
+                    <p className="text-xs text-gray-900 opacity-75 text-left">
+                      Share your thoughts
+                    </p>
+                  </div>
+                </div>
+                <div className="overflow-y-auto pr-4" style={{ maxHeight: '400px' }}>
+                  <CommentSection articleId={article.id} commentType="regular" />
+                </div>
+              </div>
+            )}
+
             {/* Related Articles Section Header - Sticky */}
             <div className={`sticky top-16 z-30 border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
