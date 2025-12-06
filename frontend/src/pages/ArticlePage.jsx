@@ -239,7 +239,7 @@ const ArticlePage = () => {
           {/* Article Section - 60% width - Scrollable */}
           <div className="lg:col-span-3 overflow-y-auto custom-scrollbar" style={{ height: '100%' }}>
             {/* Article Section Header - Sticky with published date and bottom border */}
-            <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+            <div className={`sticky top-0 z-40 border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
                 <div className="flex items-center gap-3 mb-1">
                   <h1 className="text-base font-bold text-black text-left leading-tight font-sans">
