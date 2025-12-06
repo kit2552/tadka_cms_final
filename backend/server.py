@@ -1043,16 +1043,17 @@ def get_next_image_filename(date: datetime = None) -> tuple:
     """
     Get the next available filename for the given date
     Returns (full_path, filename) tuple
-    Path structure: images/YYYY/MM/DD/N.ext where N is auto-incremented
+    Path structure: YYYY/MM/DD/N.ext where N is auto-incremented
+    Note: S3 root folder already has 'images' prefix configured
     """
     if date is None:
         date = datetime.now()
     
-    # Create date-based path
+    # Create date-based path (without 'images' prefix as S3 root folder handles that)
     year = date.strftime("%Y")
     month = date.strftime("%m")
     day = date.strftime("%d")
-    date_path = f"images/{year}/{month}/{day}"
+    date_path = f"{year}/{month}/{day}"
     
     # For S3, check existing files via API
     if s3_service.is_enabled():
