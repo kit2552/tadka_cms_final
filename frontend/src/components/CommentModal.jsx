@@ -100,15 +100,37 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular' }) =>
               />
             </div>
 
+            {commentType === 'review' && (
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                  Your Rating *
+                </label>
+                <select
+                  name="rating"
+                  value={formData.rating}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 text-left"
+                  disabled={loading}
+                >
+                  <option value="">Select Rating</option>
+                  <option value="5">★★★★★ (5/5)</option>
+                  <option value="4">★★★★☆ (4/5)</option>
+                  <option value="3">★★★☆☆ (3/5)</option>
+                  <option value="2">★★☆☆☆ (2/5)</option>
+                  <option value="1">★☆☆☆☆ (1/5)</option>
+                </select>
+              </div>
+            )}
+
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                Your Comment *
+                {commentType === 'review' ? 'Your Review *' : 'Your Comment *'}
               </label>
               <textarea
                 name="comment"
                 value={formData.comment}
                 onChange={handleChange}
-                placeholder="Write your comment here..."
+                placeholder={commentType === 'review' ? 'Write your review here...' : 'Write your comment here...'}
                 rows="5"
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 text-left"
                 disabled={loading}
