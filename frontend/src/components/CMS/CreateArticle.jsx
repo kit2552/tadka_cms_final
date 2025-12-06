@@ -1425,21 +1425,24 @@ const CreateArticle = () => {
                   {/* MOVIE REVIEW Type Fields */}
                   {formData.content_type === 'movie_review' && (
                     <>
-                      {/* Movie Poster Image */}
+                      {/* YouTube Trailer Link */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          Movie Poster *
+                          YouTube Trailer Link *
                         </label>
                         <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
+                          type="url"
+                          name="youtube_url"
+                          value={formData.youtube_url}
+                          onChange={handleInputChange}
+                          placeholder="https://www.youtube.com/watch?v=..."
                           className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required
                         />
-                        {formData.image && (
-                          <div className="mt-2">
-                            <img src={getImageUrl(formData.image)} alt="Preview" className="w-32 h-20 object-cover rounded" />
-                          </div>
+                        {formData.youtube_url && (
+                          <p className="mt-1 text-xs text-gray-500">
+                            Trailer will be embedded on the article page
+                          </p>
                         )}
                       </div>
 
