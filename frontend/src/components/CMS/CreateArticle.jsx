@@ -1710,7 +1710,7 @@ const CreateArticle = () => {
 
                   {/* VIDEO Type Fields */}
                   {formData.content_type === 'video' && (
-                    <>
+                    <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                           YouTube Video URL
