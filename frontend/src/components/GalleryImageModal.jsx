@@ -190,7 +190,7 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
           />
 
           {/* Top Right Controls - Inside image */}
-          <div className="absolute top-4 right-4 flex items-center space-x-2 z-20">
+          <div style={{ position: 'absolute', top: '8px', right: '8px', display: 'flex', gap: '8px', zIndex: 20 }}>
             {/* Fullscreen Toggle Button */}
             <button
               onClick={toggleFullscreen}
@@ -224,8 +224,8 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
           {images.length > 1 && (
             <button
               onClick={handlePrevClick}
-              className="absolute bottom-8 left-8 z-20 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
-              style={{ pointerEvents: 'auto' }}
+              style={{ position: 'absolute', bottom: '32px', left: '32px', zIndex: 20, pointerEvents: 'auto' }}
+              className="text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
             >
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -235,7 +235,7 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
 
           {/* Image Counter - Bottom Center - Rectangular with slight rounded corners */}
           {images.length > 1 && !isFullscreen && (
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 bg-black bg-opacity-50 text-white px-4 py-2 rounded text-sm font-medium">
+            <div style={{ position: 'absolute', bottom: '32px', left: '50%', transform: 'translateX(-50%)', zIndex: 20 }} className="bg-black bg-opacity-50 text-white px-4 py-2 rounded text-sm font-medium">
               {currentIndex + 1} / {images.length}
             </div>
           )}
@@ -244,8 +244,8 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
           {images.length > 1 && (
             <button
               onClick={handleNextClick}
-              className="absolute bottom-8 right-8 z-20 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
-              style={{ pointerEvents: 'auto' }}
+              style={{ position: 'absolute', bottom: '32px', right: '32px', zIndex: 20, pointerEvents: 'auto' }}
+              className="text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
             >
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
