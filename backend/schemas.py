@@ -45,7 +45,7 @@ class ArticleBase(BaseModel):
     content_secondary: Optional[str] = None
     summary: str
     author: str
-    language: str = "en"
+    article_language: str = "en"
     states: Optional[str] = None  # JSON string
     category: str
     content_type: Optional[str] = "post"  # New field for content type
