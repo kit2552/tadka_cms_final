@@ -2451,7 +2451,7 @@ const CreateArticle = () => {
                                       {formData.ott_platforms.map((platform, index) => (
                                         <span
                                           key={index}
-                                          className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                                          className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded text-sm"
                                         >
                                           {platform}
                                           <button
