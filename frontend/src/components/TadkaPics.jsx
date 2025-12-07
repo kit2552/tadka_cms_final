@@ -8,8 +8,53 @@ import { PlaceholderImage } from '../utils/imageUtils';
 const TadkaPics = ({ images, onImageClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses } = useTheme();
-  // Create an array of 20 actress images with names and IDs - same as gallery page
-  const actressImages = [
+  
+  // State for galleries data
+  const [actressImages, setActressImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Tadka Pics galleries from API
+  useEffect(() => {
+    const fetchTadkaPics = async () => {
+      try {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+        const response = await fetch(`${backendUrl}/api/galleries/tadka-pics?limit=20`);
+        
+        if (response.ok) {
+          const galleries = await response.json();
+          
+          // Transform galleries to the format expected by the component
+          const transformedImages = [];
+          galleries.forEach((gallery, galleryIndex) => {
+            const images = Array.isArray(gallery.images) ? gallery.images : 
+                          (typeof gallery.images === 'string' ? JSON.parse(gallery.images) : []);
+            
+            images.forEach((img, imgIndex) => {
+              transformedImages.push({
+                id: `${gallery.id}-${imgIndex}`,
+                gallery_id: gallery.gallery_id,
+                name: gallery.title || gallery.entity_name || 'Gallery Image',
+                image: img.url || img.data,
+                fullImage: img.url || img.data,
+                gallery: gallery
+              });
+            });
+          });
+          
+          setActressImages(transformedImages);
+        }
+      } catch (error) {
+        console.error('Error fetching Tadka Pics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTadkaPics();
+  }, []);
+
+  // Old mock data - keeping as fallback but not using
+  const mockImages = [
     {
       id: 1,
       name: "Emma Stone",
