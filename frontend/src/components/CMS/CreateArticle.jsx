@@ -1813,38 +1813,6 @@ const CreateArticle = () => {
                             ))}
                           </div>
                         )}
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          Artist
-                        </label>
-                        <div className="flex gap-2">
-                          <select
-                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            value={selectedArtist}
-                            onChange={(e) => handleSelectArtist(e.target.value)}
-                          >
-                            <option value="">Select Artist</option>
-                            {availableArtists
-                              .sort((a, b) => a.localeCompare(b))
-                              .map((artist, index) => (
-                                <option key={index} value={artist}>
-                                  {artist}
-                                </option>
-                              ))}
-                          </select>
-                          <button
-                            type="button"
-                            onClick={() => setShowArtistModal(true)}
-                            className="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium transition-colors duration-200 flex items-center"
-                            title="Add New Artist"
-                          >
-                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            Add
-                          </button>
                         </div>
                       </div>
                     </div>
