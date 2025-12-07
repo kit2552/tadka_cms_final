@@ -511,22 +511,32 @@ def publish_scheduled_article(db, article_id):
 
 # ==================== RELEASES ====================
 
-def get_theater_releases(db, language: str = None):
+def get_theater_release(db, release_id: int):
+    """Get single theater release by ID"""
+    doc = db[THEATER_RELEASES].find_one({"id": release_id})
+    return serialize_doc(doc)
+
+def get_theater_releases(db, language: str = None, skip: int = 0, limit: int = 100):
     """Get theater releases"""
     query = {}
     if language:
         query["language"] = language
     
-    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1))
+    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).skip(skip).limit(limit))
     return serialize_doc(docs)
 
-def get_ott_releases(db, language: str = None):
+def get_ott_release(db, release_id: int):
+    """Get single OTT release by ID"""
+    doc = db[OTT_RELEASES].find_one({"id": release_id})
+    return serialize_doc(doc)
+
+def get_ott_releases(db, language: str = None, skip: int = 0, limit: int = 100):
     """Get OTT releases"""
     query = {}
     if language:
         query["language"] = language
     
-    docs = list(db[OTT_RELEASES].find(query).sort("release_date", 1))
+    docs = list(db[OTT_RELEASES].find(query).sort("release_date", 1).skip(skip).limit(limit))
     return serialize_doc(docs)
 
 def create_theater_release(db, release: dict):
