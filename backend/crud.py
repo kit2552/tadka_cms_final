@@ -331,8 +331,8 @@ def update_article_cms(db, article_id: int, article: dict):
         "seo_title", "seo_description", "seo_keywords",
         "review_quick_verdict", "review_plot_summary", "review_performances",
         "review_what_works", "review_what_doesnt_work", "review_technical_aspects",
-        "review_final_verdict", "review_cast", "review_director", 
-        "review_genre", "review_runtime", "movie_language",
+        "review_final_verdict", "review_cast", "review_director", "review_producer",
+        "review_music_director", "review_dop", "review_genre", "review_runtime", "movie_language",
         "platform", "ott_platform",
         "comments_enabled", "review_comments_enabled"
     ]
