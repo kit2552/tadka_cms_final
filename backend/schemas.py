@@ -106,7 +106,7 @@ class ArticleUpdate(BaseModel):
     content_secondary: Optional[str] = None
     summary: Optional[str] = None
     author: Optional[str] = None
-    language: Optional[str] = None
+    article_language: Optional[str] = None
     states: Optional[str] = None
     category: Optional[str] = None
     content_type: Optional[str] = None  # New field for content type
