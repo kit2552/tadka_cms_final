@@ -1262,15 +1262,11 @@ def manage_top_stories(db, article_id: str, content_type: str, states_json: str,
         published_at: Publication datetime
         is_top_story: Whether this article should be a top story
     """
-    print(f"🔵 manage_top_stories called: article_id={article_id}, is_top_story={is_top_story}, states_json={states_json}")
-    
     # Parse states
     try:
         states = json.loads(states_json) if states_json else []
     except:
         states = []
-    
-    print(f"🔵 Parsed states: {states}")
     
     # Normalize 'all' to 'ALL' and determine if national or state-specific
     if states and any(s.lower() == 'all' for s in states):
@@ -1279,8 +1275,6 @@ def manage_top_stories(db, article_id: str, content_type: str, states_json: str,
         target_states = ['ALL']
     else:
         target_states = states
-    
-    print(f"🔵 Target states: {target_states}")
     
     for state in target_states:
         if is_top_story:
