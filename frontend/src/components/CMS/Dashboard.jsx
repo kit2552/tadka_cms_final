@@ -4876,7 +4876,17 @@ const Dashboard = () => {
                                 <option value={20}>20</option>
                               </select>
                               <span className="text-sm text-gray-700">
-                                galleries per page (showing {((galleriesCurrentPage - 1) * galleriesItemsPerPage) + 1}-{Math.min(galleriesCurrentPage * galleriesItemsPerPage, horizontalGalleries.filter(gallery => selectedHorizontalArtist === '' || gallery.artist === selectedHorizontalArtist).length)} of {horizontalGalleries.filter(gallery => selectedHorizontalArtist === '' || gallery.artist === selectedHorizontalArtist).length})
+                                galleries per page (showing {((galleriesCurrentPage - 1) * galleriesItemsPerPage) + 1}-{Math.min(galleriesCurrentPage * galleriesItemsPerPage, horizontalGalleries.filter(gallery => {
+                                  if (filterHorizontalCategory && gallery.category_type !== filterHorizontalCategory) return false;
+                                  if (filterHorizontalEntity && gallery.entity_name !== filterHorizontalEntity) return false;
+                                  if (selectedHorizontalArtist && gallery.artist !== selectedHorizontalArtist) return false;
+                                  return true;
+                                }).length)} of {horizontalGalleries.filter(gallery => {
+                                  if (filterHorizontalCategory && gallery.category_type !== filterHorizontalCategory) return false;
+                                  if (filterHorizontalEntity && gallery.entity_name !== filterHorizontalEntity) return false;
+                                  if (selectedHorizontalArtist && gallery.artist !== selectedHorizontalArtist) return false;
+                                  return true;
+                                }).length})
                               </span>
                             </div>
 
