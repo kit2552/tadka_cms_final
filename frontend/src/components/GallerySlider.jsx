@@ -42,13 +42,13 @@ const GallerySlider = ({ gallery, title }) => {
       <div className="mb-3 bg-white relative">
         <div className="relative group">
           <div 
-            className="w-full h-96 overflow-hidden bg-black cursor-pointer relative"
+            className="w-full h-96 overflow-hidden bg-black cursor-pointer relative flex items-center justify-center"
             onClick={handleImageClick}
           >
             <img
               src={currentImageUrl}
               alt={`${title} - Image ${currentSlide + 1}`}
-              className="w-full h-full object-contain transition-opacity duration-200 group-hover:opacity-90"
+              className="max-w-full max-h-full object-contain transition-opacity duration-200 group-hover:opacity-90"
             />
             
             {/* Preview Eye Icon Overlay - Appears on Hover */}
