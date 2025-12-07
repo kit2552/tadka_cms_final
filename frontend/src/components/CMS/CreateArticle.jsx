@@ -1351,9 +1351,9 @@ const CreateArticle = () => {
                   
                   {/* POST Type Fields - Two Column Layout */}
                   {formData.content_type === 'post' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                      {/* Left Column: Title and Image Upload */}
-                      <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-4">
+                      {/* Left Column: Title and Image Upload (60% = 3 cols) */}
+                      <div className="space-y-4 md:col-span-3">
                         {/* Title Field */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
