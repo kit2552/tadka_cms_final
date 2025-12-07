@@ -1781,9 +1781,9 @@ const CreateArticle = () => {
                           Basic Information
                         </h4>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {/* Left Column (50%) */}
-                          <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                          {/* Left Column (60% = 3 cols) */}
+                          <div className="space-y-4 md:col-span-3">
                             {/* Title Field */}
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
