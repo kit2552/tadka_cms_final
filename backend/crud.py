@@ -1380,7 +1380,16 @@ def delete_gallery(db, gallery_id: str, s3_service=None):
     if gallery:
         # Delete images from S3 if service is available
         if s3_service and s3_service.is_enabled():
-            images = gallery.get("images", [])
+            images_raw = gallery.get("images", [])
+            # Parse JSON if stored as string
+            if isinstance(images_raw, str):
+                try:
+                    images = json.loads(images_raw)
+                except:
+                    images = []
+            else:
+                images = images_raw
+                
             for image in images:
                 # Handle both dict and string formats
                 if isinstance(image, dict):
