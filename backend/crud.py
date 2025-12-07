@@ -569,6 +569,53 @@ def create_ott_release(db, release: dict):
     release_doc["_id"] = result.inserted_id
     return serialize_doc(release_doc)
 
+def delete_theater_release(db, release_id: int, s3_service=None):
+    """Delete theater release and its images from S3"""
+    # Get release to access image URLs
+    release = db[THEATER_RELEASES].find_one({"id": release_id}, {"_id": 0})
+    
+    if release and s3_service and s3_service.is_enabled():
+        # Delete movie image
+        image_url = release.get("movie_image")
+        if image_url:
+            try:
+                s3_service.delete_file(image_url)
+                print(f"Deleted theater release image from S3: {image_url}")
+            except Exception as e:
+                print(f"Failed to delete theater release image from S3: {image_url}, Error: {e}")
+        
+        # Delete movie banner
+        banner_url = release.get("movie_banner")
+        if banner_url:
+            try:
+                s3_service.delete_file(banner_url)
+                print(f"Deleted theater release banner from S3: {banner_url}")
+            except Exception as e:
+                print(f"Failed to delete theater release banner from S3: {banner_url}, Error: {e}")
+    
+    # Delete release from database
+    result = db[THEATER_RELEASES].delete_one({"id": release_id})
+    return result.deleted_count > 0
+
+def delete_ott_release(db, release_id: int, s3_service=None):
+    """Delete OTT release and its images from S3"""
+    # Get release to access image URLs
+    release = db[OTT_RELEASES].find_one({"id": release_id}, {"_id": 0})
+    
+    if release and s3_service and s3_service.is_enabled():
+        # Delete movie image
+        image_url = release.get("movie_image")
+        if image_url:
+            try:
+                s3_service.delete_file(image_url)
+                print(f"Deleted OTT release image from S3: {image_url}")
+            except Exception as e:
+                print(f"Failed to delete OTT release image from S3: {image_url}, Error: {e}")
+    
+    # Delete release from database
+    result = db[OTT_RELEASES].delete_one({"id": release_id})
+    return result.deleted_count > 0
+
 # ==================== GALLERIES ====================
 
 def get_gallery(db, gallery_id: int):
