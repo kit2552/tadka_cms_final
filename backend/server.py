@@ -1088,11 +1088,11 @@ async def get_related_articles_for_page(
 # File upload helper functions
 def get_next_image_filename(date: datetime = None, content_type: str = "articles") -> tuple:
     """
-    Get the next available filename for the given date (EST timezone)
-    Returns (date_path, next_number) tuple
+    Get a unique filename for the given date (EST timezone)
+    Returns (date_path, filename) tuple
     content_type: "articles", "galleries", or "tadka-pics"
-    For S3: Path structure is content_type/YYYY/MM/DD/N.ext
-    For Local: Path structure is content_type/YYYY/MM/DD/N.ext
+    For S3: Path structure is content_type/YYYY/MM/DD/timestamp_random.ext
+    For Local: Path structure is content_type/YYYY/MM/DD/timestamp_random.ext
     """
     if date is None:
         # Use EST timezone (America/New_York handles EST/EDT automatically)
@@ -1125,58 +1125,17 @@ def get_next_image_filename(date: datetime = None, content_type: str = "articles
     # For Local: Same structure
     local_date_path = f"{root_folder}/{year}/{month}/{day}"
     
-    # For S3, check existing files via API
-    if s3_service.is_enabled():
-        try:
-            bucket_name = s3_service.config.get('s3_bucket_name')
-            root_folder = s3_service.config.get('root_folder_path', '').strip('/')
-            
-            # List objects with this prefix
-            prefix = f"{root_folder}/{s3_date_path}/" if root_folder else f"{s3_date_path}/"
-            
-            response = s3_service.s3_client.list_objects_v2(
-                Bucket=bucket_name,
-                Prefix=prefix
-            )
-            
-            # Find the highest number
-            max_num = 0
-            if 'Contents' in response:
-                for obj in response['Contents']:
-                    # Extract filename from key
-                    filename = obj['Key'].split('/')[-1]
-                    # Try to extract number (e.g., "5.jpg" -> 5)
-                    try:
-                        num = int(filename.split('.')[0])
-                        max_num = max(max_num, num)
-                    except (ValueError, IndexError):
-                        continue
-            
-            next_num = max_num + 1
-            return (s3_date_path, next_num)
-            
-        except Exception as e:
-            logger.error(f"Error checking S3 for next filename: {e}")
-            return (s3_date_path, 1)
+    # Generate unique filename using timestamp and random string
+    import uuid
+    timestamp = int(datetime.now().timestamp() * 1000)  # milliseconds
+    random_str = str(uuid.uuid4())[:8]  # first 8 chars of UUID
+    unique_filename = f"{timestamp}_{random_str}"
     
-    # For local storage, check filesystem
+    # Return the path and unique filename
+    if s3_service.is_enabled():
+        return (s3_date_path, unique_filename)
     else:
-        local_path = UPLOAD_DIR / local_date_path
-        local_path.mkdir(parents=True, exist_ok=True)
-        
-        # Find highest numbered file
-        max_num = 0
-        if local_path.exists():
-            for file in local_path.iterdir():
-                if file.is_file():
-                    try:
-                        num = int(file.stem)  # stem is filename without extension
-                        max_num = max(max_num, num)
-                    except (ValueError, TypeError):
-                        continue
-        
-        next_num = max_num + 1
-        return (local_date_path, next_num)
+        return (local_date_path, unique_filename)
 
 async def save_uploaded_file(upload_file: UploadFile, subfolder: str = None, content_type: str = "articles") -> str:
     """
