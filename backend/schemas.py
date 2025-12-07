@@ -42,6 +42,7 @@ class ArticleBase(BaseModel):
     title: str
     short_title: Optional[str] = None
     content: str
+    content_secondary: Optional[str] = None
     summary: str
     author: str
     language: str = "en"
