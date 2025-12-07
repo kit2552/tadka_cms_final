@@ -43,21 +43,24 @@ const ArticleImage = ({
   
   const containerBgClass = shouldUseContain ? 'bg-black' : '';
   const imageObjectFit = shouldUseContain ? 'object-contain' : imgClassName;
+  
+  // Use taller height for vertical photoshoot images (8rem = 128px instead of 4rem = 64px)
+  const adjustedHeight = (isPhotoshoot && isVertical) ? 'h-32' : height;
 
   return (
-    <div className={`${width} ${height} ${className} ${containerBgClass}`}>
+    <div className={`${width} ${adjustedHeight} ${className} ${containerBgClass}`}>
       {imageLoading && (
         <ArticleImagePlaceholder 
           contentType={contentType}
           className={placeholderClassName}
           width={width}
-          height={height}
+          height={adjustedHeight}
         />
       )}
       <img
         src={src}
         alt={alt}
-        className={`${width} ${height} ${imageObjectFit} ${imageLoading ? 'hidden' : 'block'}`}
+        className={`${width} ${adjustedHeight} ${imageObjectFit} ${imageLoading ? 'hidden' : 'block'}`}
         onLoad={handleImageLoad}
         onError={() => {
           setImageError(true);
