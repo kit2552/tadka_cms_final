@@ -347,17 +347,7 @@ const CreateArticle = () => {
           }
         }
 
-        // Set selected OTT platforms
-        if (article.ott_platforms) {
-          try {
-            const platformsArray = typeof article.ott_platforms === 'string' ? JSON.parse(article.ott_platforms) : article.ott_platforms;
-            if (Array.isArray(platformsArray)) {
-              setSelectedOttPlatforms(platformsArray);
-            }
-          } catch (e) {
-            setSelectedOttPlatforms([]);
-          }
-        }
+        // OTT platforms loading removed
         
         // Load selected gallery if gallery_id exists
         if (article.gallery_id && availableGalleries.length > 0) {
