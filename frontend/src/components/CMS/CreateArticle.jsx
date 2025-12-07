@@ -1381,6 +1381,20 @@ const CreateArticle = () => {
                             className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
+
+                        {/* Enable Comments Checkbox */}
+                        <div>
+                          <label className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              name="comments_enabled"
+                              checked={formData.comments_enabled}
+                              onChange={handleInputChange}
+                              className="form-checkbox h-4 w-4 text-blue-600"
+                            />
+                            <span className="text-sm text-gray-700">Enable Comments</span>
+                          </label>
+                        </div>
                       </div>
 
                       {/* Right Column: Image Preview (40% = 2 cols) */}
