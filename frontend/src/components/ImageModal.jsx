@@ -11,11 +11,27 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
 
+  // Toggle fullscreen
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      modalRef.current?.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       switch (e.key) {
         case 'Escape':
-          onClose();
+          if (isFullscreen) {
+            document.exitFullscreen();
+            setIsFullscreen(false);
+          } else {
+            onClose();
+          }
           break;
         case 'ArrowLeft':
           onPrev(image.id);
@@ -28,14 +44,20 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
       }
     };
 
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
     document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.body.style.overflow = 'hidden';
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.body.style.overflow = 'unset';
     };
-  }, [image.id, onClose, onNext, onPrev]);
+  }, [image.id, onClose, onNext, onPrev, isFullscreen]);
 
   const onTouchStart = (e) => {
     setTouchEnd(null); // otherwise the swipe is fired even with usual touch events
