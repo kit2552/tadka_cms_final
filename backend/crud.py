@@ -1316,16 +1316,13 @@ def manage_top_stories(db, article_id: str, content_type: str, states_json: str,
                         )
                 
                 # Add new top story
-                new_doc = {
+                db['top_stories'].insert_one({
                     'article_id': article_id,
                     'state': state,
                     'content_type': 'post',
                     'published_at': published_at,
                     'created_at': datetime.utcnow()
-                }
-                print(f"🔵 Inserting top story: {new_doc}")
-                db['top_stories'].insert_one(new_doc)
-                print(f"✅ Successfully inserted top story for article {article_id}, state {state}")
+                })
         else:
             # Remove from top stories if unchecked
             db['top_stories'].delete_many({
