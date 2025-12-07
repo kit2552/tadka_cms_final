@@ -470,6 +470,50 @@ const CreateArticle = () => {
     }));
   };
 
+  // Movie Review Editor Handlers
+  const onEditorPlotSummaryChange = (editorState) => {
+    setEditorPlotSummary(editorState);
+    const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    setFormData(prev => ({ ...prev, review_plot_summary: htmlContent }));
+  };
+
+  const onEditorPerformancesChange = (editorState) => {
+    setEditorPerformances(editorState);
+    const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    setFormData(prev => ({ ...prev, review_performances: htmlContent }));
+  };
+
+  const onEditorWhatWorksChange = (editorState) => {
+    setEditorWhatWorks(editorState);
+    const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    setFormData(prev => ({ ...prev, review_what_works: htmlContent }));
+  };
+
+  const onEditorWhatDoesntWorkChange = (editorState) => {
+    setEditorWhatDoesntWork(editorState);
+    const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    setFormData(prev => ({ ...prev, review_what_doesnt_work: htmlContent }));
+  };
+
+  const onEditorTechnicalAspectsChange = (editorState) => {
+    setEditorTechnicalAspects(editorState);
+    const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    setFormData(prev => ({ ...prev, review_technical_aspects: htmlContent }));
+  };
+
+  const onEditorFinalVerdictChange = (editorState) => {
+    setEditorFinalVerdict(editorState);
+    const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    setFormData(prev => ({ ...prev, review_final_verdict: htmlContent }));
+  };
+
+  const toggleReviewAccordion = (key) => {
+    setReviewAccordions(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
   const handleAddState = () => {
     // Don't add if already selected or if trying to add 'all' when other states exist
     if (selectedState === 'all') {
