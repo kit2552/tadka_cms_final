@@ -107,18 +107,37 @@ class S3Service:
         
         try:
             bucket_name = self.config.get('s3_bucket_name')
+            region = self.config.get('aws_region', 'us-east-1')
             
             # Extract S3 key from URL
-            if bucket_name in file_url:
-                s3_key = file_url.split(f"{bucket_name}.s3")[1].split('/', 2)[-1]
-                
+            s3_key = None
+            
+            # Try standard URL format: https://bucket.s3.amazonaws.com/key
+            if f"{bucket_name}.s3.amazonaws.com/" in file_url:
+                parts = file_url.split(f"{bucket_name}.s3.amazonaws.com/")
+                if len(parts) > 1:
+                    s3_key = parts[1]
+            # Try regional URL format: https://bucket.s3.region.amazonaws.com/key
+            elif f"{bucket_name}.s3.{region}.amazonaws.com/" in file_url:
+                parts = file_url.split(f"{bucket_name}.s3.{region}.amazonaws.com/")
+                if len(parts) > 1:
+                    s3_key = parts[1]
+            
+            if s3_key:
                 self.s3_client.delete_object(
                     Bucket=bucket_name,
                     Key=s3_key
                 )
+                print(f"Successfully deleted from S3: {s3_key}")
                 return True
+            else:
+                print(f"Failed to extract S3 key from URL: {file_url}")
+                return False
+                
         except Exception as e:
-            print(f"S3 delete failed: {e}")
+            print(f"S3 delete failed for {file_url}: {e}")
+            import traceback
+            traceback.print_exc()
         
         return False
     
