@@ -36,6 +36,10 @@ def serialize_doc(doc):
     if isinstance(doc, dict):
         result = {}
         for key, value in doc.items():
+            # Map article_language to language for API response
+            if key == 'article_language':
+                result['language'] = value or 'en'
+                continue
             if key == '_id':
                 # Only add _id as id if there's no existing id field
                 if 'id' not in doc:
