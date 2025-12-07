@@ -147,9 +147,16 @@ const TopStories = ({ bigStory, entertainmentStory, featuredReview, fourthStory,
       {/* Featured Movie Review Block */}
       {featuredReview && (
         <div 
-          className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer`}
+          className={`${getSectionBodyClasses().backgroundClass} border-2 border-yellow-400 rounded-lg overflow-hidden hover:shadow-lg ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer relative`}
           onClick={() => handleArticleClick(featuredReview, 'top_story_review')}
         >
+          {/* Featured Review Badge */}
+          <div className="absolute top-2 left-2 z-10">
+            <span className="inline-flex items-center px-2 py-1 bg-yellow-400 text-gray-900 text-xs font-bold rounded shadow-md">
+              ⭐ FEATURED REVIEW
+            </span>
+          </div>
+          
           <div className="relative">
             {featuredReview?.image || featuredReview?.image_url ? (
               <img
@@ -159,24 +166,30 @@ const TopStories = ({ bigStory, entertainmentStory, featuredReview, fourthStory,
                 onError={(e) => {
                   const placeholder = document.createElement('div');
                   placeholder.className = 'w-full h-40 bg-gray-500 flex items-center justify-center';
-                  placeholder.innerHTML = '<span class="text-white font-bold text-3xl">A</span>';
+                  placeholder.innerHTML = '<span class="text-white font-bold text-3xl">M</span>';
                   e.target.parentNode.replaceChild(placeholder, e.target);
                 }}
               />
             ) : (
               <PlaceholderImage 
-                contentType="post" 
+                contentType="movie_review" 
                 className="w-full h-40"
               />
             )}
-            {/* Star Rating Overlay at Bottom */}
-            <div className="absolute bottom-2 left-2">
-              <div className="flex items-center bg-black bg-opacity-75 px-2 py-1 rounded">
-                {renderStars(featuredReview?.rating || featuredReview?.movie_rating || 4.5)}
+            
+            {/* Rating Box - Bottom Right */}
+            <div className="absolute bottom-2 right-2">
+              <div className="bg-gray-900 bg-opacity-90 px-3 py-1.5 rounded flex items-center gap-2">
+                <span className="text-yellow-400 text-lg font-bold">
+                  {(featuredReview?.rating || featuredReview?.movie_rating || 4.5)}
+                </span>
+                <div className="flex items-center text-xs">
+                  {renderStars(featuredReview?.rating || featuredReview?.movie_rating || 4.5)}
+                </div>
               </div>
             </div>
           </div>
-          <div className="p-3 text-left">
+          <div className="p-3 text-left bg-gradient-to-b from-yellow-50 to-white">
             <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
               {featuredReview?.title}
             </h2>
