@@ -33,8 +33,11 @@ async def upload_gallery_image(
         # Get file extension
         file_extension = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
         
-        # Create S3 key with gallery folder structure: galleries/{folder_path}/{number}.ext
-        s3_key = f"galleries/{folder_path}/{image_number}.{file_extension}"
+        # Get galleries root folder from config
+        galleries_root = config.get('galleries_root_folder', 'galleries')
+        
+        # Create S3 key with gallery folder structure: {galleries_root}/{folder_path}/{number}.ext
+        s3_key = f"{galleries_root}/{folder_path}/{image_number}.{file_extension}"
         
         # Upload to S3
         url = s3_service.upload_file(file_content, s3_key, file.content_type)
