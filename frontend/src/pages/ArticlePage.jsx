@@ -318,7 +318,7 @@ const ArticlePage = () => {
               </div>
             </div>
 
-            {/* Main Image or YouTube Video - White background */}
+            {/* Main Image or YouTube Video or Gallery Slider - White background */}
             {(article.content_type === 'video' || article.content_type === 'movie_review') && article.youtube_url ? (
               <div className="mb-3 bg-white">
                 <div className="relative aspect-video w-full overflow-hidden">
@@ -332,6 +332,8 @@ const ArticlePage = () => {
                   ></iframe>
                 </div>
               </div>
+            ) : article.content_type === 'photo' && article.gallery ? (
+              <GallerySlider gallery={article.gallery} title={article.title} />
             ) : article.image ? (
               <div className="mb-3 bg-white">
                 <img
