@@ -65,7 +65,9 @@ const CreateArticle = () => {
     ott_platform: '',
     // Comment settings
     comments_enabled: true,
-    review_comments_enabled: true
+    review_comments_enabled: true,
+    // Top Story
+    is_top_story: false
   });
 
   const [selectedState, setSelectedState] = useState(''); // Temporary state for dropdown selection
