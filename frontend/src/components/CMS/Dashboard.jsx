@@ -2198,26 +2198,59 @@ const Dashboard = () => {
     setSelectedHorizontalGalleryArtist('');
   };
 
-  const handleEditHorizontalGallery = (gallery) => {
-    setShowHorizontalGalleryForm(true);
-    setEditingHorizontalGallery(gallery);
+  const handleEditHorizontalGallery = async (gallery) => {
+    console.log('=== EDITING HORIZONTAL GALLERY (using unified form) ===');
+    console.log('Gallery data:', gallery);
+    
+    setShowGalleryForm(true);
+    setEditingGallery(gallery);
     
     // Add unique IDs to images if they don't have them
     const imagesWithIds = gallery.images.map((img, index) => ({
       ...img,
-      id: img.id || img.url || `${img.name}-${index}` // Use URL as unique ID, or fallback to name+index
+      id: img.id || img.url || `${img.name}-${index}`
     }));
     
-    setHorizontalGalleryForm({
+    setGalleryForm({
       title: gallery.title,
       images: imagesWithIds
     });
     
-    // Set selected artist for editing - handle artists array
+    // Set gallery type
+    setGalleryType(gallery.gallery_type || 'horizontal');
+    
+    // Set Tadka Pics (should be false for horizontal)
+    setTadkaPicsEnabled(false);
+    
+    // Set gallery category and fetch entities
+    if (gallery.category_type) {
+      setGalleryCategory(gallery.category_type);
+      // Fetch entities for this category
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${gallery.category_type.toLowerCase()}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setAvailableEntities(data.entities || []);
+          
+          // Set selected entity
+          if (gallery.entity_name) {
+            setTimeout(() => {
+              setSelectedEntity(gallery.entity_name);
+            }, 100);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching entities for edit:', error);
+      }
+    }
+    
+    // Set selected artist for backwards compatibility
     if (gallery.artists && gallery.artists.length > 0) {
-      setSelectedHorizontalGalleryArtist(gallery.artists[0]); // Take first artist
+      setSelectedGalleryArtist(gallery.artists[0]);
     } else {
-      setSelectedHorizontalGalleryArtist('');
+      setSelectedGalleryArtist('');
     }
     
     // Ensure artists are fetched for the dropdown
