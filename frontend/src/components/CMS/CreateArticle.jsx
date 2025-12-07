@@ -2090,6 +2090,8 @@ const CreateArticle = () => {
                           </select>
                         </div>
                       )}
+                        </div>
+                      </div>
                       
                       {/* Review Sections */}
                       <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-lg p-5 mt-6">
