@@ -111,6 +111,13 @@ def get_article(db, article_id: int):
             {"$inc": {"view_count": 1}}
         )
         article["view_count"] = article.get("view_count", 0) + 1
+        
+        # Populate gallery if gallery_id exists
+        if article.get("gallery_id"):
+            gallery = db[GALLERIES].find_one({"id": article["gallery_id"]}, {"_id": 0})
+            if gallery:
+                article["gallery"] = gallery
+    
     return serialize_doc(article)
 
 def get_article_by_id(db, article_id: int):
