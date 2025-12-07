@@ -214,6 +214,11 @@ const CreateArticle = () => {
           seo_title: article.seo_title || '',
           seo_description: article.seo_description || '',
           seo_keywords: article.seo_keywords || '',
+          // AEO & FAQ fields
+          aeo_title: article.aeo_title || '',
+          aeo_description: article.aeo_description || '',
+          aeo_keywords: article.aeo_keywords || '',
+          faqs: article.faqs ? JSON.parse(article.faqs) : [],
           // Movie Review fields
           review_quick_verdict: article.review_quick_verdict || '',
           review_plot_summary: article.review_plot_summary || '',
