@@ -580,9 +580,12 @@ async def get_world_news_articles(limit: int = 4, db = Depends(get_db)):
 @api_router.get("/articles/sections/photoshoots", response_model=List[schemas.ArticleListResponse])
 async def get_photoshoots_articles(skip: int = 0, limit: int = 10, db = Depends(get_db)):
     """Get photoshoots articles with gallery images"""
+    import json
+    
     articles = crud.get_articles_by_category_slug(db, category_slug="photoshoots", skip=skip, limit=limit)
     
     # Populate gallery and extract first image for photo content type
+    result = []
     for article in articles:
         if article.get("content_type") == "photo" and article.get("gallery_id"):
             gallery = db[GALLERIES].find_one({"id": article["gallery_id"]}, {"_id": 0})
@@ -590,7 +593,6 @@ async def get_photoshoots_articles(skip: int = 0, limit: int = 10, db = Depends(
                 # Parse images if stored as JSON string
                 images = gallery["images"]
                 if isinstance(images, str):
-                    import json
                     try:
                         images = json.loads(images)
                     except:
@@ -603,8 +605,10 @@ async def get_photoshoots_articles(skip: int = 0, limit: int = 10, db = Depends(
                         article["image"] = first_image.get("url")
                     elif isinstance(first_image, str):
                         article["image"] = first_image
+        
+        result.append(article)
     
-    return articles
+    return result
 
 @api_router.get("/articles/sections/travel-pics", response_model=List[schemas.ArticleListResponse])
 async def get_travel_pics_articles(limit: int = 4, db = Depends(get_db)):
