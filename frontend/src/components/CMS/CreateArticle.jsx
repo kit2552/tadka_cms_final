@@ -335,6 +335,50 @@ const CreateArticle = () => {
             setEditorStateSecondary(EditorState.createWithContent(contentState));
           }
         }
+
+        // Load Movie Review Rich Text Editors
+        if (article.review_plot_summary) {
+          const contentBlock = htmlToDraft(article.review_plot_summary);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            setEditorPlotSummary(EditorState.createWithContent(contentState));
+          }
+        }
+        if (article.review_performances) {
+          const contentBlock = htmlToDraft(article.review_performances);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            setEditorPerformances(EditorState.createWithContent(contentState));
+          }
+        }
+        if (article.review_what_works) {
+          const contentBlock = htmlToDraft(article.review_what_works);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            setEditorWhatWorks(EditorState.createWithContent(contentState));
+          }
+        }
+        if (article.review_what_doesnt_work) {
+          const contentBlock = htmlToDraft(article.review_what_doesnt_work);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            setEditorWhatDoesntWork(EditorState.createWithContent(contentState));
+          }
+        }
+        if (article.review_technical_aspects) {
+          const contentBlock = htmlToDraft(article.review_technical_aspects);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            setEditorTechnicalAspects(EditorState.createWithContent(contentState));
+          }
+        }
+        if (article.review_final_verdict) {
+          const contentBlock = htmlToDraft(article.review_final_verdict);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            setEditorFinalVerdict(EditorState.createWithContent(contentState));
+          }
+        }
         
       } else {
         throw new Error('Failed to load article');
