@@ -1060,6 +1060,7 @@ const CreateArticle = () => {
         seo_title: formData.seo_title || formData.title,
         seo_description: formData.seo_description || textContent.substring(0, 160) + '...',
         faqs: JSON.stringify(formData.faqs), // Convert FAQs array to JSON string
+        ott_platforms: JSON.stringify(formData.ott_platforms || []), // Convert OTT platforms array to JSON string
         // Handle scheduling data
         scheduled_publish_at: formData.is_scheduled && formData.scheduled_publish_at 
           ? new Date(formData.scheduled_publish_at).toISOString() 
