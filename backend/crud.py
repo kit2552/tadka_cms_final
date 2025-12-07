@@ -286,6 +286,18 @@ def create_article(db, article: dict):
     
     result = db[ARTICLES].insert_one(article_doc)
     article_doc["_id"] = result.inserted_id
+    
+    # Manage top stories if is_top_story is True
+    if article.get("is_top_story", False):
+        manage_top_stories(
+            db,
+            str(new_id),
+            article.get("content_type", "post"),
+            article.get("states", "[]"),
+            article_doc.get("published_at", datetime.utcnow()),
+            True
+        )
+    
     return serialize_doc(article_doc)
 
 def create_article_cms(db, article, slug: str, seo_title: str, seo_description: str):
