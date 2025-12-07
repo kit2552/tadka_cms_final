@@ -91,6 +91,7 @@ class ArticleBase(BaseModel):
     review_runtime: Optional[str] = None
     movie_language: Optional[str] = None
     censor_rating: Optional[str] = None
+    release_date: Optional[str] = None
     platform: Optional[str] = None
     ott_platform: Optional[str] = None
 
