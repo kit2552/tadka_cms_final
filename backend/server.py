@@ -1269,12 +1269,13 @@ async def update_theater_release(
 
 @api_router.delete("/cms/theater-releases/{release_id}")
 async def delete_theater_release(release_id: int, db = Depends(get_db)):
-    """Delete theater release"""
+    """Delete theater release and remove images from S3"""
     release = crud.get_theater_release(db, release_id)
     if not release:
         raise HTTPException(status_code=404, detail="Theater release not found")
     
-    crud.delete_theater_release(db, release_id)
+    # Delete release and its S3 images
+    crud.delete_theater_release(db, release_id, s3_service)
     return {"message": "Theater release deleted successfully"}
 
 # OTT Release endpoints
