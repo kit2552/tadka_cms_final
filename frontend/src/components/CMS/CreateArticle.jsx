@@ -1031,6 +1031,17 @@ const CreateArticle = () => {
     setLoading(true);
 
     try {
+      // Validation for photo gallery content type
+      if (formData.content_type === 'photo' && !selectedGallery) {
+        showNotification(
+          'error',
+          'Gallery Required',
+          'Please select an image gallery for Photo Gallery content type.'
+        );
+        setLoading(false);
+        return;
+      }
+
       // Strip HTML tags for summary creation
       const textContent = formData.content.replace(/<[^>]*>/g, '');
       
