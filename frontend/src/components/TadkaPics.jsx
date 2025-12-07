@@ -197,29 +197,6 @@ const TadkaPics = ({ images, onImageClick }) => {
     }
   };
 
-  // Auto scroll effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (scrollContainerRef.current) {
-        const container = scrollContainerRef.current;
-        const maxScroll = container.scrollWidth - container.clientWidth;
-        
-        if (scrollPosition >= maxScroll) {
-          // Reset to beginning
-          setScrollPosition(0);
-          container.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          // Scroll 1px to the right for slow movement
-          const newPosition = scrollPosition + 1;
-          setScrollPosition(newPosition);
-          container.scrollTo({ left: newPosition, behavior: 'smooth' });
-        }
-      }
-    }, 50); // 50ms interval for slow, smooth scrolling
-
-    return () => clearInterval(interval);
-  }, [scrollPosition]);
-
   return (
     <div className="bg-white">
       <div className="max-w-5xl-plus mx-auto px-8">
