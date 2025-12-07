@@ -116,11 +116,11 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
       onClick={handleBackdropClick}
     >
       {/* Image Container */}
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div className="relative w-full h-[98vh] flex items-center justify-center">
         
         {/* Main Image with Touch Support */}
         <div 
-          className="relative overflow-hidden w-full h-full flex items-center justify-center"
+          className="relative flex items-center justify-center"
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
