@@ -333,23 +333,18 @@ export const dataService = {
       if (!response.ok) {
         throw new Error('Failed to fetch top stories');
       }
-      return await response.json();
+      const data = await response.json();
+      console.log('✅ Top Stories fetched from database:', {
+        state: data.top_stories?.length || 0,
+        national: data.national?.length || 0
+      });
+      return data;
     } catch (error) {
-      console.error('Error fetching top stories:', error);
-      // Fallback to mock data
+      console.error('❌ Error fetching top stories:', error);
+      // Return empty arrays instead of mock data
       return {
-        top_stories: [
-          mockData.bigStory,
-          mockData.featuredEntertainmentStory,
-          mockData.politicalNews[0],
-          mockData.movieReviews[0]
-        ].filter(Boolean),
-        national: [
-          mockData.politicalNews[1],
-          mockData.bigStory,
-          mockData.featuredEntertainmentStory,
-          mockData.movieReviews[0]
-        ].filter(Boolean)
+        top_stories: [],
+        national: []
       };
     }
   },
