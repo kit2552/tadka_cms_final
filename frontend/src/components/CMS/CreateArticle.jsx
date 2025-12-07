@@ -1912,38 +1912,7 @@ const CreateArticle = () => {
                         </h4>
                         
                         <div className="space-y-4">
-
-                          {/* Runtime */}
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                              Runtime
-                            </label>
-                            <input
-                              type="text"
-                              name="review_runtime"
-                              value={formData.review_runtime}
-                              onChange={handleInputChange}
-                              placeholder="e.g., 2h 30m"
-                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                          </div>
-
-                          {/* Cast - Textarea */}
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                              Cast
-                            </label>
-                            <textarea
-                              name="review_cast"
-                              value={formData.review_cast}
-                              onChange={handleInputChange}
-                              rows="2"
-                              placeholder="Enter cast members, one per line or comma-separated"
-                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                            />
-                          </div>
-
-                          {/* Director and Producer */}
+                          {/* Row 1: Director and Producer */}
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
@@ -1969,6 +1938,116 @@ const CreateArticle = () => {
                                 value={formData.review_producer || ''}
                                 onChange={handleInputChange}
                                 placeholder="Producer name"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Row 2: Music Director and DOP */}
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Music Director
+                              </label>
+                              <input
+                                type="text"
+                                name="review_music_director"
+                                value={formData.review_music_director || ''}
+                                onChange={handleInputChange}
+                                placeholder="Music Director name"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                DOP (Cinematographer)
+                              </label>
+                              <input
+                                type="text"
+                                name="review_dop"
+                                value={formData.review_dop || ''}
+                                onChange={handleInputChange}
+                                placeholder="Director of Photography"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Row 3: Cast - Textarea */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Cast
+                            </label>
+                            <textarea
+                              name="review_cast"
+                              value={formData.review_cast}
+                              onChange={handleInputChange}
+                              rows="2"
+                              placeholder="Enter cast members, one per line or comma-separated"
+                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+
+                          {/* Row 4: Genre and Language */}
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Genre
+                              </label>
+                              <input
+                                type="text"
+                                name="review_genre"
+                                value={formData.review_genre}
+                                onChange={handleInputChange}
+                                placeholder="e.g., Action, Drama"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Language
+                              </label>
+                              <input
+                                type="text"
+                                name="movie_language"
+                                value={formData.movie_language}
+                                onChange={handleInputChange}
+                                placeholder="e.g., Telugu, Hindi"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Row 5: Platform and Runtime */}
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Platform
+                              </label>
+                              <select
+                                name="platform"
+                                value={formData.platform}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Platform</option>
+                                <option value="Theater">Theater</option>
+                                <option value="OTT">OTT</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Runtime
+                              </label>
+                              <input
+                                type="text"
+                                name="review_runtime"
+                                value={formData.review_runtime}
+                                onChange={handleInputChange}
+                                placeholder="e.g., 2h 30m"
                                 className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               />
                             </div>
