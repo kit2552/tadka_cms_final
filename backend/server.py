@@ -22,6 +22,7 @@ from routes.comments_routes import router as comments_router
 from routes.ott_platforms_routes import router as ott_platforms_router
 from routes.gallery_entities_routes import router as gallery_entities_router
 from routes.gallery_image_routes import router as gallery_image_router
+from routes.ad_settings_routes import router as ad_settings_router
 from auth import create_default_admin
 from scheduler_service import article_scheduler
 from s3_service import s3_service
