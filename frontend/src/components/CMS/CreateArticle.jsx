@@ -2356,6 +2356,83 @@ const CreateArticle = () => {
                     </p>
                   </div>
                   )}
+
+                  {/* Secondary Content (Hidden for Movie Reviews, shown for other types) */}
+                  {formData.content_type !== 'movie_review' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      Secondary Content (Optional - for ad placement)
+                    </label>
+                    <p className="text-xs text-gray-500 mb-2 text-left">
+                      Content added here will appear after the main content with an ad space in between
+                    </p>
+                    <div className="border border-gray-300 rounded-md">
+                      <Editor
+                        editorState={editorStateSecondary}
+                        onEditorStateChange={onEditorStateChangeSecondary}
+                        wrapperClassName="wrapper-class"
+                        editorClassName="editor-class"
+                        toolbarClassName="toolbar-class"
+                        toolbar={{
+                          options: ['inline', 'blockType', 'list', 'textAlign', 'link', 'image', 'history'],
+                          inline: {
+                            inDropdown: false,
+                            options: ['bold', 'italic', 'underline', 'strikethrough']
+                          },
+                          blockType: {
+                            inDropdown: true,
+                            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote']
+                          },
+                          list: {
+                            inDropdown: false,
+                            options: ['unordered', 'ordered']
+                          },
+                          textAlign: {
+                            inDropdown: false,
+                            options: ['left', 'center', 'right', 'justify']
+                          },
+                          link: {
+                            inDropdown: false,
+                            showOpenOptionOnHover: true,
+                            defaultTargetOption: '_blank',
+                            options: ['link', 'unlink']
+                          },
+                          image: {
+                            urlEnabled: true,
+                            uploadEnabled: true,
+                            uploadCallback: uploadImageCallback,
+                            previewImage: true,
+                            inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
+                            alt: { present: true, mandatory: false },
+                            defaultSize: {
+                              height: 'auto',
+                              width: '100%'
+                            }
+                          },
+                          history: {
+                            inDropdown: false,
+                            options: ['undo', 'redo']
+                          }
+                        }}
+                        placeholder="Write additional content here (will appear after main content)..."
+                        editorStyle={{
+                          minHeight: '200px',
+                          padding: '12px',
+                          fontSize: '14px',
+                          border: 'none',
+                          borderRadius: '0 0 0.375rem 0.375rem'
+                        }}
+                        toolbarStyle={{
+                          border: 'none',
+                          borderBottom: '1px solid #d1d5db',
+                          borderRadius: '0.375rem 0.375rem 0 0',
+                          marginBottom: '0'
+                        }}
+                      />
+                    </div>
+                  </div>
+                  )}
+
                 </div>
               )}
             </div>
