@@ -1705,7 +1705,7 @@ const Dashboard = () => {
     return `VIG-${timestamp}-${randomSuffix}`;
   };
 
-  const handleCreateGallery = () => {
+  const handleCreateGallery = (defaultGalleryType = '') => {
     setShowGalleryForm(true);
     setEditingGallery(null);
     setGalleryForm({
@@ -1713,6 +1713,18 @@ const Dashboard = () => {
       images: []
     });
     setSelectedGalleryArtist('');
+    
+    // Set gallery type if provided (for tab-specific creation)
+    if (defaultGalleryType) {
+      setGalleryType(defaultGalleryType);
+    } else {
+      setGalleryType(''); // Reset to empty for user selection
+    }
+    
+    // Reset other form fields
+    setGalleryCategory('');
+    setSelectedEntity('');
+    setTadkaPicsEnabled(false);
   };
 
   const handleEditGallery = async (gallery) => {
