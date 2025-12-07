@@ -1931,7 +1931,7 @@ const CreateArticle = () => {
                                 value={formData.review_runtime}
                                 onChange={handleInputChange}
                                 placeholder="e.g., 2h 30m"
-                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               />
                             </div>
                           </div>
@@ -1963,7 +1963,7 @@ const CreateArticle = () => {
                                 value={formData.review_director}
                                 onChange={handleInputChange}
                                 placeholder="Director name"
-                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               />
                             </div>
 
@@ -1977,7 +1977,7 @@ const CreateArticle = () => {
                                 value={formData.review_producer || ''}
                                 onChange={handleInputChange}
                                 placeholder="Producer name"
-                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               />
                             </div>
                           </div>
