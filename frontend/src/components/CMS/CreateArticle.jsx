@@ -97,7 +97,8 @@ const CreateArticle = () => {
     censor_rating: '',
     release_date: '',
     platform: '',
-    ott_platform: '',
+    ott_content_type: '',
+    ott_platforms: [],
     // Comment settings
     comments_enabled: true,
     review_comments_enabled: true,
