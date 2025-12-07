@@ -51,7 +51,7 @@ const CreateArticle = () => {
     content_secondary: '', // Second content for ad placement
     summary: '',
     author: 'Tadka Team', // Default author
-    language: 'en',
+    article_language: 'en',
     states: 'all',
     category: '',
     content_type: 'post', // New field for content type
