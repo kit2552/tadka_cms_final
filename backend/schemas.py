@@ -143,6 +143,11 @@ class ArticleUpdate(BaseModel):
     aeo_description: Optional[str] = None
     aeo_keywords: Optional[str] = None
     faqs: Optional[str] = None  # JSON string for FAQs array
+    # E-E-A-T fields
+    author_credentials: Optional[str] = None
+    sources: Optional[str] = None
+    fact_checked_by: Optional[str] = None
+    last_reviewed_date: Optional[str] = None
 
 class ArticleResponse(ArticleBase):
     id: int
