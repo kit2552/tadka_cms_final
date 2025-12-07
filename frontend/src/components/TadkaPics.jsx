@@ -70,11 +70,6 @@ const TadkaPics = ({ images, onImageClick }) => {
     fetchTadkaPics();
   }, []);
 
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
-  const scrollContainerRef = useRef(null);
-
   // Show loading state or empty state
   if (loading) {
     return (
