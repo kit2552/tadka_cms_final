@@ -150,11 +150,12 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
       onClick={handleBackdropClick}
     >
       {/* Image Container */}
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div className="relative flex items-center justify-center" style={{ width: '100%', height: '100%' }}>
         
         {/* Main Image with Touch Support - All controls positioned relative to this */}
         <div 
-          className="relative inline-block"
+          className="relative"
+          style={{ display: 'inline-block', position: 'relative' }}
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
@@ -162,7 +163,7 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
           
           {/* Loading Spinner */}
           {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
             </div>
           )}
@@ -183,7 +184,7 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
           <img
             src={currentImageUrl}
             alt={`${title} - Image ${currentIndex + 1}`}
-            className={`${getImageSizeClass()} object-contain rounded-lg ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+            className={`${getImageSizeClass()} object-contain rounded-lg ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 block`}
             onLoad={handleImageLoad}
             onError={handleImageError}
           />
