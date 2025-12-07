@@ -1386,34 +1386,35 @@ const CreateArticle = () => {
                           />
                         </div>
 
-                        {/* Top Story Checkbox - Enhanced Design */}
-                        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg p-4 hover:border-amber-300 transition-all">
-                          <label className="flex items-start space-x-3 cursor-pointer">
+                        {/* Top Story Checkbox */}
+                        <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
+                          <label className="flex items-center space-x-3 cursor-pointer">
                             <input
                               type="checkbox"
                               name="is_top_story"
                               checked={formData.is_top_story}
                               onChange={handleInputChange}
-                              className="form-checkbox h-5 w-5 text-amber-600 mt-0.5 rounded focus:ring-2 focus:ring-amber-500 flex-shrink-0"
+                              className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 flex-shrink-0"
                             />
-                            <div className="flex-1 text-left">
-                              <span className="text-sm font-semibold text-gray-800">Mark as Top Story</span>
-                              <p className="text-xs text-gray-600 mt-1 text-left">
+                            <span className="text-sm font-semibold text-gray-800">
+                              Mark as Top Story 
+                              <span className="ml-2 text-xs font-normal text-gray-600">
                                 {(() => {
                                   try {
                                     const states = formData.states ? JSON.parse(formData.states) : [];
-                                    return states.length === 0 ? 'Will appear in National Top Stories' : 'Will appear in State Top Stories';
+                                    const isNational = states.length === 0 || states.includes('all') || states.includes('All');
+                                    return isNational ? '(National)' : '(State)';
                                   } catch {
-                                    return 'Will appear in State Top Stories';
+                                    return '(State)';
                                   }
                                 })()}
-                              </p>
-                            </div>
+                              </span>
+                            </span>
                           </label>
                         </div>
 
-                        {/* Enable Comments Checkbox - Enhanced Design */}
-                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-4 hover:border-blue-300 transition-all">
+                        {/* Enable Comments Checkbox */}
+                        <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
                           <label className="flex items-center space-x-3 cursor-pointer">
                             <input
                               type="checkbox"
