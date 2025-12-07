@@ -307,6 +307,42 @@ const CreateArticle = () => {
             setSelectedArtist('');
           }
         }
+
+        // Set selected genres
+        if (article.review_genre) {
+          try {
+            const genresArray = typeof article.review_genre === 'string' ? JSON.parse(article.review_genre) : article.review_genre;
+            if (Array.isArray(genresArray)) {
+              setSelectedGenres(genresArray);
+            } else if (typeof article.review_genre === 'string' && article.review_genre) {
+              // Handle old format (comma-separated string)
+              setSelectedGenres([article.review_genre]);
+            }
+          } catch (e) {
+            // If not JSON, treat as single genre
+            if (article.review_genre) {
+              setSelectedGenres([article.review_genre]);
+            }
+          }
+        }
+
+        // Set selected languages
+        if (article.movie_language) {
+          try {
+            const languagesArray = typeof article.movie_language === 'string' ? JSON.parse(article.movie_language) : article.movie_language;
+            if (Array.isArray(languagesArray)) {
+              setSelectedLanguages(languagesArray);
+            } else if (typeof article.movie_language === 'string' && article.movie_language) {
+              // Handle old format (single string)
+              setSelectedLanguages([article.movie_language]);
+            }
+          } catch (e) {
+            // If not JSON, treat as single language
+            if (article.movie_language) {
+              setSelectedLanguages([article.movie_language]);
+            }
+          }
+        }
         
         // Load selected gallery if gallery_id exists
         if (article.gallery_id && availableGalleries.length > 0) {
