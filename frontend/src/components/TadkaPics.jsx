@@ -126,10 +126,20 @@ const TadkaPics = ({ images, onImageClick }) => {
   };
 
   const handleImageClick = (index) => {
-    const clickedImage = actressImages[index];
-    if (clickedImage && onImageClick) {
-      trackImageClick(clickedImage.id, clickedImage.name, 'home_slider_click');
-      onImageClick(clickedImage, actressImages);
+    const clickedGallery = actressImages[index];
+    if (clickedGallery && onImageClick) {
+      trackImageClick(clickedGallery.id, clickedGallery.name, 'home_slider_click');
+      
+      // Create the selected image object for the modal
+      const selectedImage = {
+        id: clickedGallery.id,
+        name: clickedGallery.name,
+        url: clickedGallery.allImages[clickedGallery.selectedIndex].url,
+        alt: clickedGallery.allImages[clickedGallery.selectedIndex].alt
+      };
+      
+      // Pass the selected image and ALL images from this gallery
+      onImageClick(selectedImage, clickedGallery.allImages);
     }
   };
 
