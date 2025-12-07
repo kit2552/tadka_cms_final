@@ -2049,7 +2049,7 @@ const CreateArticle = () => {
                           />
                         </div>
                       </div>
-                    </>
+                    </div>
                   )}
 
                   {/* Main Content (Hidden for Movie Reviews, shown for other types) */}
