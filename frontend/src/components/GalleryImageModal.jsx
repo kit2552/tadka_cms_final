@@ -214,8 +214,8 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
           <img
             src={currentImageUrl}
             alt={`${title} - Image ${currentIndex + 1}`}
-            className={`${getImageSizeClass()} object-contain rounded-lg ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-            style={isFullscreen ? {} : { maxHeight: '98vh', width: 'auto' }}
+            className={`object-contain rounded-lg ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+            style={isFullscreen ? { maxHeight: '100vh', maxWidth: '100vw', width: 'auto', height: 'auto' } : { maxHeight: '98vh', width: 'auto' }}
             onLoad={handleImageLoad}
             onError={handleImageError}
           />
