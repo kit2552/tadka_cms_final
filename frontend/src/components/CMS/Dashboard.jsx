@@ -235,6 +235,17 @@ const Dashboard = () => {
   
   const [activeTab, setActiveTab] = useState(initialTab);
   const [showMoreDropdown, setShowMoreDropdown] = useState(false);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showMoreDropdown && !event.target.closest('.relative')) {
+        setShowMoreDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showMoreDropdown]);
   const [articles, setArticles] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
