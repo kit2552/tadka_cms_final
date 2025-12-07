@@ -1305,8 +1305,16 @@ def update_gallery(db, gallery_id: str, gallery_data: dict, s3_service=None):
         current_gallery = db[GALLERIES].find_one({"gallery_id": gallery_id}, {"_id": 0})
         
         if current_gallery:
-            # Get current image URLs
-            current_images = current_gallery.get("images", [])
+            # Get current image URLs - parse JSON if stored as string
+            current_images_raw = current_gallery.get("images", [])
+            if isinstance(current_images_raw, str):
+                try:
+                    current_images = json.loads(current_images_raw)
+                except:
+                    current_images = []
+            else:
+                current_images = current_images_raw
+            
             current_urls = set()
             for img in current_images:
                 if isinstance(img, dict):
@@ -1316,7 +1324,7 @@ def update_gallery(db, gallery_id: str, gallery_data: dict, s3_service=None):
                 elif isinstance(img, str):
                     current_urls.add(img)
             
-            # Get new image URLs
+            # Get new image URLs - these come from the API as a list
             new_images = gallery_data["images"]
             new_urls = set()
             for img in new_images:
