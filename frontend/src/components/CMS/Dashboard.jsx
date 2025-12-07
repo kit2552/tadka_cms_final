@@ -2835,6 +2835,11 @@ const Dashboard = () => {
                                   💰 Sponsored
                                 </span>
                               )}
+                              {article.is_top_story && (
+                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                  ⭐ Top Story
+                                </span>
+                              )}
                               <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border ${
                                 article.is_published 
                                   ? 'bg-green-50 text-green-700 border-green-200'
