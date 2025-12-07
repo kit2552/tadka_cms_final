@@ -2350,21 +2350,32 @@ const CreateArticle = () => {
                             </div>
                           </div>
 
-                          {/* Row 5: Platform and Runtime */}
+                          {/* Row 5: Censor Rating and Runtime */}
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                                Platform
+                                Censor Rating
                               </label>
                               <select
-                                name="platform"
-                                value={formData.platform}
+                                name="censor_rating"
+                                value={formData.censor_rating}
                                 onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
-                                <option value="">Select Platform</option>
-                                <option value="Theater">Theater</option>
-                                <option value="OTT">OTT</option>
+                                <option value="">Select Rating</option>
+                                <optgroup label="India (CBFC)">
+                                  <option value="U">U - Unrestricted Public Exhibition</option>
+                                  <option value="UA">UA - Parental Guidance for under 12</option>
+                                  <option value="A">A - Restricted to adults (18+)</option>
+                                  <option value="S">S - Restricted to specialized audiences</option>
+                                </optgroup>
+                                <optgroup label="USA (MPAA)">
+                                  <option value="G">G - General Audiences</option>
+                                  <option value="PG">PG - Parental Guidance Suggested</option>
+                                  <option value="PG-13">PG-13 - Parents Strongly Cautioned</option>
+                                  <option value="R">R - Restricted (17+ with adult)</option>
+                                  <option value="NC-17">NC-17 - Adults Only (18+)</option>
+                                </optgroup>
                               </select>
                             </div>
 
@@ -2380,6 +2391,25 @@ const CreateArticle = () => {
                                 placeholder="e.g., 2h 30m"
                                 className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               />
+                            </div>
+                          </div>
+
+                          {/* Row 6: Platform (separate row) */}
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Platform
+                              </label>
+                              <select
+                                name="platform"
+                                value={formData.platform}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Platform</option>
+                                <option value="Theater">Theater</option>
+                                <option value="OTT">OTT</option>
+                              </select>
                             </div>
                           </div>
 
