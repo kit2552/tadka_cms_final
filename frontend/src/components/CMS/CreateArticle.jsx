@@ -2551,6 +2551,83 @@ const CreateArticle = () => {
               )}
             </div>
 
+            {/* E-E-A-T Section - Accordion */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div 
+                className="px-6 py-4 border-b border-gray-200 cursor-pointer flex items-center justify-between hover:bg-gray-50"
+                onClick={() => toggleAccordion('eeat')}
+              >
+                <h3 className="text-base font-bold text-gray-900 text-left">E-E-A-T Signals (Expertise & Authority)</h3>
+                <svg 
+                  className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${accordionStates.eeat ? 'transform rotate-180' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+              {accordionStates.eeat && (
+                <div className="p-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      Author Credentials
+                    </label>
+                    <input
+                      type="text"
+                      name="author_credentials"
+                      value={formData.author_credentials}
+                      onChange={handleInputChange}
+                      placeholder="e.g., Senior Film Critic, 15+ years experience"
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      Sources & References
+                    </label>
+                    <textarea
+                      name="sources"
+                      value={formData.sources}
+                      onChange={handleInputChange}
+                      rows="2"
+                      placeholder="Citations, official sources, links (comma separated)"
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                        Fact Checked By
+                      </label>
+                      <input
+                        type="text"
+                        name="fact_checked_by"
+                        value={formData.fact_checked_by}
+                        onChange={handleInputChange}
+                        placeholder="Editor name"
+                        className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                        Last Reviewed Date
+                      </label>
+                      <input
+                        type="date"
+                        name="last_reviewed_date"
+                        value={formData.last_reviewed_date}
+                        onChange={handleInputChange}
+                        className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Publishing & Sponsored Settings */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4 text-left">Publishing Settings</h3>
