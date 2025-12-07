@@ -2415,9 +2415,61 @@ const CreateArticle = () => {
                                   </select>
                                 </div>
 
-                                {/* OTT Platforms section removed */}
+                                {/* OTT Platforms Multi-Select */}
                                 <div>
-                                  <p className="text-sm text-gray-500 italic">OTT Platforms functionality removed</p>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    OTT Platforms
+                                  </label>
+                                  <div className="flex gap-2">
+                                    <select
+                                      value=""
+                                      onChange={(e) => {
+                                        const platform = e.target.value;
+                                        if (platform && !formData.ott_platforms.includes(platform)) {
+                                          setFormData({
+                                            ...formData,
+                                            ott_platforms: [...formData.ott_platforms, platform]
+                                          });
+                                        }
+                                      }}
+                                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                      <option value="">Select Platform</option>
+                                      <option value="Netflix">Netflix</option>
+                                      <option value="Amazon Prime">Amazon Prime</option>
+                                      <option value="Disney+ Hotstar">Disney+ Hotstar</option>
+                                      <option value="Zee5">Zee5</option>
+                                      <option value="SonyLIV">SonyLIV</option>
+                                      <option value="Jio Cinema">Jio Cinema</option>
+                                      <option value="Aha">Aha</option>
+                                      <option value="Sun NXT">Sun NXT</option>
+                                      <option value="Other">Other</option>
+                                    </select>
+                                  </div>
+                                  {formData.ott_platforms.length > 0 && (
+                                    <div className="mt-2 flex flex-wrap gap-2">
+                                      {formData.ott_platforms.map((platform, index) => (
+                                        <span
+                                          key={index}
+                                          className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                                        >
+                                          {platform}
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              setFormData({
+                                                ...formData,
+                                                ott_platforms: formData.ott_platforms.filter((_, i) => i !== index)
+                                              });
+                                            }}
+                                            className="ml-1 text-blue-600 hover:text-blue-800"
+                                          >
+                                            ×
+                                          </button>
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </>
