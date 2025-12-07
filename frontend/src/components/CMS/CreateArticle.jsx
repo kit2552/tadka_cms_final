@@ -1705,7 +1705,7 @@ const CreateArticle = () => {
                           </button>
                         </div>
                       </div>
-                    </>
+                    </div>
                   )}
 
                   {/* VIDEO Type Fields */}
