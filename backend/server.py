@@ -602,8 +602,10 @@ async def get_photoshoots_articles(skip: int = 0, limit: int = 10, db = Depends(
                 if images and len(images) > 0:
                     first_image = images[0]
                     if isinstance(first_image, dict):
+                        article["image_url"] = first_image.get("url")
                         article["image"] = first_image.get("url")
                     elif isinstance(first_image, str):
+                        article["image_url"] = first_image
                         article["image"] = first_image
         
         result.append(article)
