@@ -3360,7 +3360,9 @@ const CreateArticle = () => {
                         className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer bg-white"
                         onClick={() => handleGallerySelect(gallery)}
                       >
-                        <div className="aspect-video bg-gray-100 rounded-md mb-3 overflow-hidden">
+                        <div className={`bg-gray-100 rounded-md mb-3 overflow-hidden ${
+                          gallery.gallery_type === 'vertical' ? 'aspect-[3/4]' : 'aspect-video'
+                        }`}>
                           {gallery.images && gallery.images.length > 0 ? (
                             <img
                               src={gallery.images[0].data || gallery.images[0].url}
