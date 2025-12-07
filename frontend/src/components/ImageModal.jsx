@@ -182,7 +182,8 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
           <img
             src={image.fullImage}
             alt={image.name}
-            className={`w-full h-[98vh] object-cover rounded-lg ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+            className={`h-[98vh] max-w-full object-contain rounded-lg ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+            style={{ maxHeight: '98vh', width: 'auto' }}
             onLoad={handleImageLoad}
             onError={handleImageError}
           />
