@@ -4768,7 +4768,24 @@ const Dashboard = () => {
                           {/* Gallery List */}
                           <div className="divide-y divide-gray-200 overflow-x-auto">
                             {horizontalGalleries
-                              .filter(gallery => selectedHorizontalArtist === '' || gallery.artist === selectedHorizontalArtist)
+                              .filter(gallery => {
+                                // Category filter
+                                if (filterHorizontalCategory && gallery.category_type !== filterHorizontalCategory) {
+                                  return false;
+                                }
+                                
+                                // Entity filter
+                                if (filterHorizontalEntity && gallery.entity_name !== filterHorizontalEntity) {
+                                  return false;
+                                }
+                                
+                                // Legacy artist filter (keep for backwards compatibility)
+                                if (selectedHorizontalArtist && gallery.artist !== selectedHorizontalArtist) {
+                                  return false;
+                                }
+                                
+                                return true;
+                              })
                               .slice(
                                 (galleriesCurrentPage - 1) * galleriesItemsPerPage,
                                 galleriesCurrentPage * galleriesItemsPerPage
