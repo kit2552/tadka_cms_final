@@ -1821,7 +1821,7 @@ const Dashboard = () => {
     // Create folder path
     const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
     const orientationFolder = galleryType === 'horizontal' ? 'h' : 'v';
-    const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
+    const folderPath = `${galleryCategory}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
     
     // Fetch the actual next number from backend
     try {
