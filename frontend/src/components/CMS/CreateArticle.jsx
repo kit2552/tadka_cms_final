@@ -646,21 +646,7 @@ const CreateArticle = () => {
     setFormData(prev => ({ ...prev, movie_language: JSON.stringify(newLanguages) }));
   };
 
-  // OTT Platform handlers
-  const handleAddOttPlatform = () => {
-    if (tempOttPlatform && !selectedOttPlatforms.includes(tempOttPlatform)) {
-      const newPlatforms = [...selectedOttPlatforms, tempOttPlatform];
-      setSelectedOttPlatforms(newPlatforms);
-      setFormData(prev => ({ ...prev, ott_platforms: JSON.stringify(newPlatforms) }));
-      setTempOttPlatform('');
-    }
-  };
-
-  const handleRemoveOttPlatform = (platformToRemove) => {
-    const newPlatforms = selectedOttPlatforms.filter(p => p !== platformToRemove);
-    setSelectedOttPlatforms(newPlatforms);
-    setFormData(prev => ({ ...prev, ott_platforms: JSON.stringify(newPlatforms) }));
-  };
+  // OTT Platform handlers removed
 
   const handleAddState = () => {
     // Don't add if already selected or if trying to add 'all' when other states exist
