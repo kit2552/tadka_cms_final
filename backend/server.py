@@ -782,12 +782,13 @@ async def update_cms_article(
 
 @api_router.delete("/cms/articles/{article_id}")
 async def delete_cms_article(article_id: int, db = Depends(get_db)):
-    """Delete article via CMS"""
+    """Delete article via CMS and remove images from S3"""
     article = crud.get_article_by_id(db, article_id)
     if not article:
         raise HTTPException(status_code=404, detail="Article not found")
     
-    crud.delete_article(db, article_id)
+    # Delete article and its S3 images
+    crud.delete_article(db, article_id, s3_service)
     return {"message": "Article deleted successfully"}
 
 @api_router.get("/articles/{article_id}/related-videos")
