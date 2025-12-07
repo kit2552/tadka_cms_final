@@ -2429,8 +2429,8 @@ const CreateArticle = () => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Platform</option>
-                                <option value="Theater">Theater</option>
-                                <option value="OTT">OTT</option>
+                                <option value="Theater Release">Theater Release</option>
+                                <option value="OTT Release">OTT Release</option>
                               </select>
                             </div>
 
@@ -2447,6 +2447,87 @@ const CreateArticle = () => {
                               />
                             </div>
                           </div>
+
+                          {/* OTT Release Fields - Show only when platform is OTT Release */}
+                          {formData.platform === 'OTT Release' && (
+                            <>
+                              {/* Row 7: Content Type and OTT Platforms */}
+                              <div className="grid grid-cols-2 gap-4">
+                                {/* Content Type */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                    Content Type
+                                  </label>
+                                  <select
+                                    name="ott_content_type"
+                                    value={formData.ott_content_type}
+                                    onChange={handleInputChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  >
+                                    <option value="">Select Type</option>
+                                    <option value="Movie">Movie</option>
+                                    <option value="Web Series">Web Series</option>
+                                  </select>
+                                </div>
+
+                                {/* OTT Platforms Multi-Select */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                    OTT Platforms
+                                  </label>
+                                  <div className="flex gap-2 mb-2">
+                                    <select
+                                      value={tempOttPlatform}
+                                      onChange={(e) => setTempOttPlatform(e.target.value)}
+                                      className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                      <option value="">Select Platform</option>
+                                      <option value="Netflix">Netflix</option>
+                                      <option value="Amazon Prime Video">Amazon Prime Video</option>
+                                      <option value="Disney+ Hotstar">Disney+ Hotstar</option>
+                                      <option value="ZEE5">ZEE5</option>
+                                      <option value="SonyLIV">SonyLIV</option>
+                                      <option value="Aha">Aha</option>
+                                      <option value="Apple TV+">Apple TV+</option>
+                                      <option value="HBO Max">HBO Max</option>
+                                      <option value="Hulu">Hulu</option>
+                                      <option value="Paramount+">Paramount+</option>
+                                      <option value="YouTube">YouTube</option>
+                                      <option value="MX Player">MX Player</option>
+                                    </select>
+                                    <button
+                                      type="button"
+                                      onClick={handleAddOttPlatform}
+                                      disabled={!tempOttPlatform}
+                                      className="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                    >
+                                      Add
+                                    </button>
+                                  </div>
+                                  {/* Selected OTT Platforms */}
+                                  {selectedOttPlatforms.length > 0 && (
+                                    <div className="flex flex-wrap gap-2">
+                                      {selectedOttPlatforms.map((platform, index) => (
+                                        <span
+                                          key={index}
+                                          className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-md"
+                                        >
+                                          {platform}
+                                          <button
+                                            type="button"
+                                            onClick={() => handleRemoveOttPlatform(platform)}
+                                            className="text-purple-600 hover:text-purple-800"
+                                          >
+                                            ×
+                                          </button>
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </>
+                          )}
 
                       {/* Trailer URL */}
 
