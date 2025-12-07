@@ -45,7 +45,7 @@ const Politics = ({ politicsData = {}, onArticleClick, isLoading = false }) => {
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.state_politics', 'State Politics')}
+          {t('sections.state_politics', 'State News')}
         </button>
         <button
           onClick={() => setActiveTab('national')}
@@ -56,7 +56,7 @@ const Politics = ({ politicsData = {}, onArticleClick, isLoading = false }) => {
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.national_politics', 'National Politics')}
+          {t('sections.national_politics', 'National News')}
         </button>
       </div>
       
