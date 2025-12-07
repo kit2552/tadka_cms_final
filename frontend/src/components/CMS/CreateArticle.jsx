@@ -1661,6 +1661,7 @@ const CreateArticle = () => {
                               <p className="mt-2 text-sm text-gray-500">No image uploaded</p>
                             </div>
                           )}
+                        </div>
                       </div>
                     </div>
                   )}
