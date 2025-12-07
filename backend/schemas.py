@@ -90,6 +90,7 @@ class ArticleBase(BaseModel):
     review_genre: Optional[str] = None
     review_runtime: Optional[str] = None
     movie_language: Optional[str] = None
+    censor_rating: Optional[str] = None
     platform: Optional[str] = None
     ott_platform: Optional[str] = None
 
@@ -135,6 +136,7 @@ class ArticleUpdate(BaseModel):
     review_genre: Optional[str] = None
     review_runtime: Optional[str] = None
     movie_language: Optional[str] = None
+    censor_rating: Optional[str] = None
     platform: Optional[str] = None
     ott_platform: Optional[str] = None
     seo_title: Optional[str] = None
