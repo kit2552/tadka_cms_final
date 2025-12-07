@@ -528,7 +528,7 @@ async def get_trailers_articles(limit: int = 4, db = Depends(get_db)):
     articles = crud.get_articles_by_category_slug(db, category_slug="trailers", limit=limit)
     return articles
 
-@api_router.get("/articles/sections/top-stories", response_model=dict)
+@api_router.get("/articles/sections/top-stories")
 async def get_top_stories_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Top Stories section with regular and national tabs"""
     top_stories_articles = crud.get_articles_by_category_slug(db, category_slug="top-stories", limit=limit)
