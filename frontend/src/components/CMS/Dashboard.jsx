@@ -1823,100 +1823,112 @@ const Dashboard = () => {
     try {
       const files = Array.from(event.target.files);
       
-      console.log('🚀 NEW S3 UPLOAD CODE IS RUNNING!');
+      console.log('🚀 HYBRID IMAGE UPLOAD - Using State + S3 Max');
       console.log('Files selected:', files.length);
       console.log('Gallery Type:', galleryType);
       console.log('Category:', galleryCategory);
       console.log('Entity:', selectedEntity);
       
       if (!galleryCategory || !selectedEntity || !galleryType) {
-        alert('Please select Gallery Type, Category, and Entity before uploading images.');
         showModal('warning', 'Missing Information', 'Please select Gallery Type, Category, and Entity before uploading images.');
         return;
       }
       
-      // Get current image count to determine starting number
-      let currentCount = galleryForm.images.length;
-    
-    // Create folder path
-    const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
-    const orientationFolder = galleryType === 'horizontal' ? 'h' : 'v';
-    const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
-    
-    // Fetch the actual next number from backend
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-next-image-number?folder_path=${encodeURIComponent(folderPath)}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        currentCount = data.current_count;
+      // Create folder path
+      const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
+      const orientationFolder = galleryType === 'horizontal' ? 'h' : 'v';
+      const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
+      
+      // STEP 1: Calculate max number from current gallery state
+      let maxFromState = 0;
+      galleryForm.images.forEach(img => {
+        const numMatch = img.name.match(/^(\d+)\./);
+        if (numMatch) {
+          maxFromState = Math.max(maxFromState, parseInt(numMatch[1]));
+        }
+      });
+      console.log(`📊 Max image number from state: ${maxFromState}`);
+      
+      // STEP 2: Get max number from S3 (for safety)
+      let maxFromS3 = 0;
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-next-image-number?folder_path=${encodeURIComponent(folderPath)}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          maxFromS3 = data.next_number - 1; // next_number is already +1, so subtract to get max
+          console.log(`📊 Max image number from S3: ${maxFromS3}`);
+        }
+      } catch (error) {
+        console.error('⚠️ Error fetching S3 image numbers (will use state only):', error);
       }
-    } catch (error) {
-      console.error('Error fetching next image number:', error);
-    }
-    
-    // Upload files to S3
-    for (let index = 0; index < files.length; index++) {
-      const file = files[index];
-      if (file.type.startsWith('image/')) {
-        const imageNumber = currentCount + index + 1;
-        const fileExtension = file.name.split('.').pop();
-        
-        try {
-          // Create FormData for upload
-          const formData = new FormData();
-          formData.append('file', file);
-          formData.append('folder_path', folderPath);
-          formData.append('image_number', imageNumber);
+      
+      // STEP 3: Use the HIGHER number to avoid conflicts
+      const startNumber = Math.max(maxFromState, maxFromS3) + 1;
+      console.log(`✅ Starting upload at image number: ${startNumber}`);
+      
+      // STEP 4: Upload files to S3
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        if (file.type.startsWith('image/')) {
+          const imageNumber = startNumber + index;
+          const fileExtension = file.name.split('.').pop();
           
-          // Upload to S3
-          const uploadResponse = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/api/cms/upload-gallery-image`,
-            {
-              method: 'POST',
-              body: formData
+          console.log(`📤 Uploading ${file.name} as ${imageNumber}.${fileExtension}`);
+          
+          try {
+            // Create FormData for upload
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('folder_path', folderPath);
+            formData.append('image_number', imageNumber);
+            
+            // Upload to S3
+            const uploadResponse = await fetch(
+              `${process.env.REACT_APP_BACKEND_URL}/api/cms/upload-gallery-image`,
+              {
+                method: 'POST',
+                body: formData
+              }
+            );
+            
+            if (uploadResponse.ok) {
+              const uploadData = await uploadResponse.json();
+              console.log('✅ Image uploaded to S3:', uploadData.url);
+              console.log('✅ S3 Key:', uploadData.s3_key);
+              
+              // Add image with S3 URL to form - use URL as ID for consistency
+              const newImage = {
+                id: uploadData.url, // Use URL as unique ID (consistent with edit gallery)
+                name: uploadData.filename,
+                originalName: file.name,
+                url: uploadData.url,
+                s3_key: uploadData.s3_key,
+                size: file.size,
+                imageNumber: imageNumber
+              };
+              
+              console.log('✅ Adding image to form with ID:', newImage.id);
+              
+              setGalleryForm(prev => ({
+                ...prev,
+                images: [...prev.images, newImage]
+              }));
+            } else {
+              const errorData = await uploadResponse.json();
+              console.error('❌ Upload failed:', errorData);
+              showModal('error', 'Upload Failed', errorData.detail || `Failed to upload ${file.name}`);
             }
-          );
-          
-          if (uploadResponse.ok) {
-            const uploadData = await uploadResponse.json();
-            console.log('✅ Image uploaded to S3:', uploadData.url);
-            console.log('✅ S3 Key:', uploadData.s3_key);
-            
-            // Add image with S3 URL to form
-            const newImage = {
-              id: Date.now() + Math.random(),
-              name: uploadData.filename,
-              originalName: file.name,
-              url: uploadData.url,
-              s3_key: uploadData.s3_key,
-              size: file.size,
-              imageNumber: imageNumber
-            };
-            
-            console.log('✅ Adding image to form:', newImage);
-            
-            setGalleryForm(prev => ({
-              ...prev,
-              images: [...prev.images, newImage]
-            }));
-          } else {
-            const errorData = await uploadResponse.json();
-            console.error('❌ Upload failed:', errorData);
-            alert(`Upload failed: ${errorData.detail || 'Unknown error'}`);
-            showModal('error', 'Upload Failed', errorData.detail || `Failed to upload ${file.name}`);
+          } catch (error) {
+            console.error('❌ Error uploading image:', error);
+            showModal('error', 'Upload Error', `Error uploading ${file.name}: ${error.message}`);
           }
-        } catch (error) {
-          console.error('❌ Error uploading image:', error);
-          alert(`Error: ${error.message}`);
-          showModal('error', 'Upload Error', `Error uploading ${file.name}: ${error.message}`);
         }
       }
-    }
     } catch (outerError) {
       console.error('❌ CRITICAL ERROR in handleImageUpload:', outerError);
-      alert(`Critical error: ${outerError.message}`);
+      showModal('error', 'Upload Error', `Critical error: ${outerError.message}`);
     }
   };
 
