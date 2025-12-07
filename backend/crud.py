@@ -1295,9 +1295,48 @@ def create_gallery(db, gallery_data: dict):
     
     return gallery_doc
 
-def update_gallery(db, gallery_id: str, gallery_data: dict):
-    """Update gallery"""
+def update_gallery(db, gallery_id: str, gallery_data: dict, s3_service=None):
+    """Update gallery and delete removed images from S3"""
     update_fields = {"updated_at": datetime.utcnow()}
+    
+    # If images are being updated, check for removed images and delete from S3
+    if "images" in gallery_data and s3_service and s3_service.is_enabled():
+        # Get current gallery to compare images
+        current_gallery = db[GALLERIES].find_one({"gallery_id": gallery_id}, {"_id": 0})
+        
+        if current_gallery:
+            # Get current image URLs
+            current_images = current_gallery.get("images", [])
+            current_urls = set()
+            for img in current_images:
+                if isinstance(img, dict):
+                    url = img.get("url")
+                    if url:
+                        current_urls.add(url)
+                elif isinstance(img, str):
+                    current_urls.add(img)
+            
+            # Get new image URLs
+            new_images = gallery_data["images"]
+            new_urls = set()
+            for img in new_images:
+                if isinstance(img, dict):
+                    url = img.get("url")
+                    if url:
+                        new_urls.add(url)
+                elif isinstance(img, str):
+                    new_urls.add(img)
+            
+            # Find removed images
+            removed_urls = current_urls - new_urls
+            
+            # Delete removed images from S3
+            for url in removed_urls:
+                try:
+                    s3_service.delete_file(url)
+                    print(f"Deleted removed image from S3: {url}")
+                except Exception as e:
+                    print(f"Failed to delete removed image from S3: {url}, Error: {e}")
     
     if "title" in gallery_data:
         update_fields["title"] = gallery_data["title"]
