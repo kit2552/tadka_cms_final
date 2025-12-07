@@ -1772,113 +1772,130 @@ const CreateArticle = () => {
                   {/* MOVIE REVIEW Type Fields */}
                   {formData.content_type === 'movie_review' && (
                     <>
-                      {/* Two Column Layout: Title, YouTube, Checkboxes | Preview */}
-                      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-4">
-                        {/* Left Column (60% = 3 cols) */}
-                        <div className="space-y-4 md:col-span-3">
-                          {/* Title Field */}
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                              Title *
-                            </label>
-                            <input
-                              type="text"
-                              name="title"
-                              value={formData.title}
-                              onChange={handleInputChange}
-                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              required
-                            />
-                          </div>
-
-                          {/* YouTube Trailer Link */}
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                              YouTube Trailer Link *
-                            </label>
-                            <input
-                              type="url"
-                              name="youtube_url"
-                              value={formData.youtube_url}
-                              onChange={handleInputChange}
-                              placeholder="https://www.youtube.com/watch?v=..."
-                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              required
-                            />
-                          </div>
-
-                          {/* Mark as Top Story Checkbox */}
-                          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg p-4 hover:border-amber-300 transition-all">
-                            <label className="flex items-start space-x-3 cursor-pointer">
+                      {/* Section 1: Basic Info - Two Column Layout */}
+                      <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-lg p-5 mb-6">
+                        <h4 className="text-base font-bold text-gray-900 mb-4 text-left flex items-center">
+                          <svg className="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd"></path>
+                          </svg>
+                          Basic Information
+                        </h4>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                          {/* Left Column (60% = 3 cols) */}
+                          <div className="space-y-4 md:col-span-3">
+                            {/* Title Field */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Title *
+                              </label>
                               <input
-                                type="checkbox"
-                                name="is_top_story"
-                                checked={formData.is_top_story}
+                                type="text"
+                                name="title"
+                                value={formData.title}
                                 onChange={handleInputChange}
-                                className="form-checkbox h-5 w-5 text-amber-600 mt-0.5 rounded focus:ring-2 focus:ring-amber-500 flex-shrink-0"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
                               />
-                              <div className="flex-1 text-left">
-                                <span className="text-sm font-semibold text-gray-800">Mark as Top Story</span>
-                                <p className="text-xs text-gray-600 mt-1 text-left">
-                                  {(() => {
-                                    try {
-                                      const states = formData.states ? JSON.parse(formData.states) : [];
-                                      return states.length === 0 ? 'Will appear in National Top Stories' : 'Will appear in State Top Stories';
-                                    } catch {
-                                      return 'Will appear in State Top Stories';
-                                    }
-                                  })()}
-                                </p>
-                              </div>
-                            </label>
-                          </div>
+                            </div>
 
-                          {/* Enable Movie Review Comments Checkbox */}
-                          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-4 hover:border-blue-300 transition-all">
-                            <label className="flex items-center space-x-3 cursor-pointer">
+                            {/* YouTube Trailer Link */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                YouTube Trailer Link *
+                              </label>
                               <input
-                                type="checkbox"
-                                name="review_comments_enabled"
-                                checked={formData.review_comments_enabled}
+                                type="url"
+                                name="youtube_url"
+                                value={formData.youtube_url}
                                 onChange={handleInputChange}
-                                className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                                placeholder="https://www.youtube.com/watch?v=..."
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
                               />
-                              <span className="text-sm font-semibold text-gray-800">Enable Movie Review Comments</span>
-                            </label>
-                          </div>
-                        </div>
+                            </div>
 
-                        {/* Right Column: YouTube Preview (40% = 2 cols) */}
-                        <div className="md:col-span-2">
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Trailer Preview
-                          </label>
-                          <div className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center" style={{ minHeight: '200px' }}>
-                            {formData.youtube_url ? (
-                              <iframe
-                                width="100%"
-                                height="200"
-                                src={`https://www.youtube.com/embed/${formData.youtube_url.split('v=')[1]?.split('&')[0] || formData.youtube_url.split('/').pop()}`}
-                                title="YouTube Trailer Preview"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="rounded"
-                              ></iframe>
-                            ) : (
-                              <div className="text-center p-4">
-                                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                                <p className="mt-2 text-sm text-gray-500">No trailer URL provided</p>
-                              </div>
-                            )}
+                            {/* Mark as Top Story Checkbox */}
+                            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg p-4 hover:border-amber-300 transition-all">
+                              <label className="flex items-start space-x-3 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  name="is_top_story"
+                                  checked={formData.is_top_story}
+                                  onChange={handleInputChange}
+                                  className="form-checkbox h-5 w-5 text-amber-600 mt-0.5 rounded focus:ring-2 focus:ring-amber-500 flex-shrink-0"
+                                />
+                                <div className="flex-1 text-left">
+                                  <span className="text-sm font-semibold text-gray-800">Mark as Top Story</span>
+                                  <p className="text-xs text-gray-600 mt-1 text-left">
+                                    {(() => {
+                                      try {
+                                        const states = formData.states ? JSON.parse(formData.states) : [];
+                                        return states.length === 0 ? 'Will appear in National Top Stories' : 'Will appear in State Top Stories';
+                                      } catch {
+                                        return 'Will appear in State Top Stories';
+                                      }
+                                    })()}
+                                  </p>
+                                </div>
+                              </label>
+                            </div>
+
+                            {/* Enable Movie Review Comments Checkbox */}
+                            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg p-4 hover:border-indigo-300 transition-all">
+                              <label className="flex items-center space-x-3 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  name="review_comments_enabled"
+                                  checked={formData.review_comments_enabled}
+                                  onChange={handleInputChange}
+                                  className="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
+                                />
+                                <span className="text-sm font-semibold text-gray-800">Enable Movie Review Comments</span>
+                              </label>
+                            </div>
+                          </div>
+
+                          {/* Right Column: YouTube Preview (40% = 2 cols) */}
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Trailer Preview
+                            </label>
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center" style={{ minHeight: '280px' }}>
+                              {formData.youtube_url ? (
+                                <iframe
+                                  width="100%"
+                                  height="280"
+                                  src={`https://www.youtube.com/embed/${formData.youtube_url.split('v=')[1]?.split('&')[0] || formData.youtube_url.split('/').pop()}`}
+                                  title="YouTube Trailer Preview"
+                                  frameBorder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                  className="rounded"
+                                ></iframe>
+                              ) : (
+                                <div className="text-center p-4">
+                                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                  </svg>
+                                  <p className="mt-2 text-sm text-gray-500">No trailer URL provided</p>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Remaining Movie Review Fields */}
-                      <div className="space-y-4">
+                      {/* Section 2: Movie Information */}
+                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-5 mb-6">
+                        <h4 className="text-base font-bold text-gray-900 mb-4 text-left flex items-center">
+                          <svg className="w-5 h-5 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+                          </svg>
+                          Movie Information
+                        </h4>
+                        
+                        <div className="space-y-4">
 
                       {/* Movie Info Row */}
                       <div className="grid grid-cols-2 gap-4">
