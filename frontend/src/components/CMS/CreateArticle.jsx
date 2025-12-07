@@ -2145,36 +2145,6 @@ const CreateArticle = () => {
               )}
             </div>
 
-
-            {/* Comment Settings */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-sm font-semibold text-gray-800 mb-3 text-left">Comment Settings</h3>
-              
-              {formData.content_type !== 'movie_review' ? (
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="comments_enabled"
-                    checked={formData.comments_enabled}
-                    onChange={handleInputChange}
-                    className="form-checkbox h-4 w-4 text-blue-600"
-                  />
-                  <span className="text-sm text-gray-700">Enable Comments</span>
-                </label>
-              ) : (
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="review_comments_enabled"
-                    checked={formData.review_comments_enabled}
-                    onChange={handleInputChange}
-                    className="form-checkbox h-4 w-4 text-blue-600"
-                  />
-                  <span className="text-sm text-gray-700">Enable Movie Review Comments</span>
-                </label>
-              )}
-            </div>
-
             {/* SEO Section - Accordion */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div 
