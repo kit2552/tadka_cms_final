@@ -56,6 +56,7 @@ class ArticleBase(BaseModel):
     artists: Optional[str] = None  # JSON string for artist names
     movie_rating: Optional[str] = None  # New field for movie rating
     is_featured: Optional[bool] = False
+    is_top_story: Optional[bool] = False
     is_published: Optional[bool] = True
     is_scheduled: Optional[bool] = False
     scheduled_publish_at: Optional[datetime] = None
