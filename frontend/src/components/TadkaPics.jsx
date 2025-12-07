@@ -152,16 +152,26 @@ const TadkaPics = ({ images, onImageClick }) => {
     if (clickedGallery && onImageClick) {
       trackImageClick(clickedGallery.id, clickedGallery.name, 'home_slider_click');
       
-      // Create the selected image object for the modal
+      // Create the selected image object for the modal with fullImage property
       const selectedImage = {
         id: clickedGallery.id,
         name: clickedGallery.name,
         url: clickedGallery.allImages[clickedGallery.selectedIndex].url,
+        fullImage: clickedGallery.allImages[clickedGallery.selectedIndex].url, // ImageModal needs this
         alt: clickedGallery.allImages[clickedGallery.selectedIndex].alt
       };
       
+      // Transform all gallery images to include fullImage property
+      const transformedGalleryImages = clickedGallery.allImages.map((img, idx) => ({
+        id: `${clickedGallery.gallery_id}-${idx}`,
+        name: img.name,
+        url: img.url,
+        fullImage: img.url, // ImageModal needs this
+        alt: img.alt
+      }));
+      
       // Pass the selected image and ALL images from this gallery
-      onImageClick(selectedImage, clickedGallery.allImages);
+      onImageClick(selectedImage, transformedGalleryImages);
     }
   };
 
