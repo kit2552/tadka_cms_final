@@ -150,6 +150,12 @@ const TadkaPics = ({ images, onImageClick }) => {
   const handleImageClick = (index) => {
     const clickedGallery = actressImages[index];
     if (clickedGallery && onImageClick) {
+      console.log('🖼️ Tadka Pics - Image Clicked:', {
+        gallery: clickedGallery.name,
+        totalImages: clickedGallery.allImages.length,
+        selectedIndex: clickedGallery.selectedIndex
+      });
+      
       trackImageClick(clickedGallery.id, clickedGallery.name, 'home_slider_click');
       
       // Create the selected image object for the modal with fullImage property
@@ -161,6 +167,12 @@ const TadkaPics = ({ images, onImageClick }) => {
         alt: clickedGallery.allImages[clickedGallery.selectedIndex].alt
       };
       
+      console.log('🖼️ Selected Image:', {
+        name: selectedImage.name,
+        hasFullImage: !!selectedImage.fullImage,
+        urlType: selectedImage.fullImage?.startsWith('data:') ? 'base64' : 'S3'
+      });
+      
       // Transform all gallery images to include fullImage property
       const transformedGalleryImages = clickedGallery.allImages.map((img, idx) => ({
         id: `${clickedGallery.gallery_id}-${idx}`,
@@ -169,6 +181,8 @@ const TadkaPics = ({ images, onImageClick }) => {
         fullImage: img.url, // ImageModal needs this
         alt: img.alt
       }));
+      
+      console.log('🖼️ Passing to modal:', transformedGalleryImages.length, 'images');
       
       // Pass the selected image and ALL images from this gallery
       onImageClick(selectedImage, transformedGalleryImages);
