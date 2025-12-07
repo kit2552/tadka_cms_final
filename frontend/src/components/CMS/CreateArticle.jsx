@@ -1913,41 +1913,19 @@ const CreateArticle = () => {
                         
                         <div className="space-y-4">
 
-                          {/* Rating and Runtime */}
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                                Rating (Stars) *
-                              </label>
-                              <select
-                                name="movie_rating"
-                                value={formData.movie_rating}
-                                onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                              >
-                                <option value="">Select Rating</option>
-                                {Array.from({length: 21}, (_, i) => i * 0.25).map(rating => (
-                                  <option key={rating} value={rating.toFixed(2)}>
-                                    {rating === 0 ? 'Not Rated' : `${rating.toFixed(2)} Stars`}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                                Runtime
-                              </label>
-                              <input
-                                type="text"
-                                name="review_runtime"
-                                value={formData.review_runtime}
-                                onChange={handleInputChange}
-                                placeholder="e.g., 2h 30m"
-                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              />
-                            </div>
+                          {/* Runtime */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Runtime
+                            </label>
+                            <input
+                              type="text"
+                              name="review_runtime"
+                              value={formData.review_runtime}
+                              onChange={handleInputChange}
+                              placeholder="e.g., 2h 30m"
+                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
                           </div>
 
                           {/* Cast - Textarea */}
