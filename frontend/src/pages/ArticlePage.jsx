@@ -104,9 +104,22 @@ const ArticlePage = () => {
       }
     };
 
+    const loadAdSettings = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ad-settings`);
+        if (response.ok) {
+          const data = await response.json();
+          setAdSettings(data);
+        }
+      } catch (err) {
+        console.error('Failed to load ad settings:', err);
+      }
+    };
+
     if (articleId) {
       fetchArticle();
     }
+    loadAdSettings();
   }, [articleId]);
 
   const fetchUserRatings = async (articleId) => {
