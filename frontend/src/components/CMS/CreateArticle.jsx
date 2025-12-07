@@ -117,7 +117,9 @@ const CreateArticle = () => {
     authorTargeting: true,
     category: true,
     contentType: true,
-    seo: false
+    seo: false,
+    aeo: false,
+    faqs: false
   });
 
   const showNotification = (type, title, message) => {
