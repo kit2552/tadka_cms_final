@@ -279,7 +279,8 @@ const CreateArticle = () => {
           censor_rating: article.censor_rating || '',
           release_date: article.release_date || '',
           platform: article.platform || '',
-          ott_platform: article.ott_platform || '',
+          ott_content_type: article.ott_content_type || '',
+          ott_platforms: article.ott_platforms || [],
           // Comment settings
           comments_enabled: article.comments_enabled !== undefined ? article.comments_enabled : true,
           review_comments_enabled: article.review_comments_enabled !== undefined ? article.review_comments_enabled : true,
