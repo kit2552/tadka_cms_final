@@ -57,7 +57,7 @@ const CreateArticle = () => {
     author_credentials: '',
     sources: '',
     fact_checked_by: '',
-    last_reviewed_date: ''
+    last_reviewed_date: '',
     // Movie Review specific fields
     review_quick_verdict: '',
     review_plot_summary: '',
