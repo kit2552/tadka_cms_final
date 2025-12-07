@@ -1815,40 +1815,40 @@ const CreateArticle = () => {
                             </div>
 
                             {/* Mark as Top Story Checkbox */}
-                            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg p-4 hover:border-amber-300 transition-all">
-                              <label className="flex items-start space-x-3 cursor-pointer">
+                            <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
+                              <label className="flex items-center space-x-3 cursor-pointer">
                                 <input
                                   type="checkbox"
                                   name="is_top_story"
                                   checked={formData.is_top_story}
                                   onChange={handleInputChange}
-                                  className="form-checkbox h-5 w-5 text-amber-600 mt-0.5 rounded focus:ring-2 focus:ring-amber-500 flex-shrink-0"
+                                  className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 flex-shrink-0"
                                 />
-                                <div className="flex-1 text-left">
-                                  <span className="text-sm font-semibold text-gray-800">Mark as Top Story</span>
-                                  <p className="text-xs text-gray-600 mt-1 text-left">
+                                <span className="text-sm font-semibold text-gray-800">
+                                  Mark as Top Story 
+                                  <span className="ml-2 text-xs font-normal text-gray-600">
                                     {(() => {
                                       try {
                                         const states = formData.states ? JSON.parse(formData.states) : [];
-                                        return states.length === 0 ? 'Will appear in National Top Stories' : 'Will appear in State Top Stories';
+                                        return states.length === 0 ? '(National)' : '(State)';
                                       } catch {
-                                        return 'Will appear in State Top Stories';
+                                        return '(State)';
                                       }
                                     })()}
-                                  </p>
-                                </div>
+                                  </span>
+                                </span>
                               </label>
                             </div>
 
                             {/* Enable Movie Review Comments Checkbox */}
-                            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg p-4 hover:border-indigo-300 transition-all">
+                            <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
                               <label className="flex items-center space-x-3 cursor-pointer">
                                 <input
                                   type="checkbox"
                                   name="review_comments_enabled"
                                   checked={formData.review_comments_enabled}
                                   onChange={handleInputChange}
-                                  className="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
+                                  className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                                 />
                                 <span className="text-sm font-semibold text-gray-800">Enable Movie Review Comments</span>
                               </label>
