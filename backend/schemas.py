@@ -100,6 +100,7 @@ class ArticleUpdate(BaseModel):
     artists: Optional[str] = None  # JSON string for artist names
     movie_rating: Optional[str] = None  # New field for movie rating
     is_featured: Optional[bool] = None
+    is_top_story: Optional[bool] = None
     is_published: Optional[bool] = None
     is_scheduled: Optional[bool] = None
     scheduled_publish_at: Optional[datetime] = None
