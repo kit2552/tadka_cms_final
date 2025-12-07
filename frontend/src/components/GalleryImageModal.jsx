@@ -150,7 +150,7 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
       onClick={handleBackdropClick}
     >
       {/* Image Container */}
-      <div className="relative w-full h-[98vh] flex items-center justify-center">
+      <div className={`relative w-full flex items-center justify-center ${isFullscreen ? 'h-screen' : 'h-[98vh]'}`}>
         
         {/* Main Image with Touch Support */}
         <div 
