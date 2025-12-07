@@ -1723,67 +1723,11 @@ const CreateArticle = () => {
                         </div>
                       </div>
 
-                      {/* Direct Image Gallery Management */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                          Image Gallery ({formData.image_gallery.length} images)
-                        </label>
-                        
-                        {/* Add new image */}
-                        <div className="mb-3 space-y-2">
-                          {/* URL Input */}
-                          <div className="flex gap-2">
-                            <input
-                              type="url"
-                              value={newImageUrl}
-                              onChange={(e) => setNewImageUrl(e.target.value)}
-                              placeholder="Enter image URL"
-                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <button
-                              type="button"
-                              onClick={handleAddImageToGallery}
-                              className="px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                              Add URL
-                            </button>
-                          </div>
-                          
-                          {/* File Upload */}
-                          <div className="flex gap-2">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={async (e) => {
-                                const file = e.target.files[0];
-                                if (file) {
-                                  const url = await handleGalleryImageUpload(file);
-                                  if (url) {
-                                    handleAddImageToGallery({ target: { value: '' } }, url);
-                                    e.target.value = ''; // Reset file input
-                                  }
-                                }
-                              }}
-                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              disabled={!galleryCategory || !selectedEntity}
-                            />
-                          </div>
-                          {(!galleryCategory || !selectedEntity) && (
-                            <p className="text-xs text-red-500 text-left">
-                              Please select Gallery Type and {galleryCategory || 'Entity'} before uploading images
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Gallery images list */}
-                        {formData.image_gallery.length === 0 ? (
-                          <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-md">
-                            <svg className="mx-auto h-8 w-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p className="text-sm">No images in gallery. Add images using the URL input above.</p>
-                          </div>
-                        ) : (
+                      {/* Image Gallery Management - Hidden, keeping for data compatibility */}
+                      {formData.image_gallery.length > 0 && (
+                        <div style={{display: 'none'}}>
+                        {/* Gallery images list - keeping structure for data compatibility */}
+                        {formData.image_gallery.length > 0 && (
                           <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-300 rounded-md p-2">
                             {formData.image_gallery.map((image, index) => (
                               <div key={image.id || index} className="flex items-center gap-2 p-2 bg-gray-50 rounded border">
