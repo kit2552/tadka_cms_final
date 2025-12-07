@@ -1724,7 +1724,7 @@ const CreateArticle = () => {
                           placeholder="https://www.youtube.com/watch?v=..."
                         />
                       </div>
-                    </>
+                    </div>
                   )}
 
                   {/* MOVIE REVIEW Type Fields */}
