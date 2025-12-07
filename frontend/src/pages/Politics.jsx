@@ -288,7 +288,7 @@ const Politics = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      State Politics
+                      State News
                     </button>
                     <button
                       onClick={() => setActiveTab('national')}
@@ -298,7 +298,7 @@ const Politics = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      National Politics
+                      National News
                     </button>
                   </div>
                 </div>
