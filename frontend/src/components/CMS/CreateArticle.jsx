@@ -2391,6 +2391,155 @@ const CreateArticle = () => {
               )}
             </div>
 
+            {/* AEO Section - Accordion */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div 
+                className="px-6 py-4 border-b border-gray-200 cursor-pointer flex items-center justify-between hover:bg-gray-50"
+                onClick={() => toggleAccordion('aeo')}
+              >
+                <h3 className="text-base font-bold text-gray-900 text-left">AEO (Answer Engine Optimization)</h3>
+                <svg 
+                  className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${accordionStates.aeo ? 'transform rotate-180' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+              {accordionStates.aeo && (
+                <div className="p-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      AEO Title
+                    </label>
+                    <input
+                      type="text"
+                      name="aeo_title"
+                      value={formData.aeo_title}
+                      onChange={handleInputChange}
+                      placeholder="Optimized title for AI search engines"
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      AEO Description
+                    </label>
+                    <textarea
+                      name="aeo_description"
+                      value={formData.aeo_description}
+                      onChange={handleInputChange}
+                      rows="3"
+                      placeholder="Clear, concise answer for AI engines (ChatGPT, Perplexity, etc.)"
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      AEO Keywords
+                    </label>
+                    <input
+                      type="text"
+                      name="aeo_keywords"
+                      value={formData.aeo_keywords}
+                      onChange={handleInputChange}
+                      placeholder="Conversational keywords, question phrases"
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* FAQs Section - Accordion */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div 
+                className="px-6 py-4 border-b border-gray-200 cursor-pointer flex items-center justify-between hover:bg-gray-50"
+                onClick={() => toggleAccordion('faqs')}
+              >
+                <h3 className="text-base font-bold text-gray-900 text-left">FAQs (Frequently Asked Questions)</h3>
+                <svg 
+                  className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${accordionStates.faqs ? 'transform rotate-180' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+              {accordionStates.faqs && (
+                <div className="p-6 space-y-4">
+                  {formData.faqs.map((faq, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                      <div className="flex items-start justify-between mb-3">
+                        <span className="text-sm font-medium text-gray-700">FAQ #{index + 1}</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newFaqs = formData.faqs.filter((_, i) => i !== index);
+                            setFormData({...formData, faqs: newFaqs});
+                          }}
+                          className="text-red-600 hover:text-red-800 text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Question
+                          </label>
+                          <input
+                            type="text"
+                            value={faq.question}
+                            onChange={(e) => {
+                              const newFaqs = [...formData.faqs];
+                              newFaqs[index].question = e.target.value;
+                              setFormData({...formData, faqs: newFaqs});
+                            }}
+                            placeholder="Enter question"
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Answer
+                          </label>
+                          <textarea
+                            value={faq.answer}
+                            onChange={(e) => {
+                              const newFaqs = [...formData.faqs];
+                              newFaqs[index].answer = e.target.value;
+                              setFormData({...formData, faqs: newFaqs});
+                            }}
+                            rows="2"
+                            placeholder="Enter answer"
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({
+                        ...formData,
+                        faqs: [...formData.faqs, { question: '', answer: '' }]
+                      });
+                    }}
+                    className="w-full border-2 border-dashed border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors"
+                  >
+                    + Add FAQ
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Publishing & Sponsored Settings */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4 text-left">Publishing Settings</h3>
