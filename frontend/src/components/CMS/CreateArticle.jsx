@@ -115,8 +115,10 @@ const CreateArticle = () => {
   const [selectedArtist, setSelectedArtist] = useState(''); // Changed to single artist (string)
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedOttPlatforms, setSelectedOttPlatforms] = useState([]);
   const [tempGenre, setTempGenre] = useState('');
   const [tempLanguage, setTempLanguage] = useState('');
+  const [tempOttPlatform, setTempOttPlatform] = useState('');
   const [availableArtists, setAvailableArtists] = useState([]); // Available artists from API
   const [showArtistModal, setShowArtistModal] = useState(false); // New state for artist modal
   const [newArtistName, setNewArtistName] = useState(''); // New state for new artist name
