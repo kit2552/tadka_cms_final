@@ -256,7 +256,7 @@ def create_article(db, article: dict):
         "content": article.get("content"),
         "summary": article.get("summary"),
         "author": article.get("author"),
-        "article_language": article.get("language") or article.get("article_language", "en"),
+        "article_language": article.get("article_language", "en"),
         "states": article.get("states"),
         "category": article.get("category"),
         "content_type": article.get("content_type", "post"),
