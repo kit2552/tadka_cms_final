@@ -2062,8 +2062,15 @@ const CreateArticle = () => {
                       )}
                       
                       {/* Review Sections */}
-                      <div className="border-t pt-4 mt-4">
-                        <h4 className="text-sm font-semibold text-gray-800 mb-3 text-left">Review Sections</h4>
+                      <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-lg p-5 mt-6">
+                        <h4 className="text-base font-bold text-gray-900 mb-4 text-left flex items-center">
+                          <svg className="w-5 h-5 mr-2 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                            <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"></path>
+                          </svg>
+                          Review Sections
+                        </h4>
+                        <div className="space-y-4">
                         
                         {/* Quick Verdict */}
                         <div className="mb-4">
