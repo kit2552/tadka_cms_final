@@ -218,6 +218,8 @@ const CreateArticle = () => {
           review_cast: article.review_cast || '',
           review_director: article.review_director || '',
           review_producer: article.review_producer || '',
+          review_music_director: article.review_music_director || '',
+          review_dop: article.review_dop || '',
           review_genre: article.review_genre || '',
           review_runtime: article.review_runtime || '',
           movie_language: article.movie_language || '',
