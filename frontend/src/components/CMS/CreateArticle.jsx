@@ -29,6 +29,7 @@ const CreateArticle = () => {
     title: '',
     short_title: '',
     content: '',
+    content_secondary: '', // Second content for ad placement
     summary: '',
     author: 'Tadka Team', // Default author
     language: 'en',
