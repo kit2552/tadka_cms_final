@@ -145,13 +145,14 @@ def get_articles_by_category_slug(db, category_slug: str, skip: int = 0, limit: 
     return serialize_doc(docs)
 
 def get_articles_by_states(db, category_slug: str, state_codes: List[str], skip: int = 0, limit: int = 100):
-    """Get articles filtered by category and state codes"""
+    """Get articles filtered by category and state codes, excluding top stories"""
     # Articles where states field contains any of the state codes or "all"
     docs = list(
         db[ARTICLES]
         .find({
             "category": category_slug,
             "is_published": True,
+            "is_top_story": {"$ne": True},  # Exclude articles marked as top stories
             "$or": [
                 {"states": {"$regex": state, "$options": "i"}} 
                 for state in (state_codes + ["all"])
