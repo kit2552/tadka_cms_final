@@ -18,6 +18,10 @@ const ArticlePage = () => {
   const [error, setError] = useState(null);
   const [userRating, setUserRating] = useState(null);
   const [reviewCount, setReviewCount] = useState(0);
+  const [adSettings, setAdSettings] = useState({
+    article_content_mid: false,
+    article_sidebar_comments: false
+  });
 
   // Update page title, meta tags, and schema markup for SEO/AEO
   useEffect(() => {
