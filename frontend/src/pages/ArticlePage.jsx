@@ -407,41 +407,6 @@ const ArticlePage = () => {
               </div>
             )}
 
-            {/* Photo Gallery Display */}
-            {article.content_type === 'photo' && article.gallery && article.gallery.images && (
-              <div className="mb-6 bg-white p-4">
-                <h3 className="text-2xl font-bold mb-4 text-left">Photo Gallery</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {(() => {
-                    let images = article.gallery.images;
-                    if (typeof images === 'string') {
-                      try {
-                        images = JSON.parse(images);
-                      } catch {
-                        images = [];
-                      }
-                    }
-                    return images.map((image, index) => {
-                      const imageUrl = typeof image === 'string' ? image : image.url;
-                      return (
-                        <div key={index} className="aspect-square overflow-hidden rounded-lg cursor-pointer hover:opacity-90 transition-opacity">
-                          <img
-                            src={imageUrl}
-                            alt={`Gallery image ${index + 1}`}
-                            className="w-full h-full object-cover"
-                            onClick={() => {
-                              // TODO: Open lightbox/modal with full image
-                              window.open(imageUrl, '_blank');
-                            }}
-                          />
-                        </div>
-                      );
-                    });
-                  })()}
-                </div>
-              </div>
-            )}
-
             {/* Movie Review Content */}
             {article.content_type === 'movie_review' ? (
               <div className="space-y-6 mb-8">
