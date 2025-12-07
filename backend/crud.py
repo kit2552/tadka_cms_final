@@ -1216,3 +1216,116 @@ def delete_gallery(db, gallery_id: str):
     result = db[GALLERIES].delete_one({"gallery_id": gallery_id})
     return result.deleted_count > 0
 
+
+# ===========================
+# TOP STORIES MANAGEMENT
+# ===========================
+
+def manage_top_stories(db, article_id: str, content_type: str, states_json: str, published_at: datetime, is_top_story: bool):
+    """
+    Manage top stories collection - maintain 3 posts + 1 movie review per state/national
+    
+    Args:
+        article_id: The article ID
+        content_type: 'post' or 'movie_review'
+        states_json: JSON string of states (empty array = ALL/National)
+        published_at: Publication datetime
+        is_top_story: Whether this article should be a top story
+    """
+    # Parse states
+    try:
+        states = json.loads(states_json) if states_json else []
+    except:
+        states = []
+    
+    # Determine if national or state-specific
+    target_states = ['ALL'] if not states or len(states) == 0 else states
+    
+    for state in target_states:
+        if is_top_story:
+            # Add/update top story
+            if content_type == 'movie_review':
+                # Only one movie review per state - replace existing
+                db['top_stories'].delete_many({
+                    'state': state,
+                    'content_type': 'movie_review'
+                })
+                
+                db['top_stories'].insert_one({
+                    'article_id': article_id,
+                    'state': state,
+                    'content_type': 'movie_review',
+                    'published_at': published_at,
+                    'created_at': datetime.utcnow()
+                })
+            else:
+                # Regular post - maintain 3 maximum
+                # Count existing posts for this state
+                existing_count = db['top_stories'].count_documents({
+                    'state': state,
+                    'content_type': 'post'
+                })
+                
+                if existing_count >= 3:
+                    # Remove oldest post
+                    oldest = db['top_stories'].find_one(
+                        {'state': state, 'content_type': 'post'},
+                        sort=[('published_at', 1)]
+                    )
+                    if oldest:
+                        db['top_stories'].delete_one({'_id': oldest['_id']})
+                        # Update the removed article's is_top_story flag
+                        db[ARTICLES].update_one(
+                            {'id': oldest['article_id']},
+                            {'$set': {'is_top_story': False}}
+                        )
+                
+                # Add new top story
+                db['top_stories'].insert_one({
+                    'article_id': article_id,
+                    'state': state,
+                    'content_type': 'post',
+                    'published_at': published_at,
+                    'created_at': datetime.utcnow()
+                })
+        else:
+            # Remove from top stories if unchecked
+            db['top_stories'].delete_many({
+                'article_id': article_id,
+                'state': state
+            })
+
+def get_top_stories_for_states(db, states: List[str], limit: int = 4):
+    """
+    Get top stories for given states (3 posts + 1 movie review)
+    
+    Args:
+        states: List of state names (use ['ALL'] for national)
+        limit: Maximum number of posts to return (default 4 = 3 posts + 1 review)
+    
+    Returns:
+        List of article objects
+    """
+    # Get top story IDs from top_stories collection
+    top_story_entries = list(db['top_stories'].find(
+        {'state': {'$in': states}},
+        {'_id': 0, 'article_id': 1}
+    ).sort('published_at', -1).limit(limit))
+    
+    if not top_story_entries:
+        return []
+    
+    article_ids = [entry['article_id'] for entry in top_story_entries]
+    
+    # Fetch full articles
+    articles = list(db[ARTICLES].find(
+        {'id': {'$in': article_ids}},
+        {'_id': 0}
+    ))
+    
+    # Sort by published_at descending
+    articles.sort(key=lambda x: x.get('published_at', datetime.min), reverse=True)
+    
+    return articles
+
+
