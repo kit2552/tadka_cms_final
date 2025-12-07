@@ -1450,8 +1450,8 @@ const CreateArticle = () => {
                     </div>
                   )}
 
-                  {/* Non-POST Type: Title Only (No Image) */}
-                  {formData.content_type !== 'post' && (
+                  {/* Non-POST and Non-MOVIE-REVIEW Type: Title Only (No Image) */}
+                  {formData.content_type !== 'post' && formData.content_type !== 'movie_review' && (
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                         Title *
