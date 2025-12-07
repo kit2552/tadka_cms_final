@@ -1729,7 +1729,7 @@ const CreateArticle = () => {
 
                   {/* MOVIE REVIEW Type Fields */}
                   {formData.content_type === 'movie_review' && (
-                    <>
+                    <div className="space-y-4">
                       {/* YouTube Trailer Link */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
