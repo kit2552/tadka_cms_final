@@ -3530,15 +3530,19 @@ const CreateArticle = () => {
                         onClick={() => handleGallerySelect(gallery)}
                         className="border border-gray-200 rounded-lg p-4 cursor-pointer hover:border-blue-400 hover:shadow-md transition-all duration-200"
                       >
-                        <div className="aspect-w-16 aspect-h-9 mb-3">
+                        <div className="mb-3">
                           {gallery.images && gallery.images.length > 0 ? (
                             <img
                               src={gallery.images[0].url || gallery.images[0]}
                               alt={gallery.title}
-                              className="w-full h-32 object-cover rounded"
+                              className={`w-full object-cover rounded ${
+                                gallery.gallery_type === 'vertical' ? 'h-40' : 'h-32'
+                              }`}
                             />
                           ) : (
-                            <div className="w-full h-32 bg-gray-200 rounded flex items-center justify-center">
+                            <div className={`w-full bg-gray-200 rounded flex items-center justify-center ${
+                              gallery.gallery_type === 'vertical' ? 'h-40' : 'h-32'
+                            }`}>
                               <span className="text-gray-400">No Image</span>
                             </div>
                           )}
