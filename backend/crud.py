@@ -314,7 +314,7 @@ def update_article_cms(db, article_id: int, article: dict):
         "title", "short_title", "content", "summary", "author", 
         "states", "category", "content_type", "image", "image_gallery", 
         "gallery_id", "youtube_url", "tags", "artists", "movie_rating",
-        "is_featured", "is_published", "is_scheduled", "scheduled_publish_at",
+        "is_featured", "is_top_story", "is_published", "is_scheduled", "scheduled_publish_at",
         "seo_title", "seo_description", "seo_keywords",
         "review_quick_verdict", "review_plot_summary", "review_performances",
         "review_what_works", "review_what_doesnt_work", "review_technical_aspects",
