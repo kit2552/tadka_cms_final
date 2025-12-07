@@ -1107,14 +1107,19 @@ const CreateArticle = () => {
           `Your post "${formData.title}" has been ${isEditMode ? 'updated' : 'created'} and ${statusText}.`
         );
       } else {
-        throw new Error(`Failed to ${isEditMode ? 'update' : 'create'} article`);
+        // Handle different error status codes
+        const errorData = await response.json().catch(() => ({}));
+        if (response.status === 409) {
+          throw new Error(errorData.detail || 'An article with this title already exists');
+        }
+        throw new Error(errorData.detail || `Failed to ${isEditMode ? 'update' : 'create'} article`);
       }
     } catch (error) {
       console.error(`Error ${isEditMode ? 'updating' : 'creating'} article:`, error);
       showNotification(
         'error',
         `Error ${isEditMode ? 'Updating' : 'Creating'} Post`,
-        `There was an error ${isEditMode ? 'updating' : 'creating'} your post. Please check your connection and try again.`
+        error.message || `There was an error ${isEditMode ? 'updating' : 'creating'} your post. Please check your connection and try again.`
       );
     } finally {
       setLoading(false);
