@@ -111,6 +111,7 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
 
   return (
     <div 
+      ref={modalRef}
       className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
     >
@@ -125,9 +126,30 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
           onTouchEnd={onTouchEnd}
         >
           
-          {/* Close Button - Square with rounded corners */}
-          <button
-            onClick={onClose}
+          {/* Top Right Controls */}
+          <div className="absolute top-4 right-4 flex items-center space-x-2 z-20">
+            {/* Fullscreen Toggle Button */}
+            <button
+              onClick={toggleFullscreen}
+              className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-md transition-all backdrop-blur-sm"
+              title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            >
+              {isFullscreen ? (
+                // Minimize icon
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M15 9h4.5M15 9V4.5M15 9l5.25-5.25M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25"></path>
+                </svg>
+              ) : (
+                // Fullscreen icon
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                </svg>
+              )}
+            </button>
+
+            {/* Close Button */}
+            <button
+              onClick={onClose}
             className="absolute top-2 right-2 z-70 bg-black bg-opacity-50 text-white hover:bg-opacity-70 transition-all duration-200 rounded-lg p-2"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
