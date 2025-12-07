@@ -219,34 +219,34 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
             onError={handleImageError}
           />
 
-          {/* Previous Button - Left side */}
+          {/* Previous Button - Bottom Left inside image */}
           {images.length > 1 && (
             <button
               onClick={handlePrevClick}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-3 rounded-full transition-all backdrop-blur-sm"
+              className="absolute bottom-8 left-8 z-20 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
               style={{ pointerEvents: 'auto' }}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
           )}
 
-          {/* Image Counter - Bottom Center */}
+          {/* Image Counter - Bottom Center - Rectangular with slight rounded corners */}
           {images.length > 1 && !isFullscreen && (
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 bg-black bg-opacity-70 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm">
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 bg-black bg-opacity-50 text-white px-4 py-2 rounded text-sm font-medium">
               {currentIndex + 1} / {images.length}
             </div>
           )}
 
-          {/* Next Button - Right side */}
+          {/* Next Button - Bottom Right inside image */}
           {images.length > 1 && (
             <button
               onClick={handleNextClick}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-3 rounded-full transition-all backdrop-blur-sm"
+              className="absolute bottom-8 right-8 z-20 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
               style={{ pointerEvents: 'auto' }}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
               </svg>
             </button>
