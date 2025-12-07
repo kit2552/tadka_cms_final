@@ -130,12 +130,13 @@ def get_articles(db, skip: int = 0, limit: int = 100, is_featured: Optional[bool
     return serialize_doc(docs)
 
 def get_articles_by_category_slug(db, category_slug: str, skip: int = 0, limit: int = 100):
-    """Get articles by category slug"""
+    """Get articles by category slug, excluding top stories"""
     docs = list(
         db[ARTICLES]
         .find({
             "category": category_slug,
-            "is_published": True
+            "is_published": True,
+            "is_top_story": {"$ne": True}  # Exclude articles marked as top stories
         })
         .sort("published_at", -1)
         .skip(skip)
