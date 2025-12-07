@@ -2173,7 +2173,7 @@ const CreateArticle = () => {
                         {/* What Doesn't Work */}
                         <div className="mb-4">
                           <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            What Doesn't Work *
+                            What Doesn&apos;t Work *
                           </label>
                           <textarea
                             name="review_what_doesnt_work"
