@@ -529,10 +529,24 @@ async def get_trailers_articles(limit: int = 4, db = Depends(get_db)):
     return articles
 
 @api_router.get("/articles/sections/top-stories")
-async def get_top_stories_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for Top Stories section with regular and national tabs"""
-    top_stories_articles = crud.get_articles_by_category_slug(db, category_slug="top-stories", limit=limit)
-    national_articles = crud.get_articles_by_category_slug(db, category_slug="national-top-stories", limit=limit)
+async def get_top_stories_articles(limit: int = 4, states: str = None, db = Depends(get_db)):
+    """
+    Get articles for Top Stories section with state and national tabs
+    Uses the top_stories collection for efficient querying
+    Returns 3 posts + 1 movie review per tab
+    """
+    # Parse states from query parameter (comma-separated)
+    if states:
+        state_list = [s.strip() for s in states.split(',')]
+    else:
+        # Default states (can be overridden by frontend)
+        state_list = ['Telangana', 'Andhra Pradesh']
+    
+    # Get state top stories
+    top_stories_articles = crud.get_top_stories_for_states(db, states=state_list, limit=limit)
+    
+    # Get national top stories (ALL)
+    national_articles = crud.get_top_stories_for_states(db, states=['ALL'], limit=limit)
     
     return {
         "top_stories": top_stories_articles,
