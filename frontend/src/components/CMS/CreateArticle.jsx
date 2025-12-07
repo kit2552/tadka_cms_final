@@ -1862,7 +1862,7 @@ const CreateArticle = () => {
                             <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                               Main Image
                             </label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg bg-black flex items-center justify-center overflow-hidden" style={{ minHeight: '320px' }}>
+                            <div className="rounded-lg bg-black flex items-center justify-center overflow-hidden" style={{ minHeight: '320px' }}>
                               {formData.youtube_url ? (
                                 <img
                                   src={`https://img.youtube.com/vi/${formData.youtube_url.split('v=')[1]?.split('&')[0] || formData.youtube_url.split('/').pop()}/maxresdefault.jpg`}
