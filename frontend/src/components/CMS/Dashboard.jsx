@@ -4854,7 +4854,12 @@ const Dashboard = () => {
                       )}
                       
                       {/* Pagination for Horizontal Galleries */}
-                      {horizontalGalleries.filter(gallery => selectedHorizontalArtist === '' || gallery.artist === selectedHorizontalArtist).length > 0 && (
+                      {horizontalGalleries.filter(gallery => {
+                        if (filterHorizontalCategory && gallery.category_type !== filterHorizontalCategory) return false;
+                        if (filterHorizontalEntity && gallery.entity_name !== filterHorizontalEntity) return false;
+                        if (selectedHorizontalArtist && gallery.artist !== selectedHorizontalArtist) return false;
+                        return true;
+                      }).length > 0 && (
                         <div className="bg-white px-4 py-3 border-t border-gray-200">
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             {/* Items per page */}
