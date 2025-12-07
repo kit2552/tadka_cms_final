@@ -307,6 +307,15 @@ const CreateArticle = () => {
             setEditorState(EditorState.createWithContent(contentState));
           }
         }
+
+        // Set secondary editor content
+        if (article.content_secondary) {
+          const contentBlock = htmlToDraft(article.content_secondary);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            setEditorStateSecondary(EditorState.createWithContent(contentState));
+          }
+        }
         
       } else {
         throw new Error('Failed to load article');
