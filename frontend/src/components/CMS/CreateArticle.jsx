@@ -1855,16 +1855,16 @@ const CreateArticle = () => {
                             </div>
                           </div>
 
-                          {/* Right Column: YouTube Preview (40% = 2 cols) */}
-                          <div className="md:col-span-2">
+                          {/* Right Column: Main Image (50%) */}
+                          <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                              Trailer Preview
+                              Main Image
                             </label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center" style={{ minHeight: '280px' }}>
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center" style={{ minHeight: '320px' }}>
                               {formData.youtube_url ? (
                                 <iframe
                                   width="100%"
-                                  height="280"
+                                  height="320"
                                   src={`https://www.youtube.com/embed/${formData.youtube_url.split('v=')[1]?.split('&')[0] || formData.youtube_url.split('/').pop()}`}
                                   title="YouTube Trailer Preview"
                                   frameBorder="0"
@@ -1874,9 +1874,6 @@ const CreateArticle = () => {
                                 ></iframe>
                               ) : (
                                 <div className="text-center p-4">
-                                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                  </svg>
                                   <p className="mt-2 text-sm text-gray-500">No trailer URL provided</p>
                                 </div>
                               )}
