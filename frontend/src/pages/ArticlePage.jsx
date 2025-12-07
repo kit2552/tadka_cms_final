@@ -562,7 +562,11 @@ const ArticlePage = () => {
 
                   {/* Secondary Content */}
                   {article.content_secondary && (
-                    <div dangerouslySetInnerHTML={{ __html: article.content_secondary }} />
+                    <div dangerouslySetInnerHTML={{ 
+                      __html: article.content_secondary
+                        .replace(/^\s*<p[^>]*>\s*<br\s*\/?>\s*<\/p>/gi, '') // Remove leading empty paragraphs
+                        .trim()
+                    }} />
                   )}
                 </div>
               </div>
