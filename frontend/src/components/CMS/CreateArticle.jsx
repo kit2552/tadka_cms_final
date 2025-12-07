@@ -1862,21 +1862,21 @@ const CreateArticle = () => {
                             <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                               Main Image
                             </label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center" style={{ minHeight: '320px' }}>
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg bg-black flex items-center justify-center overflow-hidden" style={{ minHeight: '320px' }}>
                               {formData.youtube_url ? (
-                                <iframe
-                                  width="100%"
-                                  height="320"
-                                  src={`https://www.youtube.com/embed/${formData.youtube_url.split('v=')[1]?.split('&')[0] || formData.youtube_url.split('/').pop()}`}
-                                  title="YouTube Trailer Preview"
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                  allowFullScreen
-                                  className="rounded"
-                                ></iframe>
+                                <img
+                                  src={`https://img.youtube.com/vi/${formData.youtube_url.split('v=')[1]?.split('&')[0] || formData.youtube_url.split('/').pop()}/maxresdefault.jpg`}
+                                  alt="YouTube Thumbnail"
+                                  className="max-w-full max-h-full object-contain"
+                                  style={{ maxHeight: '320px' }}
+                                  onError={(e) => {
+                                    // Fallback to hqdefault if maxresdefault doesn't exist
+                                    e.target.src = `https://img.youtube.com/vi/${formData.youtube_url.split('v=')[1]?.split('&')[0] || formData.youtube_url.split('/').pop()}/hqdefault.jpg`;
+                                  }}
+                                />
                               ) : (
                                 <div className="text-center p-4">
-                                  <p className="mt-2 text-sm text-gray-500">No trailer URL provided</p>
+                                  <p className="mt-2 text-sm text-gray-400">No trailer URL provided</p>
                                 </div>
                               )}
                             </div>
