@@ -13,6 +13,7 @@ const ArticleImage = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
+  const [imageOrientation, setImageOrientation] = useState('horizontal');
 
   // Show placeholder if no src, image failed to load, or still loading
   if (!src || imageError) {
@@ -26,8 +27,25 @@ const ArticleImage = ({
     );
   }
 
+  const handleImageLoad = (e) => {
+    const img = e.target;
+    // Detect if image is vertical (portrait)
+    if (img.naturalHeight > img.naturalWidth) {
+      setImageOrientation('vertical');
+    }
+    setImageLoading(false);
+  };
+
+  // For photoshoots, use object-contain with black background for vertical images
+  const isPhotoshoot = contentType === 'photoshoots';
+  const isVertical = imageOrientation === 'vertical';
+  const shouldUseContain = isPhotoshoot && isVertical;
+  
+  const containerBgClass = shouldUseContain ? 'bg-black' : '';
+  const imageObjectFit = shouldUseContain ? 'object-contain' : imgClassName;
+
   return (
-    <div className={`${width} ${height} ${className}`}>
+    <div className={`${width} ${height} ${className} ${containerBgClass}`}>
       {imageLoading && (
         <ArticleImagePlaceholder 
           contentType={contentType}
@@ -39,8 +57,8 @@ const ArticleImage = ({
       <img
         src={src}
         alt={alt}
-        className={`${width} ${height} ${imgClassName} ${imageLoading ? 'hidden' : 'block'}`}
-        onLoad={() => setImageLoading(false)}
+        className={`${width} ${height} ${imageObjectFit} ${imageLoading ? 'hidden' : 'block'}`}
+        onLoad={handleImageLoad}
         onError={() => {
           setImageError(true);
           setImageLoading(false);
