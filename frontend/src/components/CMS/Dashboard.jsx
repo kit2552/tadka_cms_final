@@ -4420,11 +4420,14 @@ const Dashboard = () => {
                                     className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                   >
                                     <option value="">All {filterCategory}</option>
-                                    {filterEntities.map(entity => (
-                                      <option key={entity} value={entity}>
-                                        {entity}
-                                      </option>
-                                    ))}
+                                    {filterEntities.map(entity => {
+                                      const entityName = typeof entity === 'string' ? entity : entity.name;
+                                      return (
+                                        <option key={entityName} value={entityName}>
+                                          {entityName}
+                                        </option>
+                                      );
+                                    })}
                                   </select>
                                 </div>
                               )}
