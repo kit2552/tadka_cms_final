@@ -95,6 +95,7 @@ const CreateArticle = () => {
     review_runtime: '',
     movie_language: '',
     censor_rating: '',
+    release_date: '',
     platform: '',
     ott_platform: '',
     // Comment settings
