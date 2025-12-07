@@ -141,7 +141,8 @@ class ArticleUpdate(BaseModel):
     censor_rating: Optional[str] = None
     release_date: Optional[str] = None
     platform: Optional[str] = None
-    ott_platform: Optional[str] = None
+    ott_content_type: Optional[str] = None
+    ott_platforms: Optional[str] = None  # JSON array
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
