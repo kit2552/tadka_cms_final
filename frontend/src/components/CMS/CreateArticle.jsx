@@ -110,6 +110,10 @@ const CreateArticle = () => {
   const [categorySearchQuery, setCategorySearchQuery] = useState('');
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState(''); // Changed to single artist (string)
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [tempGenre, setTempGenre] = useState('');
+  const [tempLanguage, setTempLanguage] = useState('');
   const [availableArtists, setAvailableArtists] = useState([]); // Available artists from API
   const [showArtistModal, setShowArtistModal] = useState(false); // New state for artist modal
   const [newArtistName, setNewArtistName] = useState(''); // New state for new artist name
