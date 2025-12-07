@@ -28,7 +28,7 @@ export const generateArticleSchema = (article) => {
       "name": "Tadka News",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://news-cms-pro.preview.emergentagent.com/logo.png"
+        "url": "https://gallery-carousel.preview.emergentagent.com/logo.png"
       }
     },
     ...(article.fact_checked_by && {
