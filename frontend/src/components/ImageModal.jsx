@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const modalRef = useRef(null);
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
