@@ -348,6 +348,12 @@ const Dashboard = () => {
   const [selectedHorizontalArtist, setSelectedHorizontalArtist] = useState('');
   const [selectedHorizontalName, setSelectedHorizontalName] = useState('');
   
+  // Vertical gallery filters
+  const [filterCategory, setFilterCategory] = useState('');
+  const [filterEntity, setFilterEntity] = useState('');
+  const [filterTadkaPics, setFilterTadkaPics] = useState(false);
+  const [filterEntities, setFilterEntities] = useState([]);
+  
   // Gallery form states
   const [galleryForm, setGalleryForm] = useState({
     title: '',
