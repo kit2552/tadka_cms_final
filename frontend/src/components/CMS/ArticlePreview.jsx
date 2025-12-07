@@ -36,11 +36,10 @@ const ArticlePreview = () => {
         const contentType = data.content_type;
         
         let redirectUrl;
-        if (contentType === 'photo') {
-          redirectUrl = `/gallery-post/${id}?preview=true`;
-        } else if (contentType === 'video' && data.youtube_url) {
+        if (contentType === 'video' && data.youtube_url) {
           redirectUrl = `/video/${id}?preview=true`;
         } else {
+          // All content types including photo galleries use the article template
           redirectUrl = `/article/${id}/${slug}?preview=true`;
         }
         
