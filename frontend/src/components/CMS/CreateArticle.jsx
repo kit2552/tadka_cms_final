@@ -2744,14 +2744,10 @@ const CreateArticle = () => {
                         editorClassName="editor-class"
                         toolbarClassName="toolbar-class"
                         toolbar={{
-                          options: ['inline', 'blockType', 'list', 'textAlign', 'link', 'image', 'history'],
+                          options: ['inline', 'list', 'textAlign', 'link', 'image', 'history'],
                           inline: {
                             inDropdown: false,
                             options: ['bold', 'italic', 'underline', 'strikethrough']
-                          },
-                          blockType: {
-                            inDropdown: true,
-                            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote']
                           },
                           list: {
                             inDropdown: false,
@@ -2823,14 +2819,10 @@ const CreateArticle = () => {
                         editorClassName="editor-class"
                         toolbarClassName="toolbar-class"
                         toolbar={{
-                          options: ['inline', 'blockType', 'list', 'textAlign', 'link', 'image', 'history'],
+                          options: ['inline', 'list', 'textAlign', 'link', 'image', 'history'],
                           inline: {
                             inDropdown: false,
                             options: ['bold', 'italic', 'underline', 'strikethrough']
-                          },
-                          blockType: {
-                            inDropdown: true,
-                            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote']
                           },
                           list: {
                             inDropdown: false,
