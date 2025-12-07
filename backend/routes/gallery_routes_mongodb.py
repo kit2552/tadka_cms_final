@@ -144,12 +144,14 @@ async def update_gallery(gallery_id: str, gallery_update: GalleryUpdate, db = De
 
 @router.delete("/galleries/{gallery_id}")
 async def delete_gallery(gallery_id: str, db = Depends(get_db)):
-    """Delete a gallery"""
+    """Delete a gallery and its images from S3"""
+    from server import s3_service
     
     gallery = crud.get_gallery_by_gallery_id(db, gallery_id)
     if not gallery:
         raise HTTPException(status_code=404, detail="Gallery not found")
     
-    crud.delete_gallery(db, gallery_id)
+    # Delete gallery and its S3 images
+    crud.delete_gallery(db, gallery_id, s3_service)
     
     return {"message": "Gallery deleted successfully"}
