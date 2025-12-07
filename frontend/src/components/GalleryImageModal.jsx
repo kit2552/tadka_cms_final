@@ -234,7 +234,7 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
           )}
 
           {/* Image Counter - Bottom Center */}
-          {images.length > 1 && !isFullscreen && (
+          {images.length > 1 && (
             <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 bg-black bg-opacity-50 text-white px-4 py-2 rounded text-sm font-medium">
               {currentIndex + 1} / {images.length}
             </div>
