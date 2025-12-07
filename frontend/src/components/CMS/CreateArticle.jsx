@@ -1397,9 +1397,14 @@ const CreateArticle = () => {
                             <span className="text-sm text-gray-700 font-medium">Mark as Top Story</span>
                           </label>
                           <p className="text-xs text-gray-500 mt-1 ml-6">
-                            {formData.states && JSON.parse(formData.states).length === 0 || formData.states === '[]' 
-                              ? 'Will appear in National Top Stories' 
-                              : 'Will appear in State Top Stories'}
+                            {(() => {
+                              try {
+                                const states = formData.states ? JSON.parse(formData.states) : [];
+                                return states.length === 0 ? 'Will appear in National Top Stories' : 'Will appear in State Top Stories';
+                              } catch {
+                                return 'Will appear in State Top Stories';
+                              }
+                            })()}
                           </p>
                         </div>
 
