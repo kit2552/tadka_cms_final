@@ -369,6 +369,15 @@ const CreateArticle = () => {
               setEditorState(EditorState.createWithContent(contentState));
             }
           }
+
+          // Restore secondary editor content
+          if (draft.formData.content_secondary) {
+            const contentBlock = htmlToDraft(draft.formData.content_secondary);
+            if (contentBlock) {
+              const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+              setEditorStateSecondary(EditorState.createWithContent(contentState));
+            }
+          }
           
           // Clear the draft from localStorage after restoring
           localStorage.removeItem('articleDraft');
