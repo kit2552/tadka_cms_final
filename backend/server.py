@@ -1571,6 +1571,7 @@ app.include_router(comments_router)  # Add comments routes
 app.include_router(ott_platforms_router)  # Add OTT platforms routes
 app.include_router(gallery_entities_router)  # Add gallery entities routes
 app.include_router(gallery_image_router)  # Add gallery image routes
+app.include_router(ad_settings_router, prefix="/api")  # Add ad settings routes
 
 app.add_middleware(
     CORSMiddleware,
