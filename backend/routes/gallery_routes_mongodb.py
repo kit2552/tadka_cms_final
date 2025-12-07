@@ -113,7 +113,8 @@ async def get_gallery_by_id(id: int, db = Depends(get_db)):
 
 @router.put("/galleries/{gallery_id}", response_model=GalleryResponse)
 async def update_gallery(gallery_id: str, gallery_update: GalleryUpdate, db = Depends(get_db)):
-    """Update a gallery"""
+    """Update a gallery and delete removed images from S3"""
+    from server import s3_service
     
     gallery = crud.get_gallery_by_gallery_id(db, gallery_id)
     if not gallery:
@@ -138,7 +139,8 @@ async def update_gallery(gallery_id: str, gallery_update: GalleryUpdate, db = De
     if gallery_update.tadka_pics_enabled is not None:
         update_data["tadka_pics_enabled"] = gallery_update.tadka_pics_enabled
     
-    updated_gallery = crud.update_gallery(db, gallery_id, update_data)
+    # Update gallery and delete removed images from S3
+    updated_gallery = crud.update_gallery(db, gallery_id, update_data, s3_service)
     
     return GalleryResponse(**updated_gallery)
 
