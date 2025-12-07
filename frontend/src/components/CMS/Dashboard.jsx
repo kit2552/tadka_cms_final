@@ -4,6 +4,7 @@ import CustomModal from './CustomModal';
 import TopicsManagement from './TopicsManagement';
 import TopicSelector from './TopicSelector';
 import RelatedVideosManagement from './RelatedVideosManagement';
+import AdManagement from './AdManagement';
 import { getStateNames, getStateNameByCode } from '../../utils/statesConfig';
 
 // Topic Management Modal Component
