@@ -227,7 +227,9 @@ const CreateArticle = () => {
           ott_platform: article.ott_platform || '',
           // Comment settings
           comments_enabled: article.comments_enabled !== undefined ? article.comments_enabled : true,
-          review_comments_enabled: article.review_comments_enabled !== undefined ? article.review_comments_enabled : true
+          review_comments_enabled: article.review_comments_enabled !== undefined ? article.review_comments_enabled : true,
+          // Top Story flag
+          is_top_story: article.is_top_story || false
         });
         
         // Set selected states (multiple selection)
