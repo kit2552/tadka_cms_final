@@ -290,6 +290,7 @@ class ArticleListResponse(BaseModel):
     artists: Optional[str] = None  # Add artists field
     states: Optional[str] = None  # Add states field
     gallery: Optional[GalleryInfo] = None  # Add gallery field
+    gallery_id: Optional[int] = None  # Add gallery_id field
     is_published: bool
     is_scheduled: bool = False
     scheduled_publish_at: Optional[datetime] = None
