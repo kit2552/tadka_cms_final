@@ -4563,7 +4563,7 @@ const Dashboard = () => {
                           </div>
                           <div className="flex gap-2">
                             <button
-                              onClick={handleCreateHorizontalGallery}
+                              onClick={() => handleCreateGallery('horizontal')}
                               className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                             >
                               + Create Gallery
