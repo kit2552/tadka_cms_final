@@ -13,7 +13,7 @@ import aiofiles
 
 from database import get_db, db
 import schemas, crud
-from models.mongodb_collections import create_indexes
+from models.mongodb_collections import create_indexes, GALLERIES
 from routes.auth_routes import router as auth_router
 from routes.system_settings_routes import router as system_settings_router
 from routes.topics_routes_mongodb import router as topics_router
