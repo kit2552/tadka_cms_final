@@ -234,6 +234,7 @@ const Dashboard = () => {
   const initialTab = searchParams.get('tab') || 'posts';
   
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [showMoreDropdown, setShowMoreDropdown] = useState(false);
   const [articles, setArticles] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
