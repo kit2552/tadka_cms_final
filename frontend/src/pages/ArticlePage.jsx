@@ -19,27 +19,30 @@ const ArticlePage = () => {
   const [userRating, setUserRating] = useState(null);
   const [reviewCount, setReviewCount] = useState(0);
 
-  // Update page title and meta tags for SEO
+  // Update page title, meta tags, and schema markup for SEO/AEO
   useEffect(() => {
     if (article) {
       // Update page title
       document.title = `${article.title} | Tadka News`;
       
-      // Update meta description
+      // Update meta description (prioritize AEO description)
       const metaDescription = document.querySelector('meta[name="description"]');
+      const description = article.aeo_description || article.seo_description || article.summary || article.content?.substring(0, 160) || '';
       if (metaDescription) {
-        metaDescription.setAttribute('content', article.summary || article.content?.substring(0, 160) || '');
+        metaDescription.setAttribute('content', description);
       } else {
         const newMetaDescription = document.createElement('meta');
         newMetaDescription.name = 'description';
-        newMetaDescription.content = article.summary || article.content?.substring(0, 160) || '';
+        newMetaDescription.content = description;
         document.head.appendChild(newMetaDescription);
       }
 
-      // Update meta keywords
+      // Update meta keywords (combine SEO and AEO keywords)
       const metaKeywords = document.querySelector('meta[name="keywords"]');
       const articleTags = Array.isArray(article.tags) ? article.tags.join(', ') : '';
-      const keywords = `${article.title}, ${article.category || 'news'}, Tadka News, ${articleTags}`;
+      const aeoKeywords = article.aeo_keywords || '';
+      const seoKeywords = article.seo_keywords || '';
+      const keywords = `${article.title}, ${article.category || 'news'}, Tadka News, ${articleTags}, ${aeoKeywords}, ${seoKeywords}`.replace(/,\s*,/g, ',');
       if (metaKeywords) {
         metaKeywords.setAttribute('content', keywords);
       } else {
@@ -48,11 +51,19 @@ const ArticlePage = () => {
         newMetaKeywords.content = keywords;
         document.head.appendChild(newMetaKeywords);
       }
+
+      // Generate and insert Schema.org structured data
+      const schemas = generateArticleSchema(article);
+      insertSchemaMarkup(schemas);
+      
+      console.log('📊 Schema markup inserted:', schemas.length, 'schemas');
     }
 
     return () => {
-      // Reset title when component unmounts
+      // Reset title and remove schema markup when component unmounts
       document.title = 'Tadka News';
+      const existingScripts = document.querySelectorAll('script[type="application/ld+json"]');
+      existingScripts.forEach(script => script.remove());
     };
   }, [article]);
 
