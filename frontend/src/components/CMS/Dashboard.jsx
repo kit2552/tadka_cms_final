@@ -2012,7 +2012,7 @@ const Dashboard = () => {
       // Create folder path for images with h/v subfolder
       const entityFolderName = selectedEntity.toLowerCase().replace(/ /g, '_').replace(/-/g, '_');
       const orientationFolder = galleryType === 'horizontal' ? 'h' : 'v';
-      const folderPath = `${galleryCategory.toLowerCase()}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
+      const folderPath = `${galleryCategory}/${entityFolderName}/${orientationFolder}/${nextGalleryNumber}`;
       
       // Prepare image data - only send metadata, not base64 data
       const imageMetadata = galleryForm.images.map(img => ({
