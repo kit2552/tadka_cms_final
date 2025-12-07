@@ -4672,20 +4672,62 @@ const Dashboard = () => {
                           <div className="flex items-center gap-4">
                             {/* Filters */}
                             <div className="flex flex-wrap gap-3">
+                              {/* Category Filter */}
                               <div>
                                 <select
-                                  value={selectedHorizontalArtist || ''}
-                                  onChange={(e) => setSelectedHorizontalArtist(e.target.value)}
+                                  value={filterHorizontalCategory}
+                                  onChange={async (e) => {
+                                    const category = e.target.value;
+                                    setFilterHorizontalCategory(category);
+                                    setFilterHorizontalEntity('');
+                                    
+                                    if (category) {
+                                      try {
+                                        const response = await fetch(
+                                          `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${category.toLowerCase()}`
+                                        );
+                                        if (response.ok) {
+                                          const data = await response.json();
+                                          setFilterHorizontalEntities(data.entities || []);
+                                        }
+                                      } catch (error) {
+                                        console.error('Error fetching filter entities:', error);
+                                        setFilterHorizontalEntities([]);
+                                      }
+                                    } else {
+                                      setFilterHorizontalEntities([]);
+                                    }
+                                  }}
                                   className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 >
-                                  <option value="">All Artists</option>
-                                  {availableArtists.map(artist => (
-                                    <option key={artist} value={artist}>
-                                      {artist}
-                                    </option>
-                                  ))}
+                                  <option value="">All Categories</option>
+                                  <option value="Actress">Actress</option>
+                                  <option value="Actor">Actor</option>
+                                  <option value="Events">Events</option>
+                                  <option value="Sports">Sports</option>
                                 </select>
                               </div>
+                              
+                              {/* Entity Filter (shows when category selected) */}
+                              {filterHorizontalCategory && (
+                                <div>
+                                  <select
+                                    value={filterHorizontalEntity}
+                                    onChange={(e) => setFilterHorizontalEntity(e.target.value)}
+                                    className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                  >
+                                    <option value="">All {filterHorizontalCategory}</option>
+                                    {filterHorizontalEntities.map(entity => {
+                                      const entityName = typeof entity === 'string' ? entity : entity.name;
+                                      return (
+                                        <option key={entityName} value={entityName}>
+                                          {entityName}
+                                        </option>
+                                      );
+                                    })}
+                                  </select>
+                                </div>
+                              )}
                             </div>
                           </div>
                           <div className="flex gap-2">
