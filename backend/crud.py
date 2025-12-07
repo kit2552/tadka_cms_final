@@ -332,6 +332,7 @@ def update_article_cms(db, article_id: int, article: dict):
         "is_featured", "is_top_story", "is_published", "is_scheduled", "scheduled_publish_at",
         "seo_title", "seo_description", "seo_keywords",
         "aeo_title", "aeo_description", "aeo_keywords", "faqs",
+        "author_credentials", "sources", "fact_checked_by", "last_reviewed_date",
         "review_quick_verdict", "review_plot_summary", "review_performances",
         "review_what_works", "review_what_doesnt_work", "review_technical_aspects",
         "review_final_verdict", "review_cast", "review_director", "review_producer",
