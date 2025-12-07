@@ -562,6 +562,38 @@ const CreateArticle = () => {
     }));
   };
 
+  // Genre handlers
+  const handleAddGenre = () => {
+    if (tempGenre && !selectedGenres.includes(tempGenre)) {
+      const newGenres = [...selectedGenres, tempGenre];
+      setSelectedGenres(newGenres);
+      setFormData(prev => ({ ...prev, review_genre: JSON.stringify(newGenres) }));
+      setTempGenre('');
+    }
+  };
+
+  const handleRemoveGenre = (genreToRemove) => {
+    const newGenres = selectedGenres.filter(g => g !== genreToRemove);
+    setSelectedGenres(newGenres);
+    setFormData(prev => ({ ...prev, review_genre: JSON.stringify(newGenres) }));
+  };
+
+  // Language handlers
+  const handleAddLanguage = () => {
+    if (tempLanguage && !selectedLanguages.includes(tempLanguage)) {
+      const newLanguages = [...selectedLanguages, tempLanguage];
+      setSelectedLanguages(newLanguages);
+      setFormData(prev => ({ ...prev, movie_language: JSON.stringify(newLanguages) }));
+      setTempLanguage('');
+    }
+  };
+
+  const handleRemoveLanguage = (languageToRemove) => {
+    const newLanguages = selectedLanguages.filter(l => l !== languageToRemove);
+    setSelectedLanguages(newLanguages);
+    setFormData(prev => ({ ...prev, movie_language: JSON.stringify(newLanguages) }));
+  };
+
   const handleAddState = () => {
     // Don't add if already selected or if trying to add 'all' when other states exist
     if (selectedState === 'all') {
