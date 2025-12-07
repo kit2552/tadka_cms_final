@@ -424,6 +424,15 @@ const CreateArticle = () => {
     }));
   };
 
+  const onEditorStateChangeSecondary = (editorState) => {
+    setEditorStateSecondary(editorState);
+    const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    setFormData(prev => ({
+      ...prev,
+      content_secondary: htmlContent
+    }));
+  };
+
   const handleAddState = () => {
     // Don't add if already selected or if trying to add 'all' when other states exist
     if (selectedState === 'all') {
