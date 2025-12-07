@@ -147,6 +147,9 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
               )}
             </button>
 
+            {/* Close Button */}
+            <button
+              onClick={onClose}
               className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-md transition-all backdrop-blur-sm"
               title="Close"
             >
