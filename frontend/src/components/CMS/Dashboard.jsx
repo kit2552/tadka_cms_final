@@ -2773,8 +2773,13 @@ const Dashboard = () => {
                         {/* Post Column */}
                         <div className="col-span-5">
                           <div className="text-left">
-                            <h3 className="text-sm font-medium text-gray-900 hover:text-blue-600 mb-1 text-left">
-                              <Link to={`/cms/edit/${article.id}`}>
+                            <h3 className={`text-sm font-medium hover:text-blue-600 mb-1 text-left ${
+                              article.is_top_story ? 'font-bold text-blue-700' : 'text-gray-900'
+                            }`}>
+                              <Link to={`/cms/edit/${article.id}`} className="flex items-center gap-1">
+                                {article.is_top_story && (
+                                  <span className="text-yellow-500" title="Top Story">⭐</span>
+                                )}
                                 {article.title}
                               </Link>
                             </h3>
