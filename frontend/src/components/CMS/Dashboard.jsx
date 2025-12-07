@@ -4483,7 +4483,7 @@ const Dashboard = () => {
                           Start by creating your first vertical image gallery.
                         </p>
                         <button
-                          onClick={handleCreateGallery}
+                          onClick={() => handleCreateGallery('vertical')}
                           className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                         >
                           + Create First Gallery
