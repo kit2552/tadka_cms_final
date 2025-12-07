@@ -58,6 +58,7 @@ const CreateArticle = () => {
     review_final_verdict: '',
     review_cast: '',
     review_director: '',
+    review_producer: '',
     review_genre: '',
     review_runtime: '',
     movie_language: '',
