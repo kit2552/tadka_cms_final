@@ -754,8 +754,17 @@ async def create_cms_article(article: schemas.ArticleCreate, db = Depends(get_db
     seo_description = article.seo_description or article.summary[:155]
     
     # Create article in database
-    db_article = crud.create_article_cms(db, article, slug, seo_title, seo_description)
-    return db_article
+    try:
+        db_article = crud.create_article_cms(db, article, slug, seo_title, seo_description)
+        return db_article
+    except Exception as e:
+        # Handle duplicate slug error
+        if "duplicate key error" in str(e).lower() and "slug" in str(e).lower():
+            raise HTTPException(
+                status_code=409,
+                detail="An article with this title already exists. Please use a different title."
+            )
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/cms/articles/{article_id}", response_model=schemas.ArticleResponse)
 async def get_cms_article(article_id: int, db = Depends(get_db)):
