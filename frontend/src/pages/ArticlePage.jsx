@@ -5,6 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { extractArticleIdFromURL, createSEOArticleURL } from '../utils/seoUtils';
 import { PlaceholderImage } from '../utils/imageUtils';
 import CommentSection from '../components/CommentSection';
+import { generateArticleSchema, insertSchemaMarkup } from '../utils/schemaMarkup';
 
 const ArticlePage = () => {
   const { articleId, slug } = useParams();
