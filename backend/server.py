@@ -898,7 +898,16 @@ async def get_article(request: Request, article_id: int, db = Depends(get_db)):
 
 @api_router.post("/articles", response_model=schemas.ArticleResponse)
 async def create_article(article: schemas.ArticleCreate, db = Depends(get_db)):
-    return crud.create_article(db=db, article=article)
+    try:
+        return crud.create_article(db=db, article=article)
+    except Exception as e:
+        # Handle duplicate slug error
+        if "duplicate key error" in str(e).lower() and "slug" in str(e).lower():
+            raise HTTPException(
+                status_code=409,
+                detail="An article with this title already exists. Please use a different title."
+            )
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Movie Review endpoints
 @api_router.get("/movie-reviews", response_model=List[schemas.MovieReviewListResponse])
