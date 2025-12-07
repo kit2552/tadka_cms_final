@@ -274,6 +274,7 @@ const CreateArticle = () => {
           review_runtime: article.review_runtime || '',
           movie_language: article.movie_language || '',
           censor_rating: article.censor_rating || '',
+          release_date: article.release_date || '',
           platform: article.platform || '',
           ott_platform: article.ott_platform || '',
           // Comment settings
