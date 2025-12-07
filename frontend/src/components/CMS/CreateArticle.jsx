@@ -875,44 +875,6 @@ const CreateArticle = () => {
     }
   };
 
-  // Fetch OTT platforms
-  const fetchOttPlatforms = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/ott-platforms`);
-      if (response.ok) {
-        const data = await response.json();
-        setOttPlatforms(data.platforms || []);
-      }
-    } catch (error) {
-      console.error('Error fetching OTT platforms:', error);
-    }
-  };
-
-  // Handle adding new OTT platform
-  const handleAddOttPlatform = async () => {
-    if (!newOttPlatformName.trim()) return;
-    
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/ott-platforms`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newOttPlatformName.trim() })
-      });
-      
-      if (response.ok) {
-        await fetchOttPlatforms();
-        setNewOttPlatformName('');
-        showNotification('success', 'Platform Added', 'OTT platform added successfully');
-      } else {
-        const data = await response.json();
-        showNotification('error', 'Error', data.detail || 'Failed to add platform');
-      }
-    } catch (error) {
-      console.error('Error adding OTT platform:', error);
-      showNotification('error', 'Error', 'Failed to add platform');
-    }
-  };
-
   // Gallery Category handlers
   const fetchGalleryEntities = async (categoryType) => {
     if (!categoryType) return;
