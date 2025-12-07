@@ -225,6 +225,11 @@ const CreateArticle = () => {
           aeo_description: article.aeo_description || '',
           aeo_keywords: article.aeo_keywords || '',
           faqs: article.faqs ? JSON.parse(article.faqs) : [],
+          // E-E-A-T fields
+          author_credentials: article.author_credentials || '',
+          sources: article.sources || '',
+          fact_checked_by: article.fact_checked_by || '',
+          last_reviewed_date: article.last_reviewed_date || '',
           // Movie Review fields
           review_quick_verdict: article.review_quick_verdict || '',
           review_plot_summary: article.review_plot_summary || '',
