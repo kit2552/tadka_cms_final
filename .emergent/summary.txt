@@ -1,73 +1,81 @@
 <analysis>**original_problem_statement:**
-The user's initial request was to add a Language dropdown for the Movie Review content type. This evolved into a series of major feature implementations and UI/UX refinements across the application.
+The initial problem was to fix a critical issue where the Image Gallery system was believed to be writing to a legacy SQLite database instead of MongoDB. However, investigation revealed this was incorrect; the actual problem was that the frontend was saving images as base64 data strings directly into MongoDB instead of uploading them to S3.
 
-Key features requested and implemented during this session include:
-- A complete User Review system to replace the standard comment section for movie reviews, including a 5-star rating system, average rating calculation, and IP-based submission limits (one review per IP per movie).
-- A Platform selector for movie reviews (e.g., Theater, OTT), with a dynamic, manageable list of OTT platforms.
-- A comprehensive and complex Image Gallery management system with a nested folder structure based on gallery type and category (e.g., ). This includes:
-    - Gallery Type (Horizontal/Vertical).
-    - Gallery Category (Actor, Actress, Event, etc.).
-    - A manageable list of entities (e.g., actors, events) for each category.
-    - A Tadka Pics feature to highlight specific vertical galleries on the homepage.
-    - Sequential image renaming (1.jpg, 2.jpg...) within gallery folders, including re-sequencing after deletion.
-- Numerous UI/UX enhancements for the article page, homepage movie cards, and the CMS gallery creation form, including redesigning layouts, aligning elements, removing backgrounds, and improving image previews.
-
-The final request from the user was to investigate why uploaded gallery images and their metadata were not being stored correctly, leading to the discovery of a critical database issue.
+This led to a series of tasks:
+1.  Fix the image upload process to use a dedicated S3 endpoint with a specific folder structure.
+2.  Implement the Tadka Pics section on the homepage, fetching live data from the database and adding a gallery slider functionality.
+3.  Completely re-architect the Top Stories feature from a simple category-based system to a dynamic one with a checkbox in the CMS and backend logic to automatically manage a 3 posts + 1 movie review rule.
+4.  Perform extensive UI/UX enhancements and layout refactoring on the CMS Create Article and Movie Review forms, including adding new fields, reorganizing sections into two-column layouts, and restyling components.
+5.  Add a fullscreen viewing mode to the image gallery slider modal.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The application is a full-stack news portal (React/FastAPI/MongoDB). It has a rich set of features for creating articles, movie reviews, and image galleries. Most features, including articles, comments, and movie review metadata, correctly use the MongoDB database. However, the entire newly-developed Image Gallery system is fundamentally broken, as it is incorrectly configured to write all its data to a legacy SQLite database () instead of MongoDB, causing all gallery data to be lost or inaccessible to the rest of the application. The frontend UI for all these features, including the complex gallery management forms, has been built.
+The application is a full-stack news portal (React/FastAPI/MongoDB). The critical bug with image uploads has been fixed; gallery images are now correctly uploaded to S3, and their paths are stored in MongoDB. The Tadka Pics section on the homepage is functional and displays live data. The Top Stories feature has been completely overhauled with a new dynamic management system on the backend. The CMS form for creating articles and movie reviews has been significantly refactored with new layouts and fields. However, the last feature implementation—adding a fullscreen mode to the image modal—introduced a critical syntax error, breaking the image slider functionality across the site.
 
 **Last working item**:
-- **Last item agent was working:** The agent was debugging why the new Image Gallery fields (like Gallery Type, Category, Entity) were not being saved or pre-populated when editing a gallery. After extensive debugging, the agent discovered that the gallery creation and update functions were writing to a SQLite database () instead of the intended MongoDB database. The user confirmed this suspicion and asked for a fix.
+- **Last item agent was working:** Implementing a fullscreen toggle feature in the  component. This involved adding a new state for fullscreen mode, functions to toggle it, and new UI elements (a fullscreen button).
 - **Status:** BLOCKED
 - **Agent Testing Done:** N
-- **Which testing method agent to use?** After the fix, use the backend testing agent to verify all gallery CRUD operations against MongoDB and the frontend testing agent to confirm the entire gallery creation/editing flow in the CMS dashboard.
+- **Which testing method agent to use?** Frontend testing agent. After the syntax error is resolved, the agent should test the entire  functionality, including opening the modal, navigating between images, using the new fullscreen button, ensuring the entity name is hidden in fullscreen, and closing the modal from both normal and fullscreen views.
 - **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
-- **Issue 1 (P0 - CRITICAL BLOCKER):** Gallery system writes to SQLite instead of MongoDB.
-  
+- **Issue 1 (P0): JSX Syntax Error in ImageModal.jsx**
+
   **Issues Detail:**
-  - **Issue 1:** The root of all recent gallery-related bugs (data not saving, fields not pre-populating) is that the gallery API routes are interacting with an old SQLite database () instead of MongoDB.
-     - **Attempted fixes:** None. The issue was only identified at the very end of the session.
+  - **Issue 1:**
+     - **Description:** The  component has a fatal JSX syntax error (). This was introduced while adding the UI elements for the new fullscreen feature. The error prevents the frontend from compiling correctly and breaks the image slider modal everywhere it's used (e.g., Tadka Pics).
+     - **Attempted fixes:** The agent attempted to fix the issue by re-arranging  and  tags but was unsuccessful before the session ended. The component is in a broken state.
      - **Next debug checklist:**
-        1.  **Inspect Backend Routes:** Analyze . Find all database operations and ensure they use the  object injected by . It is highly likely they are using a separate, incorrect database connection method.
-        2.  **Inspect CRUD Functions:** Examine the gallery-related functions in  (e.g., , , ). Verify they are exclusively using the passed-in MongoDB  object for all queries.
-        3.  **Code Search:** Perform a global search for  and  to identify and remove all legacy database connection logic related to galleries.
-        4.  **Refactor:** Modify all identified code to use the standard MongoDB  pattern, ensuring consistency with the rest of the application.
-     - **Why fix this issue and what will be achieved with the fix?** This will fix the entire gallery feature, allowing gallery metadata and image paths to be correctly saved, retrieved, and updated in MongoDB. It is a blocker for any further work on galleries.
+        1.  View the file .
+        2.  Carefully examine the JSX structure around lines 150-170, where the fullscreen and close buttons were added.
+        3.  Identify the unclosed  or improperly nested elements.
+        4.  Fix the JSX syntax.
+        5.  Restart the frontend and ensure it compiles without errors.
+     - **Why fix this issue and what will be achieved with the fix?** This is a critical, blocking issue. Fixing it will restore the image slider functionality across the application and unblock the completion of the fullscreen feature.
      - **Status:** IN PROGRESS
      - **Is recurring issue?** N
-     - **Should Test frontend/backend/both after fix?** Both
-     - **Blocked on other issue:** None. This is the primary blocker.
+     - **Should Test frontend/backend/both after fix?** Frontend
+     - **Blocked on other issue:** None. This is the blocker.
 
 **In progress Task List**:
-- None.
+- **Task 1 (P0): Complete Fullscreen Modal Feature**
+   - **Where to resume:** Resume in  after fixing the JSX syntax error (Issue 1).
+   - **What will be achieved with this?** Users will be able to click a fullscreen icon in the image slider to view the image in an immersive, fullscreen mode without the browser UI or image name. A minimize icon will return them to the standard modal view.
+   - **Status:** IN PROGRESS
+   - **Should Test frontend/backend/both after fix?** Frontend
+   - **Blocked on something:** Issue 1.
 
 **Upcoming and Future Tasks**
-- **P1: Implement Tadka Pics Frontend Section:** After the database issue is fixed, create the UI on the homepage to fetch and display the latest 20 galleries that have Tadka Pics enabled. The API endpoint  is already created.
-- **P2: Implement User Management:** Build the frontend UI in the Users tab of the  page to list, add, edit, and delete users.
-- **P3: Delete Unused Files:** Remove old SQLite-related files (, , and the  file itself once all data is migrated/deemed unnecessary) to clean up the codebase.
-- **P4: Full Regression Testing:** After all features are stable, perform a comprehensive regression test of the entire application.
+- **Upcoming Tasks:**
+    - **P1: Implement Multi-Select for Movie Info:** In , complete the implementation for allowing multiple , , and . This requires adding state management to handle arrays for these fields and ensuring the Add button functionality works correctly.
+    - **P2: Add New Movie Info Fields to Backend:** The new  and  fields have been added to the frontend and the Pydantic schemas, but the  in  and the database update logic might need verification to ensure they are saved correctly.
+- **Future Tasks:**
+    - **P3: Code Cleanup:** Delete legacy and unused files such as , , and other remnants from the previous architecture.
+    - **P4: Full Regression Testing:** Once all features are stable, conduct a full regression test of the CMS and the public-facing site, particularly the gallery creation/editing flow and the article creation/editing flow for all content types.
 
 **Completed work in this session**
-- **Movie Review Language Feature:** Successfully implemented the language dropdown in the CMS and its display on the article page, including debugging a Pydantic schema validation issue.
-- **User Reviews System for Movies:** Replaced the generic comment system with a dedicated User Review system for movie articles, featuring a 5-star rating input.
-- **Average User Rating Display:** Implemented frontend logic to calculate and display the average star rating from all user reviews on the movie's article page.
-- **IP-Based Review Limiting:** Added backend and frontend logic to allow only one review per IP address per movie, with a mechanism for users to edit their existing review.
-- **Movie Platform Feature:** Implemented backend and frontend for selecting a movie's release platform (e.g., Theater, OTT) and a separate, manageable list of OTT platforms in the CMS.
-- **Advanced Gallery System (Logic & UI):**
-    - Designed and implemented the complete frontend logic and UI in  for a new gallery system with Gallery Type (Horizontal/Vertical) and Gallery Category (Actor, etc.).
-    - Created a modal-based system for managing entities (Actors, Events, etc.) associated with gallery categories.
-    - Implemented the Tadka Pics toggle for vertical galleries.
-- **Gallery Image Grid UI/UX:** Iteratively refined the image upload display in the gallery creation form to be compact, with smaller overlay icons for Preview and Delete, and a preview modal.
-- **Sequential Image Naming:** Implemented a backend system to automatically name gallery images sequentially (1, 2, 3...) and re-number them upon deletion to fill gaps.
-- **Major Bug Discovery:** Identified the critical architectural flaw where the entire gallery system was writing to a legacy SQLite database instead of MongoDB.
+- **Gallery Image Upload System:** Fixed the critical bug where images were saved as base64. Implemented a new backend endpoint () and refactored the frontend () to upload images directly to S3 with the correct, user-specified folder structure.
+- **Tadka Pics Homepage Section:**
+    - Replaced all mock data with a live data feed from the  endpoint.
+    - Implemented logic to show one random image from each Tadka-enabled gallery.
+    - Clicking an image now opens a slider modal containing all images from that specific gallery.
+    - Fixed a recurring React Hooks error (Rendered more hooks than during the previous render) by correctly ordering hook declarations in .
+- **Top Stories Feature Re-architecture:**
+    - Replaced the old category-based system with a Mark as Top Story checkbox in the CMS.
+    - Created a new  collection in MongoDB for efficient querying.
+    - Implemented robust backend logic in  to automatically manage a 3 articles + 1 movie review limit for both national and state-specific top stories.
+- **CMS Form Overhaul ():**
+    - Redesigned the Content Details and Movie Review sections with a two-column layout.
+    - Added new fields to the Movie Review form: , , and .
+    - Redesigned and restyled the  and  checkboxes for a modern look.
+    - Fixed a bug where the  vs.  label for Top Stories was not displaying correctly.
+    - Fixed a bug that prevented the OTT platform dropdown from populating.
+    - Reorganized the entire Movie Review form into logical, styled sections.
 
 **Earlier issues found/mentioned but not fixed**
-- The task to delete old SQLite-related files is still pending and is now more relevant given the discovery of the gallery bug.
+- The task to delete old SQLite-related files (, ) is still pending.
 
 **Known issue recurrence from previous fork**
 - None.
@@ -76,64 +84,69 @@ The application is a full-stack news portal (React/FastAPI/MongoDB). It has a ri
 
 
 **Key Technical Concepts**
-- **Mixed Database Connections (BUG):** The application is unintentionally using two different databases. The gallery feature connects to a legacy SQLite database, while all other features correctly use MongoDB. This is the root cause of the current primary bug.
-- **Pydantic Schema Validation:** Debugged multiple issues where data was not being saved because fields were missing from Pydantic models (, , ).
-- **Complex State Management in React:** Managed complex, interconnected state in  for gallery types, categories, entities, and modals.
-- **Dynamic UI Rendering:** Used conditional rendering extensively to show/hide UI elements based on user selections (e.g., showing the OTT dropdown only when OTT is selected).
-- **Backend API for File System Operations:** Created a backend service () to perform file-like operations (list, copy, delete) on objects in an S3 bucket to achieve sequential naming.
+- **Frontend File Handling:** Refactored from  (base64) to using  to upload files to a dedicated backend endpoint for S3 processing.
+- **React Hooks Order:** Debugged and fixed Rendered more hooks than during the previous render error by ensuring all , , and other hooks are called unconditionally at the top level of the functional component.
+- **Dynamic Content Management:** Implemented a sophisticated backend system to automatically manage a Top Story list, involving fetching, counting, sorting by date, and updating flags on older articles when a new one is promoted.
+- **Complex State & Layout in React:** Managed a highly complex form () with dozens of state variables, conditional rendering based on content type, and dynamic layouts (two-column, etc.).
+- **Data Structure Mismatch:** Debugged a modal loading issue caused by passing a simple string () instead of the expected object structure ().
 
 **key DB schema**
-- **articles:** Updated to include , , .
-- **comments:** Updated to include  (optional float).
-- **ott_platforms:** New collection .
-- **gallery_entities:** New collection  (e.g., type: 'actor').
-- **galleries (in SQLite):** The schema in the SQLite  was being used. The goal is to use a MongoDB collection with the fields: , , , , , , , .
+- **articles:**
+    - Added .
+    - Added .
+    - Added .
+    - Added .
+- **top_stories (New Collection):**
+    -  (Used to efficiently track and manage top stories).
 
 **changes in tech stack**
-- No new technologies, but a critical misconfiguration was discovered where a legacy SQLite database is still active for a new feature.
+- None.
 
 **All files of reference**
-- : **(Highest priority)** Contains the bug causing writes to SQLite.
-- : **(High priority)** Gallery functions here may also contain incorrect DB logic.
-- : The primary frontend file for the gallery feature.
-- : The legacy SQLite database file that needs to be decommissioned.
+- : **(Highest priority)** Currently broken with a JSX syntax error.
+- : **(High priority)** Heavily modified. Contains the next pending feature request (multi-select for genre/language).
+- : Contains the new, complex logic for managing top stories.
+- : The now-functional component for the homepage Tadka Pics section.
+- : Contains the S3 upload endpoint for gallery images.
 
 **Critical Info for New Agent**
-- **Your absolute first priority is to fix the database connection for the gallery feature.** Do not work on any other UI tweak, bug, or feature until all gallery operations (create, read, update, delete) are correctly using the MongoDB database via the  pattern.
-- The root of the problem is in the backend, likely in  and the gallery-related functions in . They are not using the injected  object for database operations.
-- Once the database issue is fixed, thoroughly test the entire gallery creation and editing flow to confirm that all fields (Gallery Type, Category, Entity Name, Tadka Pics toggle) are saved and retrieved correctly.
+- **Your absolute first priority is to fix the JSX syntax error in .** The application's frontend will not compile correctly until this is resolved. The error was introduced while adding the fullscreen feature.
+- After fixing the syntax, complete the fullscreen functionality as it's half-done.
+- The next task is to implement the Add button functionality for Genre, Language, and OTT Platforms in the Movie Review form (), as this was requested by the user but not completed.
+- The user has been making many rapid, iterative UI requests. Be prepared for further small tweaks to styling, layout, and wording after completing the main functional tasks.
 
 **documents created in this job**
 - None.
 
 **Last 10 User Messages and any pending user messages**
-1. **User:** Asked for the storage path of uploaded gallery images. **Status:** In progress.
-2. **User:** r u saving them in litesql database -- all the changes we made ?? we need to use Mongo database fo r this app as we migrated - -can u confrim and fix the issue **Status:** This is the current, active request. The agent has confirmed the issue and needs to fix it.
-3. **Agent:** Discovered the SQLite database file and confirmed it was being written to.
-4. **User:** Reported that gallery fields were still not pre-populating after a previous fix attempt and provided console logs showing  values. **Status:** Superseded by the discovery of the SQLite issue.
-5. **User:** Requested to remove the image number badge and make the preview/delete icons overlays. **Status:** Completed.
-6. **User:** Reported gallery fields were not pre-populating and asked for UI tweaks to the image grid. **Status:** Partially completed (UI tweaks done), but persistence issue remained.
-7. **User:** Requested to show the preview icon only on hover. **Status:** Completed.
-8. **User:** Requested a more compact image grid with less padding. **Status:** Completed.
-9. **User:** Requested styling changes for the preview icon (remove blue, make transparent). **Status:** Completed.
-10. **User:** Requested further UI cleanup for the gallery image grid. **Status:** Completed.
+1.  **User:** Requested 50/50 column widths for the basic information section. **Status:** Completed.
+2.  **User:** Requested to move the Rating field, rename Enable Movie Review Comments, and remove the dotted line around the image preview. **Status:** Completed.
+3.  **User:** Requested 50/50 column widths again for the basic info section. **Status:** Completed.
+4.  **User:** Requested to add Music Director and DOP fields and completely reorganize the Movie Information section layout. **Status:** Completed.
+5.  **User:** Requested to add a fullscreen icon/functionality to the Tadka Pics image slider. **Status:** In Progress (Blocked by bug).
+6.  **User:** Requested to make all movie review sections have a light grey background. **Status:** Completed.
+7.  **User:** Requested to unify checkbox styles, remove section icons, fix the State/National label logic, and change column widths to 50/50. **Status:** Completed.
+8.  **User:** Requested to show the full, uncropped YouTube thumbnail in the preview. **Status:** Completed.
+9.  **User:** Requested to change the basic info column widths back to 60/40. **Status:** Completed.
+10. **User:** Requested to move the Rating field into the Basic Information section and restyle it. **Status:** Completed.
 
 **Project Health Check:**
-- **Broken:** The entire Image Gallery feature is non-functional due to writing to the wrong database.
-- **Mocked:** None.
+- **Broken:** The frontend is currently broken due to a JSX syntax error in . This prevents the image slider from working anywhere on the site.
+- **Mocked:** All major mock data for Top Stories and Tadka Pics has been successfully removed and replaced with live data.
 
 **3rd Party Integrations**:
-- **MongoDB:** Primary database for most of the application.
-- **AWS S3 (via ):** Used for file storage, including gallery images.
+- **MongoDB:** Primary database.
+- **AWS S3 (via ):** Used for storing all uploaded images (articles and galleries).
 
 **Testing status**
 - **Testing agent used after significant changes:** NO
 - **Troubleshoot agent used after agent stuck in loop:** NO
 - **Test files created:** None
-- **Known regressions:** The entire gallery feature is a regression as it's not using the migrated database stack.
+- **Known regressions:** The image modal/slider is non-functional due to the introduced JSX bug.
 
 **Credentials to test flow:**
 - **Admin Login:** username=, password=
 
 **What agent forgot to execute**
-- The agent has consistently postponed the task of deleting old, unused files from previous development sessions. This has now become critical as one of those legacy components () is the source of a major bug.</analysis>
+- The task to implement multi-select with Add buttons for , , and  was requested by the user but only partially started and never completed. The UI was reorganized, but the actual multi-add functionality is missing.
+- The long-pending task to remove old SQLite database files and other unused artifacts from the codebase has still not been addressed.</analysis>
