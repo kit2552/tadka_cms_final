@@ -43,36 +43,38 @@ const TopStories = ({ bigStory, entertainmentStory, featuredReview, fourthStory,
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       
       {/* Big Story Block */}
-      <div 
-        className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer`}
-        onClick={() => handleArticleClick(bigStory, 'top_story_main')}
-      >
-        <div className="relative">
-          {bigStory?.image || bigStory?.image_url ? (
-            <img
-              src={bigStory?.image || bigStory?.image_url}
-              alt={bigStory?.title || 'Main Story'}
-              className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
-              onError={(e) => {
-                const placeholder = document.createElement('div');
-                placeholder.className = 'w-full h-40 bg-gray-500 flex items-center justify-center';
-                placeholder.innerHTML = '<span class="text-white font-bold text-3xl">A</span>';
-                e.target.parentNode.replaceChild(placeholder, e.target);
-              }}
-            />
-          ) : (
-            <PlaceholderImage 
-              contentType="post" 
-              className="w-full h-40"
-            />
-          )}
+      {bigStory && (
+        <div 
+          className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer`}
+          onClick={() => handleArticleClick(bigStory, 'top_story_main')}
+        >
+          <div className="relative">
+            {bigStory?.image || bigStory?.image_url ? (
+              <img
+                src={bigStory?.image || bigStory?.image_url}
+                alt={bigStory?.title || 'Main Story'}
+                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                onError={(e) => {
+                  const placeholder = document.createElement('div');
+                  placeholder.className = 'w-full h-40 bg-gray-500 flex items-center justify-center';
+                  placeholder.innerHTML = '<span class="text-white font-bold text-3xl">A</span>';
+                  e.target.parentNode.replaceChild(placeholder, e.target);
+                }}
+              />
+            ) : (
+              <PlaceholderImage 
+                contentType="post" 
+                className="w-full h-40"
+              />
+            )}
+          </div>
+          <div className="p-3 text-left">
+            <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
+              {bigStory?.title}
+            </h2>
+          </div>
         </div>
-        <div className="p-3 text-left">
-          <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
-            {bigStory?.title || 'Major Breaking News Story Develops'}
-          </h2>
-        </div>
-      </div>
+      )}
 
       {/* Entertainment Story Block */}
       <div 
