@@ -2236,32 +2236,116 @@ const CreateArticle = () => {
 
                           {/* Row 4: Genre and Language */}
                           <div className="grid grid-cols-2 gap-4">
+                            {/* Genre Multi-Select */}
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                 Genre
                               </label>
-                              <input
-                                type="text"
-                                name="review_genre"
-                                value={formData.review_genre}
-                                onChange={handleInputChange}
-                                placeholder="e.g., Action, Drama"
-                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              />
+                              <div className="flex gap-2 mb-2">
+                                <select
+                                  value={tempGenre}
+                                  onChange={(e) => setTempGenre(e.target.value)}
+                                  className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                  <option value="">Select Genre</option>
+                                  <option value="Action">Action</option>
+                                  <option value="Comedy">Comedy</option>
+                                  <option value="Drama">Drama</option>
+                                  <option value="Thriller">Thriller</option>
+                                  <option value="Horror">Horror</option>
+                                  <option value="Romance">Romance</option>
+                                  <option value="Sci-Fi">Sci-Fi</option>
+                                  <option value="Fantasy">Fantasy</option>
+                                  <option value="Crime">Crime</option>
+                                  <option value="Mystery">Mystery</option>
+                                  <option value="Adventure">Adventure</option>
+                                  <option value="Animation">Animation</option>
+                                  <option value="Biography">Biography</option>
+                                  <option value="Family">Family</option>
+                                </select>
+                                <button
+                                  type="button"
+                                  onClick={handleAddGenre}
+                                  disabled={!tempGenre}
+                                  className="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                >
+                                  Add
+                                </button>
+                              </div>
+                              {/* Selected Genres */}
+                              {selectedGenres.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {selectedGenres.map((genre, index) => (
+                                    <span
+                                      key={index}
+                                      className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-md"
+                                    >
+                                      {genre}
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveGenre(genre)}
+                                        className="text-blue-600 hover:text-blue-800"
+                                      >
+                                        ×
+                                      </button>
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
                             </div>
 
+                            {/* Language Multi-Select */}
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                 Language
                               </label>
-                              <input
-                                type="text"
-                                name="movie_language"
-                                value={formData.movie_language}
-                                onChange={handleInputChange}
-                                placeholder="e.g., Telugu, Hindi"
-                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              />
+                              <div className="flex gap-2 mb-2">
+                                <select
+                                  value={tempLanguage}
+                                  onChange={(e) => setTempLanguage(e.target.value)}
+                                  className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                  <option value="">Select Language</option>
+                                  <option value="Telugu">Telugu</option>
+                                  <option value="Hindi">Hindi</option>
+                                  <option value="Tamil">Tamil</option>
+                                  <option value="Malayalam">Malayalam</option>
+                                  <option value="Kannada">Kannada</option>
+                                  <option value="English">English</option>
+                                  <option value="Bengali">Bengali</option>
+                                  <option value="Marathi">Marathi</option>
+                                  <option value="Punjabi">Punjabi</option>
+                                  <option value="Gujarati">Gujarati</option>
+                                </select>
+                                <button
+                                  type="button"
+                                  onClick={handleAddLanguage}
+                                  disabled={!tempLanguage}
+                                  className="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                >
+                                  Add
+                                </button>
+                              </div>
+                              {/* Selected Languages */}
+                              {selectedLanguages.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {selectedLanguages.map((language, index) => (
+                                    <span
+                                      key={index}
+                                      className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-sm rounded-md"
+                                    >
+                                      {language}
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveLanguage(language)}
+                                        className="text-green-600 hover:text-green-800"
+                                      >
+                                        ×
+                                      </button>
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           </div>
 
