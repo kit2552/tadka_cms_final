@@ -2177,9 +2177,16 @@ const Dashboard = () => {
   const handleEditHorizontalGallery = (gallery) => {
     setShowHorizontalGalleryForm(true);
     setEditingHorizontalGallery(gallery);
+    
+    // Add unique IDs to images if they don't have them
+    const imagesWithIds = gallery.images.map((img, index) => ({
+      ...img,
+      id: img.id || img.url || `${img.name}-${index}` // Use URL as unique ID, or fallback to name+index
+    }));
+    
     setHorizontalGalleryForm({
       title: gallery.title,
-      images: [...gallery.images]
+      images: imagesWithIds
     });
     
     // Set selected artist for editing - handle artists array
