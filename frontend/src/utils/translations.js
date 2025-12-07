@@ -296,8 +296,8 @@ const translations = {
     sections: {
       top_stories: 'Top Stories',
       national: 'National',
-      state_politics: 'State Politics',
-      national_politics: 'National Politics',
+      state_politics: 'State News',
+      national_politics: 'National News',
       movies: 'Movies',
       bollywood: 'Bollywood',
       movie_reviews: 'Movie Reviews',
