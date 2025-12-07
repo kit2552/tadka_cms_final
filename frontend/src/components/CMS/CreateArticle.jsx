@@ -124,7 +124,8 @@ const CreateArticle = () => {
     contentType: true,
     seo: false,
     aeo: false,
-    faqs: false
+    faqs: false,
+    eeat: false
   });
 
   const showNotification = (type, title, message) => {
