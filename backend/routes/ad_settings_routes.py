@@ -16,9 +16,9 @@ class AdSettings(BaseModel):
     category_page_top: bool = False  # Category pages top (future)
 
 @router.get("/ad-settings")
-async def get_ad_settings(db = Depends(get_db)):
+def get_ad_settings(db = Depends(get_db)):
     """Get current ad settings"""
-    settings = await db.ad_settings.find_one({"_id": "global"}, {"_id": 0})
+    settings = db.ad_settings.find_one({"_id": "global"}, {"_id": 0})
     
     if not settings:
         # Return default settings if none exist
@@ -33,12 +33,12 @@ async def get_ad_settings(db = Depends(get_db)):
     return settings
 
 @router.post("/ad-settings")
-async def update_ad_settings(settings: AdSettings, db = Depends(get_db)):
+def update_ad_settings(settings: AdSettings, db = Depends(get_db)):
     """Update ad settings"""
     settings_dict = settings.dict()
     
     # Upsert the settings
-    await db.ad_settings.update_one(
+    db.ad_settings.update_one(
         {"_id": "global"},
         {"$set": settings_dict},
         upsert=True
