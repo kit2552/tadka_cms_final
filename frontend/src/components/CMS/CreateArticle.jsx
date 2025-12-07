@@ -1830,7 +1830,8 @@ const CreateArticle = () => {
                                     {(() => {
                                       try {
                                         const states = formData.states ? JSON.parse(formData.states) : [];
-                                        return states.length === 0 ? '(National)' : '(State)';
+                                        const isNational = states.length === 0 || states.includes('all') || states.includes('All');
+                                        return isNational ? '(National)' : '(State)';
                                       } catch {
                                         return '(State)';
                                       }
