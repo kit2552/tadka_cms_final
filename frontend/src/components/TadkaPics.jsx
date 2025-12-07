@@ -161,7 +161,7 @@ const TadkaPics = ({ images, onImageClick }) => {
       // Create the selected image object for the modal with fullImage property
       const selectedImage = {
         id: clickedGallery.id,
-        name: clickedGallery.name,
+        name: clickedGallery.name, // Show entity name (e.g., "Kirti Sanon")
         url: clickedGallery.allImages[clickedGallery.selectedIndex].url,
         fullImage: clickedGallery.allImages[clickedGallery.selectedIndex].url, // ImageModal needs this
         alt: clickedGallery.allImages[clickedGallery.selectedIndex].alt
@@ -174,9 +174,10 @@ const TadkaPics = ({ images, onImageClick }) => {
       });
       
       // Transform all gallery images to include fullImage property
+      // Use entity name for ALL images in the gallery
       const transformedGalleryImages = clickedGallery.allImages.map((img, idx) => ({
         id: `${clickedGallery.gallery_id}-${idx}`,
-        name: img.name,
+        name: clickedGallery.name, // Show entity name (same for all images)
         url: img.url,
         fullImage: img.url, // ImageModal needs this
         alt: img.alt
