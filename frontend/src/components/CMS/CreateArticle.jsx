@@ -1722,10 +1722,8 @@ const CreateArticle = () => {
                         </div>
                       </div>
 
-                      {/* Image Gallery Management - Hidden, keeping for data compatibility */}
-                      {formData.image_gallery.length > 0 && (
-                        <div style={{display: 'none'}}>
-                        {/* Gallery images list - keeping structure for data compatibility */}
+                      {/* Image Gallery Management - Hidden for data compatibility */}
+                      <div style={{display: 'none'}}>
                         {formData.image_gallery.length > 0 && (
                           <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-300 rounded-md p-2">
                             {formData.image_gallery.map((image, index) => (
