@@ -1237,16 +1237,28 @@ def update_gallery(db, gallery_id: str, gallery_data: dict):
     
     return get_gallery_by_gallery_id(db, gallery_id)
 
-def delete_gallery(db, gallery_id: str):
-    """Delete gallery and remove all associations"""
-    # Get gallery to find numeric ID
-    gallery = db[GALLERIES].find_one({"gallery_id": gallery_id}, {"_id": 0, "id": 1})
+def delete_gallery(db, gallery_id: str, s3_service=None):
+    """Delete gallery, remove all associations, and delete images from S3"""
+    # Get full gallery document to access images
+    gallery = db[GALLERIES].find_one({"gallery_id": gallery_id}, {"_id": 0})
     
     if gallery:
+        # Delete images from S3 if service is available
+        if s3_service and s3_service.is_enabled():
+            images = gallery.get("images", [])
+            for image in images:
+                image_url = image.get("url")
+                if image_url:
+                    try:
+                        s3_service.delete_file(image_url)
+                        print(f"Deleted image from S3: {image_url}")
+                    except Exception as e:
+                        print(f"Failed to delete image from S3: {image_url}, Error: {e}")
+        
         # Remove topic associations
-        db[GALLERY_TOPICS].delete_many({"gallery_id": gallery["id"]})
+        db[GALLERY_TOPICS].delete_many({"gallery_id": gallery.get("id")})
     
-    # Delete gallery
+    # Delete gallery from database
     result = db[GALLERIES].delete_one({"gallery_id": gallery_id})
     return result.deleted_count > 0
 
