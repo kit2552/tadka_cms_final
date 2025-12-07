@@ -1108,11 +1108,28 @@ const CreateArticle = () => {
         );
       } else {
         // Handle different error status codes
-        const errorData = await response.json().catch(() => ({}));
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = {};
+        }
+        
+        // Extract error message
+        let errorMessage = `Failed to ${isEditMode ? 'update' : 'create'} article`;
+        if (errorData.detail) {
+          if (typeof errorData.detail === 'string') {
+            errorMessage = errorData.detail;
+          } else if (Array.isArray(errorData.detail)) {
+            // Pydantic validation errors
+            errorMessage = errorData.detail.map(err => `${err.loc.join('.')}: ${err.msg}`).join(', ');
+          }
+        }
+        
         if (response.status === 409) {
           throw new Error(errorData.detail || 'An article with this title already exists');
         }
-        throw new Error(errorData.detail || `Failed to ${isEditMode ? 'update' : 'create'} article`);
+        throw new Error(errorMessage);
       }
     } catch (error) {
       console.error(`Error ${isEditMode ? 'updating' : 'creating'} article:`, error);
