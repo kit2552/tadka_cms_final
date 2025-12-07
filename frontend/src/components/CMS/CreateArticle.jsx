@@ -2178,6 +2178,7 @@ const CreateArticle = () => {
                           />
                         </div>
                       </div>
+                    </div>
                     </>
                   )}
 
