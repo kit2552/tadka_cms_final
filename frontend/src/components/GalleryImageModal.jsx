@@ -124,12 +124,17 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
 
   // Determine image size based on orientation and gallery type
   const getImageSizeClass = () => {
-    if (isFullscreen) {
-      return 'w-full h-full';
-    }
-    
     // Use gallery type if available, otherwise detect from actual image
     const isVertical = galleryType === 'vertical' || imageOrientation === 'vertical';
+    
+    if (isFullscreen) {
+      // In fullscreen, still respect orientation but use full viewport
+      if (isVertical) {
+        return 'h-screen w-auto max-w-screen';
+      } else {
+        return 'w-screen h-auto max-h-screen';
+      }
+    }
     
     if (isVertical) {
       return 'h-[98vh] w-auto';
