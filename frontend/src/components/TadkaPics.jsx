@@ -182,6 +182,24 @@ const TadkaPics = ({ images, onImageClick }) => {
   const [touchEnd, setTouchEnd] = useState(null);
   const scrollContainerRef = useRef(null);
 
+  // Show loading state or empty state
+  if (loading) {
+    return (
+      <div className="bg-white">
+        <div className="max-w-5xl-plus mx-auto px-8">
+          <div className={`${getSectionHeaderClasses().containerClass} px-3 py-2 border rounded-lg text-left mb-3`}>
+            <h3 className={`${getSectionHeaderClasses().textClass}`} style={{fontSize: '14px', fontWeight: '500'}}>{t('sections.tadka_pics', 'Tadka Pics')}</h3>
+          </div>
+          <div className="text-center text-gray-500 py-8">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (actressImages.length === 0) {
+    return null; // Don't show section if no images
+  }
+
   // Enhanced analytics tracking
   const trackImageClick = async (imageId, imageName, action) => {
     try {
