@@ -1051,7 +1051,7 @@ const CreateArticle = () => {
       const submitData = {
         ...formData,
         image: cleanImageUrl, // Use clean URL without timestamp
-        article_language: formData.language || 'en', // Map language to article_language for backend
+        language: formData.language || 'en', // Use correct field name for backend
         summary: textContent.substring(0, 200) + '...', // Generate summary from content
         states: JSON.stringify(selectedStates), // Convert states array to JSON string
         artists: JSON.stringify(selectedArtist ? [selectedArtist] : []), // Include selected artist as array
