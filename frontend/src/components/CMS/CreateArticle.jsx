@@ -53,6 +53,11 @@ const CreateArticle = () => {
     aeo_description: '',
     aeo_keywords: '',
     faqs: [], // Array of {question: '', answer: ''}
+    // E-E-A-T fields
+    author_credentials: '',
+    sources: '',
+    fact_checked_by: '',
+    last_reviewed_date: ''
     // Movie Review specific fields
     review_quick_verdict: '',
     review_plot_summary: '',
