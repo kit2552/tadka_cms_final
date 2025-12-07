@@ -2396,7 +2396,7 @@ const CreateArticle = () => {
                             </div>
                           </div>
 
-                          {/* Row 6: Platform (separate row) */}
+                          {/* Row 6: Platform and Release Date */}
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
@@ -2412,6 +2412,19 @@ const CreateArticle = () => {
                                 <option value="Theater">Theater</option>
                                 <option value="OTT">OTT</option>
                               </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Release Date
+                              </label>
+                              <input
+                                type="date"
+                                name="release_date"
+                                value={formData.release_date}
+                                onChange={handleInputChange}
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
                             </div>
                           </div>
 
