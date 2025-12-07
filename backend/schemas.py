@@ -133,6 +133,11 @@ class ArticleUpdate(BaseModel):
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
+    # AEO & FAQ fields
+    aeo_title: Optional[str] = None
+    aeo_description: Optional[str] = None
+    aeo_keywords: Optional[str] = None
+    faqs: Optional[str] = None  # JSON string for FAQs array
 
 class ArticleResponse(ArticleBase):
     id: int
