@@ -204,6 +204,7 @@ const CreateArticle = () => {
           title: article.title || '',
           short_title: article.short_title || '',
           content: article.content || '',
+          content_secondary: article.content_secondary || '',
           summary: article.summary || '',
           author: article.author || '',
           language: article.language || 'en',
