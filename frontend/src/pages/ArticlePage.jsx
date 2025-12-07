@@ -6,6 +6,7 @@ import { extractArticleIdFromURL, createSEOArticleURL } from '../utils/seoUtils'
 import { PlaceholderImage } from '../utils/imageUtils';
 import CommentSection from '../components/CommentSection';
 import { generateArticleSchema, insertSchemaMarkup } from '../utils/schemaMarkup';
+import GallerySlider from '../components/GallerySlider';
 
 const ArticlePage = () => {
   const { articleId, slug } = useParams();
