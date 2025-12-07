@@ -1268,8 +1268,13 @@ def manage_top_stories(db, article_id: str, content_type: str, states_json: str,
     except:
         states = []
     
-    # Determine if national or state-specific
-    target_states = ['ALL'] if not states or len(states) == 0 else states
+    # Normalize 'all' to 'ALL' and determine if national or state-specific
+    if states and any(s.lower() == 'all' for s in states):
+        target_states = ['ALL']
+    elif not states or len(states) == 0:
+        target_states = ['ALL']
+    else:
+        target_states = states
     
     for state in target_states:
         if is_top_story:
