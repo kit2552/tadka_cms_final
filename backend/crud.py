@@ -1350,7 +1350,8 @@ def get_top_stories_for_states(db, states: List[str], limit: int = 4):
     if not top_story_entries:
         return []
     
-    article_ids = [entry['article_id'] for entry in top_story_entries]
+    # Convert article_ids to integers (they're stored as strings in top_stories)
+    article_ids = [int(entry['article_id']) for entry in top_story_entries]
     
     # Fetch full articles
     articles = list(db[ARTICLES].find(
