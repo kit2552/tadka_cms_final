@@ -1382,6 +1382,25 @@ const CreateArticle = () => {
                           />
                         </div>
 
+                        {/* Top Story Checkbox */}
+                        <div>
+                          <label className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              name="is_top_story"
+                              checked={formData.is_top_story}
+                              onChange={handleInputChange}
+                              className="form-checkbox h-4 w-4 text-blue-600"
+                            />
+                            <span className="text-sm text-gray-700 font-medium">Mark as Top Story</span>
+                          </label>
+                          <p className="text-xs text-gray-500 mt-1 ml-6">
+                            {formData.states && JSON.parse(formData.states).length === 0 || formData.states === '[]' 
+                              ? 'Will appear in National Top Stories' 
+                              : 'Will appear in State Top Stories'}
+                          </p>
+                        </div>
+
                         {/* Enable Comments Checkbox */}
                         <div>
                           <label className="flex items-center space-x-2 cursor-pointer">
