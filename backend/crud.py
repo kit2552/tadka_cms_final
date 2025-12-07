@@ -342,12 +342,29 @@ def update_article_cms(db, article_id: int, article: dict):
     update_data = {"$set": update_fields}
     
     # Update published_at if publishing
+    published_at = None
     if article.get("is_published"):
         existing = db[ARTICLES].find_one({"id": article_id})
         if existing and not existing.get("published_at"):
             update_data["$set"]["published_at"] = datetime.utcnow()
+            published_at = datetime.utcnow()
+        else:
+            published_at = existing.get("published_at", datetime.utcnow())
     
     db[ARTICLES].update_one({"id": article_id}, update_data)
+    
+    # Manage top stories if is_top_story field is present
+    if "is_top_story" in article:
+        article_obj = db[ARTICLES].find_one({"id": article_id})
+        manage_top_stories(
+            db,
+            str(article_id),
+            article_obj.get("content_type", "post"),
+            article_obj.get("states", "[]"),
+            published_at or article_obj.get("published_at", datetime.utcnow()),
+            article.get("is_top_story", False)
+        )
+    
     return get_article_by_id(db, article_id)
 
 def delete_article(db, article_id: int):
