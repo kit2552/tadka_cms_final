@@ -1909,7 +1909,7 @@ const CreateArticle = () => {
                                 name="movie_rating"
                                 value={formData.movie_rating}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                               >
                                 <option value="">Select Rating</option>
