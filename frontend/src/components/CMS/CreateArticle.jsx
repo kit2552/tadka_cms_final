@@ -18,6 +18,7 @@ const CreateArticle = () => {
   const [states, setStates] = useState([]);
   const [categories, setCategories] = useState([]);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorStateSecondary, setEditorStateSecondary] = useState(EditorState.createEmpty());
   const [notification, setNotification] = useState({
     isOpen: false,
     type: 'success',
