@@ -39,13 +39,12 @@ const ArticleImage = ({
   // For photoshoots, use object-contain with black background for vertical images
   const isPhotoshoot = contentType === 'photoshoots';
   const isVertical = imageOrientation === 'vertical';
-  const shouldUseContain = isPhotoshoot && isVertical;
   
-  const containerBgClass = shouldUseContain ? 'bg-black' : '';
-  const imageObjectFit = shouldUseContain ? 'object-contain' : imgClassName;
-  
-  // Use taller height for vertical photoshoot images (8rem = 128px instead of 4rem = 64px)
-  const adjustedHeight = (isPhotoshoot && isVertical) ? 'h-32' : height;
+  // For vertical photoshoot images: use auto height, no black background
+  // For horizontal images: use fixed height with object-cover
+  const adjustedHeight = (isPhotoshoot && isVertical) ? 'h-auto' : height;
+  const containerBgClass = ''; // No black background
+  const imageObjectFit = (isPhotoshoot && isVertical) ? 'object-cover rounded' : imgClassName;
 
   return (
     <div className={`${width} ${adjustedHeight} ${className} ${containerBgClass}`}>
@@ -54,7 +53,7 @@ const ArticleImage = ({
           contentType={contentType}
           className={placeholderClassName}
           width={width}
-          height={adjustedHeight}
+          height={height}
         />
       )}
       <img
