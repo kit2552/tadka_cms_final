@@ -1335,7 +1335,14 @@ def delete_gallery(db, gallery_id: str, s3_service=None):
         if s3_service and s3_service.is_enabled():
             images = gallery.get("images", [])
             for image in images:
-                image_url = image.get("url")
+                # Handle both dict and string formats
+                if isinstance(image, dict):
+                    image_url = image.get("url")
+                elif isinstance(image, str):
+                    image_url = image
+                else:
+                    image_url = None
+                    
                 if image_url:
                     try:
                         s3_service.delete_file(image_url)
