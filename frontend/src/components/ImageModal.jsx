@@ -187,38 +187,38 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
             onLoad={handleImageLoad}
             onError={handleImageError}
           />
+
+          {/* Previous Button - Bottom Left - Inside image container */}
+          <button
+            onClick={handlePrevClick}
+            className="absolute bottom-8 left-8 z-70 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110 pointer-events-auto"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Image Name - Between the arrows - Only show if name exists and not in fullscreen */}
+          {image.name && !isFullscreen && (
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-70 text-white text-center">
+              <p className="text-lg font-semibold bg-black bg-opacity-50 px-4 py-2 rounded-lg">
+                {image.name}
+              </p>
+            </div>
+          )}
+
+          {/* Next Button - Bottom Right - Inside image container */}
+          <button
+            onClick={handleNextClick}
+            className="absolute bottom-8 right-8 z-70 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110 pointer-events-auto"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
-
-        {/* Previous Button - Bottom Left - Outside image container */}
-        <button
-          onClick={handlePrevClick}
-          className="absolute bottom-8 left-8 z-70 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110 pointer-events-auto"
-          style={{ pointerEvents: 'auto' }}
-        >
-          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        {/* Image Name - Between the arrows - Only show if name exists and not in fullscreen */}
-        {image.name && !isFullscreen && (
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-70 text-white text-center">
-            <p className="text-lg font-semibold bg-black bg-opacity-50 px-4 py-2 rounded-lg">
-              {image.name}
-            </p>
-          </div>
-        )}
-
-        {/* Next Button - Bottom Right - Outside image container */}
-        <button
-          onClick={handleNextClick}
-          className="absolute bottom-8 right-8 z-70 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110 pointer-events-auto"
-          style={{ pointerEvents: 'auto' }}
-        >
-          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
       </div>
     </div>
   );
