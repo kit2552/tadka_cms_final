@@ -569,8 +569,8 @@ const ArticlePage = () => {
                     </>
                   )}
 
-                  {/* Ad Placeholder - Only show if secondary content exists */}
-                  {article.content_secondary && (
+                  {/* Ad Placeholder - Only show if secondary content exists AND ad is enabled */}
+                  {article.content_secondary && adSettings.article_content_mid && (
                     <div className="my-6 border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 text-center">
                       <p className="text-sm text-gray-500 font-medium">Advertisement Space</p>
                       <p className="text-xs text-gray-400 mt-1">Ad will be displayed here</p>
