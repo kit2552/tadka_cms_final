@@ -229,7 +229,7 @@ const CreateArticle = () => {
           content_secondary: article.content_secondary || '',
           summary: article.summary || '',
           author: article.author || '',
-          language: article.language || 'en',
+          article_language: article.article_language || 'en',
           states: article.states || 'all',
           category: article.category || '',
           content_type: article.content_type || 'post', // Load content type
