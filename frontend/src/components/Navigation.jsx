@@ -729,7 +729,7 @@ const Navigation = ({ onLayoutModeChange }) => {
 
               {/* Back Button for Article Pages */}
               {isArticlePage && !isPreviewPage && (
-                <div className="hidden md:flex">
+                <div className="hidden md:flex items-center space-x-3">
                   <button
                     onClick={handleBackNavigation}
                     className="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 hover:text-gray-900 transition-all duration-200"
@@ -739,6 +739,13 @@ const Navigation = ({ onLayoutModeChange }) => {
                     </svg>
                     <span className="text-gray-700">Back</span>
                   </button>
+                  
+                  {/* Preview Mode Badge - Only show when ?preview=true is in URL */}
+                  {location.search.includes('preview=true') && (
+                    <span className="inline-flex items-center px-3 py-1.5 rounded text-sm font-medium bg-yellow-100 text-yellow-800 border border-yellow-300">
+                      Preview Mode
+                    </span>
+                  )}
                 </div>
               )}
 
