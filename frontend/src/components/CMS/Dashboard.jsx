@@ -354,6 +354,11 @@ const Dashboard = () => {
   const [filterTadkaPics, setFilterTadkaPics] = useState(false);
   const [filterEntities, setFilterEntities] = useState([]);
   
+  // Horizontal gallery filters
+  const [filterHorizontalCategory, setFilterHorizontalCategory] = useState('');
+  const [filterHorizontalEntity, setFilterHorizontalEntity] = useState('');
+  const [filterHorizontalEntities, setFilterHorizontalEntities] = useState([]);
+  
   // Gallery form states
   const [galleryForm, setGalleryForm] = useState({
     title: '',
