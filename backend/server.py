@@ -539,8 +539,8 @@ async def get_top_stories_articles(limit: int = 4, states: str = None, db = Depe
     if states:
         state_list = [s.strip() for s in states.split(',')]
     else:
-        # Default states (can be overridden by frontend)
-        state_list = ['Telangana', 'Andhra Pradesh']
+        # Default state codes (Telangana and Andhra Pradesh)
+        state_list = ['ts', 'ap']
     
     # Get state top stories
     top_stories_articles = crud.get_top_stories_for_states(db, states=state_list, limit=limit)
