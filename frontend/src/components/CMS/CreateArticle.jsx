@@ -2289,99 +2289,226 @@ const CreateArticle = () => {
                           <p className="text-xs text-gray-500 mt-1 text-left">Single impactful line (max 100 characters)</p>
                         </div>
 
-                        {/* Plot Summary */}
-                        <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Main Plot *
-                          </label>
-                          <textarea
-                            name="review_plot_summary"
-                            value={formData.review_plot_summary}
-                            onChange={handleInputChange}
-                            rows="4"
-                            placeholder="Brief overview of the story without spoilers..."
-                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          />
+                        {/* Plot Summary - Accordion */}
+                        <div className="mb-4 border border-gray-300 rounded-md">
+                          <div 
+                            className="flex items-center justify-between px-4 py-3 bg-gray-50 cursor-pointer hover:bg-gray-100"
+                            onClick={() => toggleReviewAccordion('plot')}
+                          >
+                            <label className="text-sm font-medium text-gray-700 cursor-pointer">
+                              Main Plot *
+                            </label>
+                            <svg 
+                              className={`w-5 h-5 text-gray-500 transition-transform ${reviewAccordions.plot ? 'rotate-180' : ''}`}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {reviewAccordions.plot && (
+                            <div className="border-t border-gray-300">
+                              <Editor
+                                editorState={editorPlotSummary}
+                                onEditorStateChange={onEditorPlotSummaryChange}
+                                wrapperClassName="wrapper-class"
+                                editorClassName="editor-class"
+                                toolbarClassName="toolbar-class"
+                                toolbar={{
+                                  options: ['inline', 'list', 'textAlign', 'history'],
+                                  inline: { options: ['bold', 'italic', 'underline'] }
+                                }}
+                                placeholder="Brief overview of the story without spoilers..."
+                                editorStyle={{ minHeight: '150px', padding: '12px', fontSize: '14px' }}
+                              />
+                            </div>
+                          )}
                         </div>
 
-                        {/* Performances */}
-                        <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Performances *
-                          </label>
-                          <textarea
-                            name="review_performances"
-                            value={formData.review_performances}
-                            onChange={handleInputChange}
-                            rows="4"
-                            placeholder="Highlight key actors and their performances..."
-                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          />
+                        {/* Performances - Accordion */}
+                        <div className="mb-4 border border-gray-300 rounded-md">
+                          <div 
+                            className="flex items-center justify-between px-4 py-3 bg-gray-50 cursor-pointer hover:bg-gray-100"
+                            onClick={() => toggleReviewAccordion('performances')}
+                          >
+                            <label className="text-sm font-medium text-gray-700 cursor-pointer">
+                              Performances *
+                            </label>
+                            <svg 
+                              className={`w-5 h-5 text-gray-500 transition-transform ${reviewAccordions.performances ? 'rotate-180' : ''}`}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {reviewAccordions.performances && (
+                            <div className="border-t border-gray-300">
+                              <Editor
+                                editorState={editorPerformances}
+                                onEditorStateChange={onEditorPerformancesChange}
+                                wrapperClassName="wrapper-class"
+                                editorClassName="editor-class"
+                                toolbarClassName="toolbar-class"
+                                toolbar={{
+                                  options: ['inline', 'list', 'textAlign', 'history'],
+                                  inline: { options: ['bold', 'italic', 'underline'] }
+                                }}
+                                placeholder="Highlight key actors and their performances..."
+                                editorStyle={{ minHeight: '150px', padding: '12px', fontSize: '14px' }}
+                              />
+                            </div>
+                          )}
                         </div>
 
-                        {/* What Works */}
-                        <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            What Works *
-                          </label>
-                          <textarea
-                            name="review_what_works"
-                            value={formData.review_what_works}
-                            onChange={handleInputChange}
-                            rows="4"
-                            placeholder="Strengths and positive aspects of the movie..."
-                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          />
+                        {/* What Works - Accordion */}
+                        <div className="mb-4 border border-gray-300 rounded-md">
+                          <div 
+                            className="flex items-center justify-between px-4 py-3 bg-gray-50 cursor-pointer hover:bg-gray-100"
+                            onClick={() => toggleReviewAccordion('whatWorks')}
+                          >
+                            <label className="text-sm font-medium text-gray-700 cursor-pointer">
+                              What Works *
+                            </label>
+                            <svg 
+                              className={`w-5 h-5 text-gray-500 transition-transform ${reviewAccordions.whatWorks ? 'rotate-180' : ''}`}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {reviewAccordions.whatWorks && (
+                            <div className="border-t border-gray-300">
+                              <Editor
+                                editorState={editorWhatWorks}
+                                onEditorStateChange={onEditorWhatWorksChange}
+                                wrapperClassName="wrapper-class"
+                                editorClassName="editor-class"
+                                toolbarClassName="toolbar-class"
+                                toolbar={{
+                                  options: ['inline', 'list', 'textAlign', 'history'],
+                                  inline: { options: ['bold', 'italic', 'underline'] }
+                                }}
+                                placeholder="Strengths and positive aspects of the movie..."
+                                editorStyle={{ minHeight: '150px', padding: '12px', fontSize: '14px' }}
+                              />
+                            </div>
+                          )}
                         </div>
 
-                        {/* What Doesn't Work */}
-                        <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            What Doesn&apos;t Work *
-                          </label>
-                          <textarea
-                            name="review_what_doesnt_work"
-                            value={formData.review_what_doesnt_work}
-                            onChange={handleInputChange}
-                            rows="4"
-                            placeholder="Weaknesses and issues with the movie..."
-                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          />
+                        {/* What Doesn't Work - Accordion */}
+                        <div className="mb-4 border border-gray-300 rounded-md">
+                          <div 
+                            className="flex items-center justify-between px-4 py-3 bg-gray-50 cursor-pointer hover:bg-gray-100"
+                            onClick={() => toggleReviewAccordion('whatDoesnt')}
+                          >
+                            <label className="text-sm font-medium text-gray-700 cursor-pointer">
+                              What Doesn&apos;t Work *
+                            </label>
+                            <svg 
+                              className={`w-5 h-5 text-gray-500 transition-transform ${reviewAccordions.whatDoesnt ? 'rotate-180' : ''}`}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {reviewAccordions.whatDoesnt && (
+                            <div className="border-t border-gray-300">
+                              <Editor
+                                editorState={editorWhatDoesntWork}
+                                onEditorStateChange={onEditorWhatDoesntWorkChange}
+                                wrapperClassName="wrapper-class"
+                                editorClassName="editor-class"
+                                toolbarClassName="toolbar-class"
+                                toolbar={{
+                                  options: ['inline', 'list', 'textAlign', 'history'],
+                                  inline: { options: ['bold', 'italic', 'underline'] }
+                                }}
+                                placeholder="Weaknesses and issues with the movie..."
+                                editorStyle={{ minHeight: '150px', padding: '12px', fontSize: '14px' }}
+                              />
+                            </div>
+                          )}
                         </div>
 
-                        {/* Technical Aspects */}
-                        <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Technical Aspects (Optional)
-                          </label>
-                          <textarea
-                            name="review_technical_aspects"
-                            value={formData.review_technical_aspects}
-                            onChange={handleInputChange}
-                            rows="3"
-                            placeholder="Music, Cinematography, Direction, etc..."
-                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
+                        {/* Technical Aspects - Accordion */}
+                        <div className="mb-4 border border-gray-300 rounded-md">
+                          <div 
+                            className="flex items-center justify-between px-4 py-3 bg-gray-50 cursor-pointer hover:bg-gray-100"
+                            onClick={() => toggleReviewAccordion('technical')}
+                          >
+                            <label className="text-sm font-medium text-gray-700 cursor-pointer">
+                              Technical Aspects (Optional)
+                            </label>
+                            <svg 
+                              className={`w-5 h-5 text-gray-500 transition-transform ${reviewAccordions.technical ? 'rotate-180' : ''}`}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {reviewAccordions.technical && (
+                            <div className="border-t border-gray-300">
+                              <Editor
+                                editorState={editorTechnicalAspects}
+                                onEditorStateChange={onEditorTechnicalAspectsChange}
+                                wrapperClassName="wrapper-class"
+                                editorClassName="editor-class"
+                                toolbarClassName="toolbar-class"
+                                toolbar={{
+                                  options: ['inline', 'list', 'textAlign', 'history'],
+                                  inline: { options: ['bold', 'italic', 'underline'] }
+                                }}
+                                placeholder="Music, Cinematography, Direction, etc..."
+                                editorStyle={{ minHeight: '120px', padding: '12px', fontSize: '14px' }}
+                              />
+                            </div>
+                          )}
                         </div>
 
-                        {/* Final Verdict */}
-                        <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Final Verdict *
-                          </label>
-                          <textarea
-                            name="review_final_verdict"
-                            value={formData.review_final_verdict}
-                            onChange={handleInputChange}
-                            rows="3"
-                            placeholder="Overall recommendation and who should watch this movie..."
-                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          />
+                        {/* Final Verdict - Accordion */}
+                        <div className="mb-4 border border-gray-300 rounded-md">
+                          <div 
+                            className="flex items-center justify-between px-4 py-3 bg-gray-50 cursor-pointer hover:bg-gray-100"
+                            onClick={() => toggleReviewAccordion('verdict')}
+                          >
+                            <label className="text-sm font-medium text-gray-700 cursor-pointer">
+                              Final Verdict *
+                            </label>
+                            <svg 
+                              className={`w-5 h-5 text-gray-500 transition-transform ${reviewAccordions.verdict ? 'rotate-180' : ''}`}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {reviewAccordions.verdict && (
+                            <div className="border-t border-gray-300">
+                              <Editor
+                                editorState={editorFinalVerdict}
+                                onEditorStateChange={onEditorFinalVerdictChange}
+                                wrapperClassName="wrapper-class"
+                                editorClassName="editor-class"
+                                toolbarClassName="toolbar-class"
+                                toolbar={{
+                                  options: ['inline', 'list', 'textAlign', 'history'],
+                                  inline: { options: ['bold', 'italic', 'underline'] }
+                                }}
+                                placeholder="Overall recommendation and who should watch this movie..."
+                                editorStyle={{ minHeight: '120px', padding: '12px', fontSize: '14px' }}
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
