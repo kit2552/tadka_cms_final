@@ -530,7 +530,11 @@ const ArticlePage = () => {
                 <div className={`text-gray-900 leading-relaxed space-y-6 text-justify`}>
                   {/* Main Content */}
                   {article.content ? (
-                    <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                    <div dangerouslySetInnerHTML={{ 
+                      __html: article.content
+                        .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>\s*$/gi, '') // Remove trailing empty paragraphs
+                        .trim()
+                    }} />
                   ) : (
                     <>
                       <p>
