@@ -833,8 +833,12 @@ const CreateArticle = () => {
       // Strip HTML tags for summary creation
       const textContent = formData.content.replace(/<[^>]*>/g, '');
       
+      // Clean image URL by removing cache-busting timestamp
+      const cleanImageUrl = formData.image ? formData.image.split('?t=')[0] : '';
+      
       const submitData = {
         ...formData,
+        image: cleanImageUrl, // Use clean URL without timestamp
         article_language: formData.language || 'en', // Map language to article_language for backend
         summary: textContent.substring(0, 200) + '...', // Generate summary from content
         states: JSON.stringify(selectedStates), // Convert states array to JSON string
