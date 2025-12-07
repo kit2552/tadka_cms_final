@@ -464,11 +464,33 @@ const CreateArticle = () => {
         if (response.ok) {
           const data = await response.json();
           
+          // Add cache-busting timestamp to force browser to reload the image
+          const imageUrlWithTimestamp = `${data.url}?t=${Date.now()}`;
+          
           // Update form with the returned URL
           setFormData(prev => ({
             ...prev,
-            image: data.url
+            image: data.url // Store the clean URL without timestamp
           }));
+          
+          // Force re-render of preview by temporarily setting to timestamp URL
+          // This will trigger the img element to reload
+          setTimeout(() => {
+            setFormData(prev => ({
+              ...prev,
+              image: imageUrlWithTimestamp
+            }));
+            // Then set it back to clean URL after a brief moment
+            setTimeout(() => {
+              setFormData(prev => ({
+                ...prev,
+                image: data.url
+              }));
+            }, 100);
+          }, 50);
+          
+          // Reset the file input
+          e.target.value = '';
           
           showNotification('success', 'Image Uploaded', 
             `Image uploaded successfully using ${data.storage === 's3' ? 'AWS S3' : 'local storage'}`);
