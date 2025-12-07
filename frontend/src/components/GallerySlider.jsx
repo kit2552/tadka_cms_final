@@ -48,7 +48,8 @@ const GallerySlider = ({ gallery, title }) => {
             <img
               src={currentImageUrl}
               alt={`${title} - Image ${currentSlide + 1}`}
-              className="max-w-full max-h-full object-contain transition-opacity duration-200 group-hover:opacity-90"
+              className="object-contain transition-opacity duration-200 group-hover:opacity-90"
+              style={{ maxWidth: '100%', maxHeight: '384px' }}
             />
             
             {/* Preview Eye Icon Overlay - Appears on Hover */}
