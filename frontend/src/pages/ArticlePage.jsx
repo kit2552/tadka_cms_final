@@ -528,6 +528,7 @@ const ArticlePage = () => {
               /* Regular Article Content - No background, no horizontal padding */
               <div className="prose prose-lg max-w-none mb-3 pt-3 pb-3">
                 <div className={`text-gray-900 leading-relaxed space-y-6 text-justify`}>
+                  {/* Main Content */}
                   {article.content ? (
                     <div dangerouslySetInnerHTML={{ __html: article.content }} />
                   ) : (
@@ -545,6 +546,19 @@ const ArticlePage = () => {
                         analysis, and conclusions relevant to the topic.
                       </p>
                     </>
+                  )}
+
+                  {/* Ad Placeholder - Only show if secondary content exists */}
+                  {article.content_secondary && (
+                    <div className="my-8 border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 text-center">
+                      <p className="text-sm text-gray-500 font-medium">Advertisement Space</p>
+                      <p className="text-xs text-gray-400 mt-1">Ad will be displayed here</p>
+                    </div>
+                  )}
+
+                  {/* Secondary Content */}
+                  {article.content_secondary && (
+                    <div dangerouslySetInnerHTML={{ __html: article.content_secondary }} />
                   )}
                 </div>
               </div>
