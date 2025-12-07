@@ -77,106 +77,112 @@ const TopStories = ({ bigStory, entertainmentStory, featuredReview, fourthStory,
       )}
 
       {/* Entertainment Story Block */}
-      <div 
-        className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer`}
-        onClick={() => handleArticleClick(entertainmentStory, 'top_story_entertainment')}
-      >
-        <div className="relative">
-          {entertainmentStory?.image || entertainmentStory?.image_url ? (
-            <img
-              src={entertainmentStory?.image || entertainmentStory?.image_url}
-              alt={entertainmentStory?.title || 'Entertainment Story'}
-              className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
-              onError={(e) => {
-                const placeholder = document.createElement('div');
-                placeholder.className = 'w-full h-40 bg-gray-500 flex items-center justify-center';
-                placeholder.innerHTML = '<span class="text-white font-bold text-3xl">A</span>';
-                e.target.parentNode.replaceChild(placeholder, e.target);
-              }}
-            />
-          ) : (
-            <PlaceholderImage 
-              contentType="post" 
-              className="w-full h-40"
-            />
-          )}
-        </div>
-        <div className="p-3 text-left">
-          <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
-            {entertainmentStory?.title || 'Latest Entertainment Industry News'}
-          </h2>
-        </div>
-      </div>
-
-      {/* Fourth Story Block - News/Sports */}
-      <div 
-        className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer`}
-        onClick={() => handleArticleClick(fourthStory, 'top_story_fourth')}
-      >
-        <div className="relative">
-          {fourthStory?.image || fourthStory?.image_url ? (
-            <img
-              src={fourthStory?.image || fourthStory?.image_url}
-              alt={fourthStory?.title || 'Featured News Story'}
-              className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
-              onError={(e) => {
-                const placeholder = document.createElement('div');
-                placeholder.className = 'w-full h-40 bg-gray-500 flex items-center justify-center';
-                placeholder.innerHTML = '<span class="text-white font-bold text-3xl">A</span>';
-                e.target.parentNode.replaceChild(placeholder, e.target);
-              }}
-            />
-          ) : (
-            <PlaceholderImage 
-              contentType="post" 
-              className="w-full h-40"
-            />
-          )}
-        </div>
-        <div className="p-3 text-left">
-          <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
-            {fourthStory?.title || 'Featured News Story'}
-          </h2>
-        </div>
-      </div>
-
-      {/* Featured Movie Review Block */}
-      <div 
-        className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer`}
-        onClick={() => handleArticleClick(featuredReview, 'top_story_review')}
-      >
-        <div className="relative">
-          {featuredReview?.image || featuredReview?.image_url ? (
-            <img
-              src={featuredReview?.image || featuredReview?.image_url}
-              alt={featuredReview?.title || 'Featured Movie Review'}
-              className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
-              onError={(e) => {
-                const placeholder = document.createElement('div');
-                placeholder.className = 'w-full h-40 bg-gray-500 flex items-center justify-center';
-                placeholder.innerHTML = '<span class="text-white font-bold text-3xl">A</span>';
-                e.target.parentNode.replaceChild(placeholder, e.target);
-              }}
-            />
-          ) : (
-            <PlaceholderImage 
-              contentType="post" 
-              className="w-full h-40"
-            />
-          )}
-          {/* Star Rating Overlay at Bottom */}
-          <div className="absolute bottom-2 left-2">
-            <div className="flex items-center bg-black bg-opacity-75 px-2 py-1 rounded">
-              {renderStars(featuredReview?.rating || 4.5)}
-            </div>
+      {entertainmentStory && (
+        <div 
+          className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer`}
+          onClick={() => handleArticleClick(entertainmentStory, 'top_story_entertainment')}
+        >
+          <div className="relative">
+            {entertainmentStory?.image || entertainmentStory?.image_url ? (
+              <img
+                src={entertainmentStory?.image || entertainmentStory?.image_url}
+                alt={entertainmentStory?.title}
+                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                onError={(e) => {
+                  const placeholder = document.createElement('div');
+                  placeholder.className = 'w-full h-40 bg-gray-500 flex items-center justify-center';
+                  placeholder.innerHTML = '<span class="text-white font-bold text-3xl">A</span>';
+                  e.target.parentNode.replaceChild(placeholder, e.target);
+                }}
+              />
+            ) : (
+              <PlaceholderImage 
+                contentType="post" 
+                className="w-full h-40"
+              />
+            )}
+          </div>
+          <div className="p-3 text-left">
+            <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
+              {entertainmentStory?.title}
+            </h2>
           </div>
         </div>
-        <div className="p-3 text-left">
-          <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
-            {featuredReview?.title || 'Featured Movie Review'}
-          </h2>
+      )}
+
+      {/* Fourth Story Block - News/Sports */}
+      {fourthStory && (
+        <div 
+          className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer`}
+          onClick={() => handleArticleClick(fourthStory, 'top_story_fourth')}
+        >
+          <div className="relative">
+            {fourthStory?.image || fourthStory?.image_url ? (
+              <img
+                src={fourthStory?.image || fourthStory?.image_url}
+                alt={fourthStory?.title}
+                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                onError={(e) => {
+                  const placeholder = document.createElement('div');
+                  placeholder.className = 'w-full h-40 bg-gray-500 flex items-center justify-center';
+                  placeholder.innerHTML = '<span class="text-white font-bold text-3xl">A</span>';
+                  e.target.parentNode.replaceChild(placeholder, e.target);
+                }}
+              />
+            ) : (
+              <PlaceholderImage 
+                contentType="post" 
+                className="w-full h-40"
+              />
+            )}
+          </div>
+          <div className="p-3 text-left">
+            <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
+              {fourthStory?.title}
+            </h2>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Featured Movie Review Block */}
+      {featuredReview && (
+        <div 
+          className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer`}
+          onClick={() => handleArticleClick(featuredReview, 'top_story_review')}
+        >
+          <div className="relative">
+            {featuredReview?.image || featuredReview?.image_url ? (
+              <img
+                src={featuredReview?.image || featuredReview?.image_url}
+                alt={featuredReview?.title}
+                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                onError={(e) => {
+                  const placeholder = document.createElement('div');
+                  placeholder.className = 'w-full h-40 bg-gray-500 flex items-center justify-center';
+                  placeholder.innerHTML = '<span class="text-white font-bold text-3xl">A</span>';
+                  e.target.parentNode.replaceChild(placeholder, e.target);
+                }}
+              />
+            ) : (
+              <PlaceholderImage 
+                contentType="post" 
+                className="w-full h-40"
+              />
+            )}
+            {/* Star Rating Overlay at Bottom */}
+            <div className="absolute bottom-2 left-2">
+              <div className="flex items-center bg-black bg-opacity-75 px-2 py-1 rounded">
+                {renderStars(featuredReview?.rating || featuredReview?.movie_rating || 4.5)}
+              </div>
+            </div>
+          </div>
+          <div className="p-3 text-left">
+            <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
+              {featuredReview?.title}
+            </h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
