@@ -48,6 +48,11 @@ const CreateArticle = () => {
     seo_title: '',
     seo_description: '',
     seo_keywords: '',
+    // AEO & FAQ fields
+    aeo_title: '',
+    aeo_description: '',
+    aeo_keywords: '',
+    faqs: [], // Array of {question: '', answer: ''}
     // Movie Review specific fields
     review_quick_verdict: '',
     review_plot_summary: '',
