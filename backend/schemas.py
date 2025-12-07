@@ -63,6 +63,11 @@ class ArticleBase(BaseModel):
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
+    # AEO & FAQ fields
+    aeo_title: Optional[str] = None
+    aeo_description: Optional[str] = None
+    aeo_keywords: Optional[str] = None
+    faqs: Optional[str] = None  # JSON string for FAQs array
     # Movie Review specific fields
     review_quick_verdict: Optional[str] = None
     review_plot_summary: Optional[str] = None
