@@ -1116,10 +1116,19 @@ const CreateArticle = () => {
       }
     } catch (error) {
       console.error(`Error ${isEditMode ? 'updating' : 'creating'} article:`, error);
+      
+      // Extract error message safely
+      let errorMessage = `There was an error ${isEditMode ? 'updating' : 'creating'} your post. Please check your connection and try again.`;
+      if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       showNotification(
         'error',
         `Error ${isEditMode ? 'Updating' : 'Creating'} Post`,
-        error.message || `There was an error ${isEditMode ? 'updating' : 'creating'} your post. Please check your connection and try again.`
+        errorMessage
       );
     } finally {
       setLoading(false);
