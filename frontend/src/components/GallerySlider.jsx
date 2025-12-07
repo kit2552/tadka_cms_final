@@ -40,16 +40,26 @@ const GallerySlider = ({ gallery, title }) => {
   return (
     <>
       <div className="mb-3 bg-white relative">
-        <div className="relative">
+        <div className="relative group">
           <div 
-            className="w-full h-96 overflow-hidden bg-black cursor-pointer"
+            className="w-full h-96 overflow-hidden bg-black cursor-pointer relative"
             onClick={handleImageClick}
           >
             <img
               src={currentImageUrl}
               alt={`${title} - Image ${currentSlide + 1}`}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain transition-opacity duration-200 group-hover:opacity-90"
             />
+            
+            {/* Preview Eye Icon Overlay - Appears on Hover */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+              <div className="bg-white/90 backdrop-blur-sm p-4 rounded-full shadow-lg">
+                <svg className="w-12 h-12 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </div>
+            </div>
           </div>
           
           {/* Navigation arrows */}
