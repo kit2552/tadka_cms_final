@@ -657,6 +657,14 @@ const ArticlePage = () => {
               </div>
             )}
 
+            {/* Ad Placeholder - Between Comments and Related Posts */}
+            <div className="mb-6 pr-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 text-center">
+                <p className="text-sm text-gray-500 font-medium">Advertisement Space</p>
+                <p className="text-xs text-gray-400 mt-1">Sidebar ad will be displayed here</p>
+              </div>
+            </div>
+
             {/* Related Articles Section Header - Sticky */}
             <div className={`sticky top-0 z-30 border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
