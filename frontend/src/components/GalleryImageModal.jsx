@@ -150,47 +150,18 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
       onClick={handleBackdropClick}
     >
       {/* Image Container */}
-      <div className="relative flex items-center justify-center" style={{ width: '100%', height: '100%' }}>
+      <div className="relative w-full h-[98vh] flex items-center justify-center">
         
-        {/* Main Image with Touch Support - All controls positioned relative to this */}
+        {/* Main Image with Touch Support */}
         <div 
-          className="relative"
-          style={{ display: 'inline-block', position: 'relative' }}
+          className="relative flex items-center justify-center"
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
           
-          {/* Loading Spinner */}
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-            </div>
-          )}
-
-          {/* Error State */}
-          {imageError && (
-            <div className="flex items-center justify-center p-8 bg-gray-900 rounded-lg">
-              <div className="text-center">
-                <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
-                <p className="text-gray-400">Failed to load image</p>
-              </div>
-            </div>
-          )}
-
-          {/* Actual Image */}
-          <img
-            src={currentImageUrl}
-            alt={`${title} - Image ${currentIndex + 1}`}
-            className={`${getImageSizeClass()} object-contain rounded-lg ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 block`}
-            onLoad={handleImageLoad}
-            onError={handleImageError}
-          />
-
-          {/* Top Right Controls - Inside image */}
-          <div style={{ position: 'absolute', top: '8px', right: '8px', display: 'flex', gap: '8px', zIndex: 20 }}>
+          {/* Top Right Controls */}
+          <div className="absolute top-4 right-4 flex items-center space-x-2 z-20">
             {/* Fullscreen Toggle Button */}
             <button
               onClick={toggleFullscreen}
@@ -219,13 +190,42 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
               </svg>
             </button>
           </div>
+          
+          {/* Loading Spinner */}
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+            </div>
+          )}
 
-          {/* Previous Button - Bottom Left inside image */}
+          {/* Error State */}
+          {imageError && (
+            <div className="flex items-center justify-center p-8 bg-gray-900 rounded-lg">
+              <div className="text-center">
+                <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                <p className="text-gray-400">Failed to load image</p>
+              </div>
+            </div>
+          )}
+
+          {/* Actual Image */}
+          <img
+            src={currentImageUrl}
+            alt={`${title} - Image ${currentIndex + 1}`}
+            className={`${getImageSizeClass()} object-contain rounded-lg ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+            style={isFullscreen ? {} : { maxHeight: '98vh', width: 'auto' }}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+          />
+
+          {/* Previous Button - Bottom Left */}
           {images.length > 1 && (
             <button
               onClick={handlePrevClick}
-              style={{ position: 'absolute', bottom: '32px', left: '32px', zIndex: 20, pointerEvents: 'auto' }}
-              className="text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
+              className="absolute bottom-8 left-8 z-20 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
+              style={{ pointerEvents: 'auto' }}
             >
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -233,19 +233,19 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
             </button>
           )}
 
-          {/* Image Counter - Bottom Center - Rectangular with slight rounded corners */}
+          {/* Image Counter - Bottom Center */}
           {images.length > 1 && !isFullscreen && (
-            <div style={{ position: 'absolute', bottom: '32px', left: '50%', transform: 'translateX(-50%)', zIndex: 20 }} className="bg-black bg-opacity-50 text-white px-4 py-2 rounded text-sm font-medium">
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 bg-black bg-opacity-50 text-white px-4 py-2 rounded text-sm font-medium">
               {currentIndex + 1} / {images.length}
             </div>
           )}
 
-          {/* Next Button - Bottom Right inside image */}
+          {/* Next Button - Bottom Right */}
           {images.length > 1 && (
             <button
               onClick={handleNextClick}
-              style={{ position: 'absolute', bottom: '32px', right: '32px', zIndex: 20, pointerEvents: 'auto' }}
-              className="text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
+              className="absolute bottom-8 right-8 z-20 text-white opacity-70 hover:opacity-100 hover:text-gray-300 transition-all duration-200 transform hover:scale-110"
+              style={{ pointerEvents: 'auto' }}
             >
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
