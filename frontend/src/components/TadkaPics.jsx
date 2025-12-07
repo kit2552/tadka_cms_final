@@ -23,22 +23,35 @@ const TadkaPics = ({ images, onImageClick }) => {
         if (response.ok) {
           const galleries = await response.json();
           
-          // Transform galleries to the format expected by the component
+          // Transform galleries - show ONE random image per gallery
           const transformedImages = [];
-          galleries.forEach((gallery, galleryIndex) => {
+          galleries.forEach((gallery) => {
             const images = Array.isArray(gallery.images) ? gallery.images : 
                           (typeof gallery.images === 'string' ? JSON.parse(gallery.images) : []);
             
-            images.forEach((img, imgIndex) => {
+            if (images.length > 0) {
+              // Pick a random image from this gallery
+              const randomIndex = Math.floor(Math.random() * images.length);
+              const randomImage = images[randomIndex];
+              
+              // Transform all images for the slider
+              const allGalleryImages = images.map((img, idx) => ({
+                url: img.url || img.data,
+                name: img.name || `${idx + 1}.jpg`,
+                alt: `${gallery.entity_name || gallery.title} - Image ${idx + 1}`
+              }));
+              
               transformedImages.push({
-                id: `${gallery.id}-${imgIndex}`,
+                id: gallery.id,
                 gallery_id: gallery.gallery_id,
-                name: gallery.title || gallery.entity_name || 'Gallery Image',
-                image: img.url || img.data,
-                fullImage: img.url || img.data,
-                gallery: gallery
+                name: gallery.entity_name || gallery.title || 'Gallery',
+                image: randomImage.url || randomImage.data,
+                fullImage: randomImage.url || randomImage.data,
+                gallery: gallery,
+                allImages: allGalleryImages, // Store all images for slider
+                selectedIndex: randomIndex // Which image is currently shown
               });
-            });
+            }
           });
           
           setActressImages(transformedImages);
