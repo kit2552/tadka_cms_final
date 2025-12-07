@@ -1332,9 +1332,9 @@ async def get_ott_release(release_id: int, db = Depends(get_db)):
     return release
 
 @api_router.get("/cms/ott-platforms")
-async def get_ott_platforms():
+async def get_ott_platforms(db = Depends(get_db)):
     """Get list of available OTT platforms"""
-    return {"platforms": crud.get_ott_platforms()}
+    return {"platforms": crud.get_ott_platforms(db)}
 
 @api_router.post("/cms/ott-releases", response_model=schemas.OTTReleaseResponse)
 async def create_ott_release(
