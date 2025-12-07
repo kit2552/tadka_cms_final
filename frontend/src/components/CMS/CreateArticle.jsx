@@ -215,6 +215,7 @@ const CreateArticle = () => {
           review_final_verdict: article.review_final_verdict || '',
           review_cast: article.review_cast || '',
           review_director: article.review_director || '',
+          review_producer: article.review_producer || '',
           review_genre: article.review_genre || '',
           review_runtime: article.review_runtime || '',
           movie_language: article.movie_language || '',
