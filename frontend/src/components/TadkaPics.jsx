@@ -9,9 +9,13 @@ const TadkaPics = ({ images, onImageClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses } = useTheme();
   
-  // State for galleries data
+  // ALL STATE HOOKS MUST BE AT THE TOP
   const [actressImages, setActressImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const scrollContainerRef = useRef(null);
 
   // Fetch Tadka Pics galleries from API
   useEffect(() => {
