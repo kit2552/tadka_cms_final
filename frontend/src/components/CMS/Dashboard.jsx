@@ -4375,19 +4375,71 @@ const Dashboard = () => {
                           <div className="flex items-center gap-4">
                             {/* Filters */}
                             <div className="flex flex-wrap gap-3">
+                              {/* Category Filter */}
                               <div>
                                 <select
-                                  value={selectedArtist}
-                                  onChange={(e) => setSelectedArtist(e.target.value)}
+                                  value={filterCategory}
+                                  onChange={async (e) => {
+                                    const category = e.target.value;
+                                    setFilterCategory(category);
+                                    setFilterEntity('');
+                                    
+                                    if (category) {
+                                      try {
+                                        const response = await fetch(
+                                          `${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${category.toLowerCase()}`
+                                        );
+                                        if (response.ok) {
+                                          const data = await response.json();
+                                          setFilterEntities(data.entities || []);
+                                        }
+                                      } catch (error) {
+                                        console.error('Error fetching filter entities:', error);
+                                        setFilterEntities([]);
+                                      }
+                                    } else {
+                                      setFilterEntities([]);
+                                    }
+                                  }}
                                   className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 >
-                                  <option value="">All Artists</option>
-                                  {[...new Set(verticalGalleries.map(gallery => gallery.artist))].map(artist => (
-                                    <option key={artist} value={artist}>
-                                      {artist}
-                                    </option>
-                                  ))}
+                                  <option value="">All Categories</option>
+                                  <option value="Actress">Actress</option>
+                                  <option value="Actor">Actor</option>
+                                  <option value="Events">Events</option>
+                                  <option value="Sports">Sports</option>
                                 </select>
+                              </div>
+                              
+                              {/* Entity Filter (shows when category selected) */}
+                              {filterCategory && (
+                                <div>
+                                  <select
+                                    value={filterEntity}
+                                    onChange={(e) => setFilterEntity(e.target.value)}
+                                    className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                  >
+                                    <option value="">All {filterCategory}</option>
+                                    {filterEntities.map(entity => (
+                                      <option key={entity} value={entity}>
+                                        {entity}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                              )}
+                              
+                              {/* Tadka Pics Filter */}
+                              <div className="flex items-center">
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={filterTadkaPics}
+                                    onChange={(e) => setFilterTadkaPics(e.target.checked)}
+                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                  />
+                                  <span className="text-sm text-gray-700">Show Tadka Pics Only</span>
+                                </label>
                               </div>
                             </div>
                           </div>
