@@ -4481,7 +4481,29 @@ const Dashboard = () => {
                         {/* Gallery List */}
                         <div className="divide-y divide-gray-200 overflow-x-auto">
                           {verticalGalleries
-                            .filter(gallery => selectedArtist === '' || gallery.artist === selectedArtist)
+                            .filter(gallery => {
+                              // Category filter
+                              if (filterCategory && gallery.category_type !== filterCategory) {
+                                return false;
+                              }
+                              
+                              // Entity filter
+                              if (filterEntity && gallery.entity_name !== filterEntity) {
+                                return false;
+                              }
+                              
+                              // Tadka Pics filter
+                              if (filterTadkaPics && !gallery.tadka_pics_enabled) {
+                                return false;
+                              }
+                              
+                              // Legacy artist filter (keep for backwards compatibility)
+                              if (selectedArtist && gallery.artist !== selectedArtist) {
+                                return false;
+                              }
+                              
+                              return true;
+                            })
                             .slice(
                               (galleriesCurrentPage - 1) * galleriesItemsPerPage,
                               galleriesCurrentPage * galleriesItemsPerPage
