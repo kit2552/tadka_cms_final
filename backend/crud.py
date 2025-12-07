@@ -384,8 +384,39 @@ def update_article_cms(db, article_id: int, article: dict):
     
     return get_article_by_id(db, article_id)
 
-def delete_article(db, article_id: int):
-    """Delete article"""
+def delete_article(db, article_id: int, s3_service=None):
+    """Delete article and its images from S3"""
+    # Get article to access image URLs
+    article = db[ARTICLES].find_one({"id": article_id}, {"_id": 0})
+    
+    if article and s3_service and s3_service.is_enabled():
+        # Delete main article image
+        image_url = article.get("image")
+        if image_url:
+            try:
+                s3_service.delete_file(image_url)
+                print(f"Deleted article image from S3: {image_url}")
+            except Exception as e:
+                print(f"Failed to delete article image from S3: {image_url}, Error: {e}")
+        
+        # Delete gallery images if any (image_gallery field)
+        image_gallery = article.get("image_gallery")
+        if image_gallery:
+            try:
+                # image_gallery is a JSON string of URLs
+                import json
+                gallery_urls = json.loads(image_gallery) if isinstance(image_gallery, str) else image_gallery
+                if isinstance(gallery_urls, list):
+                    for url in gallery_urls:
+                        try:
+                            s3_service.delete_file(url)
+                            print(f"Deleted gallery image from S3: {url}")
+                        except Exception as e:
+                            print(f"Failed to delete gallery image from S3: {url}, Error: {e}")
+            except Exception as e:
+                print(f"Failed to parse image_gallery: {e}")
+    
+    # Delete article from database
     result = db[ARTICLES].delete_one({"id": article_id})
     return result.deleted_count > 0
 
