@@ -70,6 +70,29 @@ const TadkaPics = ({ images, onImageClick }) => {
     fetchTadkaPics();
   }, []);
 
+  // Auto scroll effect - MUST be declared before any conditional returns
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (scrollContainerRef.current) {
+        const container = scrollContainerRef.current;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        
+        if (scrollPosition >= maxScroll) {
+          // Reset to beginning
+          setScrollPosition(0);
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          // Scroll 1px to the right for slow movement
+          const newPosition = scrollPosition + 1;
+          setScrollPosition(newPosition);
+          container.scrollTo({ left: newPosition, behavior: 'smooth' });
+        }
+      }
+    }, 50); // 50ms interval for slow, smooth scrolling
+
+    return () => clearInterval(interval);
+  }, [scrollPosition]);
+
   // Show loading state or empty state
   if (loading) {
     return (
