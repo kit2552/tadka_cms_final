@@ -59,6 +59,8 @@ const CreateArticle = () => {
     review_cast: '',
     review_director: '',
     review_producer: '',
+    review_music_director: '',
+    review_dop: '',
     review_genre: '',
     review_runtime: '',
     movie_language: '',
