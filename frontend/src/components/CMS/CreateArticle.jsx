@@ -1384,41 +1384,53 @@ const CreateArticle = () => {
                           />
                         </div>
 
-                        {/* Top Story Checkbox */}
-                        <div>
-                          <label className="flex items-center space-x-2 cursor-pointer">
+                        {/* Top Story Checkbox - Enhanced Design */}
+                        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg p-4 hover:border-amber-300 transition-all">
+                          <label className="flex items-start space-x-3 cursor-pointer">
                             <input
                               type="checkbox"
                               name="is_top_story"
                               checked={formData.is_top_story}
                               onChange={handleInputChange}
-                              className="form-checkbox h-4 w-4 text-blue-600"
+                              className="form-checkbox h-5 w-5 text-amber-600 mt-0.5 rounded focus:ring-2 focus:ring-amber-500"
                             />
-                            <span className="text-sm text-gray-700 font-medium">Mark as Top Story</span>
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm font-semibold text-gray-800">Mark as Top Story</span>
+                                <svg className="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                              </div>
+                              <p className="text-xs text-gray-600 mt-1">
+                                {(() => {
+                                  try {
+                                    const states = formData.states ? JSON.parse(formData.states) : [];
+                                    return states.length === 0 ? '📰 Will appear in National Top Stories' : '🏛️ Will appear in State Top Stories';
+                                  } catch {
+                                    return '🏛️ Will appear in State Top Stories';
+                                  }
+                                })()}
+                              </p>
+                            </div>
                           </label>
-                          <p className="text-xs text-gray-500 mt-1 ml-6">
-                            {(() => {
-                              try {
-                                const states = formData.states ? JSON.parse(formData.states) : [];
-                                return states.length === 0 ? 'Will appear in National Top Stories' : 'Will appear in State Top Stories';
-                              } catch {
-                                return 'Will appear in State Top Stories';
-                              }
-                            })()}
-                          </p>
                         </div>
 
-                        {/* Enable Comments Checkbox */}
-                        <div>
-                          <label className="flex items-center space-x-2 cursor-pointer">
+                        {/* Enable Comments Checkbox - Enhanced Design */}
+                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-4 hover:border-blue-300 transition-all">
+                          <label className="flex items-center space-x-3 cursor-pointer">
                             <input
                               type="checkbox"
                               name="comments_enabled"
                               checked={formData.comments_enabled}
                               onChange={handleInputChange}
-                              className="form-checkbox h-4 w-4 text-blue-600"
+                              className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                             />
-                            <span className="text-sm text-gray-700">Enable Comments</span>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm font-semibold text-gray-800">Enable Comments</span>
+                              <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd"></path>
+                              </svg>
+                            </div>
                           </label>
                         </div>
                       </div>
