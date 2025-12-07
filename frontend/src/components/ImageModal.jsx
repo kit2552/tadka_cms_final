@@ -147,15 +147,14 @@ const ImageModal = ({ image, images, onClose, onNext, onPrev, onImageChange }) =
               )}
             </button>
 
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-            className="absolute top-2 right-2 z-70 bg-black bg-opacity-50 text-white hover:bg-opacity-70 transition-all duration-200 rounded-lg p-2"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+              className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-md transition-all backdrop-blur-sm"
+              title="Close"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
           
           {/* Loading Spinner */}
           {isLoading && (
