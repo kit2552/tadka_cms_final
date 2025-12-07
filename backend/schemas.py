@@ -100,6 +100,7 @@ class ArticleUpdate(BaseModel):
     title: Optional[str] = None
     short_title: Optional[str] = None
     content: Optional[str] = None
+    content_secondary: Optional[str] = None
     summary: Optional[str] = None
     author: Optional[str] = None
     language: Optional[str] = None
