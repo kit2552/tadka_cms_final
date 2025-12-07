@@ -1842,7 +1842,7 @@ const CreateArticle = () => {
                               </label>
                             </div>
 
-                            {/* Enable Movie Review Comments Checkbox */}
+                            {/* Enable User Reviews Checkbox */}
                             <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
                               <label className="flex items-center space-x-3 cursor-pointer">
                                 <input
@@ -1852,8 +1852,29 @@ const CreateArticle = () => {
                                   onChange={handleInputChange}
                                   className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                                 />
-                                <span className="text-sm font-semibold text-gray-800">Enable Movie Review Comments</span>
+                                <span className="text-sm font-semibold text-gray-800">Enable User Reviews</span>
                               </label>
+                            </div>
+
+                            {/* Rating (Stars) - Styled like checkbox section */}
+                            <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
+                              <label className="block text-sm font-semibold text-gray-800 mb-2 text-left">
+                                Rating (Stars) *
+                              </label>
+                              <select
+                                name="movie_rating"
+                                value={formData.movie_rating}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                                required
+                              >
+                                <option value="">Select Rating</option>
+                                {Array.from({length: 21}, (_, i) => i * 0.25).map(rating => (
+                                  <option key={rating} value={rating.toFixed(2)}>
+                                    {rating === 0 ? 'Not Rated' : `${rating.toFixed(2)} Stars`}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
                           </div>
 
