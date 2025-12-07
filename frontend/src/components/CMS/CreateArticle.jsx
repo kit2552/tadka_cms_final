@@ -2184,6 +2184,7 @@ const CreateArticle = () => {
                             required
                           />
                         </div>
+                        </div>
                       </div>
                     </div>
                     </>
