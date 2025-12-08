@@ -460,7 +460,7 @@ const VideoView = () => {
             </div>
 
             {/* YouTube Video Player - Responsive container with aspect ratio */}
-            <div className="mb-4">
+            <div className="mb-6">
               <div 
                 className="relative w-full bg-black" 
                 style={{ 
