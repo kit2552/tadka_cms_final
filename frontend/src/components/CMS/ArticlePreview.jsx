@@ -302,6 +302,46 @@ const ArticlePreview = () => {
               </div>
             )}
 
+            {/* Social Media Embed */}
+            {article.social_media_type && article.social_media_embed && (
+              <div className="my-6">
+                {article.social_media_type === 'twitter' && (
+                  <div className="flex justify-center">
+                    {article.social_media_embed.includes('<blockquote') || article.social_media_embed.includes('<iframe') ? (
+                      <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                    ) : (
+                      <blockquote className="twitter-tweet" data-theme={theme === 'dark' ? 'dark' : 'light'}>
+                        <a href={article.social_media_embed}></a>
+                      </blockquote>
+                    )}
+                  </div>
+                )}
+                {article.social_media_type === 'instagram' && (
+                  <div className="flex justify-center">
+                    <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                  </div>
+                )}
+                {article.social_media_type === 'facebook' && (
+                  <div className="flex justify-center">
+                    <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                  </div>
+                )}
+                {article.social_media_type === 'tiktok' && (
+                  <div className="flex justify-center">
+                    <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                  </div>
+                )}
+                {article.social_media_type === 'youtube' && article.social_media_embed.includes('iframe') && (
+                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                    <div 
+                      className="absolute inset-0"
+                      dangerouslySetInnerHTML={{ __html: article.social_media_embed }} 
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Article Summary - White background */}
             {article.summary && (
               <div className="mb-6 bg-white">
