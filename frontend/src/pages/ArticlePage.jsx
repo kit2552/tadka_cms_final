@@ -23,6 +23,7 @@ const ArticlePage = () => {
     article_content_mid: false,
     article_sidebar_comments: false
   });
+  const [twitterEmbedError, setTwitterEmbedError] = useState(false);
 
   // Update page title, meta tags, and schema markup for SEO/AEO
   useEffect(() => {
