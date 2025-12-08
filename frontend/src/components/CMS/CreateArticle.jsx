@@ -2826,7 +2826,7 @@ const CreateArticle = () => {
                   )}
 
                   {/* Social Media Embed Section - Between Main and Secondary Content */}
-                  {(formData.content_type === 'post' || formData.content_type === 'video_post') && (
+                  {(formData.content_type === 'post' || formData.content_type === 'video_post' || formData.content_type === 'photo') && (
                     <div className="space-y-3 mt-6 p-4 bg-blue-50 border-2 border-blue-200 rounded-lg">
                       <h3 className="text-sm font-semibold text-gray-800 text-left">Social Media Embed (Optional)</h3>
                       <p className="text-xs text-gray-600 text-left">Embed will appear between main content and secondary content</p>
