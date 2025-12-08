@@ -2729,7 +2729,7 @@ const CreateArticle = () => {
                       {formData.social_media_type && (
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Embed Code or Share Link
+                            Embed Code (Recommended) or Share Link
                           </label>
                           <textarea
                             name="social_media_embed"
@@ -2740,7 +2740,16 @@ const CreateArticle = () => {
                             className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                           />
                           <p className="text-xs text-gray-600 mt-1 text-left">
-                            {formData.social_media_type === 'twitter' && '⚠️ For best results, get the embed code from Twitter: Click "..." on the tweet → Copy link to post. Note: Some tweets may not embed if they are deleted, private, or restricted.'}
+                            {formData.social_media_type === 'twitter' && (
+                              <>
+                                ⚠️ <strong>Important:</strong> Twitter/X embed codes work best. To get embed code:<br/>
+                                1. Go to the tweet on x.com<br/>
+                                2. Click "..." menu → "Embed post"<br/>
+                                3. Copy the entire <code>&lt;blockquote&gt;...&lt;/blockquote&gt;</code> code<br/>
+                                4. Paste it here<br/>
+                                <span className="text-orange-600">Note: Direct tweet URLs may not work due to Twitter/X restrictions.</span>
+                              </>
+                            )}
                             {formData.social_media_type === 'instagram' && 'Paste Instagram embed code or post URL'}
                             {formData.social_media_type === 'facebook' && 'Paste Facebook embed code or post URL'}
                             {formData.social_media_type === 'tiktok' && 'Paste TikTok embed code or video URL'}
