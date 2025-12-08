@@ -102,6 +102,8 @@ const CreateArticle = () => {
     // Comment settings
     comments_enabled: true,
     review_comments_enabled: true,
+    social_media_type: '',
+    social_media_embed: '',
     // Top Story
     is_top_story: false
   });
