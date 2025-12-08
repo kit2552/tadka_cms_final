@@ -127,7 +127,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
     <div>
       {/* Sticky Header with Add Comment Button */}
       <div className={`sticky top-0 z-30 border-b-2 border-gray-300 mb-4 -mr-4`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
-        <div className="pl-0 pr-4 py-4 flex items-center justify-between gap-2">
+        <div className="pl-0 pr-0 py-4 flex items-center justify-between gap-2">
           <div className="flex-1">
             <h2 className="text-base font-bold text-black text-left leading-tight mb-1">
               {headerTitle} {totalCount > 0 && `(${totalCount})`}
@@ -138,7 +138,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
           </div>
           <button
             onClick={handleOpenModal}
-            className="px-3 h-[22px] flex items-center bg-gray-700 text-white rounded text-xs font-medium hover:bg-gray-800 transition-colors whitespace-nowrap flex-shrink-0"
+            className="px-3 h-[22px] flex items-center bg-gray-700 text-white rounded text-xs font-medium hover:bg-gray-800 transition-colors whitespace-nowrap flex-shrink-0 mr-4"
           >
             {commentType === 'review' ? 'Add Review' : 'Add Comment'}
           </button>
