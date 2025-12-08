@@ -4,6 +4,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PlaceholderImage } from '../utils/imageUtils';
 import { STATE_CODE_MAPPING, parseStoredStates, DEFAULT_SELECTED_STATES } from '../utils/statesConfig';
+import CommentSection from '../components/CommentSection';
 
 const VideoView = () => {
   const { id } = useParams();
