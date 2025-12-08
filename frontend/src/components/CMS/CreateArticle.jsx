@@ -1397,6 +1397,15 @@ const CreateArticle = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Target States</label>
                     
+                    {/* Display Selected State */}
+                    {selectedStates.length > 0 && selectedStates[0] && (
+                      <div className="mb-2">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                          {selectedStates[0] === 'all' ? 'All States (National)' : states.find(s => s.code === selectedStates[0])?.name || selectedStates[0]}
+                        </span>
+                      </div>
+                    )}
+                    
                     {/* Searchable Input for Single State Selection */}
                     <div className="relative">
                       <input
