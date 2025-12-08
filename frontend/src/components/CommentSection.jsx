@@ -168,7 +168,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
           <p className="text-gray-600 text-sm">No comments yet. Be the first!</p>
         </div>
       ) : (
-        <div className={`space-y-3 -mr-4 ${comments.length > 5 ? 'max-h-[450px] overflow-y-auto pr-2 custom-scrollbar' : ''}`}>
+        <div className={`space-y-3 ${comments.length > 5 ? 'max-h-[450px] overflow-y-auto pr-2 custom-scrollbar' : ''}`}>
           {comments.map((comment) => (
             <div
               key={comment.id}
