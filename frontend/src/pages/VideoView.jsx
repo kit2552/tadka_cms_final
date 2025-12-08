@@ -490,7 +490,14 @@ const VideoView = () => {
               </div>
             </div>
 
-            {/* Share Icons - Directly after video and summary */}
+            {/* Comments Section */}
+            {article.comments_enabled !== false && (
+              <div className="mb-6">
+                <CommentSection articleId={article.id} commentType="regular" headerTitle="Comments" />
+              </div>
+            )}
+            
+            {/* Share Icons - Below comments section */}
             <div className="border-t border-gray-300 pt-4 mb-4" style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pt-4 pb-2 lg:py-4 flex justify-start space-x-2.5">
                 <button
@@ -554,13 +561,6 @@ const VideoView = () => {
                 </button>
               </div>
             </div>
-            
-            {/* Comments Section */}
-            {article.comments_enabled !== false && (
-              <div className="mb-6">
-                <CommentSection articleId={article.id} commentType="regular" headerTitle="Comments" />
-              </div>
-            )}
           </div>
 
           {/* Related Videos Section - 20% width on desktop, full width on mobile */}
