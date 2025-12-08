@@ -172,8 +172,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
           {comments.map((comment) => (
             <div
               key={comment.id}
-              className="bg-white p-3 pr-0 rounded-lg border border-gray-200 shadow-sm text-left"
-              style={{ paddingRight: '0px' }}
+              className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm text-left"
             >
               <div className="mb-2 flex items-center justify-between">
                 <div className="flex items-center gap-2">
