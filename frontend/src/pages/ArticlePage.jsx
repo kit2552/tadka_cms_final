@@ -343,7 +343,7 @@ const ArticlePage = () => {
                 />
               </div>
             ) : (
-              <div className="mb-4 bg-white">
+              <div className="mb-3 bg-white">
                 <PlaceholderImage 
                   contentType={article.content_type || 'post'} 
                   className="w-full h-96"
