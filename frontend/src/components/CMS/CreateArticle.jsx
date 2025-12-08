@@ -2782,13 +2782,10 @@ const CreateArticle = () => {
 
                   {/* Secondary Content (Hidden for Movie Reviews, shown for other types) */}
                   {formData.content_type !== 'movie_review' && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                      Secondary Content (Optional - for ad placement)
+                  <div className="mt-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                      Secondary Content (Optional)
                     </label>
-                    <p className="text-xs text-gray-500 mb-2 text-left">
-                      Content added here will appear after the main content with an ad space in between
-                    </p>
                     <div className="border border-gray-300 rounded-md">
                       <Editor
                         editorState={editorStateSecondary}
