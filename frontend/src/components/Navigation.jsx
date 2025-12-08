@@ -826,8 +826,8 @@ const Navigation = ({ onLayoutModeChange }) => {
                 </button>
               )}
 
-              {/* Mobile Menu Button - Only visible on mobile and non-preview, non-ViewMovieContent pages */}
-              {!isPreviewPage && !isViewMovieContentPage && (
+              {/* Mobile Menu Button - Only visible on mobile and non-article, non-video, non-preview, non-ViewMovieContent pages */}
+              {!isArticlePage && !isVideoPage && !isPreviewPage && !isViewMovieContentPage && (
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="md:hidden p-2 text-gray-700 hover:text-gray-900 transition-colors duration-200"
