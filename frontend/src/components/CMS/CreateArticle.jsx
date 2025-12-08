@@ -2740,7 +2740,7 @@ const CreateArticle = () => {
                             className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                           />
                           <p className="text-xs text-gray-600 mt-1 text-left">
-                            {formData.social_media_type === 'twitter' && 'Paste Twitter/X embed code or tweet URL'}
+                            {formData.social_media_type === 'twitter' && '⚠️ For best results, get the embed code from Twitter: Click "..." on the tweet → Copy link to post. Note: Some tweets may not embed if they are deleted, private, or restricted.'}
                             {formData.social_media_type === 'instagram' && 'Paste Instagram embed code or post URL'}
                             {formData.social_media_type === 'facebook' && 'Paste Facebook embed code or post URL'}
                             {formData.social_media_type === 'tiktok' && 'Paste TikTok embed code or video URL'}
