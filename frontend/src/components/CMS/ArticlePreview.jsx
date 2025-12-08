@@ -14,6 +14,7 @@ const ArticlePreview = () => {
   const [error, setError] = useState(null);
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [twitterEmbedError, setTwitterEmbedError] = useState(false);
 
   // Fetch article and redirect to appropriate template
   const fetchArticleAndRedirect = async (id) => {
