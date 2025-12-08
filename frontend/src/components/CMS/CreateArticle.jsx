@@ -2740,16 +2740,7 @@ const CreateArticle = () => {
                             className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                           />
                           <p className="text-xs text-gray-600 mt-1 text-left">
-                            {formData.social_media_type === 'twitter' && (
-                              <>
-                                ⚠️ <strong>Important:</strong> Twitter/X embed codes work best. To get embed code:<br/>
-                                1. Go to the tweet on x.com<br/>
-                                2. Click "..." menu → "Embed post"<br/>
-                                3. Copy the entire <code>&lt;blockquote&gt;...&lt;/blockquote&gt;</code> code<br/>
-                                4. Paste it here<br/>
-                                <span className="text-orange-600">⚠️ Known Limitation: Videos in embedded tweets may not autoplay due to Twitter/X restrictions. Users can click on the tweet to view the video on Twitter/X.</span>
-                              </>
-                            )}
+                            {formData.social_media_type === 'twitter' && 'Paste Twitter/X embed code'}
                             {formData.social_media_type === 'instagram' && 'Paste Instagram embed code or post URL'}
                             {formData.social_media_type === 'facebook' && 'Paste Facebook embed code or post URL'}
                             {formData.social_media_type === 'tiktok' && 'Paste TikTok embed code or video URL'}
