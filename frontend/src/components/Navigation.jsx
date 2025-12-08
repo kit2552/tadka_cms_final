@@ -23,6 +23,25 @@ const Navigation = ({ onLayoutModeChange }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout, isAuthenticated } = useAuth();
+  
+  // Track navigation depth in session storage
+  useEffect(() => {
+    const isContentPage = location.pathname.startsWith('/article/') || location.pathname.startsWith('/video/');
+    const isHomePage = location.pathname === '/';
+    
+    if (isHomePage) {
+      // Reset navigation depth when on homepage
+      sessionStorage.setItem('navDepth', '0');
+    } else if (isContentPage) {
+      // Increment navigation depth when navigating to content page
+      const currentDepth = parseInt(sessionStorage.getItem('navDepth') || '0');
+      sessionStorage.setItem('navDepth', String(currentDepth + 1));
+    }
+  }, [location.pathname]);
+  
+  // Check if user is deep in navigation (visited more than 1 content page)
+  const navDepth = parseInt(sessionStorage.getItem('navDepth') || '0');
+  const isDeepNavigation = navDepth > 1;
 
   // Check if we're on an article page, video page, or preview page
   const isArticlePage = location.pathname.startsWith('/article/');
