@@ -291,6 +291,9 @@ def create_article(db, article: dict):
         "movie_language": article.get("movie_language"),
         "platform": article.get("platform"),
         "ott_platform": article.get("ott_platform"),
+        # Social media embed fields
+        "social_media_type": article.get("social_media_type"),
+        "social_media_embed": article.get("social_media_embed"),
         "view_count": 0,
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow(),
