@@ -643,13 +643,29 @@ const ArticlePage = () => {
                   {article.social_media_type && article.social_media_embed && (
                     <div className="my-6">
                       {article.social_media_type === 'twitter' && (
-                        <div className="flex justify-center">
+                        <div className="flex justify-center flex-col items-center">
                           {article.social_media_embed.includes('<blockquote') || article.social_media_embed.includes('<iframe') ? (
                             <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
                           ) : (
-                            <blockquote className="twitter-tweet" data-theme={theme === 'dark' ? 'dark' : 'light'}>
-                              <a href={article.social_media_embed}></a>
-                            </blockquote>
+                            <>
+                              <blockquote className="twitter-tweet" data-theme={theme === 'dark' ? 'dark' : 'light'}>
+                                <a href={article.social_media_embed}></a>
+                              </blockquote>
+                              {twitterEmbedError && (
+                                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg max-w-md text-center">
+                                  <p className="text-sm text-yellow-800 mb-2">⚠️ Unable to load tweet</p>
+                                  <p className="text-xs text-yellow-700">This tweet may be deleted, private, or unavailable.</p>
+                                  <a 
+                                    href={article.social_media_embed} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-xs underline mt-2 inline-block"
+                                  >
+                                    Try opening on Twitter/X
+                                  </a>
+                                </div>
+                              )}
+                            </>
                           )}
                         </div>
                       )}
