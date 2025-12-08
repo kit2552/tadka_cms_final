@@ -39,7 +39,7 @@ const GallerySlider = ({ gallery, title }) => {
   
   return (
     <>
-      <div className="mb-3 bg-white relative">
+      <div className="mb-4 bg-white relative">
         <div className="relative group">
           <div 
             className="w-full h-96 overflow-hidden bg-black cursor-pointer relative flex items-center justify-center"
