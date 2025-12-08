@@ -152,6 +152,8 @@ const ArticlePage = () => {
   // Load Twitter widgets script and render tweets
   useEffect(() => {
     if (article && article.social_media_type === 'twitter' && article.social_media_embed) {
+      setTwitterEmbedError(false);
+      
       // Load Twitter widgets script if not already loaded
       if (!window.twttr) {
         const script = document.createElement('script');
@@ -161,15 +163,31 @@ const ArticlePage = () => {
         document.body.appendChild(script);
         
         script.onload = () => {
-          // After script loads, render the tweet
+          // After script loads, render the tweet and check if it loaded successfully
           if (window.twttr && window.twttr.widgets) {
-            window.twttr.widgets.load();
+            window.twttr.widgets.load().then(() => {
+              // Check after 3 seconds if iframe was created
+              setTimeout(() => {
+                const twitterIframes = document.querySelectorAll('iframe[id^="twitter-widget"]');
+                if (twitterIframes.length === 0) {
+                  setTwitterEmbedError(true);
+                }
+              }, 3000);
+            });
           }
         };
       } else {
         // Script already loaded, just render
         if (window.twttr.widgets) {
-          window.twttr.widgets.load();
+          window.twttr.widgets.load().then(() => {
+            // Check after 3 seconds if iframe was created
+            setTimeout(() => {
+              const twitterIframes = document.querySelectorAll('iframe[id^="twitter-widget"]');
+              if (twitterIframes.length === 0) {
+                setTwitterEmbedError(true);
+              }
+            }, 3000);
+          });
         }
       }
     }
