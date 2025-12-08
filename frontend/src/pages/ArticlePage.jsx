@@ -625,7 +625,13 @@ const ArticlePage = () => {
                     <div className="my-6">
                       {article.social_media_type === 'twitter' && (
                         <div className="flex justify-center">
-                          <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                          {article.social_media_embed.includes('<blockquote') || article.social_media_embed.includes('<iframe') ? (
+                            <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                          ) : (
+                            <blockquote className="twitter-tweet" data-theme={theme === 'dark' ? 'dark' : 'light'}>
+                              <a href={article.social_media_embed}></a>
+                            </blockquote>
+                          )}
                         </div>
                       )}
                       {article.social_media_type === 'instagram' && (
