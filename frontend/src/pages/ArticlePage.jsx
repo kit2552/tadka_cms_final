@@ -329,7 +329,7 @@ const ArticlePage = () => {
             ) : article.content_type === 'photo' && article.gallery ? (
               <GallerySlider gallery={article.gallery} title={article.title} />
             ) : article.image ? (
-              <div className="mb-3 bg-white">
+              <div className="mb-4 bg-white">
                 <img
                   src={article.image}
                   alt={article.title}
