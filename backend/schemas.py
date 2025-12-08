@@ -95,6 +95,9 @@ class ArticleBase(BaseModel):
     platform: Optional[str] = None
     ott_content_type: Optional[str] = None
     ott_platforms: Optional[str] = None  # JSON array
+    # Social Media Embed fields
+    social_media_type: Optional[str] = None
+    social_media_embed: Optional[str] = None
 
 class ArticleCreate(ArticleBase):
     pass
@@ -143,6 +146,9 @@ class ArticleUpdate(BaseModel):
     platform: Optional[str] = None
     ott_content_type: Optional[str] = None
     ott_platforms: Optional[str] = None  # JSON array
+    # Social Media Embed fields
+    social_media_type: Optional[str] = None
+    social_media_embed: Optional[str] = None
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
