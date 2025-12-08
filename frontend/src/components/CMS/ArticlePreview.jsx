@@ -96,6 +96,32 @@ const ArticlePreview = () => {
     window.scrollTo(0, 0);
   }, []); // Run only once when component mounts
 
+  // Load Twitter widgets script and render tweets
+  useEffect(() => {
+    if (article && article.social_media_type === 'twitter' && article.social_media_embed) {
+      // Load Twitter widgets script if not already loaded
+      if (!window.twttr) {
+        const script = document.createElement('script');
+        script.src = 'https://platform.twitter.com/widgets.js';
+        script.async = true;
+        script.charset = 'utf-8';
+        document.body.appendChild(script);
+        
+        script.onload = () => {
+          // After script loads, render the tweet
+          if (window.twttr && window.twttr.widgets) {
+            window.twttr.widgets.load();
+          }
+        };
+      } else {
+        // Script already loaded, just render
+        if (window.twttr.widgets) {
+          window.twttr.widgets.load();
+        }
+      }
+    }
+  }, [article]);
+
   const fetchCMSConfig = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/config`);
