@@ -658,16 +658,12 @@ const ArticlePage = () => {
             {/* Comment Section */}
             {article.content_type === 'movie_review' && (article.review_comments_enabled !== false) && (
               <div className="mb-6">
-                <div className="pr-4">
-                  <CommentSection articleId={article.id} commentType="review" headerTitle="User Reviews" />
-                </div>
+                <CommentSection articleId={article.id} commentType="review" headerTitle="User Reviews" />
               </div>
             )}
             {article.content_type !== 'movie_review' && (article.comments_enabled !== false) && (
               <div className="mb-6">
-                <div className="pr-4">
-                  <CommentSection articleId={article.id} commentType="regular" headerTitle="Comments" />
-                </div>
+                <CommentSection articleId={article.id} commentType="regular" headerTitle="Comments" />
               </div>
             )}
 
