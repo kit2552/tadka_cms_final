@@ -2293,8 +2293,8 @@ const CreateArticle = () => {
                             </div>
                           </div>
 
-                          {/* OTT Release Fields - Show only when platform is OTT Release */}
-                          {formData.platform === 'OTT Release' && (
+                          {/* OTT Release Fields - Show only when platform is OTT */}
+                          {formData.platform === 'OTT' && (
                             <>
                               {/* Row 7: Content Type and OTT Platforms */}
                               <div className="grid grid-cols-2 gap-4">
