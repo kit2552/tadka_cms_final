@@ -452,7 +452,7 @@ const VideoView = () => {
                     {article.title}
                   </h1>
                 </div>
-                <p className="text-xs text-gray-900 opacity-75">
+                <p className="text-xs text-gray-900 opacity-75 text-left">
                   Published on {formatDate(article.published_at || article.created_at)}
                 </p>
               </div>
