@@ -313,7 +313,7 @@ async def get_usa_row_videos_sections(limit: int = 20, db = Depends(get_db)):
         "row": row_articles
     }
 
-@api_router.get("/articles/sections/viral-shorts", response_model=dict)
+@api_router.get("/articles/sections/viral-shorts")
 async def get_viral_shorts_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
     """Get articles for Viral Shorts section with Viral Shorts and Bollywood tabs
     
