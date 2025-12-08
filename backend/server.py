@@ -263,7 +263,7 @@ async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
         "bollywood": bollywood_articles
     }
 
-@api_router.get("/articles/sections/trending-videos", response_model=dict)
+@api_router.get("/articles/sections/trending-videos")
 async def get_trending_videos_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
     """Get articles for Trending Videos section with Trending Videos and Bollywood-Trending Videos tabs
     
