@@ -314,7 +314,7 @@ const ArticlePage = () => {
 
             {/* Main Image or YouTube Video or Gallery Slider - White background */}
             {(article.content_type === 'video' || article.content_type === 'movie_review') && article.youtube_url ? (
-              <div className="mb-4 bg-white">
+              <div className="mb-3 bg-white">
                 <div className="relative aspect-video w-full overflow-hidden">
                   <iframe
                     src={getYouTubeEmbedUrl(article.youtube_url)}
