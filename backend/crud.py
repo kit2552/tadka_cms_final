@@ -8,6 +8,18 @@ from bson import ObjectId
 import json
 from models.mongodb_collections import *
 
+def _clean_twitter_embed(embed_code):
+    """Clean Twitter embed code to show full tweet card instead of compact video view"""
+    if not embed_code or not isinstance(embed_code, str):
+        return embed_code
+    
+    # Remove data-media-max-width attribute which causes compact video-only view
+    if '<blockquote' in embed_code and 'twitter' in embed_code.lower():
+        embed_code = embed_code.replace('data-media-max-width="560"', '')
+        embed_code = embed_code.replace("data-media-max-width='560'", '')
+    
+    return embed_code
+
 
 class DotDict(dict):
     """Dictionary that supports dot notation access for backward compatibility"""
