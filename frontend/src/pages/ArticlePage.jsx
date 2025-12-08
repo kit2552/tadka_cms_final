@@ -361,25 +361,25 @@ const ArticlePage = () => {
                     <div className="flex-1 space-y-2 text-left">
                       {article.title && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Movie</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Movie</span>
                           <span className="text-white font-medium text-xs">{article.title.replace(' Movie Review', '')}</span>
                         </div>
                       )}
                       {article.movie_language && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Language</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Language</span>
                           <span className="text-white font-medium text-xs">{article.movie_language}</span>
                         </div>
                       )}
                       {article.review_runtime && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Runtime</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Runtime</span>
                           <span className="text-white font-medium text-xs">{article.review_runtime}</span>
                         </div>
                       )}
                       {article.review_genre && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Genre</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Genre</span>
                           <span className="text-white font-medium text-xs">
                             {(() => {
                               try {
@@ -396,25 +396,25 @@ const ArticlePage = () => {
                       )}
                       {article.review_director && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Director</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Director</span>
                           <span className="text-white font-medium text-xs">{article.review_director}</span>
                         </div>
                       )}
                       {article.review_cast && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Cast</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Cast</span>
                           <span className="text-white font-medium text-xs leading-relaxed">{article.review_cast}</span>
                         </div>
                       )}
                       {article.platform && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Release</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Release</span>
                           <span className="text-white font-medium text-xs">{article.platform}</span>
                         </div>
                       )}
                       {article.release_date && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Release Date</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Release Date</span>
                           <span className="text-white font-medium text-xs">
                             {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                           </span>
