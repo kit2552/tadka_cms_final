@@ -1577,6 +1577,7 @@ const CreateArticle = () => {
                       <option value="photo">Photo Gallery</option>
                       <option value="post">Post</option>
                       <option value="video">Video</option>
+                      <option value="video_post">Video Post</option>
                     </select>
                   </div>
                 </div>
