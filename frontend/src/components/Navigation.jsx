@@ -39,9 +39,9 @@ const Navigation = ({ onLayoutModeChange }) => {
     }
   }, [location.pathname]);
   
-  // Check if user is deep in navigation (visited more than 1 content page)
+  // Check if user is in navigation (visited 1 or more content pages)
   const navDepth = parseInt(sessionStorage.getItem('navDepth') || '0');
-  const isDeepNavigation = navDepth > 1;
+  const isDeepNavigation = navDepth >= 1;
 
   // Check if we're on an article page, video page, or preview page
   const isArticlePage = location.pathname.startsWith('/article/');
