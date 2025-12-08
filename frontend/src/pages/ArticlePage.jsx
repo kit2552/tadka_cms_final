@@ -380,7 +380,18 @@ const ArticlePage = () => {
                       {article.review_genre && (
                         <div className="flex items-center gap-4">
                           <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Genre</span>
-                          <span className="text-white font-medium text-xs">{article.review_genre}</span>
+                          <span className="text-white font-medium text-xs">
+                            {(() => {
+                              try {
+                                const genres = typeof article.review_genre === 'string' 
+                                  ? JSON.parse(article.review_genre) 
+                                  : article.review_genre;
+                                return Array.isArray(genres) ? genres.join(', ') : article.review_genre;
+                              } catch {
+                                return article.review_genre;
+                              }
+                            })()}
+                          </span>
                         </div>
                       )}
                       {article.review_director && (
@@ -397,12 +408,32 @@ const ArticlePage = () => {
                       )}
                       {article.platform && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Platform</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Release</span>
+                          <span className="text-white font-medium text-xs">{article.platform}</span>
+                        </div>
+                      )}
+                      {article.release_date && (
+                        <div className="flex items-center gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">Release Date</span>
                           <span className="text-white font-medium text-xs">
-                            {article.platform === 'OTT' && article.ott_platform 
-                              ? `${article.platform} - ${article.ott_platform}`
-                              : article.platform
-                            }
+                            {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                          </span>
+                        </div>
+                      )}
+                      {article.platform === 'OTT' && article.ott_platforms && (
+                        <div className="flex items-center gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">OTT Platforms</span>
+                          <span className="text-white font-medium text-xs">
+                            {(() => {
+                              try {
+                                const platforms = typeof article.ott_platforms === 'string' 
+                                  ? JSON.parse(article.ott_platforms) 
+                                  : article.ott_platforms;
+                                return Array.isArray(platforms) ? platforms.join(', ') : article.ott_platforms;
+                              } catch {
+                                return article.ott_platforms;
+                              }
+                            })()}
                           </span>
                         </div>
                       )}
