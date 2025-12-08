@@ -553,6 +553,13 @@ const VideoView = () => {
                 </button>
               </div>
             </div>
+            
+            {/* Comments Section */}
+            {article.comments_enabled !== false && (
+              <div className="mb-6">
+                <CommentSection articleId={article.id} commentType="regular" headerTitle="Comments" />
+              </div>
+            )}
           </div>
 
           {/* Related Videos Section - 20% width on desktop, full width on mobile */}
