@@ -290,7 +290,9 @@ const CreateArticle = () => {
           comments_enabled: article.comments_enabled !== undefined ? article.comments_enabled : true,
           review_comments_enabled: article.review_comments_enabled !== undefined ? article.review_comments_enabled : true,
           // Top Story flag
-          is_top_story: article.is_top_story || false
+          is_top_story: article.is_top_story || false,
+          social_media_type: article.social_media_type || '',
+          social_media_embed: article.social_media_embed || ''
         });
         
         // Set selected states (multiple selection)
