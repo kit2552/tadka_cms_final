@@ -358,7 +358,13 @@ def update_article_cms(db, article_id: int, article: dict):
     # Only update fields that are present in the article dict
     for field in allowed_fields:
         if field in article:
-            update_fields[field] = article[field]
+            value = article[field]
+            # Clean Twitter embed code - remove data-media-max-width to show full tweet card
+            if field == "social_media_embed" and value and isinstance(value, str):
+                if '<blockquote' in value and 'twitter' in value.lower():
+                    value = value.replace('data-media-max-width="560"', '')
+                    value = value.replace("data-media-max-width='560'", '')
+            update_fields[field] = value
     
     # Handle language field - support both 'language' and 'article_language'
     if "article_language" in article:
