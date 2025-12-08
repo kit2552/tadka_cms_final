@@ -293,7 +293,7 @@ def create_article(db, article: dict):
         "ott_platform": article.get("ott_platform"),
         # Social media embed fields
         "social_media_type": article.get("social_media_type"),
-        "social_media_embed": article.get("social_media_embed"),
+        "social_media_embed": _clean_twitter_embed(article.get("social_media_embed")),
         "view_count": 0,
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow(),
