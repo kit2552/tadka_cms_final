@@ -24,8 +24,9 @@ const Navigation = ({ onLayoutModeChange }) => {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated } = useAuth();
 
-  // Check if we're on an article page or preview page
+  // Check if we're on an article page, video page, or preview page
   const isArticlePage = location.pathname.startsWith('/article/');
+  const isVideoPage = location.pathname.startsWith('/video/');
   const isPreviewPage = location.pathname.startsWith('/cms/preview/');
   
   // Check if we're on ViewMovieContent page
