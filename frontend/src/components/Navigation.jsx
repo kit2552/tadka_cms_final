@@ -553,8 +553,8 @@ const Navigation = ({ onLayoutModeChange }) => {
                 </div>
               </Link>
 
-              {/* Desktop Navigation - Hidden on mobile, article, preview, and ViewMovieContent pages */}
-              {!isArticlePage && !isPreviewPage && !isViewMovieContentPage && (
+              {/* Desktop Navigation - Hidden on mobile, article, video, preview, and ViewMovieContent pages */}
+              {!isArticlePage && !isVideoPage && !isPreviewPage && !isViewMovieContentPage && (
                 <div className="hidden md:flex items-center space-x-8 ml-8">
                   {/* Main Navigation Items */}
                   {mainNavItems.map((item) => (
