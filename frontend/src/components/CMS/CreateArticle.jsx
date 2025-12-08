@@ -1704,6 +1704,53 @@ const CreateArticle = () => {
                             <span className="text-sm font-semibold text-gray-800">Enable Comments</span>
                           </label>
                         </div>
+                        
+                        {/* Social Media Embed Section */}
+                        <div className="space-y-3 mt-4">
+                          <h3 className="text-sm font-semibold text-gray-800 text-left">Social Media Embed (Optional)</h3>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Platform
+                            </label>
+                            <select
+                              name="social_media_type"
+                              value={formData.social_media_type}
+                              onChange={handleInputChange}
+                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">None</option>
+                              <option value="twitter">Twitter/X</option>
+                              <option value="instagram">Instagram</option>
+                              <option value="facebook">Facebook</option>
+                              <option value="tiktok">TikTok</option>
+                              <option value="youtube">YouTube</option>
+                            </select>
+                          </div>
+                          
+                          {formData.social_media_type && (
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Embed Code or Share Link
+                              </label>
+                              <textarea
+                                name="social_media_embed"
+                                value={formData.social_media_embed}
+                                onChange={handleInputChange}
+                                placeholder="Paste embed code or share link here..."
+                                rows="4"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                              <p className="text-xs text-gray-500 mt-1 text-left">
+                                {formData.social_media_type === 'twitter' && 'Paste Twitter/X embed code or tweet URL'}
+                                {formData.social_media_type === 'instagram' && 'Paste Instagram embed code or post URL'}
+                                {formData.social_media_type === 'facebook' && 'Paste Facebook embed code or post URL'}
+                                {formData.social_media_type === 'tiktok' && 'Paste TikTok embed code or video URL'}
+                                {formData.social_media_type === 'youtube' && 'Paste YouTube embed code or video URL'}
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {/* Right Column: Image Preview (40% = 2 cols) */}
