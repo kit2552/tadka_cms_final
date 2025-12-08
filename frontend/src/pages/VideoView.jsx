@@ -587,7 +587,9 @@ const VideoView = () => {
                       <div
                         key={relatedVideo.id}
                         onClick={() => handleRelatedVideoClick(relatedVideo)}
-                        className={`group cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-2 ${
+                        className={`group cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
+                          index === 0 ? 'px-2 pb-2' : 'p-2'
+                        } ${
                           index < relatedVideos.length - 1 ? 'lg:border-b lg:border-gray-200' : ''
                         }`}
                       >
