@@ -759,7 +759,7 @@ const Navigation = ({ onLayoutModeChange }) => {
                   )}
                   
                   {/* Home Button - Show when user is more than 1 level deep */}
-                  {window.history.length > 2 && (
+                  {isDeepNavigation && (
                     <button
                       onClick={() => navigate('/')}
                       className="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 hover:text-gray-900 transition-all duration-200"
