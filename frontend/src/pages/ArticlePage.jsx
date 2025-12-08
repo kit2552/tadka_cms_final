@@ -594,6 +594,40 @@ const ArticlePage = () => {
                     </>
                   )}
 
+                  {/* Social Media Embed */}
+                  {article.social_media_type && article.social_media_embed && (
+                    <div className="my-6">
+                      {article.social_media_type === 'twitter' && (
+                        <div className="flex justify-center">
+                          <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                        </div>
+                      )}
+                      {article.social_media_type === 'instagram' && (
+                        <div className="flex justify-center">
+                          <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                        </div>
+                      )}
+                      {article.social_media_type === 'facebook' && (
+                        <div className="flex justify-center">
+                          <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                        </div>
+                      )}
+                      {article.social_media_type === 'tiktok' && (
+                        <div className="flex justify-center">
+                          <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                        </div>
+                      )}
+                      {article.social_media_type === 'youtube' && article.social_media_embed.includes('iframe') && (
+                        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                          <div 
+                            className="absolute inset-0"
+                            dangerouslySetInnerHTML={{ __html: article.social_media_embed }} 
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {/* Ad Placeholder - Only show if secondary content exists AND ad is enabled */}
                   {article.content_secondary && adSettings.article_content_mid && (
                     <div className="my-6 border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 text-center">
