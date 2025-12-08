@@ -138,7 +138,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
           </div>
           <button
             onClick={handleOpenModal}
-            className="px-3 h-[22px] flex items-center bg-gray-700 text-white rounded text-xs font-medium hover:bg-gray-800 transition-colors whitespace-nowrap flex-shrink-0 mr-4"
+            className="px-3 h-[22px] flex items-center bg-gray-700 text-white rounded text-xs font-medium hover:bg-gray-800 transition-colors whitespace-nowrap flex-shrink-0"
           >
             {commentType === 'review' ? 'Add Review' : 'Add Comment'}
           </button>
