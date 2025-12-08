@@ -1510,35 +1510,41 @@ def manage_top_stories(db, article_id: str, content_type: str, states_json: str,
 
 def get_top_stories_for_states(db, states: List[str], limit: int = 4):
     """
-    Get top stories for given states (3 posts + 1 movie review)
+    Get top stories based on is_top_story checkbox
     
     Args:
-        states: List of state names (use ['ALL'] for national)
-        limit: Maximum number of posts to return (default 4 = 3 posts + 1 review)
+        states: List of state codes (e.g., ['ts', 'ap'] or ['ALL'] for national)
+        limit: Maximum number of articles to return (default 4)
     
     Returns:
-        List of article objects
+        List of article objects where is_top_story is True
     """
-    # Get top story IDs from top_stories collection
-    top_story_entries = list(db['top_stories'].find(
-        {'state': {'$in': states}},
-        {'_id': 0, 'article_id': 1}
-    ).sort('published_at', -1).limit(limit))
+    # Build query based on states
+    if 'ALL' in states:
+        # National top stories - get articles where states is empty or contains 'ALL'
+        query = {
+            'is_top_story': True,
+            'is_published': True,
+            '$or': [
+                {'states': '[]'},  # Empty states means national
+                {'states': {'$regex': 'ALL', '$options': 'i'}}  # Or explicitly marked as ALL
+            ]
+        }
+    else:
+        # State-specific top stories
+        # Match articles where states array contains any of the requested states
+        state_patterns = [state.upper() for state in states]
+        query = {
+            'is_top_story': True,
+            'is_published': True,
+            'states': {'$regex': '|'.join(state_patterns), '$options': 'i'}
+        }
     
-    if not top_story_entries:
-        return []
-    
-    # Convert article_ids to integers (they're stored as strings in top_stories)
-    article_ids = [int(entry['article_id']) for entry in top_story_entries]
-    
-    # Fetch full articles
+    # Fetch articles
     articles = list(db[ARTICLES].find(
-        {'id': {'$in': article_ids}},
+        query,
         {'_id': 0}
-    ))
-    
-    # Sort by published_at descending
-    articles.sort(key=lambda x: x.get('published_at', datetime.min), reverse=True)
+    ).sort('published_at', -1).limit(limit))
     
     return articles
 
