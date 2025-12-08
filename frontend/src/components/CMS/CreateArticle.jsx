@@ -1399,9 +1399,9 @@ const CreateArticle = () => {
                     
                     {/* Display Selected State */}
                     {selectedStates.length > 0 && selectedStates[0] && (
-                      <div className="mb-2">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                          {selectedStates[0] === 'all' ? 'All States (National)' : states.find(s => s.code === selectedStates[0])?.name || selectedStates[0]}
+                      <div className="mb-2 text-left">
+                        <span className="inline-flex items-center px-3 py-1 rounded text-sm font-medium bg-blue-100 text-blue-800">
+                          {states.find(s => s.code === selectedStates[0])?.name || selectedStates[0]}
                         </span>
                       </div>
                     )}
@@ -1410,7 +1410,7 @@ const CreateArticle = () => {
                     <div className="relative">
                       <input
                         type="text"
-                        value={showStateDropdown ? stateSearchQuery : (selectedStates[0] === 'all' ? 'All States (National)' : (selectedStates[0] ? states.find(s => s.code === selectedStates[0])?.name : ''))}
+                        value={stateSearchQuery}
                         onChange={(e) => {
                           setStateSearchQuery(e.target.value);
                           setShowStateDropdown(true);
@@ -1423,6 +1423,7 @@ const CreateArticle = () => {
                           // Small delay to allow click on dropdown items
                           setTimeout(() => {
                             setStateSearchQuery('');
+                            setShowStateDropdown(false);
                           }, 200);
                         }}
                         placeholder="Search..."
@@ -1438,25 +1439,15 @@ const CreateArticle = () => {
                             }}
                           />
                           <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
-                            {/* All States Option */}
-                            {('All States (National)'.toLowerCase().includes(stateSearchQuery.toLowerCase()) || stateSearchQuery === '') && (
-                              <div
-                                onClick={() => {
-                                  setSelectedStates(['all']);
-                                  setStateSearchQuery('');
-                                  setShowStateDropdown(false);
-                                }}
-                                className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left ${
-                                  selectedStates[0] === 'all' ? 'bg-blue-100 text-blue-800' : 'text-gray-900'
-                                }`}
-                              >
-                                All States (National)
-                              </div>
-                            )}
-                            {/* Individual States */}
+                            {/* All States and Individual States */}
                             {states
                               .filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase()))
-                              .sort((a, b) => a.name.localeCompare(b.name))
+                              .sort((a, b) => {
+                                // Keep 'all' at the top, then sort alphabetically
+                                if (a.code === 'all') return -1;
+                                if (b.code === 'all') return 1;
+                                return a.name.localeCompare(b.name);
+                              })
                               .map(state => (
                                 <div
                                   key={state.code}
@@ -1465,15 +1456,12 @@ const CreateArticle = () => {
                                     setStateSearchQuery('');
                                     setShowStateDropdown(false);
                                   }}
-                                  className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left ${
-                                    selectedStates[0] === state.code ? 'bg-blue-100 text-blue-800' : 'text-gray-900'
-                                  }`}
+                                  className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left text-gray-900"
                                 >
                                   {state.name}
                                 </div>
                               ))}
-                            {states.filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase())).length === 0 && 
-                             !('All States (National)'.toLowerCase().includes(stateSearchQuery.toLowerCase())) && (
+                            {states.filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase())).length === 0 && (
                               <div className="px-3 py-2 text-sm text-gray-500 text-left">No states found</div>
                             )}
                           </div>
