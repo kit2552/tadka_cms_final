@@ -1521,19 +1521,24 @@ def get_top_stories_for_states(db, states: List[str], limit: int = 4):
     """
     # Build query based on states
     if 'ALL' in states:
-        # National top stories - get articles where states is empty or contains 'ALL'
+        # National top stories - get articles where:
+        # 1. states is empty array: '[]'
+        # 2. states contains 'all' (case insensitive): '["all"]', '["ALL"]', etc.
         query = {
             'is_top_story': True,
             'is_published': True,
             '$or': [
-                {'states': '[]'},  # Empty states means national
-                {'states': {'$regex': 'ALL', '$options': 'i'}}  # Or explicitly marked as ALL
+                {'states': '[]'},  # Empty states array means national
+                {'states': ''},    # Empty string also means national
+                {'states': {'$regex': r'\[\s*"all"\s*\]', '$options': 'i'}},  # ["all"] or ["ALL"]
+                {'states': {'$regex': r'"all"', '$options': 'i'}}  # Contains "all" anywhere in the array
             ]
         }
     else:
         # State-specific top stories
-        # Match articles where states array contains any of the requested states
-        state_patterns = [state.upper() for state in states]
+        # Match articles where states JSON array contains any of the requested states
+        # e.g., '["ts","ap"]' should match if we request 'ts' or 'ap'
+        state_patterns = [f'"{state.lower()}"' for state in states]
         query = {
             'is_top_story': True,
             'is_published': True,
