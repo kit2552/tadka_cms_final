@@ -2864,8 +2864,8 @@ const CreateArticle = () => {
                     </div>
                   )}
 
-                  {/* Secondary Content (Hidden for Movie Reviews, shown for other types) */}
-                  {formData.content_type !== 'movie_review' && (
+                  {/* Secondary Content (Hidden for Movie Reviews and Video Post, shown for other types) */}
+                  {formData.content_type !== 'movie_review' && formData.content_type !== 'video_post' && (
                   <div className="mt-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
                       Secondary Content (Optional)
