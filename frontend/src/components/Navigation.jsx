@@ -35,6 +35,7 @@ const Navigation = ({ onLayoutModeChange }) => {
   // Check if we're on a content page (should show back button)
   const isContentPage = !location.pathname.startsWith('/cms/') && 
                        !isArticlePage && 
+                       !isVideoPage && 
                        !isPreviewPage && 
                        !isViewMovieContentPage &&
                        location.pathname !== '/' &&
