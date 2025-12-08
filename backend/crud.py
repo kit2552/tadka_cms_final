@@ -352,7 +352,7 @@ def update_article_cms(db, article_id: int, article: dict):
         "review_final_verdict", "review_cast", "review_director", "review_producer",
         "review_music_director", "review_dop", "review_genre", "review_runtime", "movie_language",
         "censor_rating", "release_date", "platform", "ott_content_type", "ott_platforms",
-        "comments_enabled", "review_comments_enabled"
+        "comments_enabled", "review_comments_enabled", "social_media_type", "social_media_embed"
     ]
     
     # Only update fields that are present in the article dict
