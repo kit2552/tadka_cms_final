@@ -1064,6 +1064,17 @@ const CreateArticle = () => {
         return;
       }
 
+      // Validation for video post content type
+      if (formData.content_type === 'video_post' && !formData.youtube_url) {
+        showNotification(
+          'error',
+          'YouTube URL Required',
+          'Please provide a YouTube URL for Video Post content type.'
+        );
+        setLoading(false);
+        return;
+      }
+
       // Strip HTML tags for summary creation
       const textContent = formData.content.replace(/<[^>]*>/g, '');
       
