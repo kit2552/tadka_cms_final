@@ -353,7 +353,16 @@ const ArticlePreview = () => {
                 {article.social_media_type === 'twitter' && (
                   <div className="flex justify-center flex-col items-center">
                     {article.social_media_embed.includes('<blockquote') || article.social_media_embed.includes('<iframe') ? (
-                      <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                      <>
+                        <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                        {article.social_media_embed.includes('pic.twitter.com') || article.social_media_embed.includes('video') ? (
+                          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg max-w-md text-center">
+                            <p className="text-xs text-blue-800">
+                              💡 <strong>Tip:</strong> If the video doesn't play, click anywhere on the tweet above to watch it on Twitter/X.
+                            </p>
+                          </div>
+                        ) : null}
+                      </>
                     ) : (
                       <>
                         <blockquote className="twitter-tweet" data-theme={theme === 'dark' ? 'dark' : 'light'}>
