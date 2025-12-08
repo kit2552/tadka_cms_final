@@ -1394,28 +1394,83 @@ const CreateArticle = () => {
                     </select>
                   </div>
 
-                  <div>
+                  <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Target States</label>
                     
-                    {/* Simple Dropdown for Single State Selection */}
-                    <select
-                      value={selectedStates[0] || ''}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setSelectedStates(value ? [value] : []);
-                      }}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">Select State</option>
-                      <option value="all">All States (National)</option>
-                      {states
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((state) => (
-                          <option key={state.code} value={state.code}>
-                            {state.name}
-                          </option>
-                        ))}
-                    </select>
+                    {/* Searchable Input for Single State Selection */}
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={showStateDropdown ? stateSearchQuery : (selectedStates[0] === 'all' ? 'All States (National)' : (selectedStates[0] ? states.find(s => s.code === selectedStates[0])?.name : ''))}
+                        onChange={(e) => {
+                          setStateSearchQuery(e.target.value);
+                          setShowStateDropdown(true);
+                        }}
+                        onFocus={() => {
+                          setStateSearchQuery('');
+                          setShowStateDropdown(true);
+                        }}
+                        onBlur={() => {
+                          // Small delay to allow click on dropdown items
+                          setTimeout(() => {
+                            setStateSearchQuery('');
+                          }, 200);
+                        }}
+                        placeholder="Search..."
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
+                      />
+                      {showStateDropdown && (
+                        <>
+                          <div 
+                            className="fixed inset-0 z-10" 
+                            onClick={() => {
+                              setShowStateDropdown(false);
+                              setStateSearchQuery('');
+                            }}
+                          />
+                          <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
+                            {/* All States Option */}
+                            {('All States (National)'.toLowerCase().includes(stateSearchQuery.toLowerCase()) || stateSearchQuery === '') && (
+                              <div
+                                onClick={() => {
+                                  setSelectedStates(['all']);
+                                  setStateSearchQuery('');
+                                  setShowStateDropdown(false);
+                                }}
+                                className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left ${
+                                  selectedStates[0] === 'all' ? 'bg-blue-100 text-blue-800' : 'text-gray-900'
+                                }`}
+                              >
+                                All States (National)
+                              </div>
+                            )}
+                            {/* Individual States */}
+                            {states
+                              .filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase()))
+                              .sort((a, b) => a.name.localeCompare(b.name))
+                              .map(state => (
+                                <div
+                                  key={state.code}
+                                  onClick={() => {
+                                    setSelectedStates([state.code]);
+                                    setStateSearchQuery('');
+                                    setShowStateDropdown(false);
+                                  }}
+                                  className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left ${
+                                    selectedStates[0] === state.code ? 'bg-blue-100 text-blue-800' : 'text-gray-900'
+                                  }`}
+                                >
+                                  {state.name}
+                                </div>
+                              ))}
+                            {states.filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase())).length === 0 && 
+                             !('All States (National)'.toLowerCase().includes(stateSearchQuery.toLowerCase())) && (
+                              <div className="px-3 py-2 text-sm text-gray-500 text-left">No states found</div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
