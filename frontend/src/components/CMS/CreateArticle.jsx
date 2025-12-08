@@ -2265,7 +2265,7 @@ const CreateArticle = () => {
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                                Platform
+                                Release
                               </label>
                               <select
                                 name="platform"
@@ -2273,9 +2273,9 @@ const CreateArticle = () => {
                                 onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
-                                <option value="">Select Platform</option>
-                                <option value="Theater Release">Theater Release</option>
-                                <option value="OTT Release">OTT Release</option>
+                                <option value="">Select Release Type</option>
+                                <option value="Theater">Theater</option>
+                                <option value="OTT">OTT</option>
                               </select>
                             </div>
 
