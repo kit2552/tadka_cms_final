@@ -528,7 +528,7 @@ const Navigation = ({ onLayoutModeChange }) => {
 
   return (
     <>
-      <nav className={`bg-white border-b border-gray-200 sticky top-0 z-50 ${isArticlePage ? '' : 'mb-2'}`}>
+      <nav className={`bg-white border-b border-gray-200 sticky top-0 z-50 ${isArticlePage || isVideoPage ? '' : 'mb-2'}`}>
         {/* Main Navigation Container */}
         <div className="max-w-5xl-plus mx-auto px-8">
           <div className="flex items-center h-16">
