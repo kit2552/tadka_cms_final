@@ -2747,7 +2747,7 @@ const CreateArticle = () => {
                                 2. Click "..." menu → "Embed post"<br/>
                                 3. Copy the entire <code>&lt;blockquote&gt;...&lt;/blockquote&gt;</code> code<br/>
                                 4. Paste it here<br/>
-                                <span className="text-orange-600">Note: Direct tweet URLs may not work due to Twitter/X restrictions.</span>
+                                <span className="text-orange-600">⚠️ Known Limitation: Videos in embedded tweets may not autoplay due to Twitter/X restrictions. Users can click on the tweet to view the video on Twitter/X.</span>
                               </>
                             )}
                             {formData.social_media_type === 'instagram' && 'Paste Instagram embed code or post URL'}
