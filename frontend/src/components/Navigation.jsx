@@ -728,8 +728,8 @@ const Navigation = ({ onLayoutModeChange }) => {
                 </div>
               )}
 
-              {/* Back Button for Article Pages */}
-              {isArticlePage && !isPreviewPage && (
+              {/* Back Button for Article and Video Pages */}
+              {(isArticlePage || isVideoPage) && !isPreviewPage && (
                 <div className="hidden md:flex items-center space-x-3">
                   {/* Preview Mode Badge - Only show when ?preview=true is in URL */}
                   {location.search.includes('preview=true') && (
