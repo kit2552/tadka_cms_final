@@ -422,7 +422,7 @@ const ArticlePage = () => {
                       )}
                       {article.platform === 'OTT' && article.ott_platforms && (
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[70px]">OTT Platforms</span>
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">OTT</span>
                           <span className="text-white font-medium text-xs">
                             {(() => {
                               try {
