@@ -2742,8 +2742,8 @@ const CreateArticle = () => {
                     </>
                   )}
 
-                  {/* Main Content (Hidden for Movie Reviews, shown for other types) */}
-                  {formData.content_type !== 'movie_review' && (
+                  {/* Main Content (Hidden for Movie Reviews and Video Post, shown for other types) */}
+                  {formData.content_type !== 'movie_review' && formData.content_type !== 'video_post' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                       Main Content *
