@@ -450,3 +450,8 @@ code {
 .prose [style*="font-weight: bold"] {
   font-weight: 700 !important;
 }
+
+/* Override default mb-6 spacing from 1.5rem to 1rem */
+.mb-6 {
+  margin-bottom: 1rem !important;
+}
