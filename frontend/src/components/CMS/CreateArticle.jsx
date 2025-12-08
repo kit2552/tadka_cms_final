@@ -1845,7 +1845,7 @@ const CreateArticle = () => {
 
                   {/* PHOTO GALLERY Type Fields */}
                   {formData.content_type === 'photo' && (
-                    <div className="space-y-4">
+                    <div className="space-y-4 mb-8">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                           Image Gallery
