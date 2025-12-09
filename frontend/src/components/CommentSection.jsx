@@ -127,7 +127,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
     <div>
       {/* Sticky Header with Add Comment Button */}
       <div className={`sticky top-0 z-30 border-b-2 border-gray-300 mb-4 -mr-4`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
-        <div className="pl-0 pr-4 py-4 flex items-center justify-between gap-2">
+        <div className="pl-0 pr-4 pt-0 pb-4 flex items-center justify-between gap-2">
           <div className="flex-1">
             <h2 className="text-base font-bold text-black text-left leading-tight mb-1">
               {headerTitle} {totalCount > 0 && `(${totalCount})`}
