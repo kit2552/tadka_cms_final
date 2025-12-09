@@ -23,6 +23,22 @@ const VideoModal = ({ isOpen, onClose, video }) => {
     return `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&showinfo=0&autoplay=1&loop=1&playlist=${videoId}`;
   };
 
+  // Handle fullscreen
+  const handleFullscreen = () => {
+    const iframe = document.querySelector('.viral-shorts-iframe');
+    if (iframe) {
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.webkitRequestFullscreen) {
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.mozRequestFullScreen) {
+        iframe.mozRequestFullScreen();
+      } else if (iframe.msRequestFullscreen) {
+        iframe.msRequestFullscreen();
+      }
+    }
+  };
+
   const handleShare = (platform) => {
     const url = window.location.origin + `/video/${video.id}`;
     const title = video.title;
