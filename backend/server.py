@@ -423,7 +423,7 @@ async def get_trailers_teasers_articles(limit: int = 4, db = Depends(get_db)):
         "bollywood": bollywood_articles
     }
 
-@api_router.get("/articles/sections/box-office", response_model=dict)
+@api_router.get("/articles/sections/box-office")
 async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Box Office section with Box Office and Bollywood tabs"""
     box_office_articles = crud.get_articles_by_category_slug(db, category_slug="box-office", limit=limit)
