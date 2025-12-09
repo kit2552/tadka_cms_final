@@ -491,7 +491,7 @@ const VideoView = () => {
 
             {/* Comments Section */}
             {article.comments_enabled !== false && (
-              <div className="mb-6" style={{ marginTop: '1rem' }}>
+              <div className="mb-6">
                 <CommentSection articleId={article.id} commentType="regular" headerTitle="Comments" />
               </div>
             )}
