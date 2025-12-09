@@ -1595,45 +1595,21 @@ const Dashboard = () => {
   // Artist management functions for galleries
   const fetchAvailableArtists = async () => {
     try {
-      const artists = [];
-      
-      // Fetch artists from existing posts
-      const articlesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/articles`);
-      if (articlesResponse.ok) {
-        const articles = await articlesResponse.json();
-        
-        // Extract artists from posts
-        articles.forEach(article => {
-          if (article.artists) {
-            try {
-              const articleArtists = JSON.parse(article.artists);
-              artists.push(...articleArtists);
-            } catch (e) {
-              // Skip if JSON parsing fails
-            }
-          }
-        });
+      // Fetch artists from the dedicated artists API
+      const artistsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/artists`);
+      if (artistsResponse.ok) {
+        const artists = await artistsResponse.json();
+        // Extract just the names from the artist objects
+        const artistNames = artists.map(artist => artist.name);
+        setAvailableArtists(artistNames);
+        console.log('Available artists loaded:', artistNames); // Debug log
+      } else {
+        console.error('Failed to fetch artists');
+        setAvailableArtists([]);
       }
-      
-      // Fetch artists from existing galleries
-      const galleriesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/galleries`);
-      if (galleriesResponse.ok) {
-        const galleries = await galleriesResponse.json();
-        
-        // Extract artists from galleries
-        galleries.forEach(gallery => {
-          if (gallery.artists && Array.isArray(gallery.artists)) {
-            artists.push(...gallery.artists);
-          }
-        });
-      }
-      
-      // Remove duplicates and set
-      const uniqueArtists = [...new Set(artists)].filter(artist => artist && artist.trim());
-      setAvailableArtists(uniqueArtists);
-      console.log('Available artists loaded:', uniqueArtists); // Debug log
     } catch (error) {
       console.error('Error fetching artists:', error);
+      setAvailableArtists([]);
     }
   };
 
