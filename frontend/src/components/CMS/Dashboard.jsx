@@ -5350,10 +5350,7 @@ const Dashboard = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => {
-                          setActiveTab('artists');
-                          setShowHorizontalGalleryForm(false);
-                        }}
+                        onClick={openManageArtistsModal}
                         className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm font-medium transition-colors duration-200 flex items-center gap-1 flex-shrink-0"
                         title="Manage Artists"
                       >
