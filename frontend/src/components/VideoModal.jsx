@@ -266,9 +266,10 @@ const VideoModal = ({ isOpen, onClose, video }) => {
               />
               <button
                 onClick={handleAddComment}
-                className="px-3 py-1 bg-black bg-opacity-100 hover:bg-gray-800 text-white text-xs rounded-md transition-colors border border-gray-600"
+                disabled={loading}
+                className="px-3 py-1 bg-black bg-opacity-100 hover:bg-gray-800 text-white text-xs rounded-md transition-colors border border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Post Comment
+                {loading ? 'Posting...' : 'Post Comment'}
               </button>
             </div>
           </div>
