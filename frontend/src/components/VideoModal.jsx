@@ -94,12 +94,11 @@ const VideoModal = ({ isOpen, onClose, video }) => {
             src={getYouTubeEmbedUrl(video.youtube_url)}
             title={video.title}
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             allowFullScreen
-            className="w-full h-full object-cover"
+            className="w-full h-full viral-shorts-iframe"
             style={{ 
-              backgroundColor: '#000000',
-              objectFit: 'cover'
+              backgroundColor: '#000000'
             }}
           />
         </div>
