@@ -61,13 +61,13 @@ const BoxOffice = () => {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);
             } else {
-              console.log('Using sample related articles');
-              setRelatedArticles(sampleBoxOfficeArticles.slice(0, 5));
+              console.log('No related articles found');
+              setRelatedArticles([]);
             }
           }
         } catch (relatedError) {
           console.error('Error fetching related articles:', relatedError);
-          setRelatedArticles(sampleBoxOfficeArticles.slice(0, 5));
+          setRelatedArticles([]);
         }
 
         setError(null);
@@ -75,10 +75,10 @@ const BoxOffice = () => {
       } catch (error) {
         console.error('Error fetching box office data:', error);
         setError('Failed to load box office data. Please try again later.');
-        // Set sample data even on error
-        setBoxOfficeArticles(sampleBoxOfficeArticles);
-        setBollywoodArticles(sampleBollywoodArticles);
-        setRelatedArticles(sampleBoxOfficeArticles.slice(0, 5));
+        // Set empty arrays on error
+        setBoxOfficeArticles([]);
+        setBollywoodArticles([]);
+        setRelatedArticles([]);
       } finally {
         setLoading(false);
         console.log('Loading state set to false');
