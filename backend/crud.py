@@ -52,6 +52,11 @@ def serialize_doc(doc):
             if key == 'article_language':
                 result['language'] = value or 'en'
                 continue
+            # Map image to image_url for API response
+            if key == 'image':
+                result['image_url'] = value
+                result['image'] = value  # Keep both for backward compatibility
+                continue
             if key == '_id':
                 # Only add _id as id if there's no existing id field
                 if 'id' not in doc:
