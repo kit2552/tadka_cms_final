@@ -5716,6 +5716,154 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Manage Artists Modal */}
+      {showManageArtistsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col">
+            {/* Header */}
+            <div className="border-b px-6 py-4 flex items-center justify-between bg-gray-50">
+              <h3 className="text-lg font-bold text-gray-900">Manage Artists / Actors / Events</h3>
+              <button
+                onClick={() => {
+                  setShowManageArtistsModal(false);
+                  setArtistSearchQuery('');
+                  setNewArtistName('');
+                  setEditingArtistId(null);
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Add New Section */}
+            <div className="px-6 py-3 border-b bg-gray-50">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newArtistName}
+                  onChange={(e) => setNewArtistName(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddArtist();
+                    }
+                  }}
+                  placeholder="Enter new artist/actor/event name"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={handleAddArtist}
+                  className="px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+
+            {/* Search */}
+            <div className="px-6 py-3 border-b">
+              <input
+                type="text"
+                value={artistSearchQuery}
+                onChange={(e) => setArtistSearchQuery(e.target.value)}
+                placeholder="Search..."
+                className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* List */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {managedArtists.filter(artist =>
+                artist.name.toLowerCase().includes(artistSearchQuery.toLowerCase())
+              ).length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  {artistSearchQuery ? 'No artists found' : 'No artists added yet'}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {managedArtists
+                    .filter(artist => artist.name.toLowerCase().includes(artistSearchQuery.toLowerCase()))
+                    .map((artist) => (
+                      <div
+                        key={artist.id}
+                        className="flex items-center justify-between p-3 border border-gray-200 rounded hover:bg-gray-50 transition-colors"
+                      >
+                        {editingArtistId === artist.id ? (
+                          <>
+                            <input
+                              type="text"
+                              value={editArtistName}
+                              onChange={(e) => setEditArtistName(e.target.value)}
+                              className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2"
+                              autoFocus
+                            />
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleUpdateArtist(artist.id)}
+                                className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setEditingArtistId(null);
+                                  setEditArtistName('');
+                                }}
+                                className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <span className="flex-1 text-gray-800 font-medium text-sm">{artist.name}</span>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => {
+                                  setEditingArtistId(artist.id);
+                                  setEditArtistName(artist.name);
+                                }}
+                                className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteArtist(artist.id, artist.name)}
+                                className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="border-t px-6 py-3 bg-gray-50 text-right">
+              <button
+                onClick={() => {
+                  setShowManageArtistsModal(false);
+                  setArtistSearchQuery('');
+                  setNewArtistName('');
+                  setEditingArtistId(null);
+                }}
+                className="px-4 py-2 bg-gray-600 text-white rounded text-sm font-medium hover:bg-gray-700"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
