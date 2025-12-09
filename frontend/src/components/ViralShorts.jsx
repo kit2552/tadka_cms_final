@@ -69,7 +69,7 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
       {/* Header Container with Normal Width */}
       <div className="max-w-5xl-plus mx-auto px-8">
         {/* Header with Tabs and More Button */}
-        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-3`}>
+        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-1.5`}>
         <button
           onClick={() => setActiveTab('viral-shorts')}
           className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-l-lg ${
