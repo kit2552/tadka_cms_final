@@ -114,33 +114,41 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
           className="overflow-x-auto"
           ref={sliderRef}
         >
-          <div className={`flex space-x-3 pb-2 scrollbar-hide`}>
+          <div className={`flex space-x-4 pb-2 scrollbar-hide`}>
             {getCurrentData().map((item, index) => (
               <div
                 key={item.id}
                 className="flex-shrink-0 cursor-pointer"
-                style={{ minWidth: '120px' }} // Narrower width for vertical videos
+                style={{ minWidth: '160px' }} // Larger width for better visibility
                 onClick={() => handleVideoClick(item)}
               >
-                <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                  <div className="relative" style={{ width: '120px', height: '200px', overflow: 'hidden' }}>
-                    {/* Vertical aspect ratio for YouTube Shorts style */}
+                <div className="bg-black rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                  <div className="relative" style={{ width: '160px', height: '280px', overflow: 'hidden', backgroundColor: '#000' }}>
+                    {/* Vertical aspect ratio for YouTube Shorts style - crop to fit without black bars */}
                     <img
                       src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop')}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="group-hover:scale-105 transition-transform duration-300"
                       style={{ 
-                        minWidth: '100%',
-                        minHeight: '100%',
+                        width: '100%',
+                        height: '100%',
                         objectFit: 'cover',
-                        objectPosition: 'center'
+                        objectPosition: 'center',
+                        display: 'block'
                       }}
                       onError={(e) => {
                         e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
                       }}
                     />
                     
-                    {/* No title overlay - clean like trending videos */}
+                    {/* Play icon overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="bg-white bg-opacity-90 rounded-full p-3">
+                        <svg className="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
