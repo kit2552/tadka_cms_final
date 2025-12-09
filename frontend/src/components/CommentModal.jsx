@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular', existingReview = null, isEditing = false }) => {
+const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular', existingReview = null, isEditing = false, articleId }) => {
   const [formData, setFormData] = useState({
     name: '',
     comment: '',
@@ -8,23 +8,52 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular', exis
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [nameDisabled, setNameDisabled] = useState(false);
+
+  // Fetch user's previous name if they've commented before
+  useEffect(() => {
+    if (isOpen && articleId && !isEditing) {
+      fetchUserName();
+    }
+  }, [isOpen, articleId, isEditing]);
+
+  const fetchUserName = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/articles/${articleId}/user-name`
+      );
+      const data = await response.json();
+      
+      if (data.has_commented && data.name) {
+        setFormData(prev => ({ ...prev, name: data.name }));
+        setNameDisabled(true);
+      } else {
+        setNameDisabled(false);
+      }
+    } catch (error) {
+      console.error('Error fetching user name:', error);
+      setNameDisabled(false);
+    }
+  };
 
   // Load existing review data when editing
-  React.useEffect(() => {
+  useEffect(() => {
     if (isEditing && existingReview) {
       setFormData({
         name: existingReview.name || '',
         comment: existingReview.comment || '',
         rating: existingReview.rating ? String(existingReview.rating) : ''
       });
-    } else {
+      setNameDisabled(true); // Disable name when editing
+    } else if (!isEditing && !isOpen) {
       setFormData({
         name: '',
         comment: '',
         rating: ''
       });
+      setNameDisabled(false);
     }
-  }, [isEditing, existingReview]);
+  }, [isEditing, existingReview, isOpen]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
