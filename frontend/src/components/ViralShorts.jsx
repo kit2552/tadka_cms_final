@@ -28,7 +28,7 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
   const currentData = activeTab === 'bollywood' ? bollywoodVideos : viralShortsVideos;
   const sliderRef = useRef(null);
 
-  // Get YouTube thumbnail from video URL
+  // Get YouTube thumbnail from video URL with fallback
   const getYouTubeThumbnail = (youtubeUrl) => {
     if (!youtubeUrl) return 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
     
@@ -43,9 +43,9 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
       videoId = youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
     }
     
-    // Use maxresdefault for better quality and crop to fit vertical
+    // Use hqdefault which is more reliable for shorts (480x360)
     return videoId 
-      ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+      ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
       : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
   };
 
