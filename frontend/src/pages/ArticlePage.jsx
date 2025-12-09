@@ -788,12 +788,12 @@ const ArticlePage = () => {
           <div className="lg:col-span-2 border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingLeft: '0px', paddingRight: '4px' }}>
             {/* Comment Section */}
             {article.content_type === 'movie_review' && (article.review_comments_enabled !== false) && (
-              <div className="mb-6">
+              <div className="mb-6" style={{ marginTop: '1rem' }}>
                 <CommentSection articleId={article.id} commentType="review" headerTitle="User Reviews" />
               </div>
             )}
             {article.content_type !== 'movie_review' && (article.comments_enabled !== false) && (
-              <div className="mb-6">
+              <div className="mb-6" style={{ marginTop: '1rem' }}>
                 <CommentSection articleId={article.id} commentType="regular" headerTitle="Comments" />
               </div>
             )}
