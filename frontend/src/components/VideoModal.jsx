@@ -140,7 +140,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         </div>
 
         {/* Video Container - Takes remaining height, full width */}
-        <div className="relative bg-black flex-1" style={{ height: 'calc(98vh - 60px)' }}>
+        <div className="relative bg-black flex-1" style={{ height: 'calc(98vh - 64px)' }}>
           <iframe
             src={getYouTubeEmbedUrl(video.youtube_url)}
             title={video.title}
