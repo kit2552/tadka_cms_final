@@ -123,13 +123,18 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
                 onClick={() => handleVideoClick(item)}
               >
                 <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                  <div className="relative">
+                  <div className="relative" style={{ width: '120px', height: '200px', overflow: 'hidden' }}>
                     {/* Vertical aspect ratio for YouTube Shorts style */}
                     <img
                       src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop')}
                       alt={item.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      style={{ width: '120px', height: '200px' }} // Vertical aspect ratio
+                      style={{ 
+                        minWidth: '100%',
+                        minHeight: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center'
+                      }}
                       onError={(e) => {
                         e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
                       }}
