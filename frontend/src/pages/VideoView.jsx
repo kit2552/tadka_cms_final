@@ -562,8 +562,8 @@ const VideoView = () => {
             </div>
           </div>
 
-          {/* Related Videos Section - 20% width on desktop, full width on mobile - Sticky and Scrollable */}
-          <div className="lg:w-1/5 border-t border-gray-300 lg:border-t-0 pt-4 lg:pt-0 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto">
+          {/* Related Videos Section - 20% width on desktop, full width on mobile */}
+          <div className="lg:col-span-1 border-t border-gray-300 lg:border-t-0 pt-4 lg:pt-0 lg:sticky lg:top-16 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto">
             {/* Related Videos Section Header - Sticky */}
             <div className={`sticky top-16 z-30 border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
