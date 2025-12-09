@@ -114,16 +114,16 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
           className="overflow-x-auto"
           ref={sliderRef}
         >
-          <div className={`flex space-x-4 pb-2 scrollbar-hide`}>
+          <div className={`flex space-x-3 pb-2 scrollbar-hide`}>
             {getCurrentData().map((item, index) => (
               <div
                 key={item.id}
                 className="flex-shrink-0 cursor-pointer"
-                style={{ minWidth: '160px' }} // Larger width for better visibility
+                style={{ minWidth: '120px' }}
                 onClick={() => handleVideoClick(item)}
               >
                 <div className="bg-black rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                  <div className="relative" style={{ width: '160px', height: '280px', overflow: 'hidden', backgroundColor: '#000' }}>
+                  <div className="relative" style={{ width: '120px', height: '200px', overflow: 'hidden', backgroundColor: '#000' }}>
                     {/* Vertical aspect ratio for YouTube Shorts style - crop to fit without black bars */}
                     <img
                       src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop')}
@@ -137,14 +137,15 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
                         display: 'block'
                       }}
                       onError={(e) => {
+                        // Fallback to placeholder if thumbnail fails
                         e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
                       }}
                     />
                     
                     {/* Play icon overlay */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="bg-white bg-opacity-90 rounded-full p-3">
-                        <svg className="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24">
+                      <div className="bg-white bg-opacity-90 rounded-full p-2">
+                        <svg className="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z"/>
                         </svg>
                       </div>
