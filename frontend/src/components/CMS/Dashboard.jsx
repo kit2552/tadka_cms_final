@@ -394,6 +394,14 @@ const Dashboard = () => {
   const [nextGalleryNumber, setNextGalleryNumber] = useState(1);
   const [tadkaPicsEnabled, setTadkaPicsEnabled] = useState(false);
   
+  // Manage Artists Modal states
+  const [showManageArtistsModal, setShowManageArtistsModal] = useState(false);
+  const [managedArtists, setManagedArtists] = useState([]);
+  const [editingArtistId, setEditingArtistId] = useState(null);
+  const [editArtistName, setEditArtistName] = useState('');
+  const [newArtistName, setNewArtistName] = useState('');
+  const [artistSearchQuery, setArtistSearchQuery] = useState('');
+  
   // Image preview states
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
