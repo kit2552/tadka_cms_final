@@ -440,10 +440,10 @@ const VideoView = () => {
       <div className="max-w-5xl-plus mx-auto px-8 pb-6">
         
         {/* Two Section Layout with Gap - 80%/20% split on desktop, stacked on mobile */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-8 lg:h-[calc(100vh-120px)]">
           
           {/* Video Section - 80% width on desktop, full width on mobile */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingRight: '14px' }}>
             {/* Video Section Header - Sticky with published date and bottom border */}
             <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
