@@ -152,13 +152,13 @@ const VideoModal = ({ isOpen, onClose, video }) => {
 
         {/* Comments Slider - slides up from bottom */}
         <div 
-          className={`absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 transition-all duration-300 ease-in-out overflow-hidden ${
+          className={`absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 transition-all duration-300 ease-in-out ${
             showComments ? 'h-1/2' : 'h-0'
           }`}
-          style={{ zIndex: 10 }}
+          style={{ zIndex: 10, overflow: 'hidden', pointerEvents: showComments ? 'auto' : 'none' }}
         >
           <div className="h-full flex flex-col">
-            <div className="flex justify-between items-center px-3 py-2 border-b border-gray-600">
+            <div className="flex justify-between items-center px-3 py-2 border-b border-gray-600 flex-shrink-0">
               <h3 className="text-white font-semibold text-xs">Comments ({comments.length})</h3>
               <button
                 onClick={() => setShowComments(false)}
@@ -169,7 +169,14 @@ const VideoModal = ({ isOpen, onClose, video }) => {
                 </svg>
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2">
+            <div 
+              className="flex-1 overflow-y-scroll px-3 py-2 space-y-2"
+              style={{ 
+                overflowY: 'scroll',
+                WebkitOverflowScrolling: 'touch',
+                maxHeight: 'calc(50vh - 40px)'
+              }}
+            >
               {comments.map(comment => (
                 <div key={comment.id} className="bg-gray-900 bg-opacity-50 rounded-lg p-2 text-left">
                   <div className="flex justify-between items-start mb-1">
