@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import mockData from '../data/comprehensiveMockData';
 import useTabState from '../hooks/useTabState';
 
 const BoxOffice = ({ articles, onArticleClick }) => {
@@ -15,8 +14,8 @@ const BoxOffice = ({ articles, onArticleClick }) => {
     if (articles) {
       setTalkOfTown(articles);
     } else {
-      // Use talk of town data from mockData
-      setTalkOfTown(mockData.talkOfTown || []);
+      // No mock data - leave empty if no articles provided
+      setTalkOfTown([]);
     }
   }, [articles]);
 
