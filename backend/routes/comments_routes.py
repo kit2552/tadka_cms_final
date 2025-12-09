@@ -192,3 +192,88 @@ def delete_comment(article_id: str, comment_id: str):
         raise HTTPException(status_code=404, detail="Comment not found")
     
     return {"success": True, "message": "Comment deleted successfully"}
+
+
+# Video Comments Endpoints
+class VideoCommentCreate(BaseModel):
+    video_id: int
+    name: str
+    comment: str
+
+@router.post("/api/videos/{video_id}/comments")
+def add_video_comment(video_id: int, comment: VideoCommentCreate, request: Request):
+    """Add a comment to a viral video"""
+    from server import db
+    
+    # Get IP address
+    ip_address = request.client.host
+    if "x-forwarded-for" in request.headers:
+        ip_address = request.headers["x-forwarded-for"].split(",")[0].strip()
+    
+    # Get device info (user agent)
+    device_info = request.headers.get("user-agent", "Unknown")
+    
+    # Create comment document
+    comment_doc = {
+        "id": str(uuid.uuid4()),
+        "video_id": video_id,
+        "name": comment.name,
+        "comment": comment.comment,
+        "ip_address": ip_address,
+        "device_info": device_info,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "is_approved": True  # Auto-approve for now
+    }
+    
+    db.video_comments.insert_one(comment_doc)
+    
+    return {
+        "success": True,
+        "message": "Comment added successfully",
+        "comment": {
+            "id": comment_doc["id"],
+            "video_id": comment_doc["video_id"],
+            "name": comment_doc["name"],
+            "text": comment_doc["comment"],
+            "time": "Just now",
+            "created_at": comment_doc["created_at"]
+        }
+    }
+
+@router.get("/api/videos/{video_id}/comments")
+def get_video_comments(video_id: int):
+    """Get all comments for a viral video"""
+    from server import db
+    
+    comments = list(db.video_comments.find(
+        {"video_id": video_id, "is_approved": True},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(1000))
+    
+    # Format comments for frontend
+    formatted_comments = []
+    for comment in comments:
+        # Calculate time ago
+        created_at = datetime.fromisoformat(comment["created_at"])
+        time_diff = datetime.now(timezone.utc) - created_at
+        
+        if time_diff.days > 0:
+            time_ago = f"{time_diff.days} day{'s' if time_diff.days > 1 else ''} ago"
+        elif time_diff.seconds >= 3600:
+            hours = time_diff.seconds // 3600
+            time_ago = f"{hours} hour{'s' if hours > 1 else ''} ago"
+        elif time_diff.seconds >= 60:
+            minutes = time_diff.seconds // 60
+            time_ago = f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+        else:
+            time_ago = "Just now"
+        
+        formatted_comments.append({
+            "id": comment["id"],
+            "name": comment["name"],
+            "text": comment["comment"],
+            "time": time_ago
+        })
+    
+    return {"comments": formatted_comments, "count": len(formatted_comments)}
+
