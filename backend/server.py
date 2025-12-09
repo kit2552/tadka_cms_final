@@ -252,17 +252,6 @@ async def get_hot_topics_gossip_articles(limit: int = 4, db = Depends(get_db)):
         "gossip": gossip_articles
     }
 
-@api_router.get("/articles/sections/box-office", response_model=dict)
-async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for Box Office section with Box Office and Bollywood-Box Office tabs"""
-    box_office_articles = crud.get_articles_by_category_slug(db, category_slug="box-office", limit=limit)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="bollywood-box-office", limit=limit)
-    
-    return {
-        "box_office": box_office_articles,
-        "bollywood": bollywood_articles
-    }
-
 @api_router.get("/articles/sections/trending-videos")
 async def get_trending_videos_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
     """Get articles for Trending Videos section with Trending Videos and Bollywood-Trending Videos tabs
