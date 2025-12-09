@@ -66,8 +66,18 @@ const VideoModal = ({ isOpen, onClose, video }) => {
     <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
       <div className="relative w-full max-w-md mx-auto rounded-lg overflow-hidden" style={{ height: '90vh' }}>
         
-        {/* Black Header with Close Button - 30% smaller */}
-        <div className="bg-black text-white px-3 py-2.5 flex justify-end">
+        {/* Black Header with Fullscreen and Close Button */}
+        <div className="bg-black text-white px-3 py-2.5 flex justify-between items-center">
+          <button
+            onClick={handleFullscreen}
+            className="text-white hover:text-gray-300 transition-colors flex items-center space-x-2"
+            title="Fullscreen"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+            <span className="text-sm">Fullscreen</span>
+          </button>
           <button
             onClick={onClose}
             className="text-white hover:text-gray-300 transition-colors"
