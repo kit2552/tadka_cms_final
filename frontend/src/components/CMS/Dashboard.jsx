@@ -2718,6 +2718,17 @@ const Dashboard = () => {
                     >
                       Ad Management
                     </button>
+                    <button
+                      onClick={() => {
+                        setActiveTab('artists');
+                        setShowMoreDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                        activeTab === 'artists' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700'
+                      }`}
+                    >
+                      Manage Artists
+                    </button>
                   </div>
                 )}
               </div>
