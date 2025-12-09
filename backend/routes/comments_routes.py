@@ -107,6 +107,30 @@ def get_comments(article_id: str, comment_type: Optional[str] = None):
     
     return {"comments": comments, "count": len(comments)}
 
+
+@router.get("/api/articles/{article_id}/user-name")
+def get_article_user_name_by_ip(article_id: str, request: Request):
+    """Get the user's previous name if they've commented before from this IP"""
+    from server import db
+    
+    # Get IP address
+    ip_address = request.client.host
+    if "x-forwarded-for" in request.headers:
+        ip_address = request.headers["x-forwarded-for"].split(",")[0].strip()
+    
+    # Find the most recent comment from this IP for this article
+    previous_comment = db.comments.find_one(
+        {"article_id": article_id, "ip_address": ip_address},
+        {"name": 1, "_id": 0},
+        sort=[("created_at", -1)]
+    )
+    
+    if previous_comment:
+        return {"name": previous_comment["name"], "has_commented": True}
+    else:
+        return {"name": None, "has_commented": False}
+
+
 @router.get("/api/articles/{article_id}/check-review")
 def check_existing_review(article_id: str, request: Request):
     """Check if the current user has already submitted a review"""
