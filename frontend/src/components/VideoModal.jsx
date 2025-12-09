@@ -267,7 +267,8 @@ const VideoModal = ({ isOpen, onClose, video }) => {
                 placeholder="Your Name"
                 value={commentName}
                 onChange={(e) => setCommentName(e.target.value)}
-                className="w-full px-2 py-1.5 bg-gray-800 bg-opacity-100 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs"
+                disabled={nameDisabled}
+                className="w-full px-2 py-1.5 bg-gray-800 bg-opacity-100 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs disabled:opacity-70 disabled:cursor-not-allowed"
               />
               <textarea
                 placeholder="Your Comment"
