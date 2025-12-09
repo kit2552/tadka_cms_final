@@ -7,13 +7,33 @@ const VideoModal = ({ isOpen, onClose, video }) => {
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [nameDisabled, setNameDisabled] = useState(false);
 
   // Fetch comments when modal opens
   useEffect(() => {
     if (isOpen && video && video.id) {
       fetchComments();
+      fetchUserName();
     }
   }, [isOpen, video]);
+
+  const fetchUserName = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/user-name`);
+      const data = await response.json();
+      
+      if (data.has_commented && data.name) {
+        setCommentName(data.name);
+        setNameDisabled(true);
+      } else {
+        setCommentName('');
+        setNameDisabled(false);
+      }
+    } catch (error) {
+      console.error('Error fetching user name:', error);
+      setNameDisabled(false);
+    }
+  };
 
   const fetchComments = async () => {
     try {
