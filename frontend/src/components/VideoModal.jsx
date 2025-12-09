@@ -128,7 +128,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
       <div className="relative w-full max-w-lg mx-auto rounded-lg overflow-hidden" style={{ height: '98vh' }}>
         
         {/* Black Header with Fullscreen and Close Button */}
-        <div className="bg-black text-white px-3 py-2.5 flex justify-between items-center">
+        <div className="bg-black text-white px-3 py-1.5 flex justify-between items-center">
           <button
             onClick={handleFullscreen}
             className="text-white hover:text-gray-300 transition-colors"
