@@ -159,21 +159,21 @@ const VideoModal = ({ isOpen, onClose, video }) => {
           <div className="flex flex-col items-center">
             <button
               onClick={() => setShowAddComment(true)}
-              className="px-3 py-1.5 bg-black hover:bg-gray-800 text-white text-xs rounded-md transition-colors border border-gray-600"
+              className="px-2.5 py-1 bg-black hover:bg-gray-800 text-white text-[10px] rounded-md transition-colors border border-gray-600"
             >
               Add Comment
             </button>
-            <span className="text-gray-400 text-[10px] mt-0.5">(no account needed)</span>
+            <span className="text-gray-400 text-[9px] mt-0.5">(no account needed)</span>
           </div>
           
           <div className="flex items-center space-x-1">
             <button
               onClick={() => setShowComments(!showComments)}
-              className="px-3 py-1.5 bg-black hover:bg-gray-800 text-white text-xs rounded-md transition-colors border border-gray-600"
+              className="px-2.5 py-1 bg-black hover:bg-gray-800 text-white text-[10px] rounded-md transition-colors border border-gray-600"
             >
               View Comments
             </button>
-            <span className="text-white text-xs">({comments.length})</span>
+            <span className="text-white text-[10px]">({comments.length})</span>
           </div>
         </div>
 
