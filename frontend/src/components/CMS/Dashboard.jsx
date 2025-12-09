@@ -5344,6 +5344,10 @@ const Dashboard = () => {
         {activeTab === 'ads' && (
           <AdManagement />
         )}
+
+        {activeTab === 'artists' && (
+          <ArtistsManagement />
+        )}
       </div>
 
       {/* Custom Modal */}
