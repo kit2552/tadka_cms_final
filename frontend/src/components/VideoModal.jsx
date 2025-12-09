@@ -192,6 +192,8 @@ const VideoModal = ({ isOpen, onClose, video }) => {
             showComments ? 'h-1/2' : 'h-0'
           }`}
           style={{ zIndex: 10, overflow: 'hidden', pointerEvents: showComments ? 'auto' : 'none' }}
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
         >
           <div className="h-full flex flex-col">
             <div className="flex justify-between items-center px-3 py-2 border-b border-gray-600 flex-shrink-0">
@@ -212,6 +214,8 @@ const VideoModal = ({ isOpen, onClose, video }) => {
                 WebkitOverflowScrolling: 'touch',
                 maxHeight: 'calc(50vh - 40px)'
               }}
+              onWheel={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
             >
               {comments.map(comment => (
                 <div key={comment.id} className="bg-gray-900 bg-opacity-50 rounded-lg p-2 text-left">
