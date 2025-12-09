@@ -565,7 +565,7 @@ const VideoView = () => {
           {/* Related Videos Section - 20% width on desktop, full width on mobile */}
           <div className="lg:col-span-1 border-t border-gray-300 lg:border-t-0 pt-4 lg:pt-0 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingLeft: '0px', paddingRight: '4px' }}>
             {/* Related Videos Section Header */}
-            <div className={`border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+            <div className={`sticky top-0 z-30 border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
                 <div className="flex items-center gap-3 mb-1">
                   <h2 className="text-base font-bold text-black text-left leading-tight font-sans">
