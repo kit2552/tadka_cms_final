@@ -566,13 +566,13 @@ const VideoView = () => {
           <div className="lg:col-span-1 border-t border-gray-300 lg:border-t-0 pt-4 lg:pt-0 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingLeft: '0px', paddingRight: '4px' }}>
             {/* Related Videos Section Header */}
             <div className={`sticky top-0 z-30 border-b-2 border-gray-300`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))', marginBottom: '1rem' }}>
-              <div className="pl-0 pr-4 pt-4 pb-4">
+              <div className="pl-0 pr-4 pt-4" style={{ paddingBottom: '1rem' }}>
                 <div className="flex items-center gap-3 mb-1">
                   <h2 className="text-base font-bold text-black text-left leading-tight font-sans">
                     Related Videos
                   </h2>
                 </div>
-                <p className="text-xs text-gray-900 opacity-75 text-left" style={{ marginBottom: '1rem' }}>
+                <p className="text-xs text-gray-900 opacity-75 text-left">
                   Videos you may like
                 </p>
               </div>
