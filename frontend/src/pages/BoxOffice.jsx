@@ -11,107 +11,11 @@ const BoxOffice = () => {
   const [boxOfficeArticles, setBoxOfficeArticles] = useState([]);
   const [bollywoodArticles, setBollywoodArticles] = useState([]);
   const [relatedArticles, setRelatedArticles] = useState([]);
-  const [loading, setLoading] = useState(false); // Start with false to show sample data immediately
+  const [loading, setLoading] = useState(true); // Start with true to show loading state
   const [error, setError] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('thisWeek');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredArticles, setFilteredArticles] = useState([]);
-
-  // Sample articles data as fallback - moved up to be available immediately
-  const sampleBoxOfficeArticles = [
-    {
-      id: 1001,
-      title: "Avatar 3 Dominates Global Box Office with Record Opening Weekend",
-      summary: "James Cameron's latest installment breaks international box office records across multiple territories.",
-      publishedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Box Office Reporter",
-      slug: "avatar-3-dominates-global-box-office"
-    },
-    {
-      id: 1002,
-      title: "Fast X Speeds Past $500 Million Worldwide Collection",
-      summary: "The action franchise continues its box office dominance with impressive international numbers.",
-      publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Entertainment Analyst",
-      slug: "fast-x-speeds-past-500-million"
-    },
-    {
-      id: 1003,
-      title: "Guardians of Galaxy Vol 3 Maintains Strong Box Office Performance",
-      summary: "Marvel's space adventure continues to attract audiences in its third weekend.",
-      publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Marvel Correspondent",
-      slug: "guardians-galaxy-vol-3-strong-performance"
-    },
-    {
-      id: 1004,
-      title: "John Wick 4 Surpasses Franchise Box Office Expectations",
-      summary: "Keanu Reeves' action thriller delivers the highest grossing entry in the series.",
-      publishedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Action Movie Critic",
-      slug: "john-wick-4-surpasses-expectations"
-    },
-    {
-      id: 1005,
-      title: "Scream VI Opens Strong in Horror Movie Box Office Rankings",
-      summary: "The latest slasher sequel proves the franchise still has box office appeal.",
-      publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Horror Specialist",
-      slug: "scream-vi-opens-strong-horror"
-    }
-  ];
-
-  const sampleBollywoodArticles = [
-    {
-      id: 1006,
-      title: "Pathaan Creates Box Office History with ₹1000 Crore Club Entry",
-      summary: "Shah Rukh Khan's comeback film becomes fastest Bollywood movie to cross ₹1000 crores worldwide.",
-      publishedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Bollywood Trade Analyst",
-      slug: "pathaan-creates-box-office-history"
-    },
-    {
-      id: 1007,
-      title: "Jawan Breaks All Previous SRK Box Office Records",
-      summary: "Shah Rukh Khan's mass entertainer delivers the biggest opening day in his career.",
-      publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Trade Expert",
-      slug: "jawan-breaks-srk-records"
-    },
-    {
-      id: 1008,
-      title: "Tiger 3 Roars at Box Office with ₹300 Crore Weekend",
-      summary: "Salman Khan's spy thriller delivers massive numbers in its opening weekend.",
-      publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Box Office Tracker",
-      slug: "tiger-3-roars-300-crore-weekend"
-    },
-    {
-      id: 1009,
-      title: "Gadar 2 Emerges as Surprise Box Office Champion",
-      summary: "Sunny Deol's sequel becomes one of the highest grossing films of the year.",
-      publishedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Film Trade Magazine",
-      slug: "gadar-2-surprise-box-office-champion"
-    },
-    {
-      id: 1010,
-      title: "Rocky Aur Rani Ki Prem Kahani Wins Hearts and Box Office",
-      summary: "Karan Johar's romantic drama proves content-driven films can succeed commercially.",
-      publishedAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
-      author: "Bollywood Correspondent",
-      slug: "rocky-rani-wins-hearts-box-office"
-    }
-  ];
-
-  // Initialize with sample data immediately
-  useEffect(() => {
-    console.log('BoxOffice: Initializing with sample data...');
-    setBoxOfficeArticles(sampleBoxOfficeArticles);
-    setBollywoodArticles(sampleBollywoodArticles);
-    setRelatedArticles(sampleBoxOfficeArticles.slice(0, 5));
-    console.log('BoxOffice: Sample data set successfully');
-  }, []);
 
   useEffect(() => {
     const fetchBoxOfficeData = async () => {
