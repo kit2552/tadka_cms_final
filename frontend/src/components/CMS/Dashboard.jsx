@@ -1641,6 +1641,96 @@ const Dashboard = () => {
     }
   };
 
+  // Manage Artists Modal functions
+  const fetchManagedArtists = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/artists`);
+      if (response.ok) {
+        const artists = await response.json();
+        setManagedArtists(artists);
+      }
+    } catch (error) {
+      console.error('Error fetching artists:', error);
+    }
+  };
+
+  const handleAddArtist = async () => {
+    if (!newArtistName.trim()) return;
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/artists`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newArtistName.trim() })
+      });
+
+      if (response.ok) {
+        setNewArtistName('');
+        await fetchManagedArtists();
+        await fetchAvailableArtists();
+      } else {
+        const error = await response.json();
+        alert(error.detail || 'Failed to add artist');
+      }
+    } catch (error) {
+      console.error('Error adding artist:', error);
+      alert('Failed to add artist');
+    }
+  };
+
+  const handleUpdateArtist = async (artistId) => {
+    if (!editArtistName.trim()) return;
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/artists/${artistId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: editArtistName.trim() })
+      });
+
+      if (response.ok) {
+        setEditingArtistId(null);
+        setEditArtistName('');
+        await fetchManagedArtists();
+        await fetchAvailableArtists();
+      } else {
+        const error = await response.json();
+        alert(error.detail || 'Failed to update artist');
+      }
+    } catch (error) {
+      console.error('Error updating artist:', error);
+      alert('Failed to update artist');
+    }
+  };
+
+  const handleDeleteArtist = async (artistId, artistName) => {
+    if (!window.confirm(`Delete "${artistName}"? This cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/artists/${artistId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        await fetchManagedArtists();
+        await fetchAvailableArtists();
+      } else {
+        const error = await response.json();
+        alert(error.detail || 'Failed to delete artist');
+      }
+    } catch (error) {
+      console.error('Error deleting artist:', error);
+      alert('Failed to delete artist');
+    }
+  };
+
+  const openManageArtistsModal = () => {
+    setShowManageArtistsModal(true);
+    fetchManagedArtists();
+  };
+
   // Gallery topic management functions
   const handleGalleryTopicsManagement = async (gallery) => {
     setSelectedGalleryForTopics(gallery);
