@@ -158,25 +158,25 @@ const VideoModal = ({ isOpen, onClose, video }) => {
           style={{ zIndex: 10 }}
         >
           <div className="h-full flex flex-col">
-            <div className="flex justify-between items-center px-4 py-3 border-b border-gray-600">
-              <h3 className="text-white font-semibold">Comments ({comments.length})</h3>
+            <div className="flex justify-between items-center px-3 py-2 border-b border-gray-600">
+              <h3 className="text-white font-semibold text-xs">Comments ({comments.length})</h3>
               <button
                 onClick={() => setShowComments(false)}
                 className="text-gray-400 hover:text-white"
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+            <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2">
               {comments.map(comment => (
-                <div key={comment.id} className="bg-gray-900 bg-opacity-50 rounded-lg p-3">
+                <div key={comment.id} className="bg-gray-900 bg-opacity-50 rounded-lg p-2 text-left">
                   <div className="flex justify-between items-start mb-1">
-                    <span className="text-white font-semibold text-sm">{comment.name}</span>
-                    <span className="text-gray-400 text-xs">{comment.time}</span>
+                    <span className="text-white font-semibold text-xs">{comment.name}</span>
+                    <span className="text-gray-400 text-[10px]">{comment.time}</span>
                   </div>
-                  <p className="text-gray-300 text-sm">{comment.text}</p>
+                  <p className="text-gray-300 text-xs text-left">{comment.text}</p>
                 </div>
               ))}
             </div>
