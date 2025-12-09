@@ -341,8 +341,8 @@ const ArticlePage = () => {
           {/* Article Section - 60% width - Scrollable */}
           <div className="lg:col-span-3 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingRight: '14px' }}>
             {/* Article Section Header - Sticky with published date and bottom border */}
-            <div className={`sticky top-0 z-40 border-b-2 border-gray-300 mb-6`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
-              <div className="pl-0 pr-4 py-4">
+            <div className={`sticky top-0 z-40 border-b-2 border-gray-300`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+              <div className="pl-0 pr-4 pt-4" style={{ paddingBottom: '1rem' }}>
                 <div className="flex items-center gap-3 mb-1">
                   <h1 className="text-base font-bold text-black text-left leading-tight font-sans">
                     {article.title}
@@ -356,7 +356,7 @@ const ArticlePage = () => {
 
             {/* Main Image or YouTube Video or Gallery Slider - White background */}
             {(article.content_type === 'video' || article.content_type === 'movie_review') && article.youtube_url ? (
-              <div className="mb-3 bg-white">
+              <div className="mb-3 bg-white" style={{ marginTop: '1rem' }}>
                 <div className="relative aspect-video w-full overflow-hidden">
                   <iframe
                     src={getYouTubeEmbedUrl(article.youtube_url)}
