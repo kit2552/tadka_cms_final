@@ -435,7 +435,7 @@ export const dataService = {
       return [...(data.box_office || []), ...(data.bollywood || [])];
     } catch (error) {
       console.error('Error fetching Box Office data:', error);
-      return mockData.talkOfTown; // Fallback to mock data
+      return []; // Return empty array instead of mock data
     }
   },
 
