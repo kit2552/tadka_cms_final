@@ -5029,7 +5029,7 @@ const Dashboard = () => {
                             type="button"
                             onClick={() => {
                               setActiveTab('artists');
-                              setShowVerticalGalleryForm(false);
+                              setShowGalleryForm(false);
                             }}
                             className="text-xs text-green-600 hover:text-green-800 font-medium flex items-center gap-1"
                           >
