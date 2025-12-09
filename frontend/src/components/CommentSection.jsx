@@ -213,6 +213,7 @@ const CommentSection = ({ articleId, commentType = 'regular', headerTitle = 'Com
         commentType={commentType}
         existingReview={existingReview}
         isEditing={isEditing}
+        articleId={articleId}
       />
     </div>
   );
