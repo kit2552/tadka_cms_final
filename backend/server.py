@@ -176,7 +176,7 @@ async def get_politics_articles(
         "national_politics": national_articles or []
     }
 
-@api_router.get("/articles/sections/movies", response_model=dict)
+@api_router.get("/articles/sections/movies")
 async def get_movies_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Movies section with Movie News and Movie News Bollywood tabs"""
     movie_news_articles = crud.get_articles_by_category_slug(db, category_slug="movie-news", limit=limit)
