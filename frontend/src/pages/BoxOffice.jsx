@@ -32,8 +32,8 @@ const BoxOffice = () => {
           console.log('Box Office data received:', boxOfficeData.length);
           setBoxOfficeArticles(boxOfficeData);
         } else {
-          console.log('Box Office response not ok, using sample data');
-          setBoxOfficeArticles(sampleBoxOfficeArticles);
+          console.log('Box Office response not ok');
+          setBoxOfficeArticles([]);
         }
 
         const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood-box-office?limit=50`);
@@ -44,8 +44,8 @@ const BoxOffice = () => {
           console.log('Bollywood data received:', bollywoodData.length);
           setBollywoodArticles(bollywoodData);
         } else {
-          console.log('Bollywood response not ok, using sample data');
-          setBollywoodArticles(sampleBollywoodArticles);
+          console.log('Bollywood response not ok');
+          setBollywoodArticles([]);
         }
         
         // Get related articles from configured categories for box office page
