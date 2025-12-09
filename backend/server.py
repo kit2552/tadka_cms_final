@@ -230,7 +230,7 @@ async def get_fashion_beauty_articles(limit: int = 4, db = Depends(get_db)):
         "travel": travel_articles
     }
 
-@api_router.get("/articles/sections/sports", response_model=dict)
+@api_router.get("/articles/sections/sports")
 async def get_sports_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Sports section with Cricket and Other Sports tabs"""
     cricket_articles = crud.get_articles_by_category_slug(db, category_slug="cricket", limit=limit)
