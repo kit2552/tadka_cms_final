@@ -100,9 +100,12 @@ const SportsSchedules = ({ sportsData, onArticleClick }) => {
               >
                 <div className="flex items-start space-x-2 text-left">
                   <img
-                    src={article.image_url || getThumbnail(index)}
+                    src={article.image_url || article.image || getThumbnail(index)}
                     alt={article.title}
                     className="flex-shrink-0 w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      e.target.src = getThumbnail(index);
+                    }}
                   />
                   <div className="flex-1 min-w-0">
                     <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
