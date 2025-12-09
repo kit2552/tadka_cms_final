@@ -185,7 +185,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
 
         {/* Add Comment Popup - slides up from bottom */}
         <div 
-          className={`absolute bottom-0 left-0 right-0 bg-black bg-opacity-90 transition-all duration-300 ease-in-out ${
+          className={`absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 transition-all duration-300 ease-in-out ${
             showAddComment ? 'translate-y-0' : 'translate-y-full'
           }`}
           style={{ zIndex: 20 }}
@@ -212,18 +212,18 @@ const VideoModal = ({ isOpen, onClose, video }) => {
                 placeholder="Your Name"
                 value={commentName}
                 onChange={(e) => setCommentName(e.target.value)}
-                className="w-full px-2 py-1.5 bg-gray-800 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs"
+                className="w-full px-2 py-1.5 bg-gray-800 bg-opacity-100 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs"
               />
               <textarea
                 placeholder="Your Comment"
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 rows="2"
-                className="w-full px-2 py-1.5 bg-gray-800 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs resize-none"
+                className="w-full px-2 py-1.5 bg-gray-800 bg-opacity-100 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs resize-none"
               />
               <button
                 onClick={handleAddComment}
-                className="px-3 py-1 bg-black bg-opacity-50 hover:bg-opacity-70 text-white text-xs rounded-md transition-colors border border-gray-600"
+                className="px-3 py-1 bg-black bg-opacity-100 hover:bg-gray-800 text-white text-xs rounded-md transition-colors border border-gray-600"
               >
                 Post Comment
               </button>
