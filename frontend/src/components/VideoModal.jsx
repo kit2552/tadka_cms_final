@@ -1,32 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const VideoModal = ({ isOpen, onClose, video }) => {
   const [showComments, setShowComments] = useState(false);
   const [showAddComment, setShowAddComment] = useState(false);
   const [commentName, setCommentName] = useState('');
   const [commentText, setCommentText] = useState('');
-  const [comments, setComments] = useState([
-    { id: 1, name: 'John Doe', text: 'Great video!', time: '2 hours ago' },
-    { id: 2, name: 'Jane Smith', text: 'Love this content', time: '5 hours ago' },
-    { id: 3, name: 'Mike Johnson', text: 'Amazing!', time: '1 day ago' }
-  ]);
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  if (!isOpen || !video) return null;
+  // Fetch comments when modal opens
+  useEffect(() => {
+    if (isOpen && video && video.id) {
+      fetchComments();
+    }
+  }, [isOpen, video]);
 
-  const handleAddComment = () => {
-    if (commentName.trim() && commentText.trim()) {
-      const newComment = {
-        id: comments.length + 1,
-        name: commentName,
-        text: commentText,
-        time: 'Just now'
-      };
-      setComments([newComment, ...comments]);
-      setCommentName('');
-      setCommentText('');
-      setShowAddComment(false);
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/comments`);
+      const data = await response.json();
+      setComments(data.comments || []);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      setComments([]);
     }
   };
+
+  const handleAddComment = async () => {
+    if (commentName.trim() && commentText.trim()) {
+      setLoading(true);
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/comments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            video_id: video.id,
+            name: commentName.trim(),
+            comment: commentText.trim()
+          })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          // Add new comment to the list
+          setComments([data.comment, ...comments]);
+          setCommentName('');
+          setCommentText('');
+          setShowAddComment(false);
+        } else {
+          alert('Failed to add comment. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error adding comment:', error);
+        alert('Failed to add comment. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  if (!isOpen || !video) return null;
 
   // Extract YouTube video ID and create embed URL
   const getYouTubeEmbedUrl = (url) => {
