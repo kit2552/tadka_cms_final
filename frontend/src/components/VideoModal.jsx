@@ -251,7 +251,9 @@ const VideoModal = ({ isOpen, onClose, video }) => {
               <button
                 onClick={() => {
                   setShowAddComment(false);
-                  setCommentName('');
+                  if (!nameDisabled) {
+                    setCommentName('');
+                  }
                   setCommentText('');
                 }}
                 className="text-gray-400 hover:text-white"
