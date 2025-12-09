@@ -132,9 +132,9 @@ const BoxOffice = () => {
   // Get current articles based on active tab
   const getCurrentTabArticles = () => {
     if (activeTab === 'box-office') {
-      return boxOfficeArticles.length > 0 ? boxOfficeArticles : sampleBoxOfficeArticles;
+      return boxOfficeArticles;
     } else {
-      return bollywoodArticles.length > 0 ? bollywoodArticles : sampleBollywoodArticles;
+      return bollywoodArticles;
     }
   };
 
