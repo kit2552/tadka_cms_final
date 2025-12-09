@@ -1,7 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const VideoModal = ({ isOpen, onClose, video }) => {
+  const [showComments, setShowComments] = useState(false);
+  const [showAddComment, setShowAddComment] = useState(false);
+  const [commentName, setCommentName] = useState('');
+  const [commentText, setCommentText] = useState('');
+  const [comments, setComments] = useState([
+    { id: 1, name: 'John Doe', text: 'Great video!', time: '2 hours ago' },
+    { id: 2, name: 'Jane Smith', text: 'Love this content', time: '5 hours ago' },
+    { id: 3, name: 'Mike Johnson', text: 'Amazing!', time: '1 day ago' }
+  ]);
+
   if (!isOpen || !video) return null;
+
+  const handleAddComment = () => {
+    if (commentName.trim() && commentText.trim()) {
+      const newComment = {
+        id: comments.length + 1,
+        name: commentName,
+        text: commentText,
+        time: 'Just now'
+      };
+      setComments([newComment, ...comments]);
+      setCommentName('');
+      setCommentText('');
+      setShowAddComment(false);
+    }
+  };
 
   // Extract YouTube video ID and create embed URL
   const getYouTubeEmbedUrl = (url) => {
