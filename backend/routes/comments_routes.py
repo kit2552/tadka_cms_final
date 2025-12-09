@@ -277,3 +277,27 @@ def get_video_comments(video_id: int):
     
     return {"comments": formatted_comments, "count": len(formatted_comments)}
 
+
+@router.get("/api/videos/{video_id}/user-name")
+def get_user_name_by_ip(video_id: int, request: Request):
+    """Get the user's previous name if they've commented before from this IP"""
+    from server import db
+    
+    # Get IP address
+    ip_address = request.client.host
+    if "x-forwarded-for" in request.headers:
+        ip_address = request.headers["x-forwarded-for"].split(",")[0].strip()
+    
+    # Find the most recent comment from this IP for this video
+    previous_comment = db.video_comments.find_one(
+        {"video_id": video_id, "ip_address": ip_address},
+        {"name": 1, "_id": 0},
+        sort=[("created_at", -1)]
+    )
+    
+    if previous_comment:
+        return {"name": previous_comment["name"], "has_commented": True}
+    else:
+        return {"name": None, "has_commented": False}
+
+
