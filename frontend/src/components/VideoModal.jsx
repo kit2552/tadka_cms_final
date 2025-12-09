@@ -190,9 +190,9 @@ const VideoModal = ({ isOpen, onClose, video }) => {
           }`}
           style={{ zIndex: 20 }}
         >
-          <div className="p-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-white font-semibold">Add Comment</h3>
+          <div className="p-3">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-white font-semibold text-xs">Add Comment</h3>
               <button
                 onClick={() => {
                   setShowAddComment(false);
@@ -201,29 +201,29 @@ const VideoModal = ({ isOpen, onClose, video }) => {
                 }}
                 className="text-gray-400 hover:text-white"
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <input
                 type="text"
                 placeholder="Your Name"
                 value={commentName}
                 onChange={(e) => setCommentName(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-800 text-white rounded-md border border-gray-600 focus:outline-none focus:border-blue-500"
+                className="w-full px-2 py-1.5 bg-gray-800 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs"
               />
               <textarea
                 placeholder="Your Comment"
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                rows="3"
-                className="w-full px-3 py-2 bg-gray-800 text-white rounded-md border border-gray-600 focus:outline-none focus:border-blue-500"
+                rows="2"
+                className="w-full px-2 py-1.5 bg-gray-800 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs resize-none"
               />
               <button
                 onClick={handleAddComment}
-                className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+                className="px-3 py-1 bg-black bg-opacity-50 hover:bg-opacity-70 text-white text-xs rounded-md transition-colors border border-gray-600"
               >
                 Post Comment
               </button>
