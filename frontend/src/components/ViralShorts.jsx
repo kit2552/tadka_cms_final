@@ -150,8 +150,8 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
                     </div>
                     
                     {/* Title overlay at bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2">
-                      <p className="text-white text-[10px] font-medium line-clamp-2 text-left leading-tight">
+                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-2 border-t border-gray-700">
+                      <p className="text-white text-[10px] font-medium line-clamp-2 text-center leading-tight">
                         {item.title}
                       </p>
                     </div>
