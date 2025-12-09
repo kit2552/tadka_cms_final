@@ -43,8 +43,9 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
       videoId = youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
     }
     
+    // Use maxresdefault for better quality and crop to fit vertical
     return videoId 
-      ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+      ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
       : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
   };
 
