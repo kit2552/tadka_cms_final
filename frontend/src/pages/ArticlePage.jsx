@@ -810,7 +810,7 @@ const ArticlePage = () => {
 
             {/* Related Articles Section Header - Sticky */}
             <div className={`sticky top-0 z-30 border-b-2 border-gray-300`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))', marginBottom: '1rem' }}>
-              <div className="pl-0 pr-4 pt-4" style={{ paddingBottom: '1rem' }}>
+              <div className="pl-0 pr-4" style={{ paddingTop: '0px', paddingBottom: '1rem' }}>
                 <div className="mb-1">
                   <h2 className="text-base font-bold text-black text-left leading-tight">
                     Related Posts
