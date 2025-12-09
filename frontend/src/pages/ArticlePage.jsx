@@ -369,9 +369,11 @@ const ArticlePage = () => {
                 </div>
               </div>
             ) : article.content_type === 'photo' && article.gallery ? (
-              <GallerySlider gallery={article.gallery} title={article.title} />
+              <div style={{ marginTop: '1rem' }}>
+                <GallerySlider gallery={article.gallery} title={article.title} />
+              </div>
             ) : article.image ? (
-              <div className="mb-3 bg-white">
+              <div className="mb-3 bg-white" style={{ marginTop: '1rem' }}>
                 <img
                   src={article.image}
                   alt={article.title}
