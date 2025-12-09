@@ -148,6 +148,13 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
                         <path d="M8 5v14l11-7z"/>
                       </svg>
                     </div>
+                    
+                    {/* Title overlay at bottom */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2">
+                      <p className="text-white text-[10px] font-medium line-clamp-2 text-left leading-tight">
+                        {item.title}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
