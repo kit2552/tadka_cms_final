@@ -517,9 +517,18 @@ const ArticlePage = () => {
                       </div>
 
                       {/* Divider between sections */}
-                      {(article.review_banner || article.review_producer || article.review_director || article.review_music_director || article.review_dop || article.review_editor) && (
-                        <div className="border-t border-gray-700 my-2"></div>
-                      )}
+                      {(() => {
+                        const hasValidBanner = article.review_banner && article.review_banner !== 'Not Available' && article.review_banner !== 'N/A';
+                        const hasValidProducer = article.review_producer && article.review_producer !== 'Not Available' && article.review_producer !== 'N/A';
+                        const hasValidDirector = article.review_director && article.review_director !== 'Not Available' && article.review_director !== 'N/A';
+                        const hasValidMusic = article.review_music_director && article.review_music_director !== 'Not Available' && article.review_music_director !== 'N/A';
+                        const hasValidDop = article.review_dop && article.review_dop !== 'Not Available' && article.review_dop !== 'N/A';
+                        const hasValidEditor = article.review_editor && article.review_editor !== 'Not Available' && article.review_editor !== 'N/A';
+                        
+                        return (hasValidBanner || hasValidProducer || hasValidDirector || hasValidMusic || hasValidDop || hasValidEditor) && (
+                          <div className="border-t border-gray-700 my-2"></div>
+                        );
+                      })()}
 
                       {/* Section 2: Production & Crew (Combined) */}
                       {(() => {
