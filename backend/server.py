@@ -1540,17 +1540,20 @@ async def get_homepage_theater_bollywood_releases(db = Depends(get_db)):
         result = []
         for release in releases:
             release_data = {
-                "id": release.id,
-                "movie_name": release.movie_name,
-                "language": release.language,
-                "release_date": release.release_date,
-                "movie_image": release.movie_image,
-                "created_at": release.created_at
+                "id": release.get("id"),
+                "movie_name": release.get("movie_name"),
+                "languages": release.get("languages"),
+                "release_date": release.get("release_date"),
+                "movie_image": release.get("movie_image"),
+                "youtube_url": release.get("youtube_url"),
+                "states": release.get("states"),
+                "genres": release.get("genres"),
+                "created_at": release.get("created_at")
             }
             if is_theater:
-                release_data["movie_banner"] = release.movie_banner
+                release_data["banner"] = release.get("banner")
             else:
-                release_data["ott_platform"] = release.ott_platform
+                release_data["ott_platforms"] = release.get("ott_platforms")
             result.append(release_data)
         return result
     
@@ -1597,17 +1600,20 @@ async def get_homepage_releases(db = Depends(get_db)):
         result = []
         for release in releases:
             release_data = {
-                "id": release.id,
-                "movie_name": release.movie_name,
-                "language": release.language,
-                "release_date": release.release_date,
-                "movie_image": release.movie_image,
-                "created_at": release.created_at
+                "id": release.get("id"),
+                "movie_name": release.get("movie_name"),
+                "languages": release.get("languages"),
+                "release_date": release.get("release_date"),
+                "movie_image": release.get("movie_image"),
+                "youtube_url": release.get("youtube_url"),
+                "states": release.get("states"),
+                "genres": release.get("genres"),
+                "created_at": release.get("created_at")
             }
             if is_theater:
-                release_data["movie_banner"] = release.movie_banner
+                release_data["banner"] = release.get("banner")
             else:
-                release_data["ott_platform"] = release.ott_platform
+                release_data["ott_platforms"] = release.get("ott_platforms")
             result.append(release_data)
         return result
     
