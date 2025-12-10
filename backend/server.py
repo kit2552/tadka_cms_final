@@ -1445,6 +1445,7 @@ async def update_ott_release(
     movie_name: Optional[str] = Form(None),
     content_type: Optional[str] = Form(None),
     release_date: Optional[date] = Form(None),
+    youtube_url: Optional[str] = Form(None),
     ott_platforms: Optional[str] = Form(None),
     states: Optional[str] = Form(None),
     languages: Optional[str] = Form(None),
