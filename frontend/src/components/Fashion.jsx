@@ -115,8 +115,7 @@ const Fashion = ({ hotTopicsData = {}, onArticleClick }) => {
                 </div>
               </li>
             ))}
-          </ul>
-        </div>
+        </ul>
       </div>
       
       {/* More Button Overlay - Square with Rounded Corners */}
