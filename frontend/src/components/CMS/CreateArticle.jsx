@@ -2221,7 +2221,7 @@ const CreateArticle = () => {
                             </div>
                           </div>
 
-                          {/* Row 3: Cast - Textarea */}
+                          {/* Row 4: Cast - Textarea */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                               Cast
@@ -2236,7 +2236,7 @@ const CreateArticle = () => {
                             />
                           </div>
 
-                          {/* Row 4: Genre and Language */}
+                          {/* Row 5: Genre and Language */}
                           <div className="grid grid-cols-2 gap-4">
                             {/* Genre Multi-Select */}
                             <div>
