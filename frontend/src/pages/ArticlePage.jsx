@@ -438,7 +438,7 @@ const ArticlePage = () => {
               <div className="space-y-6 mb-8">
                 {/* Compact Movie Info Card - Dark Theme */}
                 <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 rounded-lg shadow-xl border border-gray-700">
-                  <div className="flex items-start justify-between gap-6">
+                  <div className="flex items-stretch justify-between gap-6">
                     {/* Left Side - Movie Details (4 Sections) */}
                     <div className="flex-1 space-y-0 text-left">
                       
