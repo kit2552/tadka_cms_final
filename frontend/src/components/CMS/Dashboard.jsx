@@ -1427,10 +1427,9 @@ const Dashboard = () => {
     setOttForm({...ottForm, languages: ottForm.languages.filter(l => l !== languageToRemove)});
   };
 
-  const handleAddOttState = () => {
-    if (tempOttState && !ottForm.states.includes(tempOttState)) {
-      setOttForm({...ottForm, states: [...ottForm.states, tempOttState]});
-      setTempOttState('');
+  const handleAddOttState = (stateCode) => {
+    if (stateCode && !ottForm.states.includes(stateCode)) {
+      setOttForm({...ottForm, states: [...ottForm.states, stateCode]});
     }
   };
 
