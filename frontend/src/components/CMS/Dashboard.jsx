@@ -334,10 +334,21 @@ const Dashboard = () => {
   
   const [ottForm, setOttForm] = useState({
     movie_name: '',
-    ott_platform: '',
-    language: 'Hindi',
     release_date: '',
-    movie_image: null
+    content_type: 'Movie',
+    ott_platforms: [],
+    states: [],
+    languages: [],
+    genres: [],
+    director: '',
+    producer: '',
+    banner: '',
+    music_director: '',
+    dop: '',
+    editor: '',
+    cast: '',
+    runtime: '',
+    censor_rating: ''
   });
 
   // Custom banner and platform states
