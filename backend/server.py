@@ -902,13 +902,18 @@ async def get_featured_article(db = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No featured article found")
     return articles[0]
 
-@api_router.get("/articles/{article_id}", response_model=schemas.ArticleResponse)
+@api_router.get("/articles/{article_id}")
 async def get_article(request: Request, article_id: int, db = Depends(get_db)):
     article = crud.get_article(db, article_id=article_id)
     if article is None:
         raise HTTPException(status_code=404, detail="Article not found")
     
-    # Article is already serialized by crud.get_article
+    # Populate gallery data if article has a gallery_id
+    if article.get('gallery_id'):
+        gallery = crud.get_gallery_by_id(db, article['gallery_id'])
+        if gallery:
+            article['gallery'] = gallery
+    
     return article
 
 @api_router.post("/articles", response_model=schemas.ArticleResponse)
