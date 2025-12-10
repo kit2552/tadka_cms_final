@@ -602,10 +602,18 @@ async def get_photoshoots_articles(skip: int = 0, limit: int = 10, db = Depends(
     
     return result
 
-@api_router.get("/articles/sections/travel-pics", response_model=List[schemas.ArticleListResponse])
+@api_router.get("/articles/sections/travel-pics")
 async def get_travel_pics_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for Travel Pics section"""
+    """Get articles for Travel Pics section with gallery data"""
     articles = crud.get_articles_by_category_slug(db, category_slug="travel-pics", limit=limit)
+    
+    # Populate gallery data for articles that have galleries
+    for article in articles:
+        if article.get('gallery_id'):
+            gallery = crud.get_gallery_by_id(db, article['gallery_id'])
+            if gallery:
+                article['gallery'] = gallery
+    
     return articles
 
 # Helper function removed - crud functions now return properly serialized data
