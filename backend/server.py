@@ -1477,6 +1477,8 @@ async def update_ott_release(
             update_data["content_type"] = content_type
         if release_date is not None:
             update_data["release_date"] = release_date
+        if youtube_url is not None:
+            update_data["youtube_url"] = youtube_url
         if ott_platforms is not None:
             update_data["ott_platforms"] = ott_platforms
         if states is not None:
