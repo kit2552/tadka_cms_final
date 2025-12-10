@@ -1214,6 +1214,74 @@ def create_gallery_entity(db, entity_type: str, entity_data: dict):
     del entity_doc["_id"]
     return entity_doc
 
+def get_gallery_entity_by_id(db, entity_id: int):
+    """Get gallery entity by ID from all collections"""
+    collection_map = {
+        "actor": GALLERY_ACTORS,
+        "actress": GALLERY_ACTRESSES,
+        "events": GALLERY_EVENTS,
+        "politics": GALLERY_POLITICS,
+        "travel": GALLERY_TRAVEL,
+        "others": GALLERY_OTHERS
+    }
+    
+    for collection_name in collection_map.values():
+        entity = db[collection_name].find_one({"id": entity_id}, {"_id": 0})
+        if entity:
+            return entity
+    return None
+
+def update_gallery_entity(db, entity_id: int, entity_data: dict):
+    """Update gallery entity"""
+    collection_map = {
+        "actor": GALLERY_ACTORS,
+        "actress": GALLERY_ACTRESSES,
+        "events": GALLERY_EVENTS,
+        "politics": GALLERY_POLITICS,
+        "travel": GALLERY_TRAVEL,
+        "others": GALLERY_OTHERS
+    }
+    
+    # Find which collection the entity is in
+    for collection_name in collection_map.values():
+        entity = db[collection_name].find_one({"id": entity_id}, {"_id": 0})
+        if entity:
+            # Update folder name if name changed
+            if "name" in entity_data:
+                folder_name = entity_data["name"].lower().replace(" ", "_").replace("-", "_")
+                entity_data["folder_name"] = folder_name
+            
+            # Update the entity
+            db[collection_name].update_one(
+                {"id": entity_id},
+                {"$set": entity_data}
+            )
+            
+            # Return updated entity
+            updated = db[collection_name].find_one({"id": entity_id}, {"_id": 0})
+            return updated
+    
+    return None
+
+def delete_gallery_entity(db, entity_id: int):
+    """Delete gallery entity"""
+    collection_map = {
+        "actor": GALLERY_ACTORS,
+        "actress": GALLERY_ACTRESSES,
+        "events": GALLERY_EVENTS,
+        "politics": GALLERY_POLITICS,
+        "travel": GALLERY_TRAVEL,
+        "others": GALLERY_OTHERS
+    }
+    
+    # Find and delete from the correct collection
+    for collection_name in collection_map.values():
+        result = db[collection_name].delete_one({"id": entity_id})
+        if result.deleted_count > 0:
+            return True
+    
+    return False
+
 def get_next_gallery_number(db, category_type: str, entity_name: str):
     """Get the next gallery number for an entity"""
     # Find all galleries for this entity
