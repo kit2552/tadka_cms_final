@@ -532,12 +532,12 @@ const ArticlePage = () => {
 
                       {/* Divider between sections */}
                       {(article.review_banner || article.review_producer) && (
-                        <div className="border-t border-gray-700 my-3"></div>
+                        <div className="border-t border-gray-700 my-4"></div>
                       )}
 
                       {/* Section 2: Production */}
                       {(article.review_banner || article.review_producer) && (
-                        <div className="space-y-2 pb-3">
+                        <div className="space-y-2 pb-4">
                           {article.review_banner && (
                             <div className="flex items-center gap-4">
                               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Banner</span>
