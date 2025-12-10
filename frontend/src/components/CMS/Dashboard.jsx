@@ -1162,7 +1162,7 @@ const Dashboard = () => {
   // Release form handlers
   const handleTheaterFormSubmit = async (e) => {
     e.preventDefault();
-    if (!theaterForm.movie_name || !theaterForm.release_date || !theaterForm.movie_banner) {
+    if (!theaterForm.movie_name || !theaterForm.release_date) {
       showModal('warning', 'Missing Fields', 'Please fill in all required fields.');
       return;
     }
@@ -1171,8 +1171,19 @@ const Dashboard = () => {
       const formData = new FormData();
       formData.append('movie_name', theaterForm.movie_name);
       formData.append('release_date', theaterForm.release_date);
-      formData.append('movie_banner', theaterForm.movie_banner);
-      formData.append('language', theaterForm.language);
+      formData.append('youtube_url', theaterForm.youtube_url || '');
+      formData.append('states', JSON.stringify(theaterForm.states));
+      formData.append('languages', JSON.stringify(theaterForm.languages));
+      formData.append('genres', JSON.stringify(theaterForm.genres));
+      formData.append('director', theaterForm.director || '');
+      formData.append('producer', theaterForm.producer || '');
+      formData.append('banner', theaterForm.banner || '');
+      formData.append('music_director', theaterForm.music_director || '');
+      formData.append('dop', theaterForm.dop || '');
+      formData.append('editor', theaterForm.editor || '');
+      formData.append('cast', theaterForm.cast || '');
+      formData.append('runtime', theaterForm.runtime || '');
+      formData.append('censor_rating', theaterForm.censor_rating || '');
       
       if (!editingRelease) {
         formData.append('created_by', 'Current User'); // Replace with actual user
@@ -1202,9 +1213,7 @@ const Dashboard = () => {
       if (response.ok) {
         const action = editingRelease ? 'updated' : 'added';
         showModal('success', `Theater Release ${action.charAt(0).toUpperCase() + action.slice(1)}`, `Theater release has been ${action} successfully!`);
-        setTheaterForm({ movie_name: '', release_date: '', movie_banner: '', language: 'Hindi', movie_image: null });
-        handleCancelEdit();
-        setShowTheaterForm(false); // Close the form page
+        handleTheaterFormCancel();
         fetchReleaseData();
       } else {
         const errorText = await response.text();
