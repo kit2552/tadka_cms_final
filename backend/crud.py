@@ -143,8 +143,20 @@ def get_article_by_id(db, article_id: int):
     return serialize_doc(article)
 
 def get_articles(db, skip: int = 0, limit: int = 100, is_featured: Optional[bool] = None):
-    """Get paginated articles"""
-    query = {}
+    """Get paginated articles, excluding future-dated articles (based on EST)"""
+    # Get current time in EST (UTC-5)
+    est_tz = timezone(timedelta(hours=-5))
+    current_est_time = datetime.now(est_tz)
+    
+    # Convert to UTC for MongoDB comparison
+    current_utc_time = current_est_time.astimezone(timezone.utc)
+    
+    query = {
+        "$or": [
+            {"published_at": {"$lte": current_utc_time.isoformat()}},
+            {"published_at": {"$exists": False}}
+        ]
+    }
     if is_featured is not None:
         query["is_featured"] = is_featured
     
