@@ -626,6 +626,16 @@ def get_ott_releases(db, language: str = None, skip: int = 0, limit: int = 100):
     docs = list(db[OTT_RELEASES].find(query).sort("release_date", 1).skip(skip).limit(limit))
     return serialize_doc(docs)
 
+def get_upcoming_ott_releases(db, limit: int = 100):
+    """Get upcoming OTT releases (from today onwards)"""
+    from datetime import date
+    today = date.today().isoformat()
+    
+    docs = list(db[OTT_RELEASES].find(
+        {"release_date": {"$gte": today}}
+    ).sort("release_date", 1).limit(limit))
+    return serialize_doc(docs)
+
 def create_theater_release(db, release):
     """Create theater release"""
     # Convert Pydantic model to dict if needed
