@@ -768,6 +768,9 @@ def update_theater_release(db, release_id: int, release_data):
                   "dop", "editor", "cast", "runtime", "censor_rating"]:
         value = data.get(field)
         if value is not None:
+            # Convert date to string if it's a date object
+            if field == "release_date" and hasattr(value, 'isoformat'):
+                value = value.isoformat()
             update_doc[field] = value
     
     result = db[THEATER_RELEASES].update_one(
