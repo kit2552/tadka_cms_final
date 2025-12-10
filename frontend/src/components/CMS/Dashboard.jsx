@@ -5134,7 +5134,7 @@ const Dashboard = () => {
                           <span className="text-gray-300">|</span>
                           <button
                             type="button"
-                            onClick={openManageArtistsModal}
+                            onClick={openManageEntitiesModal}
                             className="text-xs text-green-600 hover:text-green-800 font-medium flex items-center gap-1"
                           >
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
