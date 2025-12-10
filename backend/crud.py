@@ -653,11 +653,15 @@ def get_upcoming_theater_releases_by_state(db, state: str = None, limit: int = 1
     week_start = (today + timedelta(days=8)).isoformat()
     today_str = today.isoformat()
     
-    query = {"release_date": {"$gte": week_start}}
+    query = {
+        "release_date": {"$gte": week_start},
+        # Explicitly exclude 'all' states - only show state-specific releases
+        "states": {"$not": {"$regex": '"all"'}}
+    }
     
     if state:
         # Match releases that include the user's state (not 'all')
-        query["states"] = {"$regex": f'"{state}"'}
+        query["states"]["$regex"] = f'"{state}"'
     
     docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
     return serialize_doc(docs)
