@@ -4780,6 +4780,31 @@ const Dashboard = () => {
                           />
                         </div>
 
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            YouTube Trailer URL
+                          </label>
+                          <input
+                            type="url"
+                            value={ottForm.youtube_url}
+                            onChange={(e) => setOttForm({...ottForm, youtube_url: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="https://youtube.com/watch?v=..."
+                          />
+                          {ottForm.youtube_url && (
+                            <div className="mt-2">
+                              <img
+                                src={`https://img.youtube.com/vi/${ottForm.youtube_url.split('v=')[1]?.split('&')[0] || ottForm.youtube_url.split('/').pop()}/mqdefault.jpg`}
+                                alt="YouTube Thumbnail"
+                                className="w-full max-w-xs rounded border border-gray-300"
+                                onError={(e) => {
+                                  e.target.src = `https://img.youtube.com/vi/${ottForm.youtube_url.split('v=')[1]?.split('&')[0] || ottForm.youtube_url.split('/').pop()}/hqdefault.jpg`;
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+
                         {/* OTT Platforms Multi-select */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
