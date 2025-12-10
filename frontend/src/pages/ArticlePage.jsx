@@ -581,7 +581,7 @@ const ArticlePage = () => {
 
                     {/* Right Side - Rating */}
                     {article.movie_rating && (
-                      <div className="flex flex-col items-center justify-between border-l border-gray-700 pl-4 flex-shrink-0 h-full">
+                      <div className="flex flex-col items-center border-l border-gray-700 pl-4 flex-shrink-0">
                         {/* Top Section - Ratings */}
                         <div className="flex flex-col items-center">
                           <div className="text-4xl font-bold text-white leading-none">{article.movie_rating}</div>
@@ -638,18 +638,26 @@ const ArticlePage = () => {
                           )}
                         </div>
 
-                        {/* Bottom Section - Runtime and Release Date (no labels) */}
+                        {/* Bottom Section - Runtime and Release Date (aligned with Cast section) */}
                         {(article.review_runtime || article.release_date) && (
-                          <div className="flex flex-col items-center gap-1.5 mt-auto pt-4">
-                            {article.review_runtime && (
-                              <div className="text-xs text-gray-300 font-medium">{article.review_runtime}</div>
-                            )}
-                            {article.release_date && (
-                              <div className="text-xs text-gray-300 font-medium">
-                                {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                              </div>
-                            )}
-                          </div>
+                          <>
+                            {/* Add spacing to push this section down */}
+                            <div className="flex-1"></div>
+                            
+                            {/* Divider above Runtime/Release */}
+                            <div className="w-full border-t border-gray-700 my-4"></div>
+                            
+                            <div className="flex flex-col items-center gap-2">
+                              {article.review_runtime && (
+                                <div className="text-xs text-white font-medium">{article.review_runtime}</div>
+                              )}
+                              {article.release_date && (
+                                <div className="text-xs text-white font-medium">
+                                  {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                </div>
+                              )}
+                            </div>
+                          </>
                         )}
                       </div>
                     )}
