@@ -39,6 +39,10 @@ const SystemSettings = () => {
     is_active: true
   });
 
+  // State-Language Mapping State
+  const [stateLanguageMapping, setStateLanguageMapping] = useState(DEFAULT_STATE_LANGUAGE_MAPPING);
+  const [editingMapping, setEditingMapping] = useState(null);
+
   useEffect(() => {
     loadAWSConfig();
     loadUsers();
