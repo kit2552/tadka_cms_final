@@ -77,9 +77,9 @@ const Fashion = ({ hotTopicsData = {}, onArticleClick }) => {
       </div>
       
       <div 
-        className={`overflow-y-auto ${getSectionBodyClasses().backgroundClass}`}
+        className={`p-2 overflow-y-hidden ${getSectionBodyClasses().backgroundClass}`}
         style={{ 
-          height: '312px !important',
+          height: '312px',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none'
         }}
