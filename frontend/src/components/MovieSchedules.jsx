@@ -132,7 +132,7 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                   >
                     <div className="flex items-start justify-between text-left">
                       <div className="flex items-start space-x-2 flex-1">
-                        <div className="relative flex-shrink-0 w-20 h-16 rounded overflow-hidden border border-gray-300">
+                        <div className="relative flex-shrink-0 w-32 h-20 rounded overflow-hidden border border-gray-300">
                           {release.youtube_url ? (
                             <>
                               <img
