@@ -177,14 +177,18 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                           <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
                             {release.movie_name}
                           </h4>
-                          {activeTab === 'theater' && release.movie_banner && (
-                            <p className="text-xs text-gray-500 mt-1">{release.movie_banner}</p>
+                          {activeTab === 'theater' && release.banner && (
+                            <p className="text-xs text-gray-500 mt-1">{release.banner}</p>
                           )}
-                          {activeTab === 'ott' && release.ott_platform && (
-                            <p className="text-xs text-gray-500 mt-1">{release.ott_platform}</p>
+                          {activeTab === 'ott' && release.ott_platforms && (
+                            <p className="text-xs text-gray-500 mt-1">
+                              {JSON.parse(release.ott_platforms || '[]').join(', ')}
+                            </p>
                           )}
-                          {release.language && (
-                            <p className="text-xs text-blue-600 mt-1">{release.language}</p>
+                          {release.languages && (
+                            <p className="text-xs text-blue-600 mt-1">
+                              {JSON.parse(release.languages || '[]').join(', ')}
+                            </p>
                           )}
                         </div>
                       </div>
