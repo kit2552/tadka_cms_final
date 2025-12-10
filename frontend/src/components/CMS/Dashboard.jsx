@@ -1646,10 +1646,10 @@ const Dashboard = () => {
     if (!galleryCategory) return;
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/gallery-entities?category_type=${galleryCategory}`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${galleryCategory.toLowerCase()}`);
       if (response.ok) {
-        const entities = await response.json();
-        setManagedEntities(entities);
+        const data = await response.json();
+        setManagedEntities(data.entities || []);
       }
     } catch (error) {
       console.error('Error fetching entities:', error);
