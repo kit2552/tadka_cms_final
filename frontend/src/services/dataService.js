@@ -538,6 +538,7 @@ export const dataService = {
         eventsInterviewsData,
         hotTopicsData,
         tadkaPicsData,
+        boxOfficeData,
         bigStory: mockData.bigStory,
         featuredMovieReview: (movieReviewsData.movie_reviews && movieReviewsData.movie_reviews[0]) || mockData.movieReviews[0] || null,
         featuredEntertainmentStory: mockData.featuredEntertainmentStory,
