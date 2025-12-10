@@ -15,6 +15,28 @@ const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick, onArticleClic
   // Extract data from props or use fallback sample data
   const ottMovieReviews = ottMovieReviewsData.ott_movie_reviews || [];
   const webSeriesReviews = ottMovieReviewsData.web_series || [];
+
+  // Get YouTube thumbnail from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    const videoId = youtubeUrl.includes('youtube.com/watch?v=') 
+      ? youtubeUrl.split('v=')[1]?.split('&')[0]
+      : youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    
+    return videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : null;
+  };
+
+  // Handle article click - navigate to article page
+  const handleArticleClick = (article) => {
+    if (onArticleClick) {
+      onArticleClick(article);
+    } else {
+      // Direct navigation fallback
+      const slug = article.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+      navigate(`/article/${article.id}/${slug}`);
+    }
+  };
   
   const itemsPerSlide = 5; // Match Movie Reviews section
   const getCurrentData = () => {
