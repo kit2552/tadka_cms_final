@@ -14,9 +14,9 @@ const TrailersTeasers = ({ trailersData = {}, onImageClick }) => {
   
   // Get data from API instead of mock data
   const trailersVideos = trailersData.trailers || [];
-  const teasersVideos = trailersData.teasers || [];
+  const bollywoodVideos = trailersData.bollywood || [];
   
-  const currentData = activeTab === 'teasers' ? teasersVideos : trailersVideos;
+  const currentData = activeTab === 'bollywood' ? bollywoodVideos : trailersVideos;
 
   // Get YouTube thumbnail from video URL
   const getYouTubeThumbnail = (youtubeUrl) => {
