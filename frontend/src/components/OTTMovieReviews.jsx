@@ -15,7 +15,7 @@ const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick }) => {
   const ottMovieReviews = ottMovieReviewsData.ott_movie_reviews || [];
   const webSeriesReviews = ottMovieReviewsData.web_series || [];
   
-  const itemsPerSlide = 6; // Increased from 5 to 6 for more items
+  const itemsPerSlide = 5; // Match Movie Reviews section
   const getCurrentData = () => {
     if (activeTab === 'webseries') {
       return webSeriesReviews;
