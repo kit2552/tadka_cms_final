@@ -129,31 +129,36 @@ const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick }) => {
             {getDisplayData().map((item, index) => (
               <div
                 key={item.id}
-                className="flex-shrink-0 cursor-pointer"
-                style={{ minWidth: '200px' }} // Reverted back to original 200px
-                onClick={() => onImageClick(item, 'ott_review')}
+                className="flex-shrink-0"
+                style={{ minWidth: '266px' }}
               >
-                <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group">
+                <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group cursor-pointer"
+                     onClick={() => onImageClick(item, 'ott_review')}>
                   <div className="relative">
                     <img
                       src={item.image_url || item.image || 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop'}
                       alt={item.title || item.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      style={{ width: '200px', height: '120px' }} // Reverted back to original dimensions
+                      style={{ width: '266px', height: '160px' }}
                       onError={(e) => {
                         e.target.src = 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop';
                       }}
                     />
                     
-                    {/* Rating Badge - Yellow Square Background */}
+                    {/* OTT Review Badge - Red Background on Left */}
+                    <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
+                      OTT Review
+                    </div>
+                    
+                    {/* Rating Badge - Yellow Square Background on Right */}
                     <div className="absolute top-2 right-2 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded shadow-lg">
                       {getRandomRating(currentIndex + index)}
                     </div>
                     
-                    {/* Title Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2">
+                    {/* Title Overlay with Black Transparent Banner */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
                       <h3 className="text-white font-bold text-xs text-center leading-tight">
-                        {item.title || item.name}
+                        {(item.title || item.name).replace(' Review', '')}
                       </h3>
                     </div>
                   </div>
