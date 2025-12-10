@@ -565,12 +565,12 @@ const ArticlePage = () => {
 
                       {/* Divider between sections */}
                       {article.review_cast && (
-                        <div className="border-t border-gray-700 my-4"></div>
+                        <div className="border-t border-gray-700 my-2"></div>
                       )}
 
                       {/* Section 3: Cast */}
                       {article.review_cast && (
-                        <div className="space-y-2 pt-4">
+                        <div className="space-y-2 py-2">
                           <div className="flex items-start gap-4">
                             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px] pt-0.5">Cast</span>
                             <span className="text-white font-medium text-xs leading-relaxed">{article.review_cast}</span>
