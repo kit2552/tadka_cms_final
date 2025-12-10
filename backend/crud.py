@@ -742,15 +742,21 @@ def delete_ott_release(db, release_id: int, s3_service=None):
     result = db[OTT_RELEASES].delete_one({"id": release_id})
     return result.deleted_count > 0
 
-def update_theater_release(db, release_id: int, release_data: dict):
+def update_theater_release(db, release_id: int, release_data):
     """Update theater release"""
+    # Convert Pydantic model to dict if needed
+    if hasattr(release_data, 'dict'):
+        data = release_data.dict(exclude_unset=True)
+    else:
+        data = release_data
+    
     update_doc = {"updated_at": datetime.utcnow()}
     
     # Add all provided fields to update document
     for field in ["movie_name", "release_date", "movie_image", "youtube_url", "states", 
                   "languages", "genres", "director", "producer", "banner", "music_director",
                   "dop", "editor", "cast", "runtime", "censor_rating"]:
-        value = release_data.get(field)
+        value = data.get(field)
         if value is not None:
             update_doc[field] = value
     
