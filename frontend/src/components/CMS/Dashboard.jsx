@@ -360,6 +360,15 @@ const Dashboard = () => {
   const [showCustomBanner, setShowCustomBanner] = useState(false);
   const [allBanners, setAllBanners] = useState([]);
   
+  // Multi-select temporary states for Theater and OTT forms
+  const [tempTheaterGenre, setTempTheaterGenre] = useState('');
+  const [tempTheaterLanguage, setTempTheaterLanguage] = useState('');
+  const [tempTheaterState, setTempTheaterState] = useState('');
+  const [tempOttGenre, setTempOttGenre] = useState('');
+  const [tempOttLanguage, setTempOttLanguage] = useState('');
+  const [tempOttState, setTempOttState] = useState('');
+  const [tempOttPlatform, setTempOttPlatform] = useState('');
+  
   // Video Posts state management
   const [videoPostsActiveTab, setVideoPostsActiveTab] = useState('vertical-gallery');
   const [showGalleryForm, setShowGalleryForm] = useState(false);
