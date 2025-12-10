@@ -577,8 +577,9 @@ const ArticlePage = () => {
                                 <span className="text-white font-medium text-xs">{article.review_editor}</span>
                               </div>
                             )}
-                        </div>
-                      )}
+                          </div>
+                        );
+                      })()}
 
                       {/* Divider between sections */}
                       {article.review_cast && (
