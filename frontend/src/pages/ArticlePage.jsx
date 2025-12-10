@@ -149,24 +149,40 @@ const ArticlePage = () => {
     window.scrollTo(0, 0);
   }, []); // Run only once when component mounts
 
-  // Load Instagram embed script
+  // Load Instagram embed script immediately on mount
+  useEffect(() => {
+    // Preload Instagram embed script
+    if (!window.instgrm && !document.querySelector('script[src*="instagram.com/embed.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://www.instagram.com/embed.js';
+      script.async = true;
+      document.head.appendChild(script);
+    }
+  }, []); // Run once on mount
+
+  // Process Instagram embeds when article loads
   useEffect(() => {
     if (article && article.social_media_type === 'instagram' && article.social_media_embed) {
-      // Load Instagram embed script if not already loaded
-      if (!window.instgrm) {
-        const script = document.createElement('script');
-        script.src = 'https://www.instagram.com/embed.js';
-        script.async = true;
-        document.body.appendChild(script);
-        
-        script.onload = () => {
-          if (window.instgrm) {
-            window.instgrm.Embeds.process();
-          }
-        };
+      // Wait for script to load and process embeds
+      const processEmbed = () => {
+        if (window.instgrm && window.instgrm.Embeds) {
+          window.instgrm.Embeds.process();
+        }
+      };
+
+      if (window.instgrm) {
+        processEmbed();
       } else {
-        // If script already loaded, just process embeds
-        window.instgrm.Embeds.process();
+        // Wait for script to load
+        const checkScript = setInterval(() => {
+          if (window.instgrm) {
+            clearInterval(checkScript);
+            processEmbed();
+          }
+        }, 100);
+
+        // Cleanup after 5 seconds
+        setTimeout(() => clearInterval(checkScript), 5000);
       }
     }
   }, [article]);
