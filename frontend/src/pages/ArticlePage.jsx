@@ -633,7 +633,12 @@ const ArticlePage = () => {
                           {userRating ? (
                             <div className="flex flex-col items-center">
                               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">User Rating</div>
-                              <div className="text-2xl font-bold text-white leading-none">{userRating}</div>
+                              <div className="text-2xl font-bold text-white leading-none">
+                                {(() => {
+                                  const rating = parseFloat(userRating);
+                                  return rating % 1 === 0 ? rating.toFixed(0) : rating.toString();
+                                })()}
+                              </div>
                               <div className="text-[10px] text-gray-400 mb-1">/5</div>
                               <div className="flex items-center gap-0.5">
                                 {[...Array(5)].map((_, i) => {
