@@ -607,7 +607,7 @@ const ArticlePage = () => {
                     <div className="border-b-2 border-gray-300 mb-4 pb-3">
                       <h3 className="text-base font-bold text-black text-left leading-tight">Performances</h3>
                     </div>
-                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_performances}</p>
+                    <div className="text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: article.review_performances }} />
                   </div>
                 )}
 
@@ -617,7 +617,7 @@ const ArticlePage = () => {
                     <div className="border-b-2 border-gray-300 mb-4 pb-3">
                       <h3 className="text-base font-bold text-black text-left leading-tight">What Works</h3>
                     </div>
-                    <div className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_what_works}</div>
+                    <div className="text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: article.review_what_works }} />
                   </div>
                 )}
 
@@ -627,7 +627,7 @@ const ArticlePage = () => {
                     <div className="border-b-2 border-gray-300 mb-4 pb-3">
                       <h3 className="text-base font-bold text-black text-left leading-tight">What Doesn't Work</h3>
                     </div>
-                    <div className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_what_doesnt_work}</div>
+                    <div className="text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: article.review_what_doesnt_work }} />
                   </div>
                 )}
 
@@ -637,7 +637,7 @@ const ArticlePage = () => {
                     <div className="border-b-2 border-gray-300 mb-4 pb-3">
                       <h3 className="text-base font-bold text-black text-left leading-tight">Technical Aspects</h3>
                     </div>
-                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_technical_aspects}</p>
+                    <div className="text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: article.review_technical_aspects }} />
                   </div>
                 )}
 
@@ -647,7 +647,7 @@ const ArticlePage = () => {
                     <div className="border-b-2 border-gray-300 mb-4 pb-3">
                       <h3 className="text-base font-bold text-black text-left leading-tight">Final Verdict</h3>
                     </div>
-                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_final_verdict}</p>
+                    <div className="text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: article.review_final_verdict }} />
                   </div>
                 )}
               </div>
