@@ -166,7 +166,7 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
     // iPad Row: Cricket/Sports + Hot Topics (Desktop: this will be part of above row)
     'sports-fashion-row': {
       id: 'sports-fashion-row',
-      name: 'Cricket/Sports & Hot Topics Row',
+      name: 'Cricket/Sports & Box Office Row',
       component: isIpad ? (
         <div className="max-w-5xl-plus mx-auto px-8 pt-0 pb-2">
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
@@ -177,8 +177,8 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
               />
             </div>
             <div>
-              <Fashion 
-                hotTopicsData={data.hotTopicsData} 
+              <BoxOffice 
+                boxOfficeData={data.boxOfficeData} 
                 onArticleClick={handlers.handleArticleClick}
               />
             </div>
