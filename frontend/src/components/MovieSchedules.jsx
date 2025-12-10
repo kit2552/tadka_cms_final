@@ -55,7 +55,8 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
 
   const formatReleaseDate = (dateString) => {
     if (!dateString) return '';
-    const date = new Date(dateString);
+    // Append 'T00:00:00' to treat as local date, not UTC
+    const date = new Date(dateString + 'T00:00:00');
     return date.toLocaleDateString('en-US', { 
       month: 'short', 
       day: 'numeric'
