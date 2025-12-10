@@ -16,9 +16,21 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   const filterCurrentArticles = (articles) => {
     const now = new Date();
     return articles.filter(article => {
-      if (!article.published_at) return true; // Keep articles without dates
+      if (!article.published_at) {
+        console.log('Article without date:', article.id, article.title);
+        return true; // Keep articles without dates
+      }
       const publishedDate = new Date(article.published_at);
-      return publishedDate <= now; // Exclude future-dated articles
+      const isValid = publishedDate <= now;
+      console.log('Date check:', {
+        id: article.id,
+        title: article.title,
+        published_at: article.published_at,
+        publishedDate: publishedDate.toString(),
+        now: now.toString(),
+        isValid
+      });
+      return isValid; // Exclude future-dated articles
     });
   };
 
