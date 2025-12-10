@@ -117,7 +117,7 @@ export const dataService = {
       // Fallback to empty data structure
       return {
         trailers: [],
-        teasers: []
+        bollywood: []
       };
     }
   },
