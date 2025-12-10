@@ -89,8 +89,7 @@ const Fashion = ({ hotTopicsData = {}, onArticleClick }) => {
             display: none;
           }
         `}</style>
-        <div className="p-2">
-          <ul className="space-y-1">
+        <ul className="space-y-1">
             {currentArticles.slice(0, 4).map((article, index) => (
               <li
                 key={article.id}
