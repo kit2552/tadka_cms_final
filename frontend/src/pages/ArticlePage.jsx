@@ -443,7 +443,7 @@ const ArticlePage = () => {
                     <div className="flex-1 space-y-0 text-left">
                       
                       {/* Section 1: Basic Info */}
-                      <div className="space-y-2">
+                      <div className="space-y-2 py-2">
                         {article.title && (
                           <div className="flex items-center gap-4">
                             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Movie</span>
