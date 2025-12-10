@@ -402,6 +402,11 @@ const Dashboard = () => {
   const [newEntityNameManage, setNewEntityNameManage] = useState('');
   const [entitySearchQuery, setEntitySearchQuery] = useState('');
   
+  // Alert Modal states
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('error'); // 'error' or 'success'
+  
   // Image preview states
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
