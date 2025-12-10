@@ -1385,10 +1385,22 @@ async def get_ott_platforms(db = Depends(get_db)):
 @api_router.post("/cms/ott-releases", response_model=schemas.OTTReleaseResponse)
 async def create_ott_release(
     movie_name: str = Form(...),
-    ott_platform: str = Form(...),
-    language: str = Form("Hindi"),  # Added language field
     release_date: date = Form(...),
     created_by: str = Form(...),
+    content_type: str = Form('Movie'),
+    ott_platforms: str = Form('[]'),
+    states: str = Form('[]'),
+    languages: str = Form('[]'),
+    genres: str = Form('[]'),
+    director: str = Form(''),
+    producer: str = Form(''),
+    banner: str = Form(''),
+    music_director: str = Form(''),
+    dop: str = Form(''),
+    editor: str = Form(''),
+    cast: str = Form(''),
+    runtime: str = Form(''),
+    censor_rating: str = Form(''),
     movie_image: UploadFile = File(None),
     db = Depends(get_db)
 ):
@@ -1402,9 +1414,21 @@ async def create_ott_release(
         # Create release data
         release_data = schemas.OTTReleaseCreate(
             movie_name=movie_name,
-            ott_platform=ott_platform,
-            language=language,
+            content_type=content_type,
+            ott_platforms=ott_platforms,
+            states=states,
+            languages=languages,
+            genres=genres,
             release_date=release_date,
+            director=director,
+            producer=producer,
+            banner=banner,
+            music_director=music_director,
+            dop=dop,
+            editor=editor,
+            cast=cast,
+            runtime=runtime,
+            censor_rating=censor_rating,
             created_by=created_by,
             movie_image=image_path
         )
