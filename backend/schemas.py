@@ -298,6 +298,7 @@ class OTTReleaseUpdate(BaseModel):
     content_type: Optional[str] = None
     release_date: Optional[date] = None
     movie_image: Optional[str] = None
+    youtube_url: Optional[str] = None
     ott_platforms: Optional[str] = None
     states: Optional[str] = None
     languages: Optional[str] = None
