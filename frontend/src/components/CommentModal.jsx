@@ -162,11 +162,17 @@ const CommentModal = ({ isOpen, onClose, onSubmit, commentType = 'regular', exis
                   disabled={loading}
                 >
                   <option value="">Select Rating</option>
-                  <option value="5">★★★★★ (5/5)</option>
-                  <option value="4">★★★★☆ (4/5)</option>
-                  <option value="3">★★★☆☆ (3/5)</option>
-                  <option value="2">★★☆☆☆ (2/5)</option>
-                  <option value="1">★☆☆☆☆ (1/5)</option>
+                  {Array.from({length: 21}, (_, i) => (5 - i * 0.25)).map(rating => {
+                    const fullStars = Math.floor(rating);
+                    const hasHalf = rating % 1 >= 0.5;
+                    const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+                    const stars = '★'.repeat(fullStars) + (hasHalf ? '⯨' : '') + '☆'.repeat(emptyStars);
+                    return (
+                      <option key={rating} value={rating.toFixed(2)}>
+                        {stars} ({rating.toFixed(2)}/5.00)
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
             )}
