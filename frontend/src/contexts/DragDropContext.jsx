@@ -23,7 +23,7 @@ export const DragDropProvider = ({ children }) => {
     'movie-reviews',            // Full width
     'theater-ott-row',          // iPad only: TheaterReleases+OTTReleases
     'ott-movie-reviews',        // Full width
-    'videosongs-tv-row',        // Desktop: TheaterReleases+TV+OTTReleases | iPad: TheaterReleases+TV
+    'videosongs-tv-row',        // Desktop: TheaterReleases+OTTReleases+TV | iPad: TheaterReleases+OTTReleases
     'events-interviews',        // Full width
     'viral-shorts',             // Full width - New Viral Shorts section with state filtering
     'ai-fashion-row',           // Desktop: Health+StockMarket+AI | iPad: Health+StockMarket
