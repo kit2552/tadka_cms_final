@@ -177,9 +177,6 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                           <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
                             {release.movie_name}
                           </h4>
-                          {activeTab === 'theater' && release.banner && (
-                            <p className="text-xs text-gray-500 mt-1">{release.banner}</p>
-                          )}
                           {activeTab === 'ott' && release.ott_platforms && (
                             <p className="text-xs text-gray-500 mt-1">
                               {JSON.parse(release.ott_platforms || '[]').join(', ')}
