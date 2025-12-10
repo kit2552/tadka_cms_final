@@ -317,9 +317,19 @@ const Dashboard = () => {
   const [theaterForm, setTheaterForm] = useState({
     movie_name: '',
     release_date: '',
-    movie_banner: '', // Changed to string for text input
-    language: 'Hindi',
-    movie_image: null
+    youtube_url: '',
+    states: [],
+    languages: [],
+    genres: [],
+    director: '',
+    producer: '',
+    banner: '',
+    music_director: '',
+    dop: '',
+    editor: '',
+    cast: '',
+    runtime: '',
+    censor_rating: ''
   });
   
   const [ottForm, setOttForm] = useState({
