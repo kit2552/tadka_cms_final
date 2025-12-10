@@ -5874,6 +5874,43 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Alert Modal */}
+      {showAlertModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className={`px-6 py-4 rounded-t-lg ${alertType === 'success' ? 'bg-green-50' : 'bg-red-50'}`}>
+              <div className="flex items-center gap-3">
+                {alertType === 'success' ? (
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                )}
+                <h3 className={`text-lg font-semibold ${alertType === 'success' ? 'text-green-900' : 'text-red-900'}`}>
+                  {alertType === 'success' ? 'Success' : 'Error'}
+                </h3>
+              </div>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-gray-700 text-sm">{alertMessage}</p>
+            </div>
+            <div className="px-6 py-4 bg-gray-50 rounded-b-lg text-right">
+              <button
+                onClick={() => setShowAlertModal(false)}
+                className={`px-4 py-2 rounded text-sm font-medium text-white transition-colors ${
+                  alertType === 'success' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
+                }`}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
