@@ -15,36 +15,12 @@ const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick }) => {
   const ottMovieReviews = ottMovieReviewsData.ott_movie_reviews || [];
   const webSeriesReviews = ottMovieReviewsData.web_series || [];
   
-  // Sample OTT Movie Reviews data (fallback)
-  const sampleOTTMovieReviews = [
-    { id: 1, title: 'The Gray Man Review', image_url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop' },
-    { id: 2, title: 'Red Notice Review', image_url: 'https://images.unsplash.com/photo-1594736797933-d0c1372bbf52?w=400&h=300&fit=crop' },
-    { id: 3, title: 'Don\'t Look Up Review', image_url: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=400&h=300&fit=crop' },
-    { id: 4, title: 'The Adam Project Review', image_url: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&h=300&fit=crop' },
-    { id: 5, title: 'Extraction 2 Review', image_url: 'https://images.unsplash.com/photo-1489599511804-b5e70a09c787?w=400&h=300&fit=crop' },
-    { id: 6, title: 'The Irishman Review', image_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop' },
-    { id: 7, title: 'Marriage Story Review', image_url: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400&h=300&fit=crop' },
-    { id: 8, title: 'The Trial of Chicago 7 Review', image_url: 'https://images.unsplash.com/photo-1533895328261-4524dd57665a?w=400&h=300&fit=crop' }
-  ];
-
-  // Sample Web Series Reviews data (fallback)
-  const sampleWebSeriesReviews = [
-    { id: 1, title: 'Stranger Things Review', image_url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop' },
-    { id: 2, title: 'The Crown Review', image_url: 'https://images.unsplash.com/photo-1594736797933-d0c1372bbf52?w=400&h=300&fit=crop' },
-    { id: 3, title: 'Money Heist Review', image_url: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=400&h=300&fit=crop' },
-    { id: 4, title: 'Squid Game Review', image_url: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&h=300&fit=crop' },
-    { id: 5, title: 'The Witcher Review', image_url: 'https://images.unsplash.com/photo-1489599511804-b5e70a09c787?w=400&h=300&fit=crop' },
-    { id: 6, title: 'Ozark Review', image_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop' },
-    { id: 7, title: 'The Mandalorian Review', image_url: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400&h=300&fit=crop' },
-    { id: 8, title: 'House of Cards Review', image_url: 'https://images.unsplash.com/photo-1533895328261-4524dd57665a?w=400&h=300&fit=crop' }
-  ];
-  
   const itemsPerSlide = 6; // Increased from 5 to 6 for more items
   const getCurrentData = () => {
     if (activeTab === 'webseries') {
-      return webSeriesReviews.length > 0 ? webSeriesReviews : sampleWebSeriesReviews;
+      return webSeriesReviews;
     } else {
-      return ottMovieReviews.length > 0 ? ottMovieReviews : sampleOTTMovieReviews;
+      return ottMovieReviews;
     }
   };
   
