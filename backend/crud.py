@@ -602,6 +602,16 @@ def get_theater_releases(db, language: str = None, skip: int = 0, limit: int = 1
     docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).skip(skip).limit(limit))
     return serialize_doc(docs)
 
+def get_upcoming_theater_releases(db, limit: int = 100):
+    """Get upcoming theater releases (from today onwards)"""
+    from datetime import date
+    today = date.today().isoformat()
+    
+    docs = list(db[THEATER_RELEASES].find(
+        {"release_date": {"$gte": today}}
+    ).sort("release_date", 1).limit(limit))
+    return serialize_doc(docs)
+
 def get_ott_release(db, release_id: int):
     """Get single OTT release by ID"""
     doc = db[OTT_RELEASES].find_one({"id": release_id})
