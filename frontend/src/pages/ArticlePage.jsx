@@ -522,44 +522,52 @@ const ArticlePage = () => {
                       )}
 
                       {/* Section 2: Production & Crew (Combined) */}
-                      {(article.review_banner || article.review_producer || article.review_director || article.review_music_director || article.review_dop || article.review_editor) && (
-                        <div className="space-y-2 py-2">
-                          {article.review_banner && (
-                            <div className="flex items-center gap-4">
-                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Banner</span>
-                              <span className="text-white font-medium text-xs">{article.review_banner}</span>
-                            </div>
-                          )}
-                          {article.review_producer && (
-                            <div className="flex items-center gap-4">
-                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Producer</span>
-                              <span className="text-white font-medium text-xs">{article.review_producer}</span>
-                            </div>
-                          )}
-                          {article.review_director && (
-                            <div className="flex items-center gap-4">
-                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Director</span>
-                              <span className="text-white font-medium text-xs">{article.review_director}</span>
-                            </div>
-                          )}
-                          {article.review_music_director && (
-                            <div className="flex items-center gap-4">
-                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Music</span>
-                              <span className="text-white font-medium text-xs">{article.review_music_director}</span>
-                            </div>
-                          )}
-                          {article.review_dop && (
-                            <div className="flex items-center gap-4">
-                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">DOP</span>
-                              <span className="text-white font-medium text-xs">{article.review_dop}</span>
-                            </div>
-                          )}
-                          {article.review_editor && (
-                            <div className="flex items-center gap-4">
-                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Editor</span>
-                              <span className="text-white font-medium text-xs">{article.review_editor}</span>
-                            </div>
-                          )}
+                      {(() => {
+                        const hasValidBanner = article.review_banner && article.review_banner !== 'Not Available' && article.review_banner !== 'N/A';
+                        const hasValidProducer = article.review_producer && article.review_producer !== 'Not Available' && article.review_producer !== 'N/A';
+                        const hasValidDirector = article.review_director && article.review_director !== 'Not Available' && article.review_director !== 'N/A';
+                        const hasValidMusic = article.review_music_director && article.review_music_director !== 'Not Available' && article.review_music_director !== 'N/A';
+                        const hasValidDop = article.review_dop && article.review_dop !== 'Not Available' && article.review_dop !== 'N/A';
+                        const hasValidEditor = article.review_editor && article.review_editor !== 'Not Available' && article.review_editor !== 'N/A';
+                        
+                        return (hasValidBanner || hasValidProducer || hasValidDirector || hasValidMusic || hasValidDop || hasValidEditor) && (
+                          <div className="space-y-2 py-2">
+                            {hasValidBanner && (
+                              <div className="flex items-center gap-4">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Banner</span>
+                                <span className="text-white font-medium text-xs">{article.review_banner}</span>
+                              </div>
+                            )}
+                            {hasValidProducer && (
+                              <div className="flex items-center gap-4">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Producer</span>
+                                <span className="text-white font-medium text-xs">{article.review_producer}</span>
+                              </div>
+                            )}
+                            {hasValidDirector && (
+                              <div className="flex items-center gap-4">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Director</span>
+                                <span className="text-white font-medium text-xs">{article.review_director}</span>
+                              </div>
+                            )}
+                            {hasValidMusic && (
+                              <div className="flex items-center gap-4">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Music</span>
+                                <span className="text-white font-medium text-xs">{article.review_music_director}</span>
+                              </div>
+                            )}
+                            {hasValidDop && (
+                              <div className="flex items-center gap-4">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">DOP</span>
+                                <span className="text-white font-medium text-xs">{article.review_dop}</span>
+                              </div>
+                            )}
+                            {hasValidEditor && (
+                              <div className="flex items-center gap-4">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Editor</span>
+                                <span className="text-white font-medium text-xs">{article.review_editor}</span>
+                              </div>
+                            )}
                         </div>
                       )}
 
