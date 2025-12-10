@@ -683,6 +683,7 @@ def create_ott_release(db, release):
         "content_type": release_data.get("content_type"),
         "release_date": release_date,
         "movie_image": release_data.get("movie_image"),
+        "youtube_url": release_data.get("youtube_url"),
         "ott_platforms": release_data.get("ott_platforms"),
         "states": release_data.get("states"),
         "languages": release_data.get("languages"),
