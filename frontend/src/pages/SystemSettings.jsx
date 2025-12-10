@@ -694,6 +694,132 @@ const SystemSettings = () => {
               </div>
             )}
 
+            {/* State-Language Tab */}
+            {activeTab === 'state-language' && (
+              <div className="space-y-6">
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">State-Language Mapping</h3>
+                  <p className="text-sm text-gray-600 text-left">Configure the default language for each Indian state. This mapping is used for content targeting and recommendations.</p>
+                </div>
+
+                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          State Code
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          State Name
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Primary Language
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {/* ALL States (National) - First Row */}
+                      <tr className="bg-blue-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-left">
+                          all
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-left">
+                          All States (National/Bollywood)
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-left">
+                          {editingMapping === 'all' ? (
+                            <input
+                              type="text"
+                              value={stateLanguageMapping['all']}
+                              onChange={(e) => setStateLanguageMapping({...stateLanguageMapping, 'all': e.target.value})}
+                              className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          ) : (
+                            <span className="font-semibold text-blue-700">{stateLanguageMapping['all']}</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-left">
+                          {editingMapping === 'all' ? (
+                            <button
+                              onClick={() => setEditingMapping(null)}
+                              className="text-green-600 hover:text-green-900 font-medium"
+                            >
+                              Save
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => setEditingMapping('all')}
+                              className="text-blue-600 hover:text-blue-900 font-medium"
+                            >
+                              Edit
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+
+                      {/* All Indian States */}
+                      {INDIAN_STATES.map((state) => (
+                        <tr key={state.code} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-left">
+                            {state.code}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-left">
+                            {state.name}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-left">
+                            {editingMapping === state.code ? (
+                              <input
+                                type="text"
+                                value={stateLanguageMapping[state.code] || 'Hindi'}
+                                onChange={(e) => setStateLanguageMapping({...stateLanguageMapping, [state.code]: e.target.value})}
+                                className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            ) : (
+                              stateLanguageMapping[state.code] || 'Hindi'
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-left">
+                            {editingMapping === state.code ? (
+                              <button
+                                onClick={() => setEditingMapping(null)}
+                                className="text-green-600 hover:text-green-900 font-medium"
+                              >
+                                Save
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => setEditingMapping(state.code)}
+                                className="text-blue-600 hover:text-blue-900 font-medium"
+                              >
+                                Edit
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex gap-3">
+                    <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    <div className="text-left">
+                      <h4 className="text-sm font-semibold text-blue-900 mb-1">About State-Language Mapping</h4>
+                      <p className="text-sm text-blue-800">
+                        This mapping determines the default language for content in each state. The "ALL" option represents national/Bollywood content that is shown to all users regardless of their state selection.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Notifications Tab */}
             {activeTab === 'notifications' && (
               <div className="py-16">
