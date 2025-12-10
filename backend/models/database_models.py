@@ -159,10 +159,22 @@ class OTTRelease(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     movie_name = Column(String, index=True, nullable=False)
-    ott_platform = Column(String, nullable=False)  # Netflix, Prime Video, etc.
+    content_type = Column(String, default="Movie")  # Movie or Web Series
     movie_image = Column(String)   # Path to uploaded movie image
-    language = Column(String, default="Hindi")  # Movie language
     release_date = Column(Date, nullable=False)
+    ott_platforms = Column(String)  # JSON string of OTT platforms
+    states = Column(String)        # JSON string of target states
+    languages = Column(String)     # JSON string of languages
+    genres = Column(String)        # JSON string of genres
+    director = Column(String)      # Director name
+    producer = Column(String)      # Producer name
+    banner = Column(String)        # Production banner
+    music_director = Column(String)  # Music director name
+    dop = Column(String)           # Director of Photography
+    editor = Column(String)        # Editor name
+    cast = Column(String)          # Cast (comma-separated)
+    runtime = Column(String)       # Runtime in minutes
+    censor_rating = Column(String) # Censor rating (U, UA, A, etc.)
     created_by = Column(String)    # User who created this entry
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
