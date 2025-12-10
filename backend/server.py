@@ -1669,13 +1669,19 @@ async def get_theater_ott_page_releases(
                 result = []
                 for release in releases:
                     result.append({
-                        "id": release.id,
-                        "movie_name": release.movie_name,
-                        "language": release.language,
-                        "release_date": release.release_date,
-                        "movie_image": release.movie_image,
-                        "ott_platform": release.ott_platform,
-                        "created_at": release.created_at
+                        "id": release.get("id"),
+                        "movie_name": release.get("movie_name"),
+                        "languages": release.get("languages"),
+                        "content_type": release.get("content_type"),
+                        "release_date": release.get("release_date"),
+                        "movie_image": release.get("movie_image"),
+                        "youtube_url": release.get("youtube_url"),
+                        "ott_platforms": release.get("ott_platforms"),
+                        "states": release.get("states"),
+                        "genres": release.get("genres"),
+                        "director": release.get("director"),
+                        "banner": release.get("banner"),
+                        "created_at": release.get("created_at")
                     })
                 return result
             
