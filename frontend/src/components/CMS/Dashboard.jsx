@@ -394,13 +394,13 @@ const Dashboard = () => {
   const [nextGalleryNumber, setNextGalleryNumber] = useState(1);
   const [tadkaPicsEnabled, setTadkaPicsEnabled] = useState(false);
   
-  // Manage Artists Modal states
-  const [showManageArtistsModal, setShowManageArtistsModal] = useState(false);
-  const [managedArtists, setManagedArtists] = useState([]);
-  const [editingArtistId, setEditingArtistId] = useState(null);
-  const [editArtistName, setEditArtistName] = useState('');
-  const [newArtistName, setNewArtistName] = useState('');
-  const [artistSearchQuery, setArtistSearchQuery] = useState('');
+  // Manage Entities Modal states (category-specific)
+  const [showManageEntitiesModal, setShowManageEntitiesModal] = useState(false);
+  const [managedEntities, setManagedEntities] = useState([]);
+  const [editingEntityId, setEditingEntityId] = useState(null);
+  const [editEntityName, setEditEntityName] = useState('');
+  const [newEntityNameManage, setNewEntityNameManage] = useState('');
+  const [entitySearchQuery, setEntitySearchQuery] = useState('');
   
   // Image preview states
   const [showImagePreview, setShowImagePreview] = useState(false);
