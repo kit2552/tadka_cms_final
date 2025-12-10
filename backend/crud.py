@@ -624,6 +624,69 @@ def get_this_week_theater_releases(db, limit: int = 100):
     ).sort("release_date", 1).limit(limit))
     return serialize_doc(docs)
 
+def get_this_week_theater_releases_by_state(db, state: str = None, limit: int = 100):
+    """Get this week's theater releases filtered by state (excluding 'all')"""
+    from datetime import date, timedelta
+    import json
+    today = date.today()
+    week_end = (today + timedelta(days=7)).isoformat()
+    today_str = today.isoformat()
+    
+    query = {"release_date": {"$gte": today_str, "$lte": week_end}}
+    
+    if state:
+        # Match releases that include the user's state (not 'all')
+        query["states"] = {"$regex": f'"{state}"'}
+    
+    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
+    return serialize_doc(docs)
+
+def get_upcoming_theater_releases_by_state(db, state: str = None, limit: int = 100):
+    """Get upcoming theater releases filtered by state (excluding 'all')"""
+    from datetime import date, timedelta
+    import json
+    today = date.today()
+    week_start = (today + timedelta(days=8)).isoformat()
+    today_str = today.isoformat()
+    
+    query = {"release_date": {"$gte": week_start}}
+    
+    if state:
+        # Match releases that include the user's state (not 'all')
+        query["states"] = {"$regex": f'"{state}"'}
+    
+    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
+    return serialize_doc(docs)
+
+def get_this_week_theater_releases_all_states(db, limit: int = 100):
+    """Get this week's theater releases with state='all' only"""
+    from datetime import date, timedelta
+    today = date.today()
+    week_end = (today + timedelta(days=7)).isoformat()
+    today_str = today.isoformat()
+    
+    query = {
+        "release_date": {"$gte": today_str, "$lte": week_end},
+        "states": {"$regex": '"all"'}
+    }
+    
+    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
+    return serialize_doc(docs)
+
+def get_upcoming_theater_releases_all_states(db, limit: int = 100):
+    """Get upcoming theater releases with state='all' only"""
+    from datetime import date, timedelta
+    today = date.today()
+    week_start = (today + timedelta(days=8)).isoformat()
+    
+    query = {
+        "release_date": {"$gte": week_start},
+        "states": {"$regex": '"all"'}
+    }
+    
+    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
+    return serialize_doc(docs)
+
 def get_ott_release(db, release_id: int):
     """Get single OTT release by ID"""
     doc = db[OTT_RELEASES].find_one({"id": release_id})
