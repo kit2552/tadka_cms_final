@@ -1,173 +1,87 @@
-import useTabState from '../hooks/useTabState';
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import mockData from '../data/comprehensiveMockData';
+import { PlaceholderImage } from '../utils/imageUtils';
+import useTabState from '../hooks/useTabState';
 
-const TrailersTeasers = ({ reviews, onArticleClick }) => {
+const TrailersTeasers = ({ trailersData = {}, onImageClick }) => {
   const { t } = useLanguage();
-  const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
-  const [featuredItems, setFeaturedItems] = useState([]);
+  const { theme, getSectionHeaderClasses } = useTheme();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useTabState('trailers-teasers', 'trailers');
-  const [trailersData, setTrailersData] = useState({ trailers: [], bollywood: [] });
-  const [loading, setLoading] = useState(true);
+  const scrollContainerRef = useRef(null);
+  
+  // Get data from API instead of mock data
+  const trailersVideos = trailersData.trailers || [];
+  const teasersVideos = trailersData.teasers || [];
+  
+  const currentData = activeTab === 'teasers' ? teasersVideos : trailersVideos;
 
-  useEffect(() => {
-    fetchTrailersData();
-  }, []);
-
-  const fetchTrailersData = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/articles/sections/trailers-teasers`);
-      if (response.ok) {
-        const data = await response.json();
-        setTrailersData(data);
-      }
-    } catch (error) {
-      console.error('Error fetching trailers data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Sample articles data (fallback)
-  const sampleTrailersArticles = [
-    { id: 801, title: "Epic Superhero Film Trailer Breaks YouTube View Records" },
-    { id: 802, title: "Romantic Comedy Teaser Promises Heartwarming Entertainment" },
-    { id: 803, title: "Action Thriller Preview Shows Stunning Visual Effects" }
-  ];
-
-  const sampleBollywoodArticles = [
-    { id: 804, title: "Pathaan Trailer Sets Internet on Fire" },
-    { id: 805, title: "Jawan Teaser Creates Mass Hysteria" },
-    { id: 806, title: "Tiger 3 Action Trailer Breaks Records" }
-  ];
-
-  useEffect(() => {
-    if (reviews) {
-      setFeaturedItems(reviews);
-    } else {
-      // Use features data from mockData for trailers/teasers
-      setFeaturedItems(mockData.features || []);
-    }
-  }, [reviews]);
-
-  // Get articles based on active tab
-  const getTabArticles = () => {
-    if (loading) {
-      // Return sample data while loading
-      return activeTab === 'trailers' ? sampleTrailersArticles : sampleBollywoodArticles;
-    }
+  // Get YouTube thumbnail from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
     
-    if (activeTab === 'trailers') {
-      return trailersData.trailers.length > 0 ? trailersData.trailers : sampleTrailersArticles;
+    const videoId = youtubeUrl.includes('youtube.com/watch?v=') 
+      ? youtubeUrl.split('v=')[1]?.split('&')[0]
+      : youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    
+    return videoId 
+      ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+      : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+  };
+
+  // Handle video click - navigate to specific video page or article page based on content type
+  const handleVideoClick = (video) => {
+    // Navigate to video view page for video content type articles
+    if (video.content_type === 'video' || video.youtube_url) {
+      navigate(`/video/${video.id}`);
     } else {
-      return trailersData.bollywood.length > 0 ? trailersData.bollywood : sampleBollywoodArticles;
+      // Navigate to regular article page for non-video articles
+      navigate(`/article/${video.id}`);
     }
   };
 
-  const currentItems = getTabArticles();
 
-  const handleClick = (review) => {
-    if (onArticleClick) {
-      // Navigate to the article page with correct category
-      onArticleClick(review, activeTab === 'trailers' ? 'trailers_teasers' : 'bollywood_trailers');
-    }
-  };
 
-  const getThumbnail = (index) => {
-    const thumbnails = [
-      'https://images.unsplash.com/photo-1489599112477-990c2cb2c508?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1518810765-8aedc8f72bcc?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1515810143205-c9095cb61d34?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1578496479914-7ef3b0193be3?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1594736797933-d0d8e4b15d0a?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=80&h=64&fit=crop'
-    ];
-    return thumbnails[index % thumbnails.length];
+  const getCurrentData = () => {
+    return currentData; // Return all data since we removed pagination
   };
 
   return (
-    <div className={`${getSectionContainerClasses()} relative`} style={{ height: '351px' }}>
-      {/* Header with Tabs */}
-      <div className={`${getSectionHeaderClasses().containerClass} border-b flex`}>
-        <button
-          onClick={() => setActiveTab('trailers')}
-          className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-tl-lg ${
-            activeTab === 'trailers' 
-              ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}` 
-              : getSectionHeaderClasses().unselectedTabClass
-          }`}
-          style={{fontSize: '14px', fontWeight: '500'}}
-        >
-          {t('sections.trailers_teasers', 'Trailers & Teasers')}
-        </button>
-        <button
-          onClick={() => setActiveTab('songs')}
-          className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-tr-lg ${
-            activeTab === 'songs'
-              ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
-              : getSectionHeaderClasses().unselectedTabClass
-          }`}
-          style={{fontSize: '14px', fontWeight: '500'}}
-        >
-          {t('sections.bollywood_trailers', 'Bollywood')}
-        </button>
-      </div>
-      
-      <div 
-        className={`overflow-y-hidden ${getSectionBodyClasses().backgroundClass}`}
-        style={{ 
-          height: 'calc(351px - 45px)',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none'
-        }}
-      >
-        <style>{`
-          div::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
-        <div className="p-2">
-          <ul className="space-y-1">
-            {currentItems.slice(0, 4).map((review, index) => (
-              <li
-                key={review.id}
-                className={`group cursor-pointer py-1 px-1 ${getSectionBodyClasses().hoverClass} transition-colors duration-200 border-b ${getSectionBodyClasses().dividerClass} last:border-b-0`}
-                onClick={() => handleClick(review)}
-              >
-                <div className="flex items-start space-x-2 text-left">
-                  <div className="relative flex-shrink-0">
-                    <img
-                      src={getThumbnail(index)}
-                      alt={review.title}
-                      className="w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
-                      {review.title}
-                    </h4>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      
-      {/* More Button Overlay - Square with Rounded Corners - Fixed positioning to match Fashion */}
-      <div className="absolute bottom-2 right-2 z-10 pointer-events-none">
-        <div className="pointer-events-auto">
+    <div className="bg-white pt-0 pb-2 -mt-[9px] -mb-[17px]">
+      {/* Header Container with Normal Width */}
+      <div className="max-w-5xl-plus mx-auto px-8">
+        {/* Header with tabs matching BoxOffice style */}
+        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-3`}>
+          <button
+            onClick={() => setActiveTab('trailers')}
+            className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-l-lg ${
+              activeTab === 'trailers' 
+                ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}` 
+                : getSectionHeaderClasses().unselectedTabClass
+            }`}
+            style={{fontSize: '14px', fontWeight: '500'}}
+          >
+            Trailers
+          </button>
+          <button
+            onClick={() => setActiveTab('teasers')}
+            className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-r-lg ${
+              activeTab === 'teasers'
+                ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
+                : getSectionHeaderClasses().unselectedTabClass
+            }`}
+            style={{fontSize: '14px', fontWeight: '500'}}
+          >
+            Teasers
+          </button>
           <Link 
-            to="/trailers-teasers-and-new-songs" 
-            className="group inline-flex items-center justify-center w-8 h-8 bg-white bg-opacity-95 hover:bg-opacity-100 rounded border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-xl"
+            to="/trailers-teasers" 
+            className={`absolute top-1/2 transform -translate-y-1/2 right-4 group flex items-center justify-center text-xs ${getSectionHeaderClasses().moreButtonClass} transition-colors duration-200`}
           >
             <svg 
-              className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200 text-gray-600 group-hover:text-gray-800"
+              className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -176,7 +90,46 @@ const TrailersTeasers = ({ reviews, onArticleClick }) => {
             </svg>
           </Link>
         </div>
+        
+        {/* Multiple Videos Horizontal Scroll Container - Reverted to Original Size */}
+        <div 
+          className="relative overflow-x-auto"
+          ref={scrollContainerRef}
+        >
+          <div className="flex space-x-3 pb-2 scrollbar-hide">
+            {getCurrentData().map((item, index) => (
+              <div
+                key={item.id}
+                className="flex-shrink-0 cursor-pointer"
+                style={{ minWidth: '200px' }}
+                onClick={() => handleVideoClick(item)}
+              >
+                <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                  <div className="relative">
+                    <img
+                      src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      style={{ width: '200px', height: '120px' }}
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Custom Scrollbar Styles */}
+        <style>{`
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
       </div>
+
     </div>
   );
 };
