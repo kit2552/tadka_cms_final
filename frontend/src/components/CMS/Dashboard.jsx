@@ -2732,6 +2732,7 @@ const Dashboard = () => {
       movie_name: '',
       release_date: '',
       content_type: 'Movie',
+      youtube_url: '',
       ott_platforms: [],
       states: [],
       languages: [],
