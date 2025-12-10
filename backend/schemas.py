@@ -224,9 +224,20 @@ class FeaturedImage(FeaturedImageBase):
 class TheaterReleaseBase(BaseModel):
     movie_name: str
     release_date: date
-    movie_banner: Optional[str] = None  # Text field, not file path
     movie_image: Optional[str] = None
-    language: str = "Hindi"
+    youtube_url: Optional[str] = None
+    states: Optional[str] = None  # JSON string of array
+    languages: Optional[str] = None  # JSON string of array
+    genres: Optional[str] = None  # JSON string of array
+    director: Optional[str] = None
+    producer: Optional[str] = None
+    banner: Optional[str] = None
+    music_director: Optional[str] = None
+    dop: Optional[str] = None
+    editor: Optional[str] = None
+    cast: Optional[str] = None
+    runtime: Optional[str] = None
+    censor_rating: Optional[str] = None
 
 class TheaterReleaseCreate(TheaterReleaseBase):
     created_by: str
@@ -234,9 +245,20 @@ class TheaterReleaseCreate(TheaterReleaseBase):
 class TheaterReleaseUpdate(BaseModel):
     movie_name: Optional[str] = None
     release_date: Optional[date] = None
-    movie_banner: Optional[str] = None  # Text field, not file path
     movie_image: Optional[str] = None
-    language: Optional[str] = None
+    youtube_url: Optional[str] = None
+    states: Optional[str] = None
+    languages: Optional[str] = None
+    genres: Optional[str] = None
+    director: Optional[str] = None
+    producer: Optional[str] = None
+    banner: Optional[str] = None
+    music_director: Optional[str] = None
+    dop: Optional[str] = None
+    editor: Optional[str] = None
+    cast: Optional[str] = None
+    runtime: Optional[str] = None
+    censor_rating: Optional[str] = None
 
 class TheaterReleaseResponse(TheaterReleaseBase):
     id: int
