@@ -351,6 +351,19 @@ const SystemSettings = () => {
                 Other Settings
               </button>
               <button
+                onClick={() => setActiveTab('state-language')}
+                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                  activeTab === 'state-language'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                </svg>
+                State-Language
+              </button>
+              <button
                 onClick={() => setActiveTab('notifications')}
                 className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
                   activeTab === 'notifications'
