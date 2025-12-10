@@ -2588,9 +2588,20 @@ const Dashboard = () => {
     setOttForm({
       movie_name: '',
       release_date: '',
-      ott_platform: '',
-      language: 'Hindi',
-      movie_image: null
+      content_type: 'Movie',
+      ott_platforms: [],
+      states: [],
+      languages: [],
+      genres: [],
+      director: '',
+      producer: '',
+      banner: '',
+      music_director: '',
+      dop: '',
+      editor: '',
+      cast: '',
+      runtime: '',
+      censor_rating: ''
     });
   };
 
@@ -2601,9 +2612,20 @@ const Dashboard = () => {
     setOttForm({
       movie_name: '',
       release_date: '',
-      ott_platform: '',
-      language: 'Hindi',
-      movie_image: null
+      content_type: 'Movie',
+      ott_platforms: [],
+      states: [],
+      languages: [],
+      genres: [],
+      director: '',
+      producer: '',
+      banner: '',
+      music_director: '',
+      dop: '',
+      editor: '',
+      cast: '',
+      runtime: '',
+      censor_rating: ''
     });
   };
 
