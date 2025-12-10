@@ -28,6 +28,15 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   
   const movieReviews = filterCurrentArticles(rawMovieReviews);
   const bollywoodReviews = filterCurrentArticles(rawBollywoodReviews);
+  
+  // Debug logging
+  console.log('MovieReviews Debug:', {
+    rawMovieReviews: rawMovieReviews.length,
+    movieReviews: movieReviews.length,
+    bollywoodReviews: bollywoodReviews.length,
+    activeTab,
+    movieReviewsData: rawMovieReviews.map(r => ({ id: r.id, title: r.title, published_at: r.published_at }))
+  });
 
   // Get YouTube thumbnail URL from video URL
   const getYouTubeThumbnail = (youtubeUrl) => {
