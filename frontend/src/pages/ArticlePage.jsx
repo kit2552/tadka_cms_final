@@ -645,6 +645,23 @@ const ArticlePage = () => {
                             <div className="text-xs text-gray-500">No reviews yet</div>
                           </div>
                         )}
+
+                        {/* Runtime and Release Date (no labels) */}
+                        {(article.review_runtime || article.release_date) && (
+                          <>
+                            <div className="w-full border-t border-gray-700 my-3"></div>
+                            <div className="flex flex-col items-center gap-2">
+                              {article.review_runtime && (
+                                <div className="text-xs text-white font-medium">{article.review_runtime}</div>
+                              )}
+                              {article.release_date && (
+                                <div className="text-xs text-white font-medium">
+                                  {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                </div>
+                              )}
+                            </div>
+                          </>
+                        )}
                       </div>
                     )}
                   </div>
