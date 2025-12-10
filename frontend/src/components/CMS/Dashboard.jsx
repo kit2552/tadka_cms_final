@@ -1394,10 +1394,9 @@ const Dashboard = () => {
     setTheaterForm({...theaterForm, languages: theaterForm.languages.filter(l => l !== languageToRemove)});
   };
 
-  const handleAddTheaterState = () => {
-    if (tempTheaterState && !theaterForm.states.includes(tempTheaterState)) {
-      setTheaterForm({...theaterForm, states: [...theaterForm.states, tempTheaterState]});
-      setTempTheaterState('');
+  const handleAddTheaterState = (stateCode) => {
+    if (stateCode && !theaterForm.states.includes(stateCode)) {
+      setTheaterForm({...theaterForm, states: [...theaterForm.states, stateCode]});
     }
   };
 
