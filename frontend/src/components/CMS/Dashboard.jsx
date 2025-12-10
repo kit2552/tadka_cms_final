@@ -2754,11 +2754,36 @@ const Dashboard = () => {
     setShowOttForm(true);
     setEditingRelease(release);
     setEditingType('ott');
+    
+    // Parse JSON arrays safely
+    const parseJsonArray = (value) => {
+      if (!value) return [];
+      if (typeof value === 'string') {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return [];
+        }
+      }
+      return Array.isArray(value) ? value : [];
+    };
+    
     setOttForm({
-      movie_name: release.movie_name,
-      release_date: release.release_date,
-      ott_platform: release.ott_platform,
-      language: release.language,
+      movie_name: release.movie_name || '',
+      release_date: release.release_date || '',
+      content_type: release.content_type || 'Movie',
+      youtube_url: release.youtube_url || '',
+      ott_platforms: parseJsonArray(release.ott_platforms),
+      states: parseJsonArray(release.states),
+      languages: parseJsonArray(release.languages),
+      genres: parseJsonArray(release.genres),
+      director: release.director || '',
+      producer: release.producer || '',
+      banner: release.banner || '',
+      music_director: release.music_director || '',
+      dop: release.dop || '',
+      editor: release.editor || '',
+      cast: release.cast || '',
       movie_image: null
     });
   };
