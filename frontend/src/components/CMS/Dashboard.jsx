@@ -1675,13 +1675,14 @@ const Dashboard = () => {
         setNewEntityNameManage('');
         await fetchManagedEntities();
         await fetchGalleryEntities(galleryCategory);
+        showAlert(`${galleryCategory} added successfully!`, 'success');
       } else {
         const error = await response.json();
-        alert(error.detail || `Failed to add ${galleryCategory.toLowerCase()}`);
+        showAlert(error.detail || `Failed to add ${galleryCategory.toLowerCase()}`, 'error');
       }
     } catch (error) {
       console.error('Error adding entity:', error);
-      alert(`Failed to add ${galleryCategory.toLowerCase()}`);
+      showAlert(`Failed to add ${galleryCategory.toLowerCase()}`, 'error');
     }
   };
 
@@ -1700,13 +1701,14 @@ const Dashboard = () => {
         setEditEntityName('');
         await fetchManagedEntities();
         await fetchGalleryEntities(galleryCategory);
+        showAlert(`${galleryCategory} updated successfully!`, 'success');
       } else {
         const error = await response.json();
-        alert(error.detail || `Failed to update ${galleryCategory.toLowerCase()}`);
+        showAlert(error.detail || `Failed to update ${galleryCategory.toLowerCase()}`, 'error');
       }
     } catch (error) {
       console.error('Error updating entity:', error);
-      alert(`Failed to update ${galleryCategory.toLowerCase()}`);
+      showAlert(`Failed to update ${galleryCategory.toLowerCase()}`, 'error');
     }
   };
 
@@ -1723,13 +1725,14 @@ const Dashboard = () => {
       if (response.ok) {
         await fetchManagedEntities();
         await fetchGalleryEntities(galleryCategory);
+        showAlert(`${galleryCategory} deleted successfully!`, 'success');
       } else {
         const error = await response.json();
-        alert(error.detail || `Failed to delete ${galleryCategory.toLowerCase()}`);
+        showAlert(error.detail || `Failed to delete ${galleryCategory.toLowerCase()}`, 'error');
       }
     } catch (error) {
       console.error('Error deleting entity:', error);
-      alert(`Failed to delete ${galleryCategory.toLowerCase()}`);
+      showAlert(`Failed to delete ${galleryCategory.toLowerCase()}`, 'error');
     }
   };
 
