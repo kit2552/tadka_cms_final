@@ -15,6 +15,27 @@ const TravelPics = ({ tadkaPicsData = {}, onArticleClick }) => {
   const travelPicsArticles = tadkaPicsData.travel_pics || [];
   const photoshootsArticles = tadkaPicsData.photoshoots || [];
 
+  // Helper function to get random image from gallery
+  const getRandomGalleryImage = (article) => {
+    if (article.gallery && article.gallery.images && article.gallery.images.length > 0) {
+      const images = Array.isArray(article.gallery.images) 
+        ? article.gallery.images 
+        : (typeof article.gallery.images === 'string' ? JSON.parse(article.gallery.images) : []);
+      
+      if (images.length > 0) {
+        const randomIndex = Math.floor(Math.random() * images.length);
+        const randomImage = images[randomIndex];
+        return randomImage.url || randomImage.data || randomImage;
+      }
+    }
+    return article.image_url || article.image;
+  };
+
+  // Check if the gallery is vertical
+  const isVerticalGallery = (article) => {
+    return article.gallery && article.gallery.gallery_type === 'vertical';
+  };
+
   useEffect(() => {
     // Use real data from API instead of sample data
     const currentData = activeTab === 'travel-pics' ? travelPicsArticles : photoshootsArticles;
