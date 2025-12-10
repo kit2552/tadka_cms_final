@@ -4173,8 +4173,8 @@ const Dashboard = () => {
                         </div>
                       </div>
 
-                      {/* Target States with Search */}
-                      <div className="relative">
+                      {/* Target States with Search - Full Width */}
+                      <div className="relative md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                           Target States
                         </label>
