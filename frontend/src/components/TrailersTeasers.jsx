@@ -63,18 +63,18 @@ const TrailersTeasers = ({ trailersData = {}, onImageClick }) => {
             }`}
             style={{fontSize: '14px', fontWeight: '500'}}
           >
-            Trailers
+            Trailers & Teasers
           </button>
           <button
-            onClick={() => setActiveTab('teasers')}
+            onClick={() => setActiveTab('bollywood')}
             className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-r-lg ${
-              activeTab === 'teasers'
+              activeTab === 'bollywood'
                 ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
                 : getSectionHeaderClasses().unselectedTabClass
             }`}
             style={{fontSize: '14px', fontWeight: '500'}}
           >
-            Teasers
+            Bollywood
           </button>
           <Link 
             to="/trailers-teasers" 
