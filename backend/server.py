@@ -369,15 +369,15 @@ async def get_viral_shorts_articles(limit: int = 20, states: str = None, db = De
         "bollywood": bollywood_articles
     }
 
-@api_router.get("/articles/sections/ott-movie-reviews", response_model=dict)
+@api_router.get("/articles/sections/ott-movie-reviews")
 async def get_ott_movie_reviews_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for OTT Reviews section with OTT Reviews and Bollywood tabs"""
-    ott_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="ott-reviews", limit=limit)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="ott-reviews-bollywood", limit=limit)
+    """Get articles for OTT Reviews section with OTT Reviews and Web Series tabs"""
+    ott_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="ott-movie-reviews", limit=limit)
+    web_series_articles = crud.get_articles_by_category_slug(db, category_slug="web-series", limit=limit)
     
     return {
         "ott_movie_reviews": ott_reviews_articles,
-        "web_series": bollywood_articles
+        "web_series": web_series_articles
     }
 
 @api_router.get("/articles/sections/events-interviews", response_model=dict)
