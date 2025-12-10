@@ -3120,9 +3120,9 @@ const Dashboard = () => {
                         className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >
                         <option value="">All States</option>
-                        {getStateNames().map(stateName => (
-                          <option key={stateName} value={stateName}>
-                            {stateName}
+                        {getAllStatesWithAll().map(state => (
+                          <option key={state.code} value={state.name}>
+                            {state.name}
                           </option>
                         ))}
                       </select>
