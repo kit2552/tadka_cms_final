@@ -5068,56 +5068,16 @@ const Dashboard = () => {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                             Cast (comma-separated)
                           </label>
                           <textarea
                             value={ottForm.cast}
                             onChange={(e) => setOttForm({...ottForm, cast: e.target.value})}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
                             placeholder="Enter cast names separated by commas"
                             rows="2"
                           />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                              Runtime (minutes)
-                            </label>
-                            <input
-                              type="text"
-                              value={ottForm.runtime}
-                              onChange={(e) => setOttForm({...ottForm, runtime: e.target.value})}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                              placeholder="e.g., 150"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                              Censor Rating
-                            </label>
-                            <select
-                              value={ottForm.censor_rating}
-                              onChange={(e) => setOttForm({...ottForm, censor_rating: e.target.value})}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                              <option value="">Select Rating</option>
-                              <optgroup label="India (CBFC)">
-                                <option value="U">U - Unrestricted Public Exhibition</option>
-                                <option value="UA">UA - Parental Guidance for under 12</option>
-                                <option value="A">A - Restricted to adults (18+)</option>
-                                <option value="S">S - Restricted to specialized audiences</option>
-                              </optgroup>
-                              <optgroup label="USA (MPAA)">
-                                <option value="G">G - General Audiences</option>
-                                <option value="PG">PG - Parental Guidance Suggested</option>
-                                <option value="PG-13">PG-13 - Parents Strongly Cautioned</option>
-                                <option value="R">R - Restricted (17+ with adult)</option>
-                                <option value="NC-17">NC-17 - Adults Only (18+)</option>
-                              </optgroup>
-                            </select>
-                          </div>
                         </div>
                       </div>
 
