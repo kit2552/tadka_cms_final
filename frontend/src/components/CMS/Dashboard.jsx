@@ -363,11 +363,15 @@ const Dashboard = () => {
   // Multi-select temporary states for Theater and OTT forms
   const [tempTheaterGenre, setTempTheaterGenre] = useState('');
   const [tempTheaterLanguage, setTempTheaterLanguage] = useState('');
-  const [tempTheaterState, setTempTheaterState] = useState('');
   const [tempOttGenre, setTempOttGenre] = useState('');
   const [tempOttLanguage, setTempOttLanguage] = useState('');
-  const [tempOttState, setTempOttState] = useState('');
   const [tempOttPlatform, setTempOttPlatform] = useState('');
+  
+  // State search for Theater and OTT forms
+  const [theaterStateSearch, setTheaterStateSearch] = useState('');
+  const [showTheaterStateDropdown, setShowTheaterStateDropdown] = useState(false);
+  const [ottStateSearch, setOttStateSearch] = useState('');
+  const [showOttStateDropdown, setShowOttStateDropdown] = useState(false);
   
   // Video Posts state management
   const [videoPostsActiveTab, setVideoPostsActiveTab] = useState('vertical-gallery');
