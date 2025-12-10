@@ -638,7 +638,7 @@ const ArticlePage = () => {
             ) : (
               /* Regular Article Content - No background, no horizontal padding */
               <div className="prose prose-lg max-w-none mb-3 pt-3 pb-3">
-                <div className={`text-gray-900 leading-relaxed space-y-6 text-justify`}>
+                <div className={`text-gray-900 leading-relaxed space-y-6 text-left`}>
                   {/* Main Content */}
                   {article.content ? (
                     <div dangerouslySetInnerHTML={{ 
