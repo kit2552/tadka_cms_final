@@ -366,6 +366,7 @@ const Dashboard = () => {
   const [tempOttGenre, setTempOttGenre] = useState('');
   const [tempOttLanguage, setTempOttLanguage] = useState('');
   const [tempOttPlatform, setTempOttPlatform] = useState('');
+  const [tempOttState, setTempOttState] = useState('');
   
   // State search for Theater and OTT forms
   const [theaterStateSearch, setTheaterStateSearch] = useState('');
