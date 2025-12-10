@@ -149,45 +149,60 @@ const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick, onArticleClic
           onTouchEnd={handleTouchEnd}
         >
           <div className="flex space-x-3 pb-2 scrollbar-hide">
-            {getDisplayData().map((item, index) => (
-              <div
-                key={item.id}
-                className="flex-shrink-0"
-                style={{ minWidth: '266px' }}
-              >
-                <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group cursor-pointer"
-                     onClick={() => handleArticleClick(item)}>
-                  <div className="relative">
-                    <img
-                      src={getYouTubeThumbnail(item.youtube_url) || item.image_url || item.image || 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop'}
-                      alt={item.title || item.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      style={{ width: '266px', height: '160px' }}
-                      onError={(e) => {
-                        e.target.src = item.image_url || 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop';
-                      }}
-                    />
-                    
-                    {/* OTT Review Badge - Red Background on Left */}
-                    <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
-                      OTT Review
-                    </div>
-                    
-                    {/* Rating Badge - Yellow Square Background on Right */}
-                    <div className="absolute top-2 right-2 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded shadow-lg">
-                      {getRandomRating(currentIndex + index)}
-                    </div>
-                    
-                    {/* Title Overlay with Black Transparent Banner */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
-                      <h3 className="text-white font-bold text-xs text-center leading-tight">
-                        {(item.title || item.name).replace(' Review', '')}
-                      </h3>
+            {getDisplayData().map((item, index) => {
+              const rating = parseFloat(item.movie_rating || getRandomRating(currentIndex + index));
+              const formattedRating = rating % 1 === 0 ? rating.toFixed(0) : rating.toString();
+              const fullStars = Math.floor(rating);
+              const hasHalfStar = rating % 1 >= 0.5;
+              
+              return (
+                <div
+                  key={item.id}
+                  className="flex-shrink-0"
+                  style={{ minWidth: '266px' }}
+                >
+                  <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group cursor-pointer"
+                       onClick={() => handleArticleClick(item)}>
+                    <div className="relative">
+                      <img
+                        src={getYouTubeThumbnail(item.youtube_url) || item.image_url || item.image || 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop'}
+                        alt={item.title || item.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        style={{ width: '266px', height: '160px' }}
+                        onError={(e) => {
+                          e.target.src = item.image_url || 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop';
+                        }}
+                      />
+                      
+                      {/* Rating Display - Centered at Top */}
+                      <div className="absolute top-0 left-0 right-0 flex flex-col items-center justify-center pt-3 pb-2 bg-gradient-to-b from-black/60 to-transparent">
+                        <div className="text-3xl font-bold text-white leading-none">{formattedRating}</div>
+                        <div className="text-[10px] text-gray-300 mb-1">/5</div>
+                        <div className="flex items-center gap-0.5">
+                          {[...Array(5)].map((_, i) => (
+                            <svg
+                              key={i}
+                              className={`w-3 h-3 ${i < fullStars ? 'text-yellow-400' : (i === fullStars && hasHalfStar ? 'text-yellow-400' : 'text-gray-400')}`}
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                            </svg>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Title Overlay with Black Transparent Banner */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
+                        <h3 className="text-white font-bold text-xs text-center leading-tight">
+                          {(item.title || item.name).replace(' Review', '')}
+                        </h3>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           
           {/* Navigation Arrows */}
