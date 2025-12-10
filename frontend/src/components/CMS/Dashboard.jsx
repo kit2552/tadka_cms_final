@@ -1660,19 +1660,16 @@ const Dashboard = () => {
     if (!newEntityNameManage.trim() || !galleryCategory) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/gallery-entities`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${galleryCategory.toLowerCase()}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name: newEntityNameManage.trim(),
-          category_type: galleryCategory
-        })
+        body: JSON.stringify({ name: newEntityNameManage.trim() })
       });
 
       if (response.ok) {
         setNewEntityNameManage('');
         await fetchManagedEntities();
-        await fetchAvailableEntities();
+        await fetchGalleryEntities(galleryCategory);
       } else {
         const error = await response.json();
         alert(error.detail || `Failed to add ${galleryCategory.toLowerCase()}`);
@@ -1687,7 +1684,7 @@ const Dashboard = () => {
     if (!editEntityName.trim()) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/gallery-entities/${entityId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${galleryCategory.toLowerCase()}/${entityId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: editEntityName.trim() })
@@ -1697,7 +1694,7 @@ const Dashboard = () => {
         setEditingEntityId(null);
         setEditEntityName('');
         await fetchManagedEntities();
-        await fetchAvailableEntities();
+        await fetchGalleryEntities(galleryCategory);
       } else {
         const error = await response.json();
         alert(error.detail || `Failed to update ${galleryCategory.toLowerCase()}`);
@@ -1714,13 +1711,13 @@ const Dashboard = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/gallery-entities/${entityId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/gallery-entities/${galleryCategory.toLowerCase()}/${entityId}`, {
         method: 'DELETE'
       });
 
       if (response.ok) {
         await fetchManagedEntities();
-        await fetchAvailableEntities();
+        await fetchGalleryEntities(galleryCategory);
       } else {
         const error = await response.json();
         alert(error.detail || `Failed to delete ${galleryCategory.toLowerCase()}`);
