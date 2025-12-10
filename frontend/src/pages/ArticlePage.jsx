@@ -597,7 +597,7 @@ const ArticlePage = () => {
                     <div className="border-b-2 border-gray-300 mb-4 pb-3">
                       <h3 className="text-base font-bold text-black text-left leading-tight">Main Plot</h3>
                     </div>
-                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_plot_summary}</p>
+                    <div className="text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: article.review_plot_summary }} />
                   </div>
                 )}
 
