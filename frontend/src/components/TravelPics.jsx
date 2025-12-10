@@ -113,7 +113,7 @@ const TravelPics = ({ tadkaPicsData = {}, onArticleClick }) => {
                     <img
                       src={getRandomGalleryImage(review)}
                       alt={review.title}
-                      className="w-12 h-24 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                      className="w-20 h-28 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
                       onError={(e) => {
                         e.target.style.display = 'none';
