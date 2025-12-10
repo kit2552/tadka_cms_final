@@ -626,10 +626,23 @@ def create_theater_release(db, release: dict):
         "id": new_id,
         "movie_name": release.get("movie_name"),
         "release_date": release.get("release_date"),
-        "language": release.get("language"),
         "movie_image": release.get("movie_image"),
-        "movie_banner": release.get("movie_banner"),
-        "created_at": datetime.utcnow()
+        "youtube_url": release.get("youtube_url"),
+        "states": release.get("states"),
+        "languages": release.get("languages"),
+        "genres": release.get("genres"),
+        "director": release.get("director"),
+        "producer": release.get("producer"),
+        "banner": release.get("banner"),
+        "music_director": release.get("music_director"),
+        "dop": release.get("dop"),
+        "editor": release.get("editor"),
+        "cast": release.get("cast"),
+        "runtime": release.get("runtime"),
+        "censor_rating": release.get("censor_rating"),
+        "created_by": release.get("created_by"),
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow()
     }
     
     result = db[THEATER_RELEASES].insert_one(release_doc)
