@@ -10,6 +10,7 @@ const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick, onArticleClic
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeTab, setActiveTab] = useTabState('ott-movie-reviews', 'general'); // 'general' or 'webseries'
   const sliderRef = useRef(null);
+  const navigate = useNavigate();
 
   // Extract data from props or use fallback sample data
   const ottMovieReviews = ottMovieReviewsData.ott_movie_reviews || [];
