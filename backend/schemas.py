@@ -275,6 +275,7 @@ class OTTReleaseBase(BaseModel):
     release_date: date
     content_type: str = "Movie"
     movie_image: Optional[str] = None
+    youtube_url: Optional[str] = None
     ott_platforms: Optional[str] = None  # JSON string of array
     states: Optional[str] = None  # JSON string of array
     languages: Optional[str] = None  # JSON string of array
