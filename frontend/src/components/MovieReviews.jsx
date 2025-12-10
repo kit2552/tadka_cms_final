@@ -195,10 +195,12 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                           />
                         )}
                         
-                        {/* Rating Display - Centered at Top */}
-                        <div className="absolute top-0 left-0 right-0 flex flex-col items-center justify-center pt-3 pb-2 bg-gradient-to-b from-black/60 to-transparent">
-                          <div className="text-3xl font-bold text-white leading-none">{formattedRating}</div>
-                          <div className="text-[10px] text-gray-300 mb-1">/5</div>
+                        {/* Rating Display - Centered at Top with Black Square Background */}
+                        <div className="absolute top-3 left-1/2 transform -translate-x-1/2 flex flex-col items-center justify-center px-3 py-2 bg-black/60 rounded">
+                          <div className="flex items-baseline gap-1 mb-1">
+                            <span className="text-3xl font-bold text-white leading-none">{formattedRating}</span>
+                            <span className="text-sm text-gray-300">/5</span>
+                          </div>
                           <div className="flex items-center gap-0.5">
                             {[...Array(5)].map((_, i) => (
                               <svg
