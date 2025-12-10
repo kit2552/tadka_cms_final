@@ -156,15 +156,15 @@ const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick, onArticleClic
                 style={{ minWidth: '266px' }}
               >
                 <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group cursor-pointer"
-                     onClick={() => onImageClick(item, 'ott_review')}>
+                     onClick={() => handleArticleClick(item)}>
                   <div className="relative">
                     <img
-                      src={item.image_url || item.image || 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop'}
+                      src={getYouTubeThumbnail(item.youtube_url) || item.image_url || item.image || 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop'}
                       alt={item.title || item.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       style={{ width: '266px', height: '160px' }}
                       onError={(e) => {
-                        e.target.src = 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop';
+                        e.target.src = item.image_url || 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop';
                       }}
                     />
                     
