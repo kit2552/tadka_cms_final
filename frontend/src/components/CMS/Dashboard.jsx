@@ -4038,121 +4038,370 @@ const Dashboard = () => {
                     
                     {/* Form Content */}
                     <div className="p-6">
-                  <form onSubmit={handleTheaterFormSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                          Movie Name *
-                        </label>
-                        <input
-                          type="text"
-                          value={theaterForm.movie_name}
-                          onChange={(e) => setTheaterForm({...theaterForm, movie_name: e.target.value})}
-                          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                          placeholder="Enter movie name"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                          Language *
-                        </label>
-                        <select
-                          value={theaterForm.language}
-                          onChange={(e) => setTheaterForm({...theaterForm, language: e.target.value})}
-                          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                          required
-                        >
-                          {languages.map(lang => (
-                            <option key={lang.code} value={lang.name}>
-                              {lang.code === 'en' ? lang.name : `${lang.name} (${lang.native_name})`}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                          Release Date *
-                        </label>
-                        <input
-                          type="date"
-                          value={theaterForm.release_date}
-                          onChange={(e) => setTheaterForm({...theaterForm, release_date: e.target.value})}
-                          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                          Movie Image
-                        </label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => setTheaterForm({...theaterForm, movie_image: e.target.files[0]})}
-                          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                          Movie Banner *
-                        </label>
-                        <div className="flex space-x-2">
-                          <select
-                            value={showCustomBanner ? 'add_custom' : theaterForm.movie_banner}
-                            onChange={(e) => handleBannerSelect(e.target.value)}
-                            className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                  <form onSubmit={handleTheaterFormSubmit} className="space-y-6">
+                    {/* Basic Information Section */}
+                    <div className="space-y-4">
+                      <h3 className="text-md font-semibold text-gray-900 border-b pb-2">Basic Information</h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Movie Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={theaterForm.movie_name}
+                            onChange={(e) => setTheaterForm({...theaterForm, movie_name: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="Enter movie name"
                             required
-                          >
-                            <option value="">Select Production Banner</option>
-                            {allBanners.map(banner => (
-                              <option key={banner} value={banner}>{banner}</option>
-                            ))}
-                            <option value="add_custom">+ Add New Banner</option>
-                          </select>
+                          />
                         </div>
-                        {showCustomBanner && (
-                          <div className="mt-2 flex space-x-2">
-                            <input
-                              type="text"
-                              value={customBanner}
-                              onChange={(e) => setCustomBanner(e.target.value)}
-                              placeholder="Enter new banner name"
-                              className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                              onKeyPress={(e) => e.key === 'Enter' && handleAddCustomBanner()}
-                            />
-                            <button
-                              type="button"
-                              onClick={handleAddCustomBanner}
-                              className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200"
-                            >
-                              Add
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {setShowCustomBanner(false); setCustomBanner('');}}
-                              className="px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors duration-200"
-                            >
-                              Cancel
-                            </button>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Release Date *
+                          </label>
+                          <input
+                            type="date"
+                            value={theaterForm.release_date}
+                            onChange={(e) => setTheaterForm({...theaterForm, release_date: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            YouTube Trailer URL
+                          </label>
+                          <input
+                            type="url"
+                            value={theaterForm.youtube_url}
+                            onChange={(e) => setTheaterForm({...theaterForm, youtube_url: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="https://youtube.com/watch?v=..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Movie Image
+                          </label>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setTheaterForm({...theaterForm, movie_image: e.target.files[0]})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Target States Multi-select */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                          Target States
+                        </label>
+                        <div className="flex gap-2 mb-2">
+                          <select
+                            value={tempTheaterState}
+                            onChange={(e) => setTempTheaterState(e.target.value)}
+                            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">Select State</option>
+                            {getStateNames().map(state => (
+                              <option key={state.code} value={state.code}>{state.name}</option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={handleAddTheaterState}
+                            disabled={!tempTheaterState}
+                            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                          >
+                            Add
+                          </button>
+                        </div>
+                        {theaterForm.states.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {theaterForm.states.map((state, index) => (
+                              <span
+                                key={index}
+                                className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-md"
+                              >
+                                {getStateNameByCode(state)}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveTheaterState(state)}
+                                  className="text-purple-600 hover:text-purple-800"
+                                >
+                                  ×
+                                </button>
+                              </span>
+                            ))}
                           </div>
                         )}
                       </div>
                     </div>
-                    <div className="flex justify-end space-x-3">
-                      {editingRelease && editingType === 'theater' && (
-                        <button
-                          type="button"
-                          onClick={handleCancelEdit}
-                          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                        >
-                          Cancel
-                        </button>
-                      )}
+
+                    {/* Languages and Genres Section */}
+                    <div className="space-y-4">
+                      <h3 className="text-md font-semibold text-gray-900 border-b pb-2">Languages & Genres</h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Languages Multi-select */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Languages
+                          </label>
+                          <div className="flex gap-2 mb-2">
+                            <select
+                              value={tempTheaterLanguage}
+                              onChange={(e) => setTempTheaterLanguage(e.target.value)}
+                              className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Select Language</option>
+                              <option value="Telugu">Telugu</option>
+                              <option value="Hindi">Hindi</option>
+                              <option value="Tamil">Tamil</option>
+                              <option value="Malayalam">Malayalam</option>
+                              <option value="Kannada">Kannada</option>
+                              <option value="English">English</option>
+                              <option value="Bengali">Bengali</option>
+                              <option value="Marathi">Marathi</option>
+                              <option value="Punjabi">Punjabi</option>
+                              <option value="Gujarati">Gujarati</option>
+                            </select>
+                            <button
+                              type="button"
+                              onClick={handleAddTheaterLanguage}
+                              disabled={!tempTheaterLanguage}
+                              className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            >
+                              Add
+                            </button>
+                          </div>
+                          {theaterForm.languages.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {theaterForm.languages.map((language, index) => (
+                                <span
+                                  key={index}
+                                  className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-sm rounded-md"
+                                >
+                                  {language}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveTheaterLanguage(language)}
+                                    className="text-green-600 hover:text-green-800"
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Genres Multi-select */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Genres
+                          </label>
+                          <div className="flex gap-2 mb-2">
+                            <select
+                              value={tempTheaterGenre}
+                              onChange={(e) => setTempTheaterGenre(e.target.value)}
+                              className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Select Genre</option>
+                              <option value="Action">Action</option>
+                              <option value="Comedy">Comedy</option>
+                              <option value="Drama">Drama</option>
+                              <option value="Thriller">Thriller</option>
+                              <option value="Horror">Horror</option>
+                              <option value="Romance">Romance</option>
+                              <option value="Sci-Fi">Sci-Fi</option>
+                              <option value="Fantasy">Fantasy</option>
+                              <option value="Crime">Crime</option>
+                              <option value="Mystery">Mystery</option>
+                              <option value="Adventure">Adventure</option>
+                              <option value="Animation">Animation</option>
+                              <option value="Biography">Biography</option>
+                              <option value="Family">Family</option>
+                            </select>
+                            <button
+                              type="button"
+                              onClick={handleAddTheaterGenre}
+                              disabled={!tempTheaterGenre}
+                              className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            >
+                              Add
+                            </button>
+                          </div>
+                          {theaterForm.genres.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {theaterForm.genres.map((genre, index) => (
+                                <span
+                                  key={index}
+                                  className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-md"
+                                >
+                                  {genre}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveTheaterGenre(genre)}
+                                    className="text-blue-600 hover:text-blue-800"
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Movie Details Section */}
+                    <div className="space-y-4">
+                      <h3 className="text-md font-semibold text-gray-900 border-b pb-2">Movie Details</h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Director
+                          </label>
+                          <input
+                            type="text"
+                            value={theaterForm.director}
+                            onChange={(e) => setTheaterForm({...theaterForm, director: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="Enter director name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Producer
+                          </label>
+                          <input
+                            type="text"
+                            value={theaterForm.producer}
+                            onChange={(e) => setTheaterForm({...theaterForm, producer: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="Enter producer name"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Production Banner
+                          </label>
+                          <input
+                            type="text"
+                            value={theaterForm.banner}
+                            onChange={(e) => setTheaterForm({...theaterForm, banner: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="Enter production banner"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Music Director
+                          </label>
+                          <input
+                            type="text"
+                            value={theaterForm.music_director}
+                            onChange={(e) => setTheaterForm({...theaterForm, music_director: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="Enter music director name"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            DOP (Director of Photography)
+                          </label>
+                          <input
+                            type="text"
+                            value={theaterForm.dop}
+                            onChange={(e) => setTheaterForm({...theaterForm, dop: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="Enter DOP name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Editor
+                          </label>
+                          <input
+                            type="text"
+                            value={theaterForm.editor}
+                            onChange={(e) => setTheaterForm({...theaterForm, editor: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="Enter editor name"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                          Cast (comma-separated)
+                        </label>
+                        <textarea
+                          value={theaterForm.cast}
+                          onChange={(e) => setTheaterForm({...theaterForm, cast: e.target.value})}
+                          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                          placeholder="Enter cast names separated by commas"
+                          rows="2"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Runtime (minutes)
+                          </label>
+                          <input
+                            type="text"
+                            value={theaterForm.runtime}
+                            onChange={(e) => setTheaterForm({...theaterForm, runtime: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            placeholder="e.g., 150"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Censor Rating
+                          </label>
+                          <select
+                            value={theaterForm.censor_rating}
+                            onChange={(e) => setTheaterForm({...theaterForm, censor_rating: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">Select Rating</option>
+                            <optgroup label="India (CBFC)">
+                              <option value="U">U - Unrestricted Public Exhibition</option>
+                              <option value="UA">UA - Parental Guidance for under 12</option>
+                              <option value="A">A - Restricted to adults (18+)</option>
+                              <option value="S">S - Restricted to specialized audiences</option>
+                            </optgroup>
+                            <optgroup label="USA (MPAA)">
+                              <option value="G">G - General Audiences</option>
+                              <option value="PG">PG - Parental Guidance Suggested</option>
+                              <option value="PG-13">PG-13 - Parents Strongly Cautioned</option>
+                              <option value="R">R - Restricted (17+ with adult)</option>
+                              <option value="NC-17">NC-17 - Adults Only (18+)</option>
+                            </optgroup>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Form Actions */}
+                    <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                       <button
                         type="button"
                         onClick={handleTheaterFormCancel}
@@ -4162,7 +4411,7 @@ const Dashboard = () => {
                       </button>
                       <button
                         type="submit"
-                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                       >
                         {editingRelease && editingType === 'theater' ? 'Update Theater Release' : 'Add Theater Release'}
                       </button>
