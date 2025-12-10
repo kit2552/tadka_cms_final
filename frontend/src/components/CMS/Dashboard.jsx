@@ -4154,13 +4154,8 @@ const Dashboard = () => {
                                 }}
                               />
                               <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
-                                {getStateNames()
+                                {getAllStatesWithAll()
                                   .filter(state => state && state.name && state.name.toLowerCase().includes(theaterStateSearch.toLowerCase()))
-                                  .sort((a, b) => {
-                                    if (a.code === 'all') return -1;
-                                    if (b.code === 'all') return 1;
-                                    return a.name.localeCompare(b.name);
-                                  })
                                   .map(state => (
                                     <div
                                       key={state.code}
@@ -4174,7 +4169,7 @@ const Dashboard = () => {
                                       {state.name}
                                     </div>
                                   ))}
-                                {getStateNames().filter(state => state && state.name && state.name.toLowerCase().includes(theaterStateSearch.toLowerCase())).length === 0 && (
+                                {getAllStatesWithAll().filter(state => state && state.name && state.name.toLowerCase().includes(theaterStateSearch.toLowerCase())).length === 0 && (
                                   <div className="px-3 py-2 text-sm text-gray-500 text-left">No states found</div>
                                 )}
                               </div>
