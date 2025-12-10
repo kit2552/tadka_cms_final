@@ -1641,94 +1641,103 @@ const Dashboard = () => {
     }
   };
 
-  // Manage Artists Modal functions
-  const fetchManagedArtists = async () => {
+  // Manage Entities Modal functions (category-specific)
+  const fetchManagedEntities = async () => {
+    if (!galleryCategory) return;
+    
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/artists`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/gallery-entities?category_type=${galleryCategory}`);
       if (response.ok) {
-        const artists = await response.json();
-        setManagedArtists(artists);
+        const entities = await response.json();
+        setManagedEntities(entities);
       }
     } catch (error) {
-      console.error('Error fetching artists:', error);
+      console.error('Error fetching entities:', error);
     }
   };
 
-  const handleAddArtist = async () => {
-    if (!newArtistName.trim()) return;
+  const handleAddEntityManage = async () => {
+    if (!newEntityNameManage.trim() || !galleryCategory) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/artists`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/gallery-entities`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newArtistName.trim() })
+        body: JSON.stringify({ 
+          name: newEntityNameManage.trim(),
+          category_type: galleryCategory
+        })
       });
 
       if (response.ok) {
-        setNewArtistName('');
-        await fetchManagedArtists();
-        await fetchAvailableArtists();
+        setNewEntityNameManage('');
+        await fetchManagedEntities();
+        await fetchAvailableEntities();
       } else {
         const error = await response.json();
-        alert(error.detail || 'Failed to add artist');
+        alert(error.detail || `Failed to add ${galleryCategory.toLowerCase()}`);
       }
     } catch (error) {
-      console.error('Error adding artist:', error);
-      alert('Failed to add artist');
+      console.error('Error adding entity:', error);
+      alert(`Failed to add ${galleryCategory.toLowerCase()}`);
     }
   };
 
-  const handleUpdateArtist = async (artistId) => {
-    if (!editArtistName.trim()) return;
+  const handleUpdateEntityManage = async (entityId) => {
+    if (!editEntityName.trim()) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/artists/${artistId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/gallery-entities/${entityId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editArtistName.trim() })
+        body: JSON.stringify({ name: editEntityName.trim() })
       });
 
       if (response.ok) {
-        setEditingArtistId(null);
-        setEditArtistName('');
-        await fetchManagedArtists();
-        await fetchAvailableArtists();
+        setEditingEntityId(null);
+        setEditEntityName('');
+        await fetchManagedEntities();
+        await fetchAvailableEntities();
       } else {
         const error = await response.json();
-        alert(error.detail || 'Failed to update artist');
+        alert(error.detail || `Failed to update ${galleryCategory.toLowerCase()}`);
       }
     } catch (error) {
-      console.error('Error updating artist:', error);
-      alert('Failed to update artist');
+      console.error('Error updating entity:', error);
+      alert(`Failed to update ${galleryCategory.toLowerCase()}`);
     }
   };
 
-  const handleDeleteArtist = async (artistId, artistName) => {
-    if (!window.confirm(`Delete "${artistName}"? This cannot be undone.`)) {
+  const handleDeleteEntityManage = async (entityId, entityName) => {
+    if (!window.confirm(`Delete "${entityName}"? This cannot be undone.`)) {
       return;
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/artists/${artistId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/gallery-entities/${entityId}`, {
         method: 'DELETE'
       });
 
       if (response.ok) {
-        await fetchManagedArtists();
-        await fetchAvailableArtists();
+        await fetchManagedEntities();
+        await fetchAvailableEntities();
       } else {
         const error = await response.json();
-        alert(error.detail || 'Failed to delete artist');
+        alert(error.detail || `Failed to delete ${galleryCategory.toLowerCase()}`);
       }
     } catch (error) {
-      console.error('Error deleting artist:', error);
-      alert('Failed to delete artist');
+      console.error('Error deleting entity:', error);
+      alert(`Failed to delete ${galleryCategory.toLowerCase()}`);
     }
   };
 
-  const openManageArtistsModal = () => {
-    setShowManageArtistsModal(true);
-    fetchManagedArtists();
+  const openManageEntitiesModal = () => {
+    if (!galleryCategory) {
+      alert('Please select a gallery category first');
+      return;
+    }
+    setShowManageEntitiesModal(true);
+    fetchManagedEntities();
   };
 
   // Gallery topic management functions
