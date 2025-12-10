@@ -1230,17 +1230,29 @@ const Dashboard = () => {
 
   const handleOttFormSubmit = async (e) => {
     e.preventDefault();
-    if (!ottForm.movie_name || !ottForm.ott_platform || !ottForm.release_date) {
-      showModal('warning', 'Missing Fields', 'Please fill in all required fields.');
+    if (!ottForm.movie_name || !ottForm.release_date || ottForm.ott_platforms.length === 0) {
+      showModal('warning', 'Missing Fields', 'Please fill in all required fields including at least one OTT platform.');
       return;
     }
 
     try {
       const formData = new FormData();
       formData.append('movie_name', ottForm.movie_name);
-      formData.append('ott_platform', ottForm.ott_platform);
-      formData.append('language', ottForm.language);
+      formData.append('content_type', ottForm.content_type);
+      formData.append('ott_platforms', JSON.stringify(ottForm.ott_platforms));
+      formData.append('states', JSON.stringify(ottForm.states));
+      formData.append('languages', JSON.stringify(ottForm.languages));
+      formData.append('genres', JSON.stringify(ottForm.genres));
       formData.append('release_date', ottForm.release_date);
+      formData.append('director', ottForm.director || '');
+      formData.append('producer', ottForm.producer || '');
+      formData.append('banner', ottForm.banner || '');
+      formData.append('music_director', ottForm.music_director || '');
+      formData.append('dop', ottForm.dop || '');
+      formData.append('editor', ottForm.editor || '');
+      formData.append('cast', ottForm.cast || '');
+      formData.append('runtime', ottForm.runtime || '');
+      formData.append('censor_rating', ottForm.censor_rating || '');
       
       if (!editingRelease) {
         formData.append('created_by', 'Current User'); // Replace with actual user
@@ -1270,9 +1282,7 @@ const Dashboard = () => {
       if (response.ok) {
         const action = editingRelease ? 'updated' : 'added';
         showModal('success', `OTT Release ${action.charAt(0).toUpperCase() + action.slice(1)}`, `OTT release has been ${action} successfully!`);
-        setOttForm({ movie_name: '', ott_platform: '', language: 'Hindi', release_date: '', movie_image: null });
-        handleCancelEdit();
-        setShowOttForm(false); // Close the form page
+        handleOttFormCancel();
         fetchReleaseData();
       } else {
         const errorText = await response.text();
