@@ -2159,8 +2159,22 @@ const CreateArticle = () => {
                             </div>
                           </div>
 
-                          {/* Row 2: Music Director and DOP */}
+                          {/* Row 2: Banner and Music Director */}
                           <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Banner (Production House)
+                              </label>
+                              <input
+                                type="text"
+                                name="review_banner"
+                                value={formData.review_banner || ''}
+                                onChange={handleInputChange}
+                                placeholder="Production house name"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                 Music Director
@@ -2174,7 +2188,10 @@ const CreateArticle = () => {
                                 className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               />
                             </div>
+                          </div>
 
+                          {/* Row 3: DOP and Editor */}
+                          <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                 DOP (Cinematographer)
@@ -2185,6 +2202,20 @@ const CreateArticle = () => {
                                 value={formData.review_dop || ''}
                                 onChange={handleInputChange}
                                 placeholder="Director of Photography"
+                                className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Editor
+                              </label>
+                              <input
+                                type="text"
+                                name="review_editor"
+                                value={formData.review_editor || ''}
+                                onChange={handleInputChange}
+                                placeholder="Editor name"
                                 className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               />
                             </div>
