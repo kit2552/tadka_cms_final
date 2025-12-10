@@ -6,7 +6,7 @@ import TopicSelector from './TopicSelector';
 import RelatedVideosManagement from './RelatedVideosManagement';
 import AdManagement from './AdManagement';
 import ArtistsManagement from './ArtistsManagement';
-import { getStateNames, getStateNameByCode } from '../../utils/statesConfig';
+import { getSortedStates, getStateNameByCode } from '../../utils/statesConfig';
 
 // Topic Management Modal Component
 const TopicManagementModal = ({ article, currentTopics, onClose, onTopicToggle }) => {
