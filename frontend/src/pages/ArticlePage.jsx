@@ -443,7 +443,7 @@ const ArticlePage = () => {
                     <div className="flex-1 space-y-0 text-left">
                       
                       {/* Section 1: Basic Info */}
-                      <div className="space-y-2 pb-3">
+                      <div className="space-y-2 pb-4">
                         {article.title && (
                           <div className="flex items-center gap-4">
                             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Movie</span>
@@ -468,24 +468,10 @@ const ArticlePage = () => {
                             </span>
                           </div>
                         )}
-                        {article.review_runtime && (
-                          <div className="flex items-center gap-4">
-                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Runtime</span>
-                            <span className="text-white font-medium text-xs">{article.review_runtime}</span>
-                          </div>
-                        )}
                         {article.platform && (
                           <div className="flex items-center gap-4">
                             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Release</span>
                             <span className="text-white font-medium text-xs">{article.platform}</span>
-                          </div>
-                        )}
-                        {article.release_date && (
-                          <div className="flex items-center gap-4">
-                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Release Date</span>
-                            <span className="text-white font-medium text-xs">
-                              {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                            </span>
                           </div>
                         )}
                         {article.censor_rating && (
