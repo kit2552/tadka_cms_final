@@ -517,12 +517,12 @@ const ArticlePage = () => {
                       </div>
 
                       {/* Divider between sections */}
-                      {(article.review_banner || article.review_producer) && (
+                      {(article.review_banner || article.review_producer || article.review_director || article.review_music_director || article.review_dop || article.review_editor) && (
                         <div className="border-t border-gray-700 my-4"></div>
                       )}
 
-                      {/* Section 2: Production */}
-                      {(article.review_banner || article.review_producer) && (
+                      {/* Section 2: Production & Crew (Combined) */}
+                      {(article.review_banner || article.review_producer || article.review_director || article.review_music_director || article.review_dop || article.review_editor) && (
                         <div className="space-y-2 pb-4">
                           {article.review_banner && (
                             <div className="flex items-center gap-4">
@@ -536,17 +536,6 @@ const ArticlePage = () => {
                               <span className="text-white font-medium text-xs">{article.review_producer}</span>
                             </div>
                           )}
-                        </div>
-                      )}
-
-                      {/* Divider between sections */}
-                      {(article.review_director || article.review_music_director || article.review_dop || article.review_editor) && (
-                        <div className="border-t border-gray-700 my-4"></div>
-                      )}
-
-                      {/* Section 3: Crew */}
-                      {(article.review_director || article.review_music_director || article.review_dop || article.review_editor) && (
-                        <div className="space-y-2 pb-4">
                           {article.review_director && (
                             <div className="flex items-center gap-4">
                               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Director</span>
