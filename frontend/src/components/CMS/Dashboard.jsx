@@ -4724,120 +4724,425 @@ const Dashboard = () => {
                     {/* Form Content */}
                     <div className="p-6">
 
-                    <form onSubmit={handleOttFormSubmit} className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                            Movie Name *
-                          </label>
-                          <input
-                            type="text"
-                            value={ottForm.movie_name}
-                            onChange={(e) => setOttForm({...ottForm, movie_name: e.target.value})}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                            placeholder="Enter movie name"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                            Language *
-                          </label>
-                          <select
-                            value={ottForm.language}
-                            onChange={(e) => setOttForm({...ottForm, language: e.target.value})}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                            required
-                          >
-                            {languages.map(lang => (
-                              <option key={lang.code} value={lang.name}>
-                                {lang.code === 'en' ? lang.name : `${lang.name} (${lang.native_name})`}
-                              </option>
-                            ))}
-                            <option value="Assamese">Assamese</option>
-                            <option value="English">English</option>
-                          </select>
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                            OTT Platform *
-                          </label>
-                          <div className="space-y-2">
+                    <form onSubmit={handleOttFormSubmit} className="space-y-6">
+                      {/* Basic Information Section */}
+                      <div className="space-y-4">
+                        <h3 className="text-md font-semibold text-gray-900 border-b pb-2">Basic Information</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Title *
+                            </label>
+                            <input
+                              type="text"
+                              value={ottForm.movie_name}
+                              onChange={(e) => setOttForm({...ottForm, movie_name: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="Enter movie/series name"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Content Type *
+                            </label>
                             <select
-                              value={ottForm.ott_platform || ''}
-                              onChange={(e) => {
-                                if (e.target.value === 'add-new') {
-                                  setShowCustomPlatform(true);
-                                } else {
-                                  setOttForm({...ottForm, ott_platform: e.target.value});
-                                  setShowCustomPlatform(false);
-                                }
-                              }}
+                              value={ottForm.content_type}
+                              onChange={(e) => setOttForm({...ottForm, content_type: e.target.value})}
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
                               required
                             >
-                              <option value="">Select OTT Platform</option>
-                              {allOttPlatforms.map(platform => (
-                                <option key={platform} value={platform}>{platform}</option>
-                              ))}
-                              <option value="add-new">+ Add New Platform</option>
+                              <option value="Movie">Movie</option>
+                              <option value="Web Series">Web Series</option>
                             </select>
-                            {showCustomPlatform && (
-                              <div className="flex gap-2">
-                                <input
-                                  type="text"
-                                  value={customPlatform}
-                                  onChange={(e) => setCustomPlatform(e.target.value)}
-                                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                                  placeholder="Enter new platform name"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    if (customPlatform.trim()) {
-                                      setAllOttPlatforms(prev => [...new Set([...prev, customPlatform.trim()])]);
-                                      setOttForm({...ottForm, ott_platform: customPlatform.trim()});
-                                      setCustomPlatform('');
-                                      setShowCustomPlatform(false);
-                                    }
-                                  }}
-                                  className="px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition-colors duration-200"
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Release Date *
+                            </label>
+                            <input
+                              type="date"
+                              value={ottForm.release_date}
+                              onChange={(e) => setOttForm({...ottForm, release_date: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Movie Image
+                            </label>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => setOttForm({...ottForm, movie_image: e.target.files[0]})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            />
+                          </div>
+                        </div>
+
+                        {/* OTT Platforms Multi-select */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            OTT Platforms *
+                          </label>
+                          <div className="flex gap-2 mb-2">
+                            <select
+                              value={tempOttPlatform}
+                              onChange={(e) => setTempOttPlatform(e.target.value)}
+                              className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Select OTT Platform</option>
+                              <option value="Netflix">Netflix</option>
+                              <option value="Amazon Prime Video">Amazon Prime Video</option>
+                              <option value="Disney+ Hotstar">Disney+ Hotstar</option>
+                              <option value="Zee5">Zee5</option>
+                              <option value="SonyLIV">SonyLIV</option>
+                              <option value="Aha">Aha</option>
+                              <option value="MX Player">MX Player</option>
+                              <option value="Voot">Voot</option>
+                              <option value="JioCinema">JioCinema</option>
+                              <option value="Apple TV+">Apple TV+</option>
+                              <option value="YouTube">YouTube</option>
+                            </select>
+                            <button
+                              type="button"
+                              onClick={handleAddOttPlatform}
+                              disabled={!tempOttPlatform}
+                              className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            >
+                              Add
+                            </button>
+                          </div>
+                          {ottForm.ott_platforms.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {ottForm.ott_platforms.map((platform, index) => (
+                                <span
+                                  key={index}
+                                  className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-800 text-sm rounded-md"
                                 >
-                                  Add
-                                </button>
+                                  {platform}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveOttPlatform(platform)}
+                                    className="text-indigo-600 hover:text-indigo-800"
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Target States Multi-select */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            Target States
+                          </label>
+                          <div className="flex gap-2 mb-2">
+                            <select
+                              value={tempOttState}
+                              onChange={(e) => setTempOttState(e.target.value)}
+                              className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Select State</option>
+                              {getStateNames().map(state => (
+                                <option key={state.code} value={state.code}>{state.name}</option>
+                              ))}
+                            </select>
+                            <button
+                              type="button"
+                              onClick={handleAddOttState}
+                              disabled={!tempOttState}
+                              className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            >
+                              Add
+                            </button>
+                          </div>
+                          {ottForm.states.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {ottForm.states.map((state, index) => (
+                                <span
+                                  key={index}
+                                  className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-md"
+                                >
+                                  {getStateNameByCode(state)}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveOttState(state)}
+                                    className="text-purple-600 hover:text-purple-800"
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Languages and Genres Section */}
+                      <div className="space-y-4">
+                        <h3 className="text-md font-semibold text-gray-900 border-b pb-2">Languages & Genres</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Languages Multi-select */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Languages
+                            </label>
+                            <div className="flex gap-2 mb-2">
+                              <select
+                                value={tempOttLanguage}
+                                onChange={(e) => setTempOttLanguage(e.target.value)}
+                                className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Language</option>
+                                <option value="Telugu">Telugu</option>
+                                <option value="Hindi">Hindi</option>
+                                <option value="Tamil">Tamil</option>
+                                <option value="Malayalam">Malayalam</option>
+                                <option value="Kannada">Kannada</option>
+                                <option value="English">English</option>
+                                <option value="Bengali">Bengali</option>
+                                <option value="Marathi">Marathi</option>
+                                <option value="Punjabi">Punjabi</option>
+                                <option value="Gujarati">Gujarati</option>
+                              </select>
+                              <button
+                                type="button"
+                                onClick={handleAddOttLanguage}
+                                disabled={!tempOttLanguage}
+                                className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                              >
+                                Add
+                              </button>
+                            </div>
+                            {ottForm.languages.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {ottForm.languages.map((language, index) => (
+                                  <span
+                                    key={index}
+                                    className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-sm rounded-md"
+                                  >
+                                    {language}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveOttLanguage(language)}
+                                      className="text-green-600 hover:text-green-800"
+                                    >
+                                      ×
+                                    </button>
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Genres Multi-select */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Genres
+                            </label>
+                            <div className="flex gap-2 mb-2">
+                              <select
+                                value={tempOttGenre}
+                                onChange={(e) => setTempOttGenre(e.target.value)}
+                                className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Genre</option>
+                                <option value="Action">Action</option>
+                                <option value="Comedy">Comedy</option>
+                                <option value="Drama">Drama</option>
+                                <option value="Thriller">Thriller</option>
+                                <option value="Horror">Horror</option>
+                                <option value="Romance">Romance</option>
+                                <option value="Sci-Fi">Sci-Fi</option>
+                                <option value="Fantasy">Fantasy</option>
+                                <option value="Crime">Crime</option>
+                                <option value="Mystery">Mystery</option>
+                                <option value="Adventure">Adventure</option>
+                                <option value="Animation">Animation</option>
+                                <option value="Biography">Biography</option>
+                                <option value="Family">Family</option>
+                              </select>
+                              <button
+                                type="button"
+                                onClick={handleAddOttGenre}
+                                disabled={!tempOttGenre}
+                                className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                              >
+                                Add
+                              </button>
+                            </div>
+                            {ottForm.genres.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {ottForm.genres.map((genre, index) => (
+                                  <span
+                                    key={index}
+                                    className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-md"
+                                  >
+                                    {genre}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveOttGenre(genre)}
+                                      className="text-blue-600 hover:text-blue-800"
+                                    >
+                                      ×
+                                    </button>
+                                  </span>
+                                ))}
                               </div>
                             )}
                           </div>
                         </div>
+                      </div>
+
+                      {/* Movie Details Section */}
+                      <div className="space-y-4">
+                        <h3 className="text-md font-semibold text-gray-900 border-b pb-2">Movie/Series Details</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Director
+                            </label>
+                            <input
+                              type="text"
+                              value={ottForm.director}
+                              onChange={(e) => setOttForm({...ottForm, director: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="Enter director name"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Producer
+                            </label>
+                            <input
+                              type="text"
+                              value={ottForm.producer}
+                              onChange={(e) => setOttForm({...ottForm, producer: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="Enter producer name"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Production Banner
+                            </label>
+                            <input
+                              type="text"
+                              value={ottForm.banner}
+                              onChange={(e) => setOttForm({...ottForm, banner: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="Enter production banner"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Music Director
+                            </label>
+                            <input
+                              type="text"
+                              value={ottForm.music_director}
+                              onChange={(e) => setOttForm({...ottForm, music_director: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="Enter music director name"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              DOP (Director of Photography)
+                            </label>
+                            <input
+                              type="text"
+                              value={ottForm.dop}
+                              onChange={(e) => setOttForm({...ottForm, dop: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="Enter DOP name"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Editor
+                            </label>
+                            <input
+                              type="text"
+                              value={ottForm.editor}
+                              onChange={(e) => setOttForm({...ottForm, editor: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="Enter editor name"
+                            />
+                          </div>
+                        </div>
+
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                            Release Date *
+                            Cast (comma-separated)
                           </label>
-                          <input
-                            type="date"
-                            value={ottForm.release_date}
-                            onChange={(e) => setOttForm({...ottForm, release_date: e.target.value})}
+                          <textarea
+                            value={ottForm.cast}
+                            onChange={(e) => setOttForm({...ottForm, cast: e.target.value})}
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                            required
+                            placeholder="Enter cast names separated by commas"
+                            rows="2"
                           />
                         </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Runtime (minutes)
+                            </label>
+                            <input
+                              type="text"
+                              value={ottForm.runtime}
+                              onChange={(e) => setOttForm({...ottForm, runtime: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="e.g., 150"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Censor Rating
+                            </label>
+                            <select
+                              value={ottForm.censor_rating}
+                              onChange={(e) => setOttForm({...ottForm, censor_rating: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Select Rating</option>
+                              <optgroup label="India (CBFC)">
+                                <option value="U">U - Unrestricted Public Exhibition</option>
+                                <option value="UA">UA - Parental Guidance for under 12</option>
+                                <option value="A">A - Restricted to adults (18+)</option>
+                                <option value="S">S - Restricted to specialized audiences</option>
+                              </optgroup>
+                              <optgroup label="USA (MPAA)">
+                                <option value="G">G - General Audiences</option>
+                                <option value="PG">PG - Parental Guidance Suggested</option>
+                                <option value="PG-13">PG-13 - Parents Strongly Cautioned</option>
+                                <option value="R">R - Restricted (17+ with adult)</option>
+                                <option value="NC-17">NC-17 - Adults Only (18+)</option>
+                              </optgroup>
+                            </select>
+                          </div>
+                        </div>
                       </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                          Movie Image
-                        </label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => setOttForm({...ottForm, movie_image: e.target.files[0]})}
-                          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                        />
-                      </div>
-                      
+
+                      {/* Form Actions */}
                       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                         <button
                           type="button"
@@ -4848,7 +5153,7 @@ const Dashboard = () => {
                         </button>
                         <button
                           type="submit" 
-                          className="px-4 py-2 bg-gray-600 text-white rounded-md text-sm font-medium hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-200"
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
                         >
                           {editingRelease && editingType === 'ott' ? 'Update OTT Release' : 'Create OTT Release'}
                         </button>
