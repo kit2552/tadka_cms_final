@@ -453,11 +453,12 @@ export const dataService = {
         throw new Error('Failed to fetch Box Office data');
       }
       const data = await response.json();
-      // Combine box office and bollywood articles into a single array
-      return [...(data.box_office || []), ...(data.bollywood || [])];
+      console.log('Box Office data fetched:', data);
+      // Return the data in the expected format for BoxOffice component
+      return data;
     } catch (error) {
       console.error('Error fetching Box Office data:', error);
-      return []; // Return empty array instead of mock data
+      return { box_office: [], bollywood: [] };
     }
   },
 
