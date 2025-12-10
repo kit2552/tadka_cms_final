@@ -100,6 +100,28 @@ export const dataService = {
     }
   },
 
+  // Fetch Trailers & Teasers data from backend
+  async getTrailersData() {
+    try {
+      const url = `${API_BASE_URL}/articles/sections/trailers-teasers?limit=20`;
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch trailers data');
+      }
+      const data = await response.json();
+      console.log('Trailers data:', data); // Debug log
+      return data;
+    } catch (error) {
+      console.error('Error fetching trailers data:', error);
+      // Fallback to empty data structure
+      return {
+        trailers: [],
+        teasers: []
+      };
+    }
+  },
+
   // Fetch Politics data from backend - state politics with user state filtering and national politics
   async getPoliticsData(userStates = ['Andhra Pradesh', 'Telangana']) {
     try {
