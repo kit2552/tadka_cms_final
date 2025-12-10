@@ -450,7 +450,20 @@ const ArticlePage = () => {
                       {article.movie_language && (
                         <div className="flex items-center gap-4">
                           <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Language</span>
-                          <span className="text-white font-medium text-xs">{article.movie_language}</span>
+                          <span className="text-white font-medium text-xs">
+                            {(() => {
+                              try {
+                                // Check if it's a JSON array string
+                                if (typeof article.movie_language === 'string' && article.movie_language.startsWith('[')) {
+                                  const languages = JSON.parse(article.movie_language);
+                                  return Array.isArray(languages) ? languages.join(', ') : article.movie_language;
+                                }
+                                return article.movie_language;
+                              } catch (e) {
+                                return article.movie_language;
+                              }
+                            })()}
+                          </span>
                         </div>
                       )}
                       {article.review_runtime && (
