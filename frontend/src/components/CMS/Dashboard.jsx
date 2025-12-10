@@ -5726,19 +5726,19 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Manage Artists Modal */}
-      {showManageArtistsModal && (
+      {/* Manage Entities Modal (Category-Specific) */}
+      {showManageEntitiesModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col">
             {/* Header */}
             <div className="border-b px-6 py-4 flex items-center justify-between bg-gray-50">
-              <h3 className="text-lg font-bold text-gray-900">Manage Artists / Actors / Events</h3>
+              <h3 className="text-lg font-bold text-gray-900">Manage {galleryCategory === 'Actress' ? 'Actresses' : galleryCategory === 'Actor' ? 'Actors' : galleryCategory}</h3>
               <button
                 onClick={() => {
-                  setShowManageArtistsModal(false);
-                  setArtistSearchQuery('');
-                  setNewArtistName('');
-                  setEditingArtistId(null);
+                  setShowManageEntitiesModal(false);
+                  setEntitySearchQuery('');
+                  setNewEntityNameManage('');
+                  setEditingEntityId(null);
                 }}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -5753,19 +5753,19 @@ const Dashboard = () => {
               <div className="flex gap-2">
                 <input
                   type="text"
-                  value={newArtistName}
-                  onChange={(e) => setNewArtistName(e.target.value)}
+                  value={newEntityNameManage}
+                  onChange={(e) => setNewEntityNameManage(e.target.value)}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
-                      handleAddArtist();
+                      handleAddEntityManage();
                     }
                   }}
-                  placeholder="Enter new artist/actor/event name"
+                  placeholder={`Enter new ${galleryCategory.toLowerCase()} name`}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
-                  onClick={handleAddArtist}
+                  onClick={handleAddEntityManage}
                   className="px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700 transition-colors"
                 >
                   Add
@@ -5777,8 +5777,8 @@ const Dashboard = () => {
             <div className="px-6 py-3 border-b">
               <input
                 type="text"
-                value={artistSearchQuery}
-                onChange={(e) => setArtistSearchQuery(e.target.value)}
+                value={entitySearchQuery}
+                onChange={(e) => setEntitySearchQuery(e.target.value)}
                 placeholder="Search..."
                 className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -5786,41 +5786,41 @@ const Dashboard = () => {
 
             {/* List */}
             <div className="flex-1 overflow-y-auto p-6">
-              {managedArtists.filter(artist =>
-                artist.name.toLowerCase().includes(artistSearchQuery.toLowerCase())
+              {managedEntities.filter(entity =>
+                entity.name.toLowerCase().includes(entitySearchQuery.toLowerCase())
               ).length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  {artistSearchQuery ? 'No artists found' : 'No artists added yet'}
+                  {entitySearchQuery ? `No ${galleryCategory.toLowerCase()}s found` : `No ${galleryCategory.toLowerCase()}s added yet`}
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {managedArtists
-                    .filter(artist => artist.name.toLowerCase().includes(artistSearchQuery.toLowerCase()))
-                    .map((artist) => (
+                  {managedEntities
+                    .filter(entity => entity.name.toLowerCase().includes(entitySearchQuery.toLowerCase()))
+                    .map((entity) => (
                       <div
-                        key={artist.id}
+                        key={entity.id}
                         className="flex items-center justify-between p-3 border border-gray-200 rounded hover:bg-gray-50 transition-colors"
                       >
-                        {editingArtistId === artist.id ? (
+                        {editingEntityId === entity.id ? (
                           <>
                             <input
                               type="text"
-                              value={editArtistName}
-                              onChange={(e) => setEditArtistName(e.target.value)}
+                              value={editEntityName}
+                              onChange={(e) => setEditEntityName(e.target.value)}
                               className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2"
                               autoFocus
                             />
                             <div className="flex gap-2">
                               <button
-                                onClick={() => handleUpdateArtist(artist.id)}
+                                onClick={() => handleUpdateEntityManage(entity.id)}
                                 className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
                               >
                                 Save
                               </button>
                               <button
                                 onClick={() => {
-                                  setEditingArtistId(null);
-                                  setEditArtistName('');
+                                  setEditingEntityId(null);
+                                  setEditEntityName('');
                                 }}
                                 className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600"
                               >
@@ -5830,19 +5830,19 @@ const Dashboard = () => {
                           </>
                         ) : (
                           <>
-                            <span className="flex-1 text-gray-800 font-medium text-sm">{artist.name}</span>
+                            <span className="flex-1 text-gray-800 font-medium text-sm">{entity.name}</span>
                             <div className="flex gap-2">
                               <button
                                 onClick={() => {
-                                  setEditingArtistId(artist.id);
-                                  setEditArtistName(artist.name);
+                                  setEditingEntityId(entity.id);
+                                  setEditEntityName(entity.name);
                                 }}
                                 className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
                               >
                                 Edit
                               </button>
                               <button
-                                onClick={() => handleDeleteArtist(artist.id, artist.name)}
+                                onClick={() => handleDeleteEntityManage(entity.id, entity.name)}
                                 className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
                               >
                                 Delete
@@ -5860,10 +5860,10 @@ const Dashboard = () => {
             <div className="border-t px-6 py-3 bg-gray-50 text-right">
               <button
                 onClick={() => {
-                  setShowManageArtistsModal(false);
-                  setArtistSearchQuery('');
-                  setNewArtistName('');
-                  setEditingArtistId(null);
+                  setShowManageEntitiesModal(false);
+                  setEntitySearchQuery('');
+                  setNewEntityNameManage('');
+                  setEditingEntityId(null);
                 }}
                 className="px-4 py-2 bg-gray-600 text-white rounded text-sm font-medium hover:bg-gray-700"
               >
