@@ -413,15 +413,15 @@ def get_movie_reviews_articles(limit: int = 20, db = Depends(get_db)):
         "bollywood": bollywood_articles
     }
 
-@api_router.get("/articles/sections/trailers-teasers", response_model=dict)
+@api_router.get("/articles/sections/trailers-teasers")
 async def get_trailers_teasers_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for Trailers & Teasers section with Trailers and Bollywood tabs"""
-    trailers_articles = crud.get_articles_by_category_slug(db, category_slug="trailers-teasers", limit=limit)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="trailers-teasers-bollywood", limit=limit)
+    """Get articles for Trailers & Teasers section with Trailers and Teasers tabs"""
+    trailers_articles = crud.get_articles_by_category_slug(db, category_slug="trailers", limit=limit)
+    teasers_articles = crud.get_articles_by_category_slug(db, category_slug="teasers", limit=limit)
     
     return {
         "trailers": trailers_articles,
-        "bollywood": bollywood_articles
+        "teasers": teasers_articles
     }
 
 @api_router.get("/articles/sections/box-office")
