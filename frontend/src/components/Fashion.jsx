@@ -89,49 +89,33 @@ const Fashion = ({ hotTopicsData = {}, onArticleClick }) => {
             display: none;
           }
         `}</style>
-        <div className="p-2" style={{ minHeight: '300px' }}>
+        <div className="p-2">
           <ul className="space-y-1">
-            {[...Array(4)].map((_, index) => {
-              const article = currentArticles[index];
-              if (!article) {
-                return (
-                  <li
-                    key={`empty-${index}`}
-                    className="py-1 px-1 border-b border-gray-200 last:border-b-0"
-                    style={{ height: '72px' }}
-                  >
-                    <div className="flex items-center justify-center h-full text-gray-400 text-sm">
-                      {/* Empty slot */}
-                    </div>
-                  </li>
-                );
-              }
-              return (
-                <li
-                  key={article.id}
-                  className={`group cursor-pointer py-1 px-1 ${getSectionBodyClasses().hoverClass} transition-colors duration-200 border-b ${getSectionBodyClasses().dividerClass} last:border-b-0`}
-                  onClick={() => handleClick(article)}
-                >
-                  <div className="flex items-start space-x-2 text-left">
-                    <div className="relative flex-shrink-0">
-                      <img
-                        src={article.image_url || article.image || getThumbnail(index)}
-                        alt={article.title}
-                        className="w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          e.target.src = getThumbnail(index);
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
-                        {article.title}
-                      </h4>
-                    </div>
+            {currentArticles.slice(0, 4).map((article, index) => (
+              <li
+                key={article.id}
+                className={`group cursor-pointer py-1 ${getSectionBodyClasses().hoverClass} transition-colors duration-200 border-b ${getSectionBodyClasses().dividerClass} last:border-b-0`}
+                onClick={() => handleClick(article)}
+              >
+                <div className="flex items-start space-x-2 text-left">
+                  <div className="relative flex-shrink-0">
+                    <img
+                      src={article.image_url || article.image || getThumbnail(index)}
+                      alt={article.title}
+                      className="w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        e.target.src = getThumbnail(index);
+                      }}
+                    />
                   </div>
-                </li>
-              );
-            })}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
+                      {article.title}
+                    </h4>
+                  </div>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
