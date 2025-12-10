@@ -4176,8 +4176,8 @@ const Dashboard = () => {
                     </div>
 
                     {/* Languages and Genres Section */}
-                    <div className="space-y-4">
-                      <h3 className="text-md font-semibold text-gray-900 border-b pb-2">Languages & Genres</h3>
+                    <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+                      <h3 className="text-sm font-semibold text-gray-800 text-left">Languages & Genres</h3>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Languages Multi-select */}
