@@ -1586,8 +1586,8 @@ async def get_homepage_theater_bollywood_releases(
             "coming_soon": format_release_response(upcoming_theater, True)
         },
         "ott": {
-            "this_week": format_article_response(bollywood_articles[:2]),  # First 2 as this week
-            "coming_soon": format_article_response(bollywood_articles[2:])  # Rest as coming soon
+            "this_week": format_release_response(this_week_bollywood, True),
+            "coming_soon": format_release_response(upcoming_bollywood, True)
         }
     }
 
