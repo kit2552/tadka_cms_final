@@ -144,16 +144,17 @@ def get_article_by_id(db, article_id: int):
 
 def get_articles(db, skip: int = 0, limit: int = 100, is_featured: Optional[bool] = None):
     """Get paginated articles, excluding future-dated articles (based on EST)"""
-    # Get current time in EST (UTC-5)
+    # Get current time in EST (UTC-5) and convert to UTC
     est_tz = timezone(timedelta(hours=-5))
     current_est_time = datetime.now(est_tz)
-    
-    # Convert to UTC for MongoDB comparison
     current_utc_time = current_est_time.astimezone(timezone.utc)
+    
+    # MongoDB stores datetime objects (timezone-naive, assumed UTC)
+    current_utc_naive = current_utc_time.replace(tzinfo=None)
     
     query = {
         "$or": [
-            {"published_at": {"$lte": current_utc_time.isoformat()}},
+            {"published_at": {"$lte": current_utc_naive}},
             {"published_at": {"$exists": False}}
         ]
     }
