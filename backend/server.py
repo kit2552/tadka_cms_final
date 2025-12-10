@@ -567,40 +567,19 @@ async def get_world_news_articles(limit: int = 4, db = Depends(get_db)):
     articles = crud.get_articles_by_category_slug(db, category_slug="world-news", limit=limit)
     return articles
 
-@api_router.get("/articles/sections/photoshoots", response_model=List[schemas.ArticleListResponse])
+@api_router.get("/articles/sections/photoshoots")
 async def get_photoshoots_articles(skip: int = 0, limit: int = 10, db = Depends(get_db)):
     """Get photoshoots articles with gallery images"""
-    import json
-    
     articles = crud.get_articles_by_category_slug(db, category_slug="photoshoots", skip=skip, limit=limit)
     
-    # Populate gallery and extract first image for photo content type
-    result = []
+    # Populate gallery data for articles that have galleries
     for article in articles:
-        if article.get("content_type") == "photo" and article.get("gallery_id"):
-            gallery = db[GALLERIES].find_one({"id": article["gallery_id"]}, {"_id": 0})
-            if gallery and gallery.get("images"):
-                # Parse images if stored as JSON string
-                images = gallery["images"]
-                if isinstance(images, str):
-                    try:
-                        images = json.loads(images)
-                    except:
-                        images = []
-                
-                # Set first image as article image
-                if images and len(images) > 0:
-                    first_image = images[0]
-                    if isinstance(first_image, dict):
-                        article["image_url"] = first_image.get("url")
-                        article["image"] = first_image.get("url")
-                    elif isinstance(first_image, str):
-                        article["image_url"] = first_image
-                        article["image"] = first_image
-        
-        result.append(article)
+        if article.get('gallery_id'):
+            gallery = crud.get_gallery_by_id(db, article['gallery_id'])
+            if gallery:
+                article['gallery'] = gallery
     
-    return result
+    return articles
 
 @api_router.get("/articles/sections/travel-pics")
 async def get_travel_pics_articles(limit: int = 4, db = Depends(get_db)):
