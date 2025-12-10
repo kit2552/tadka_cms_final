@@ -4229,6 +4229,31 @@ const Dashboard = () => {
                             </>
                           )}
                         </div>
+                          </div>
+                        </div>
+
+                        {/* Right Column - YouTube Preview */}
+                        <div className="flex items-start justify-center pt-8">
+                          {theaterForm.youtube_url ? (
+                            <div className="w-full">
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                                Preview
+                              </label>
+                              <img
+                                src={`https://img.youtube.com/vi/${theaterForm.youtube_url.split('v=')[1]?.split('&')[0] || theaterForm.youtube_url.split('/').pop()}/mqdefault.jpg`}
+                                alt="YouTube Thumbnail"
+                                className="w-full rounded border border-gray-300"
+                                onError={(e) => {
+                                  e.target.src = `https://img.youtube.com/vi/${theaterForm.youtube_url.split('v=')[1]?.split('&')[0] || theaterForm.youtube_url.split('/').pop()}/hqdefault.jpg`;
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-full h-40 flex items-center justify-center bg-gray-100 rounded border-2 border-dashed border-gray-300">
+                              <p className="text-sm text-gray-500">YouTube preview will appear here</p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
 
