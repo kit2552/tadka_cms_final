@@ -168,10 +168,6 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                               </svg>
                             </div>
                           )}
-                          {/* Movie banner overlay for theater releases */}
-                          {activeTab === 'theater' && release.banner && (
-                            <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-gray-400 to-gray-600"></div>
-                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
