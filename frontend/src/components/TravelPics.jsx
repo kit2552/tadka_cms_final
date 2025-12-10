@@ -109,14 +109,26 @@ const TravelPics = ({ tadkaPicsData = {}, onArticleClick }) => {
             >
               <div className="flex items-start space-x-2 text-left">
                 <div className="relative flex-shrink-0">
-                  <ArticleImage
-                    src={getRandomGalleryImage(review)}
-                    alt={review.title}
-                    width={isVerticalGallery(review) ? "w-12" : "w-20"}
-                    height="h-16"
-                    className="object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
-                    contentType={activeTab === 'travel-pics' ? 'travel-pics' : 'photoshoots'}
-                  />
+                  {isVerticalGallery(review) ? (
+                    <img
+                      src={getRandomGalleryImage(review)}
+                      alt={review.title}
+                      className="w-12 h-24 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <ArticleImage
+                      src={getRandomGalleryImage(review)}
+                      alt={review.title}
+                      width="w-20"
+                      height="h-16"
+                      className="object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                      contentType={activeTab === 'travel-pics' ? 'travel-pics' : 'photoshoots'}
+                    />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300" style={{fontSize: '14px', fontWeight: '600'}}>
