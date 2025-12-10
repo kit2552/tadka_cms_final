@@ -4093,6 +4093,18 @@ const Dashboard = () => {
                           className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
                           placeholder="https://youtube.com/watch?v=..."
                         />
+                        {theaterForm.youtube_url && (
+                          <div className="mt-2">
+                            <img
+                              src={`https://img.youtube.com/vi/${theaterForm.youtube_url.split('v=')[1]?.split('&')[0] || theaterForm.youtube_url.split('/').pop()}/mqdefault.jpg`}
+                              alt="YouTube Thumbnail"
+                              className="w-full max-w-xs rounded border border-gray-300"
+                              onError={(e) => {
+                                e.target.src = `https://img.youtube.com/vi/${theaterForm.youtube_url.split('v=')[1]?.split('&')[0] || theaterForm.youtube_url.split('/').pop()}/hqdefault.jpg`;
+                              }}
+                            />
+                          </div>
+                        )}
                       </div>
 
                       {/* Target States with Search */}
