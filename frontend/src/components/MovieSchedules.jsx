@@ -133,7 +133,18 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                     <div className="flex items-start justify-between text-left">
                       <div className="flex items-start space-x-2 flex-1">
                         <div className="relative flex-shrink-0 w-20 h-16 rounded overflow-hidden border border-gray-300">
-                          {release.movie_image ? (
+                          {release.youtube_url ? (
+                            <>
+                              <img
+                                src={`https://img.youtube.com/vi/${release.youtube_url.split('v=')[1]?.split('&')[0] || release.youtube_url.split('/').pop()}/mqdefault.jpg`}
+                                alt={release.movie_name}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                onError={(e) => {
+                                  e.target.src = `https://img.youtube.com/vi/${release.youtube_url.split('v=')[1]?.split('&')[0] || release.youtube_url.split('/').pop()}/hqdefault.jpg`;
+                                }}
+                              />
+                            </>
+                          ) : release.movie_image ? (
                             <>
                               <img
                                 src={release.movie_image.startsWith('http') ? release.movie_image : `${process.env.REACT_APP_BACKEND_URL}/${release.movie_image}`}
@@ -158,7 +169,7 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                             </div>
                           )}
                           {/* Movie banner overlay for theater releases */}
-                          {activeTab === 'theater' && release.movie_banner && (
+                          {activeTab === 'theater' && release.banner && (
                             <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-gray-400 to-gray-600"></div>
                           )}
                         </div>
