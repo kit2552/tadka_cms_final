@@ -15,19 +15,18 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   // Filter out future-dated articles (for home page display)
   const filterCurrentArticles = (articles) => {
     const now = new Date();
+    // Add 6-hour tolerance to handle timezone differences between server (UTC) and client
+    // This prevents articles published "now" from being filtered out due to timezone conversion
+    const tolerance = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+    
     return articles.filter(article => {
       if (!article.published_at) {
-        console.log('Article without date - ID:', article.id, 'Title:', article.title);
         return true; // Keep articles without dates
       }
       const publishedDate = new Date(article.published_at);
-      const isValid = publishedDate <= now;
-      console.log('Date check - ID:', article.id, 
-        'Published:', publishedDate.toISOString(), 
-        'Now:', now.toISOString(),
-        'IsValid:', isValid,
-        'Diff (ms):', now.getTime() - publishedDate.getTime());
-      return isValid; // Exclude future-dated articles
+      // Allow articles published up to 6 hours in the "future" (due to timezone conversion)
+      const isValid = publishedDate.getTime() <= (now.getTime() + tolerance);
+      return isValid;
     });
   };
 
