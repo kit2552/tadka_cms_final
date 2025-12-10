@@ -602,7 +602,12 @@ const ArticlePage = () => {
                       <div className="flex flex-col items-center border-l border-gray-700 pl-4 flex-shrink-0">
                         {/* Top Section - Ratings */}
                         <div className="flex flex-col items-center">
-                          <div className="text-4xl font-bold text-white leading-none">{article.movie_rating}</div>
+                          <div className="text-4xl font-bold text-white leading-none">
+                          {(() => {
+                            const rating = parseFloat(article.movie_rating);
+                            return rating % 1 === 0 ? rating.toFixed(0) : rating.toString();
+                          })()}
+                        </div>
                           <div className="text-xs text-gray-400 mb-1">/5</div>
                           <div className="flex items-center gap-0.5 mb-3">
                             {[...Array(5)].map((_, i) => {
