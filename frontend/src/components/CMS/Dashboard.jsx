@@ -1348,6 +1348,85 @@ const Dashboard = () => {
     }
   };
 
+  // Theater Form Multi-select handlers
+  const handleAddTheaterGenre = () => {
+    if (tempTheaterGenre && !theaterForm.genres.includes(tempTheaterGenre)) {
+      setTheaterForm({...theaterForm, genres: [...theaterForm.genres, tempTheaterGenre]});
+      setTempTheaterGenre('');
+    }
+  };
+
+  const handleRemoveTheaterGenre = (genreToRemove) => {
+    setTheaterForm({...theaterForm, genres: theaterForm.genres.filter(g => g !== genreToRemove)});
+  };
+
+  const handleAddTheaterLanguage = () => {
+    if (tempTheaterLanguage && !theaterForm.languages.includes(tempTheaterLanguage)) {
+      setTheaterForm({...theaterForm, languages: [...theaterForm.languages, tempTheaterLanguage]});
+      setTempTheaterLanguage('');
+    }
+  };
+
+  const handleRemoveTheaterLanguage = (languageToRemove) => {
+    setTheaterForm({...theaterForm, languages: theaterForm.languages.filter(l => l !== languageToRemove)});
+  };
+
+  const handleAddTheaterState = () => {
+    if (tempTheaterState && !theaterForm.states.includes(tempTheaterState)) {
+      setTheaterForm({...theaterForm, states: [...theaterForm.states, tempTheaterState]});
+      setTempTheaterState('');
+    }
+  };
+
+  const handleRemoveTheaterState = (stateToRemove) => {
+    setTheaterForm({...theaterForm, states: theaterForm.states.filter(s => s !== stateToRemove)});
+  };
+
+  // OTT Form Multi-select handlers
+  const handleAddOttGenre = () => {
+    if (tempOttGenre && !ottForm.genres.includes(tempOttGenre)) {
+      setOttForm({...ottForm, genres: [...ottForm.genres, tempOttGenre]});
+      setTempOttGenre('');
+    }
+  };
+
+  const handleRemoveOttGenre = (genreToRemove) => {
+    setOttForm({...ottForm, genres: ottForm.genres.filter(g => g !== genreToRemove)});
+  };
+
+  const handleAddOttLanguage = () => {
+    if (tempOttLanguage && !ottForm.languages.includes(tempOttLanguage)) {
+      setOttForm({...ottForm, languages: [...ottForm.languages, tempOttLanguage]});
+      setTempOttLanguage('');
+    }
+  };
+
+  const handleRemoveOttLanguage = (languageToRemove) => {
+    setOttForm({...ottForm, languages: ottForm.languages.filter(l => l !== languageToRemove)});
+  };
+
+  const handleAddOttState = () => {
+    if (tempOttState && !ottForm.states.includes(tempOttState)) {
+      setOttForm({...ottForm, states: [...ottForm.states, tempOttState]});
+      setTempOttState('');
+    }
+  };
+
+  const handleRemoveOttState = (stateToRemove) => {
+    setOttForm({...ottForm, states: ottForm.states.filter(s => s !== stateToRemove)});
+  };
+
+  const handleAddOttPlatform = () => {
+    if (tempOttPlatform && !ottForm.ott_platforms.includes(tempOttPlatform)) {
+      setOttForm({...ottForm, ott_platforms: [...ottForm.ott_platforms, tempOttPlatform]});
+      setTempOttPlatform('');
+    }
+  };
+
+  const handleRemoveOttPlatform = (platformToRemove) => {
+    setOttForm({...ottForm, ott_platforms: ottForm.ott_platforms.filter(p => p !== platformToRemove)});
+  };
+
   // Edit handlers
   const handleEditRelease = (release, type) => {
     setEditingRelease(release);
