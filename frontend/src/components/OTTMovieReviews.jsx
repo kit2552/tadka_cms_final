@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick }) => {
+const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
