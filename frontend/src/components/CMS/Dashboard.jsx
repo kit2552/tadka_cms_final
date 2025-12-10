@@ -2541,9 +2541,19 @@ const Dashboard = () => {
     setTheaterForm({
       movie_name: '',
       release_date: '',
-      movie_banner: '',
-      language: 'Hindi',
-      movie_image: null
+      youtube_url: '',
+      states: [],
+      languages: [],
+      genres: [],
+      director: '',
+      producer: '',
+      banner: '',
+      music_director: '',
+      dop: '',
+      editor: '',
+      cast: '',
+      runtime: '',
+      censor_rating: ''
     });
   };
 
@@ -2554,9 +2564,19 @@ const Dashboard = () => {
     setTheaterForm({
       movie_name: '',
       release_date: '',
-      movie_banner: '',
-      language: 'Hindi',
-      movie_image: null
+      youtube_url: '',
+      states: [],
+      languages: [],
+      genres: [],
+      director: '',
+      producer: '',
+      banner: '',
+      music_director: '',
+      dop: '',
+      editor: '',
+      cast: '',
+      runtime: '',
+      censor_rating: ''
     });
   };
 
