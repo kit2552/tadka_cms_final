@@ -655,32 +655,38 @@ def create_theater_release(db, release):
     release_doc["_id"] = result.inserted_id
     return serialize_doc(release_doc)
 
-def create_ott_release(db, release: dict):
+def create_ott_release(db, release):
     """Create OTT release"""
+    # Convert Pydantic model to dict if needed
+    if hasattr(release, 'dict'):
+        release_data = release.dict()
+    else:
+        release_data = release
+    
     # Generate new ID
     last_release = db[OTT_RELEASES].find_one(sort=[("id", -1)])
     new_id = (last_release["id"] + 1) if last_release else 1
     
     release_doc = {
         "id": new_id,
-        "movie_name": release.get("movie_name"),
-        "content_type": release.get("content_type"),
-        "release_date": release.get("release_date"),
-        "movie_image": release.get("movie_image"),
-        "ott_platforms": release.get("ott_platforms"),
-        "states": release.get("states"),
-        "languages": release.get("languages"),
-        "genres": release.get("genres"),
-        "director": release.get("director"),
-        "producer": release.get("producer"),
-        "banner": release.get("banner"),
-        "music_director": release.get("music_director"),
-        "dop": release.get("dop"),
-        "editor": release.get("editor"),
-        "cast": release.get("cast"),
-        "runtime": release.get("runtime"),
-        "censor_rating": release.get("censor_rating"),
-        "created_by": release.get("created_by"),
+        "movie_name": release_data.get("movie_name"),
+        "content_type": release_data.get("content_type"),
+        "release_date": release_data.get("release_date"),
+        "movie_image": release_data.get("movie_image"),
+        "ott_platforms": release_data.get("ott_platforms"),
+        "states": release_data.get("states"),
+        "languages": release_data.get("languages"),
+        "genres": release_data.get("genres"),
+        "director": release_data.get("director"),
+        "producer": release_data.get("producer"),
+        "banner": release_data.get("banner"),
+        "music_director": release_data.get("music_director"),
+        "dop": release_data.get("dop"),
+        "editor": release_data.get("editor"),
+        "cast": release_data.get("cast"),
+        "runtime": release_data.get("runtime"),
+        "censor_rating": release_data.get("censor_rating"),
+        "created_by": release_data.get("created_by"),
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
     }
