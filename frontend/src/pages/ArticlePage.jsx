@@ -439,121 +439,167 @@ const ArticlePage = () => {
                 {/* Compact Movie Info Card - Dark Theme */}
                 <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 rounded-lg shadow-xl border border-gray-700">
                   <div className="flex items-start justify-between gap-6">
-                    {/* Left Side - Movie Details */}
-                    <div className="flex-1 space-y-2 text-left">
-                      {article.title && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Movie</span>
-                          <span className="text-white font-medium text-xs">{article.title.replace(' Movie Review', '')}</span>
-                        </div>
-                      )}
-                      {article.movie_language && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Language</span>
-                          <span className="text-white font-medium text-xs">
-                            {(() => {
-                              try {
-                                // Check if it's a JSON array string
-                                if (typeof article.movie_language === 'string' && article.movie_language.startsWith('[')) {
-                                  const languages = JSON.parse(article.movie_language);
-                                  return Array.isArray(languages) ? languages.join(', ') : article.movie_language;
+                    {/* Left Side - Movie Details (4 Sections) */}
+                    <div className="flex-1 space-y-0 text-left">
+                      
+                      {/* Section 1: Basic Info */}
+                      <div className="space-y-2 pb-3">
+                        {article.title && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Movie</span>
+                            <span className="text-white font-medium text-xs">{article.title.replace(' Movie Review', '')}</span>
+                          </div>
+                        )}
+                        {article.movie_language && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Language</span>
+                            <span className="text-white font-medium text-xs">
+                              {(() => {
+                                try {
+                                  if (typeof article.movie_language === 'string' && article.movie_language.startsWith('[')) {
+                                    const languages = JSON.parse(article.movie_language);
+                                    return Array.isArray(languages) ? languages.join(', ') : article.movie_language;
+                                  }
+                                  return article.movie_language;
+                                } catch (e) {
+                                  return article.movie_language;
                                 }
-                                return article.movie_language;
-                              } catch (e) {
-                                return article.movie_language;
-                              }
-                            })()}
-                          </span>
+                              })()}
+                            </span>
+                          </div>
+                        )}
+                        {article.review_runtime && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Runtime</span>
+                            <span className="text-white font-medium text-xs">{article.review_runtime}</span>
+                          </div>
+                        )}
+                        {article.platform && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Release</span>
+                            <span className="text-white font-medium text-xs">{article.platform}</span>
+                          </div>
+                        )}
+                        {article.release_date && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Release Date</span>
+                            <span className="text-white font-medium text-xs">
+                              {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                            </span>
+                          </div>
+                        )}
+                        {article.censor_rating && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Censor Rating</span>
+                            <span className="text-white font-medium text-xs">{article.censor_rating}</span>
+                          </div>
+                        )}
+                        {article.platform === 'OTT' && article.ott_platforms && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">OTT</span>
+                            <span className="text-white font-medium text-xs">
+                              {(() => {
+                                try {
+                                  const platforms = typeof article.ott_platforms === 'string' 
+                                    ? JSON.parse(article.ott_platforms) 
+                                    : article.ott_platforms;
+                                  return Array.isArray(platforms) ? platforms.join(', ') : article.ott_platforms;
+                                } catch {
+                                  return article.ott_platforms;
+                                }
+                              })()}
+                            </span>
+                          </div>
+                        )}
+                        {article.review_genre && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Genre</span>
+                            <span className="text-white font-medium text-xs">
+                              {(() => {
+                                try {
+                                  const genres = typeof article.review_genre === 'string' 
+                                    ? JSON.parse(article.review_genre) 
+                                    : article.review_genre;
+                                  return Array.isArray(genres) ? genres.join(', ') : article.review_genre;
+                                } catch {
+                                  return article.review_genre;
+                                }
+                              })()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Divider between sections */}
+                      {(article.review_banner || article.review_producer) && (
+                        <div className="border-t border-gray-700 my-3"></div>
+                      )}
+
+                      {/* Section 2: Production */}
+                      {(article.review_banner || article.review_producer) && (
+                        <div className="space-y-2 pb-3">
+                          {article.review_banner && (
+                            <div className="flex items-center gap-4">
+                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Banner</span>
+                              <span className="text-white font-medium text-xs">{article.review_banner}</span>
+                            </div>
+                          )}
+                          {article.review_producer && (
+                            <div className="flex items-center gap-4">
+                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Producer</span>
+                              <span className="text-white font-medium text-xs">{article.review_producer}</span>
+                            </div>
+                          )}
                         </div>
                       )}
-                      {article.review_runtime && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Runtime</span>
-                          <span className="text-white font-medium text-xs">{article.review_runtime}</span>
+
+                      {/* Divider between sections */}
+                      {(article.review_director || article.review_music_director || article.review_dop || article.review_editor) && (
+                        <div className="border-t border-gray-700 my-3"></div>
+                      )}
+
+                      {/* Section 3: Crew */}
+                      {(article.review_director || article.review_music_director || article.review_dop || article.review_editor) && (
+                        <div className="space-y-2 pb-3">
+                          {article.review_director && (
+                            <div className="flex items-center gap-4">
+                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Director</span>
+                              <span className="text-white font-medium text-xs">{article.review_director}</span>
+                            </div>
+                          )}
+                          {article.review_music_director && (
+                            <div className="flex items-center gap-4">
+                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Music</span>
+                              <span className="text-white font-medium text-xs">{article.review_music_director}</span>
+                            </div>
+                          )}
+                          {article.review_dop && (
+                            <div className="flex items-center gap-4">
+                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">DOP</span>
+                              <span className="text-white font-medium text-xs">{article.review_dop}</span>
+                            </div>
+                          )}
+                          {article.review_editor && (
+                            <div className="flex items-center gap-4">
+                              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Editor</span>
+                              <span className="text-white font-medium text-xs">{article.review_editor}</span>
+                            </div>
+                          )}
                         </div>
                       )}
-                      {article.review_genre && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Genre</span>
-                          <span className="text-white font-medium text-xs">
-                            {(() => {
-                              try {
-                                const genres = typeof article.review_genre === 'string' 
-                                  ? JSON.parse(article.review_genre) 
-                                  : article.review_genre;
-                                return Array.isArray(genres) ? genres.join(', ') : article.review_genre;
-                              } catch {
-                                return article.review_genre;
-                              }
-                            })()}
-                          </span>
-                        </div>
-                      )}
-                      {article.review_director && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Director</span>
-                          <span className="text-white font-medium text-xs">{article.review_director}</span>
-                        </div>
-                      )}
-                      {article.review_producer && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Producer</span>
-                          <span className="text-white font-medium text-xs">{article.review_producer}</span>
-                        </div>
-                      )}
-                      {article.review_music_director && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Music Director</span>
-                          <span className="text-white font-medium text-xs">{article.review_music_director}</span>
-                        </div>
-                      )}
-                      {article.review_dop && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">DOP</span>
-                          <span className="text-white font-medium text-xs">{article.review_dop}</span>
-                        </div>
-                      )}
-                      {article.censor_rating && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Censor Rating</span>
-                          <span className="text-white font-medium text-xs">{article.censor_rating}</span>
-                        </div>
-                      )}
+
+                      {/* Divider between sections */}
                       {article.review_cast && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Cast</span>
-                          <span className="text-white font-medium text-xs leading-relaxed">{article.review_cast}</span>
-                        </div>
+                        <div className="border-t border-gray-700 my-3"></div>
                       )}
-                      {article.platform && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Release</span>
-                          <span className="text-white font-medium text-xs">{article.platform}</span>
-                        </div>
-                      )}
-                      {article.release_date && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Release Date</span>
-                          <span className="text-white font-medium text-xs">
-                            {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                          </span>
-                        </div>
-                      )}
-                      {article.platform === 'OTT' && article.ott_platforms && (
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">OTT</span>
-                          <span className="text-white font-medium text-xs">
-                            {(() => {
-                              try {
-                                const platforms = typeof article.ott_platforms === 'string' 
-                                  ? JSON.parse(article.ott_platforms) 
-                                  : article.ott_platforms;
-                                return Array.isArray(platforms) ? platforms.join(', ') : article.ott_platforms;
-                              } catch {
-                                return article.ott_platforms;
-                              }
-                            })()}
-                          </span>
+
+                      {/* Section 4: Cast */}
+                      {article.review_cast && (
+                        <div className="space-y-2 pt-1">
+                          <div className="flex items-start gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px] pt-0.5">Cast</span>
+                            <span className="text-white font-medium text-xs leading-relaxed">{article.review_cast}</span>
+                          </div>
                         </div>
                       )}
                     </div>
