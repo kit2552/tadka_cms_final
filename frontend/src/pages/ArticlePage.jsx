@@ -636,29 +636,24 @@ const ArticlePage = () => {
                               <div className="text-xs text-gray-500">No reviews yet</div>
                             </div>
                           )}
-                        </div>
 
-                        {/* Bottom Section - Runtime and Release Date (aligned with Cast section) */}
-                        {(article.review_runtime || article.release_date) && (
-                          <>
-                            {/* Add spacing to push this section down */}
-                            <div className="flex-1"></div>
-                            
-                            {/* Divider above Runtime/Release */}
-                            <div className="w-full border-t border-gray-700 my-4"></div>
-                            
-                            <div className="flex flex-col items-center gap-2 pt-4">
-                              {article.review_runtime && (
-                                <div className="text-xs text-gray-300 font-medium">{article.review_runtime}</div>
-                              )}
-                              {article.release_date && (
-                                <div className="text-xs text-gray-300 font-medium">
-                                  {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                                </div>
-                              )}
-                            </div>
-                          </>
-                        )}
+                          {/* Runtime and Release Date - Right below User Rating */}
+                          {(article.review_runtime || article.release_date) && (
+                            <>
+                              <div className="w-full border-t border-gray-700 my-2"></div>
+                              <div className="flex flex-col items-center gap-2 py-2">
+                                {article.review_runtime && (
+                                  <div className="text-xs text-gray-300 font-medium">{article.review_runtime}</div>
+                                )}
+                                {article.release_date && (
+                                  <div className="text-xs text-gray-300 font-medium">
+                                    {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
