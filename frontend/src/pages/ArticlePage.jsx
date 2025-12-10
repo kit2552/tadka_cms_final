@@ -501,6 +501,24 @@ const ArticlePage = () => {
                           <span className="text-white font-medium text-xs">{article.review_producer}</span>
                         </div>
                       )}
+                      {article.review_music_director && (
+                        <div className="flex items-center gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Music Director</span>
+                          <span className="text-white font-medium text-xs">{article.review_music_director}</span>
+                        </div>
+                      )}
+                      {article.review_dop && (
+                        <div className="flex items-center gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">DOP</span>
+                          <span className="text-white font-medium text-xs">{article.review_dop}</span>
+                        </div>
+                      )}
+                      {article.censor_rating && (
+                        <div className="flex items-center gap-4">
+                          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Censor Rating</span>
+                          <span className="text-white font-medium text-xs">{article.censor_rating}</span>
+                        </div>
+                      )}
                       {article.review_cast && (
                         <div className="flex items-center gap-4">
                           <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Cast</span>
