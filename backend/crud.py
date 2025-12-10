@@ -730,6 +730,48 @@ def delete_ott_release(db, release_id: int, s3_service=None):
     result = db[OTT_RELEASES].delete_one({"id": release_id})
     return result.deleted_count > 0
 
+def update_theater_release(db, release_id: int, release_data: dict):
+    """Update theater release"""
+    update_doc = {"updated_at": datetime.utcnow()}
+    
+    # Add all provided fields to update document
+    for field in ["movie_name", "release_date", "movie_image", "youtube_url", "states", 
+                  "languages", "genres", "director", "producer", "banner", "music_director",
+                  "dop", "editor", "cast", "runtime", "censor_rating"]:
+        value = release_data.get(field)
+        if value is not None:
+            update_doc[field] = value
+    
+    result = db[THEATER_RELEASES].update_one(
+        {"id": release_id},
+        {"$set": update_doc}
+    )
+    
+    if result.modified_count > 0 or result.matched_count > 0:
+        return get_theater_release(db, release_id)
+    return None
+
+def update_ott_release(db, release_id: int, release_data: dict):
+    """Update OTT release"""
+    update_doc = {"updated_at": datetime.utcnow()}
+    
+    # Add all provided fields to update document
+    for field in ["movie_name", "content_type", "release_date", "movie_image", "ott_platforms",
+                  "states", "languages", "genres", "director", "producer", "banner",
+                  "music_director", "dop", "editor", "cast", "runtime", "censor_rating"]:
+        value = release_data.get(field)
+        if value is not None:
+            update_doc[field] = value
+    
+    result = db[OTT_RELEASES].update_one(
+        {"id": release_id},
+        {"$set": update_doc}
+    )
+    
+    if result.modified_count > 0 or result.matched_count > 0:
+        return get_ott_release(db, release_id)
+    return None
+
 # ==================== GALLERIES ====================
 
 def get_gallery(db, gallery_id: int):
