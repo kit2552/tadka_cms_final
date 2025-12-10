@@ -50,12 +50,11 @@ const TravelPics = ({ tadkaPicsData = {}, onArticleClick }) => {
   const currentReviews = getTabArticles();
 
   const handleArticleClick = (article) => {
-    // Check if article has a gallery - if so, navigate to gallery post page
-    if (article.gallery && article.gallery.images && article.gallery.images.length > 0) {
-      navigate(`/gallery-post/${article.id}`);
-    } else if (onArticleClick) {
-      // Fallback to existing modal behavior for articles without galleries
-      onArticleClick(article, activeTab === 'travel-pics' ? 'travel_pics' : 'photoshoots');
+    // Navigate to article page
+    if (article.slug) {
+      navigate(`/article/${article.id}/${article.slug}`);
+    } else {
+      navigate(`/article/${article.id}`);
     }
   };
 
