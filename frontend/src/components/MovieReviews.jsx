@@ -12,39 +12,9 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   const [activeTab, setActiveTab] = useTabState('movie-reviews', 'general'); // 'general' or 'bollywood'
   const sliderRef = useRef(null);
 
-  // Filter out future-dated articles (for home page display)
-  const filterCurrentArticles = (articles) => {
-    const now = new Date();
-    // Add 6-hour tolerance to handle timezone differences between server (UTC) and client
-    // This prevents articles published "now" from being filtered out due to timezone conversion
-    const tolerance = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
-    
-    return articles.filter(article => {
-      if (!article.published_at) {
-        return true; // Keep articles without dates
-      }
-      const publishedDate = new Date(article.published_at);
-      // Allow articles published up to 6 hours in the "future" (due to timezone conversion)
-      const isValid = publishedDate.getTime() <= (now.getTime() + tolerance);
-      return isValid;
-    });
-  };
-
-  // Extract data from props - now using real API data with date filtering
-  const rawMovieReviews = movieReviewsData.movie_reviews || [];
-  const rawBollywoodReviews = movieReviewsData.bollywood || [];
-  
-  const movieReviews = filterCurrentArticles(rawMovieReviews);
-  const bollywoodReviews = filterCurrentArticles(rawBollywoodReviews);
-  
-  // Debug logging
-  console.log('MovieReviews Debug:', {
-    rawMovieReviews: rawMovieReviews.length,
-    movieReviews: movieReviews.length,
-    bollywoodReviews: bollywoodReviews.length,
-    activeTab,
-    movieReviewsData: rawMovieReviews.map(r => ({ id: r.id, title: r.title, published_at: r.published_at }))
-  });
+  // Extract data from props - backend handles all date filtering based on EST timezone
+  const movieReviews = movieReviewsData.movie_reviews || [];
+  const bollywoodReviews = movieReviewsData.bollywood || [];
 
   // Get YouTube thumbnail URL from video URL
   const getYouTubeThumbnail = (youtubeUrl) => {
