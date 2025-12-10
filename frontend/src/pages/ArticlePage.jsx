@@ -568,7 +568,7 @@ const ArticlePage = () => {
                         <div className="border-t border-gray-700 my-4"></div>
                       )}
 
-                      {/* Section 4: Cast */}
+                      {/* Section 3: Cast */}
                       {article.review_cast && (
                         <div className="space-y-2 pt-1">
                           <div className="flex items-start gap-4">
