@@ -129,16 +129,20 @@ const OTTMovieReviews = ({ ottMovieReviewsData = {}, onImageClick }) => {
             {getDisplayData().map((item, index) => (
               <div
                 key={item.id}
-                className="flex-shrink-0"
+                className="flex-shrink-0 cursor-pointer"
                 style={{ minWidth: '200px' }} // Reverted back to original 200px
+                onClick={() => onImageClick(item, 'ott_review')}
               >
                 <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group">
                   <div className="relative">
                     <img
-                      src={item.image_url || item.image}
+                      src={item.image_url || item.image || 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop'}
                       alt={item.title || item.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       style={{ width: '200px', height: '120px' }} // Reverted back to original dimensions
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1574267432644-f610cab6adc4?w=800&h=600&fit=crop';
+                      }}
                     />
                     
                     {/* Rating Badge - Yellow Square Background */}
