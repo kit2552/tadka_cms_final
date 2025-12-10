@@ -278,7 +278,7 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
     // iPad Row: Video Songs + TV
     'videosongs-tv-row': {
       id: 'videosongs-tv-row',
-      name: 'Theater Releases & TV & OTT Row',
+      name: 'Theater Releases & OTT & TV Row',
       component: (
         <div className="max-w-5xl-plus mx-auto px-8 pt-0 pb-2">
           <div className={`grid gap-4 ${isIpad ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 lg:grid-cols-3'}`}>
@@ -289,15 +289,15 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
               />
             </div>
             <div>
-              <TVShows 
-                articles={data.talkOfTown} 
+              <OTTReleases 
+                articles={data.movieSchedules} 
                 onArticleClick={handlers.handleArticleClick}
               />
             </div>
             {!isIpad && (
               <div>
-                <OTTReleases 
-                  articles={data.movieSchedules} 
+                <TVShows 
+                  articles={data.talkOfTown} 
                   onArticleClick={handlers.handleArticleClick}
                 />
               </div>
