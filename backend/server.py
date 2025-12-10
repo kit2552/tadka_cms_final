@@ -188,7 +188,7 @@ async def get_movies_articles(limit: int = 4, db = Depends(get_db)):
         "bollywood": bollywood_articles
     }
 
-@api_router.get("/articles/sections/hot-topics", response_model=dict)
+@api_router.get("/articles/sections/hot-topics")
 async def get_hot_topics_articles(limit: int = 4, states: str = None, db = Depends(get_db)):
     """Get articles for Hot Topics section with Hot Topics (state-specific) and Hot Topics Bollywood tabs"""
     # For hot topics tab - apply state filtering if provided (similar to politics filtering)
