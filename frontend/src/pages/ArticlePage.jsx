@@ -710,8 +710,24 @@ const ArticlePage = () => {
                         </div>
                       )}
                       {article.social_media_type === 'instagram' && (
-                        <div className="flex justify-center">
-                          <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                        <div className="flex justify-center my-6">
+                          <div 
+                            className="instagram-embed-container"
+                            style={{ width: '100%', maxWidth: '700px' }}
+                            dangerouslySetInnerHTML={{ __html: article.social_media_embed }} 
+                          />
+                          <style>{`
+                            .instagram-embed-container .instagram-media {
+                              min-width: 326px !important;
+                              max-width: 700px !important;
+                              width: 100% !important;
+                              margin: 0 auto !important;
+                            }
+                            .instagram-embed-container iframe {
+                              max-width: 700px !important;
+                              width: 100% !important;
+                            }
+                          `}</style>
                         </div>
                       )}
                       {article.social_media_type === 'facebook' && (
