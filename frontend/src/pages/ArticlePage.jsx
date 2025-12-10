@@ -149,6 +149,28 @@ const ArticlePage = () => {
     window.scrollTo(0, 0);
   }, []); // Run only once when component mounts
 
+  // Load Instagram embed script
+  useEffect(() => {
+    if (article && article.social_media_type === 'instagram' && article.social_media_embed) {
+      // Load Instagram embed script if not already loaded
+      if (!window.instgrm) {
+        const script = document.createElement('script');
+        script.src = 'https://www.instagram.com/embed.js';
+        script.async = true;
+        document.body.appendChild(script);
+        
+        script.onload = () => {
+          if (window.instgrm) {
+            window.instgrm.Embeds.process();
+          }
+        };
+      } else {
+        // If script already loaded, just process embeds
+        window.instgrm.Embeds.process();
+      }
+    }
+  }, [article]);
+
   // Load Twitter widgets script and render tweets
   useEffect(() => {
     if (article && article.social_media_type === 'twitter' && article.social_media_embed) {
