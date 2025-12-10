@@ -1441,9 +1441,21 @@ async def create_ott_release(
 async def update_ott_release(
     release_id: int,
     movie_name: Optional[str] = Form(None),
-    ott_platform: Optional[str] = Form(None),
-    language: Optional[str] = Form(None),  # Added language field
+    content_type: Optional[str] = Form(None),
     release_date: Optional[date] = Form(None),
+    ott_platforms: Optional[str] = Form(None),
+    states: Optional[str] = Form(None),
+    languages: Optional[str] = Form(None),
+    genres: Optional[str] = Form(None),
+    director: Optional[str] = Form(None),
+    producer: Optional[str] = Form(None),
+    banner: Optional[str] = Form(None),
+    music_director: Optional[str] = Form(None),
+    dop: Optional[str] = Form(None),
+    editor: Optional[str] = Form(None),
+    cast: Optional[str] = Form(None),
+    runtime: Optional[str] = Form(None),
+    censor_rating: Optional[str] = Form(None),
     movie_image: UploadFile = File(None),
     db = Depends(get_db)
 ):
@@ -1456,14 +1468,38 @@ async def update_ott_release(
         
         # Prepare update data
         update_data = {}
-        if movie_name:
+        if movie_name is not None:
             update_data["movie_name"] = movie_name
-        if ott_platform:
-            update_data["ott_platform"] = ott_platform
-        if language:
-            update_data["language"] = language
-        if release_date:
+        if content_type is not None:
+            update_data["content_type"] = content_type
+        if release_date is not None:
             update_data["release_date"] = release_date
+        if ott_platforms is not None:
+            update_data["ott_platforms"] = ott_platforms
+        if states is not None:
+            update_data["states"] = states
+        if languages is not None:
+            update_data["languages"] = languages
+        if genres is not None:
+            update_data["genres"] = genres
+        if director is not None:
+            update_data["director"] = director
+        if producer is not None:
+            update_data["producer"] = producer
+        if banner is not None:
+            update_data["banner"] = banner
+        if music_director is not None:
+            update_data["music_director"] = music_director
+        if dop is not None:
+            update_data["dop"] = dop
+        if editor is not None:
+            update_data["editor"] = editor
+        if cast is not None:
+            update_data["cast"] = cast
+        if runtime is not None:
+            update_data["runtime"] = runtime
+        if censor_rating is not None:
+            update_data["censor_rating"] = censor_rating
         
         # Handle file upload
         if movie_image:
