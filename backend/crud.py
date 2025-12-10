@@ -672,11 +672,16 @@ def create_ott_release(db, release):
     last_release = db[OTT_RELEASES].find_one(sort=[("id", -1)])
     new_id = (last_release["id"] + 1) if last_release else 1
     
+    # Convert date to string if it's a date object
+    release_date = release_data.get("release_date")
+    if release_date and hasattr(release_date, 'isoformat'):
+        release_date = release_date.isoformat()
+    
     release_doc = {
         "id": new_id,
         "movie_name": release_data.get("movie_name"),
         "content_type": release_data.get("content_type"),
-        "release_date": release_data.get("release_date"),
+        "release_date": release_date,
         "movie_image": release_data.get("movie_image"),
         "ott_platforms": release_data.get("ott_platforms"),
         "states": release_data.get("states"),
