@@ -374,6 +374,14 @@ const Dashboard = () => {
   const [ottStateSearch, setOttStateSearch] = useState('');
   const [showOttStateDropdown, setShowOttStateDropdown] = useState(false);
   
+  // Helper function to get all states with "All" option
+  const getAllStatesWithAll = () => {
+    return [
+      { code: 'all', name: 'All States (National & Bollywood)' },
+      ...getSortedStates()
+    ];
+  };
+  
   // Video Posts state management
   const [videoPostsActiveTab, setVideoPostsActiveTab] = useState('vertical-gallery');
   const [showGalleryForm, setShowGalleryForm] = useState(false);
