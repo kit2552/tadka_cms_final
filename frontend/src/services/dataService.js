@@ -509,6 +509,7 @@ export const dataService = {
         moviesData,
         sportsData,
         trendingVideosData,
+        trailersData,
         viralVideosData,
         viralShortsData,
         eventsInterviewsData,
