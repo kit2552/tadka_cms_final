@@ -1230,10 +1230,21 @@ async def get_theater_release(release_id: int, db = Depends(get_db)):
 @api_router.post("/cms/theater-releases", response_model=schemas.TheaterReleaseResponse)
 async def create_theater_release(
     movie_name: str = Form(...),
-    movie_banner: str = Form(...),  # Changed to string form field
-    language: str = Form("Hindi"),  # Added language field
     release_date: date = Form(...),
     created_by: str = Form(...),
+    youtube_url: str = Form(''),
+    states: str = Form('[]'),
+    languages: str = Form('[]'),
+    genres: str = Form('[]'),
+    director: str = Form(''),
+    producer: str = Form(''),
+    banner: str = Form(''),
+    music_director: str = Form(''),
+    dop: str = Form(''),
+    editor: str = Form(''),
+    cast: str = Form(''),
+    runtime: str = Form(''),
+    censor_rating: str = Form(''),
     movie_image: UploadFile = File(None),
     db = Depends(get_db)
 ):
@@ -1248,9 +1259,20 @@ async def create_theater_release(
         # Create release data
         release_data = schemas.TheaterReleaseCreate(
             movie_name=movie_name,
-            movie_banner=movie_banner,  # Store as text
-            language=language,
             release_date=release_date,
+            youtube_url=youtube_url,
+            states=states,
+            languages=languages,
+            genres=genres,
+            director=director,
+            producer=producer,
+            banner=banner,
+            music_director=music_director,
+            dop=dop,
+            editor=editor,
+            cast=cast,
+            runtime=runtime,
+            censor_rating=censor_rating,
             created_by=created_by,
             movie_image=image_path
         )
