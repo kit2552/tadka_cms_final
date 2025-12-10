@@ -195,17 +195,17 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                           />
                         )}
                         
-                        {/* Rating Display - Centered at Top with Black Square Background */}
-                        <div className="absolute top-3 left-1/2 transform -translate-x-1/2 flex flex-col items-center justify-center px-3 py-2 bg-black/60 rounded">
-                          <div className="flex items-baseline gap-1 mb-1">
-                            <span className="text-3xl font-bold text-white leading-none">{formattedRating}</span>
-                            <span className="text-sm text-gray-300">/5</span>
+                        {/* Rating Display - Compact Top Right */}
+                        <div className="absolute top-2 right-2 flex flex-col items-center justify-center px-2 py-1.5 bg-black/70 rounded">
+                          <div className="flex items-baseline gap-0.5 mb-0.5">
+                            <span className="text-xl font-bold text-white leading-none">{formattedRating}</span>
+                            <span className="text-[10px] text-gray-300">/5</span>
                           </div>
                           <div className="flex items-center gap-0.5">
                             {[...Array(5)].map((_, i) => (
                               <svg
                                 key={i}
-                                className={`w-3 h-3 ${i < fullStars ? 'text-yellow-400' : (i === fullStars && hasHalfStar ? 'text-yellow-400' : 'text-gray-400')}`}
+                                className={`w-2 h-2 ${i < fullStars ? 'text-yellow-400' : (i === fullStars && hasHalfStar ? 'text-yellow-400' : 'text-gray-400')}`}
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                               >
