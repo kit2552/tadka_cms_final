@@ -648,6 +648,18 @@ def get_upcoming_ott_releases(db, limit: int = 100):
     ).sort("release_date", 1).limit(limit))
     return serialize_doc(docs)
 
+def get_this_week_ott_releases(db, limit: int = 100):
+    """Get this week's OTT releases"""
+    from datetime import date, timedelta
+    today = date.today()
+    week_end = (today + timedelta(days=7)).isoformat()
+    today_str = today.isoformat()
+    
+    docs = list(db[OTT_RELEASES].find(
+        {"release_date": {"$gte": today_str, "$lte": week_end}}
+    ).sort("release_date", 1).limit(limit))
+    return serialize_doc(docs)
+
 def create_theater_release(db, release):
     """Create theater release"""
     # Convert Pydantic model to dict if needed
