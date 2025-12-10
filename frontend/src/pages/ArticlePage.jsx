@@ -590,7 +590,7 @@ const ArticlePage = () => {
 
                       {/* Divider between sections */}
                       {article.review_cast && (
-                        <div className="border-t border-gray-700 my-3"></div>
+                        <div className="border-t border-gray-700 my-4"></div>
                       )}
 
                       {/* Section 4: Cast */}
