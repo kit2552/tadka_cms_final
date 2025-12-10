@@ -647,12 +647,12 @@ const ArticlePage = () => {
                             {/* Divider above Runtime/Release */}
                             <div className="w-full border-t border-gray-700 my-4"></div>
                             
-                            <div className="flex flex-col items-center gap-2">
+                            <div className="flex flex-col items-center gap-2 pt-4">
                               {article.review_runtime && (
-                                <div className="text-xs text-white font-medium">{article.review_runtime}</div>
+                                <div className="text-xs text-gray-300 font-medium">{article.review_runtime}</div>
                               )}
                               {article.release_date && (
-                                <div className="text-xs text-white font-medium">
+                                <div className="text-xs text-gray-300 font-medium">
                                   {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                                 </div>
                               )}
