@@ -17,7 +17,7 @@ export const DragDropProvider = ({ children }) => {
     'top-stories',              // Full width  
     'trailers-teasers',         // Full width - Trailers & Teasers section
     'politics-movies-row',      // Desktop: Politics+Movies+Sports | iPad: Politics+Movies
-    'sports-fashion-row',       // iPad only: Sports+Hot Topics  
+    'sports-fashion-row',       // iPad only: Sports+Box Office  
     'trending-videos',          // Full width - Trending videos section
     'viral-travel-row',         // Desktop: Travel+Fashion | iPad: Travel only
     'movie-reviews',            // Full width
