@@ -4716,33 +4716,33 @@ const Dashboard = () => {
                     {/* Form Content */}
                     <div className="p-6">
 
-                    <form onSubmit={handleOttFormSubmit} className="space-y-6">
+                    <form onSubmit={handleOttFormSubmit} className="space-y-4">
                       {/* Basic Information Section */}
-                      <div className="space-y-4">
-                        <h3 className="text-md font-semibold text-gray-900 border-b pb-2">Basic Information</h3>
+                      <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+                        <h3 className="text-sm font-semibold text-gray-800 text-left">Basic Information</h3>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                               Title *
                             </label>
                             <input
                               type="text"
                               value={ottForm.movie_name}
                               onChange={(e) => setOttForm({...ottForm, movie_name: e.target.value})}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
                               placeholder="Enter movie/series name"
                               required
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                               Content Type *
                             </label>
                             <select
                               value={ottForm.content_type}
                               onChange={(e) => setOttForm({...ottForm, content_type: e.target.value})}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
                               required
                             >
                               <option value="Movie">Movie</option>
@@ -4751,30 +4751,17 @@ const Dashboard = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                              Release Date *
-                            </label>
-                            <input
-                              type="date"
-                              value={ottForm.release_date}
-                              onChange={(e) => setOttForm({...ottForm, release_date: e.target.value})}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                              required
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                              Movie Image
-                            </label>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) => setOttForm({...ottForm, movie_image: e.target.files[0]})}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                            />
-                          </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Release Date *
+                          </label>
+                          <input
+                            type="date"
+                            value={ottForm.release_date}
+                            onChange={(e) => setOttForm({...ottForm, release_date: e.target.value})}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            required
+                          />
                         </div>
 
                         {/* OTT Platforms Multi-select */}
