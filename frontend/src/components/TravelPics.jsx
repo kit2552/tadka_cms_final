@@ -110,9 +110,9 @@ const TravelPics = ({ tadkaPicsData = {}, onArticleClick }) => {
               <div className="flex items-start space-x-2 text-left">
                 <div className="relative flex-shrink-0">
                   <ArticleImage
-                    src={review.image_url || review.image}
+                    src={getRandomGalleryImage(review)}
                     alt={review.title}
-                    width="w-20"
+                    width={isVerticalGallery(review) ? "w-12" : "w-20"}
                     height="h-16"
                     className="object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
                     contentType={activeTab === 'travel-pics' ? 'travel-pics' : 'photoshoots'}
