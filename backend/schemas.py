@@ -272,20 +272,44 @@ class TheaterReleaseResponse(TheaterReleaseBase):
 # OTT Release Schemas
 class OTTReleaseBase(BaseModel):
     movie_name: str
-    ott_platform: str
     release_date: date
+    content_type: str = "Movie"
     movie_image: Optional[str] = None
-    language: str = "Hindi"
+    ott_platforms: Optional[str] = None  # JSON string of array
+    states: Optional[str] = None  # JSON string of array
+    languages: Optional[str] = None  # JSON string of array
+    genres: Optional[str] = None  # JSON string of array
+    director: Optional[str] = None
+    producer: Optional[str] = None
+    banner: Optional[str] = None
+    music_director: Optional[str] = None
+    dop: Optional[str] = None
+    editor: Optional[str] = None
+    cast: Optional[str] = None
+    runtime: Optional[str] = None
+    censor_rating: Optional[str] = None
 
 class OTTReleaseCreate(OTTReleaseBase):
     created_by: str
 
 class OTTReleaseUpdate(BaseModel):
     movie_name: Optional[str] = None
-    ott_platform: Optional[str] = None
+    content_type: Optional[str] = None
     release_date: Optional[date] = None
     movie_image: Optional[str] = None
-    language: Optional[str] = None
+    ott_platforms: Optional[str] = None
+    states: Optional[str] = None
+    languages: Optional[str] = None
+    genres: Optional[str] = None
+    director: Optional[str] = None
+    producer: Optional[str] = None
+    banner: Optional[str] = None
+    music_director: Optional[str] = None
+    dop: Optional[str] = None
+    editor: Optional[str] = None
+    cast: Optional[str] = None
+    runtime: Optional[str] = None
+    censor_rating: Optional[str] = None
 
 class OTTReleaseResponse(OTTReleaseBase):
     id: int
