@@ -1733,9 +1733,15 @@ const Dashboard = () => {
     }
   };
 
+  const showAlert = (message, type = 'error') => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setShowAlertModal(true);
+  };
+
   const openManageEntitiesModal = () => {
     if (!galleryCategory) {
-      alert('Please select a gallery category first');
+      showAlert('Please select a gallery category first', 'error');
       return;
     }
     setShowManageEntitiesModal(true);
