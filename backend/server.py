@@ -449,8 +449,8 @@ async def get_events_interviews_articles(limit: int = 4, db = Depends(get_db)):
 @api_router.get("/articles/sections/tv-shows", response_model=dict)
 async def get_tv_shows_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for TV Shows section with TV Shows and Bollywood tabs"""
-    tv_articles = crud.get_articles_by_category_slug(db, category_slug="tv-shows", limit=limit)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="tv-shows-bollywood", limit=limit)
+    tv_articles = crud.get_articles_by_category_slug(db, category_slug="tv", limit=limit)
+    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="tv-bollywood", limit=limit)
     
     return {
         "tv": tv_articles,
