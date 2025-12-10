@@ -2797,11 +2797,34 @@ const Dashboard = () => {
     setShowTheaterForm(true);
     setEditingRelease(release);
     setEditingType('theater');
+    
+    // Parse JSON arrays safely
+    const parseJsonArray = (value) => {
+      if (!value) return [];
+      if (typeof value === 'string') {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return [];
+        }
+      }
+      return Array.isArray(value) ? value : [];
+    };
+    
     setTheaterForm({
-      movie_name: release.movie_name,
-      release_date: release.release_date,
-      movie_banner: release.movie_banner,
-      language: release.language,
+      movie_name: release.movie_name || '',
+      release_date: release.release_date || '',
+      youtube_url: release.youtube_url || '',
+      states: parseJsonArray(release.states),
+      languages: parseJsonArray(release.languages),
+      genres: parseJsonArray(release.genres),
+      director: release.director || '',
+      producer: release.producer || '',
+      banner: release.banner || '',
+      music_director: release.music_director || '',
+      dop: release.dop || '',
+      editor: release.editor || '',
+      cast: release.cast || '',
       movie_image: null
     });
   };
