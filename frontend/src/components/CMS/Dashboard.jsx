@@ -5827,7 +5827,7 @@ const Dashboard = () => {
                           </>
                         ) : (
                           <>
-                            <span className="flex-1 text-gray-800 font-medium text-sm">{entity.name}</span>
+                            <span className="flex-1 text-gray-800 font-medium text-sm text-left">{entity.name}</span>
                             <div className="flex gap-2">
                               <button
                                 onClick={() => {
