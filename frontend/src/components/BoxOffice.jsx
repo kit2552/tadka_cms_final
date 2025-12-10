@@ -4,20 +4,28 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import useTabState from '../hooks/useTabState';
 
-const BoxOffice = ({ articles, onArticleClick }) => {
+const BoxOffice = ({ articles, boxOfficeData, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
   const [activeTab, setActiveTab] = useTabState('box-office', 'box-office');
-  const [talkOfTown, setTalkOfTown] = useState([]);
+  const [boxOfficeArticles, setBoxOfficeArticles] = useState([]);
+  const [bollywoodArticles, setBollywoodArticles] = useState([]);
 
   useEffect(() => {
-    if (articles) {
-      setTalkOfTown(articles);
+    // Support both old format (articles prop) and new format (boxOfficeData prop)
+    if (boxOfficeData) {
+      setBoxOfficeArticles(boxOfficeData.box_office || []);
+      setBollywoodArticles(boxOfficeData.bollywood || []);
+    } else if (articles) {
+      // Old format: split articles array in half
+      const halfLength = Math.ceil(articles.length / 2);
+      setBoxOfficeArticles(articles.slice(0, halfLength));
+      setBollywoodArticles(articles.slice(halfLength));
     } else {
-      // No mock data - leave empty if no articles provided
-      setTalkOfTown([]);
+      setBoxOfficeArticles([]);
+      setBollywoodArticles([]);
     }
-  }, [articles]);
+  }, [articles, boxOfficeData]);
 
   const handleClick = (article) => {
     if (onArticleClick) {
@@ -26,18 +34,7 @@ const BoxOffice = ({ articles, onArticleClick }) => {
   };
 
   // Get articles based on active tab
-  const getTabArticles = () => {
-    if (!talkOfTown || talkOfTown.length === 0) return [];
-    
-    const halfLength = Math.ceil(talkOfTown.length / 2);
-    if (activeTab === 'box-office') {
-      return talkOfTown.slice(0, halfLength); // First half for Box Office
-    } else {
-      return talkOfTown.slice(halfLength); // Second half for Bollywood
-    }
-  };
-
-  const currentArticles = getTabArticles();
+  const currentArticles = activeTab === 'bollywood' ? bollywoodArticles : boxOfficeArticles;
 
   const getThumbnail = (index) => {
     const thumbnails = [
