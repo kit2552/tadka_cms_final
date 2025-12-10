@@ -112,22 +112,26 @@ const Fashion = ({ hotTopicsData = {}, onArticleClick }) => {
                   className={`group cursor-pointer py-1 px-1 ${getSectionBodyClasses().hoverClass} transition-colors duration-200 border-b ${getSectionBodyClasses().dividerClass} last:border-b-0`}
                   onClick={() => handleClick(article)}
                 >
-                <div className="flex items-start space-x-2 text-left">
-                  <div className="relative flex-shrink-0">
-                    <img
-                      src={getThumbnail(index)}
-                      alt={article.title}
-                      className="w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
-                    />
+                  <div className="flex items-start space-x-2 text-left">
+                    <div className="relative flex-shrink-0">
+                      <img
+                        src={article.image_url || article.image || getThumbnail(index)}
+                        alt={article.title}
+                        className="w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.target.src = getThumbnail(index);
+                        }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
+                        {article.title}
+                      </h4>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
-                      {article.title}
-                    </h4>
-                  </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
