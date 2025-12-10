@@ -632,11 +632,15 @@ def get_this_week_theater_releases_by_state(db, state: str = None, limit: int = 
     week_end = (today + timedelta(days=7)).isoformat()
     today_str = today.isoformat()
     
-    query = {"release_date": {"$gte": today_str, "$lte": week_end}}
+    query = {
+        "release_date": {"$gte": today_str, "$lte": week_end},
+        # Explicitly exclude 'all' states - only show state-specific releases
+        "states": {"$not": {"$regex": '"all"'}}
+    }
     
     if state:
         # Match releases that include the user's state (not 'all')
-        query["states"] = {"$regex": f'"{state}"'}
+        query["states"]["$regex"] = f'"{state}"'
     
     docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
     return serialize_doc(docs)
