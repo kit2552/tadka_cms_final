@@ -4040,102 +4040,71 @@ const Dashboard = () => {
                     
                     {/* Form Content */}
                     <div className="p-6">
-                  <form onSubmit={handleTheaterFormSubmit} className="space-y-6">
+                  <form onSubmit={handleTheaterFormSubmit} className="space-y-4">
                     {/* Basic Information Section */}
-                    <div className="space-y-4">
-                      <h3 className="text-md font-semibold text-gray-900 border-b pb-2">Basic Information</h3>
+                    <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+                      <h3 className="text-sm font-semibold text-gray-800 text-left">Basic Information</h3>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                             Movie Name *
                           </label>
                           <input
                             type="text"
                             value={theaterForm.movie_name}
                             onChange={(e) => setTheaterForm({...theaterForm, movie_name: e.target.value})}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
                             placeholder="Enter movie name"
                             required
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                             Release Date *
                           </label>
                           <input
                             type="date"
                             value={theaterForm.release_date}
                             onChange={(e) => setTheaterForm({...theaterForm, release_date: e.target.value})}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
                             required
                           />
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                            YouTube Trailer URL
-                          </label>
-                          <input
-                            type="url"
-                            value={theaterForm.youtube_url}
-                            onChange={(e) => setTheaterForm({...theaterForm, youtube_url: e.target.value})}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                            placeholder="https://youtube.com/watch?v=..."
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                            Movie Image
-                          </label>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setTheaterForm({...theaterForm, movie_image: e.target.files[0]})}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                          />
-                        </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                          YouTube Trailer URL
+                        </label>
+                        <input
+                          type="url"
+                          value={theaterForm.youtube_url}
+                          onChange={(e) => setTheaterForm({...theaterForm, youtube_url: e.target.value})}
+                          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                          placeholder="https://youtube.com/watch?v=..."
+                        />
                       </div>
 
-                      {/* Target States Multi-select */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                      {/* Target States with Search */}
+                      <div className="relative">
+                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                           Target States
                         </label>
-                        <div className="flex gap-2 mb-2">
-                          <select
-                            value={tempTheaterState}
-                            onChange={(e) => setTempTheaterState(e.target.value)}
-                            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="">Select State</option>
-                            {getStateNames().map(state => (
-                              <option key={state.code} value={state.code}>{state.name}</option>
-                            ))}
-                          </select>
-                          <button
-                            type="button"
-                            onClick={handleAddTheaterState}
-                            disabled={!tempTheaterState}
-                            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                          >
-                            Add
-                          </button>
-                        </div>
+                        
+                        {/* Display Selected States */}
                         {theaterForm.states.length > 0 && (
-                          <div className="flex flex-wrap gap-2">
-                            {theaterForm.states.map((state, index) => (
+                          <div className="flex flex-wrap gap-2 mb-2">
+                            {theaterForm.states.map((stateCode, index) => (
                               <span
                                 key={index}
-                                className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-md"
+                                className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-md"
                               >
-                                {getStateNameByCode(state)}
+                                {getStateNameByCode(stateCode)}
                                 <button
                                   type="button"
-                                  onClick={() => handleRemoveTheaterState(state)}
-                                  className="text-purple-600 hover:text-purple-800"
+                                  onClick={() => handleRemoveTheaterState(stateCode)}
+                                  className="text-blue-600 hover:text-blue-800 font-bold"
                                 >
                                   ×
                                 </button>
@@ -4143,6 +4112,66 @@ const Dashboard = () => {
                             ))}
                           </div>
                         )}
+                        
+                        {/* Searchable State Input */}
+                        <div className="relative">
+                          <input
+                            type="text"
+                            value={theaterStateSearch}
+                            onChange={(e) => {
+                              setTheaterStateSearch(e.target.value);
+                              setShowTheaterStateDropdown(true);
+                            }}
+                            onFocus={() => {
+                              setTheaterStateSearch('');
+                              setShowTheaterStateDropdown(true);
+                            }}
+                            onBlur={() => {
+                              setTimeout(() => {
+                                setTheaterStateSearch('');
+                                setShowTheaterStateDropdown(false);
+                              }, 200);
+                            }}
+                            placeholder="Search states..."
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
+                          />
+                          {showTheaterStateDropdown && (
+                            <>
+                              <div 
+                                className="fixed inset-0 z-10" 
+                                onClick={() => {
+                                  setShowTheaterStateDropdown(false);
+                                  setTheaterStateSearch('');
+                                }}
+                              />
+                              <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
+                                {getStateNames()
+                                  .filter(state => state.name.toLowerCase().includes(theaterStateSearch.toLowerCase()))
+                                  .sort((a, b) => {
+                                    if (a.code === 'all') return -1;
+                                    if (b.code === 'all') return 1;
+                                    return a.name.localeCompare(b.name);
+                                  })
+                                  .map(state => (
+                                    <div
+                                      key={state.code}
+                                      onClick={() => {
+                                        handleAddTheaterState(state.code);
+                                        setTheaterStateSearch('');
+                                        setShowTheaterStateDropdown(false);
+                                      }}
+                                      className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left text-gray-900"
+                                    >
+                                      {state.name}
+                                    </div>
+                                  ))}
+                                {getStateNames().filter(state => state.name.toLowerCase().includes(theaterStateSearch.toLowerCase())).length === 0 && (
+                                  <div className="px-3 py-2 text-sm text-gray-500 text-left">No states found</div>
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
 
