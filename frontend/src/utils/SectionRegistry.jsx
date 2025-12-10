@@ -52,6 +52,19 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
       ),
       layout: 'full-width'
     },
+    'trailers-teasers': {
+      id: 'trailers-teasers',
+      name: 'Trailers & Teasers',
+      component: (
+        <div className="pt-2 pb-2">
+          <TrailersTeasers 
+            trailersData={data.trailersData} 
+            onImageClick={handlers.handleImageClick}
+          />
+        </div>
+      ),
+      layout: 'full-width'
+    },
     'trending-videos': {
       id: 'trending-videos',
       name: 'Trending Videos',
