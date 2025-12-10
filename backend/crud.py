@@ -158,13 +158,25 @@ def get_articles(db, skip: int = 0, limit: int = 100, is_featured: Optional[bool
     return serialize_doc(docs)
 
 def get_articles_by_category_slug(db, category_slug: str, skip: int = 0, limit: int = 100):
-    """Get articles by category slug, excluding top stories"""
+    """Get articles by category slug, excluding top stories and future-dated articles (based on EST)"""
+    # Get current time in EST (UTC-5)
+    est_tz = timezone(timedelta(hours=-5))
+    current_est_time = datetime.now(est_tz)
+    
+    # Convert to ISO string for MongoDB comparison (MongoDB stores dates as UTC)
+    # We need to convert EST time to UTC for proper comparison
+    current_utc_time = current_est_time.astimezone(timezone.utc)
+    
     docs = list(
         db[ARTICLES]
         .find({
             "category": category_slug,
             "is_published": True,
-            "is_top_story": {"$ne": True}  # Exclude articles marked as top stories
+            "is_top_story": {"$ne": True},  # Exclude articles marked as top stories
+            "$or": [
+                {"published_at": {"$lte": current_utc_time.isoformat()}},
+                {"published_at": {"$exists": False}}  # Include articles without published_at
+            ]
         })
         .sort("published_at", -1)
         .skip(skip)
