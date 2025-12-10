@@ -18,7 +18,15 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
 
   const fetchReleaseData = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood`);
+      // Get user's selected state from localStorage
+      const userStates = JSON.parse(localStorage.getItem('selectedStates') || '[]');
+      const userState = userStates.length > 0 ? userStates[0] : null;
+      
+      const url = userState 
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood?user_state=${userState}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood`;
+      
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
         setReleaseData(data);
