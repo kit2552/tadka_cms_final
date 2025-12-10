@@ -19,7 +19,7 @@ export const DragDropProvider = ({ children }) => {
     'politics-movies-row',      // Desktop: Politics+Movies+Sports | iPad: Politics+Movies
     'sports-fashion-row',       // iPad only: Sports+Box Office  
     'trending-videos',          // Full width - Trending videos section
-    'viral-travel-row',         // Desktop: Travel+Fashion | iPad: Travel only
+    'viral-travel-row',         // Desktop: Travel+Box Office | iPad: Travel only
     'movie-reviews',            // Full width
     'trailers-boxoffice-row',   // Desktop: Trailers+BoxOffice+TheaterReleases | iPad: Trailers+BoxOffice
     'theater-ott-row',          // iPad only: TheaterReleases+OTTReleases
