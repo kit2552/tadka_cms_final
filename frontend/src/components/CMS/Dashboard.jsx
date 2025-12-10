@@ -4818,43 +4818,25 @@ const Dashboard = () => {
                           )}
                         </div>
 
-                        {/* Target States Multi-select */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                        {/* Target States with Search */}
+                        <div className="relative">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                             Target States
                           </label>
-                          <div className="flex gap-2 mb-2">
-                            <select
-                              value={tempOttState}
-                              onChange={(e) => setTempOttState(e.target.value)}
-                              className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                              <option value="">Select State</option>
-                              {getStateNames().map(state => (
-                                <option key={state.code} value={state.code}>{state.name}</option>
-                              ))}
-                            </select>
-                            <button
-                              type="button"
-                              onClick={handleAddOttState}
-                              disabled={!tempOttState}
-                              className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                            >
-                              Add
-                            </button>
-                          </div>
+                          
+                          {/* Display Selected States */}
                           {ottForm.states.length > 0 && (
-                            <div className="flex flex-wrap gap-2">
-                              {ottForm.states.map((state, index) => (
+                            <div className="flex flex-wrap gap-2 mb-2">
+                              {ottForm.states.map((stateCode, index) => (
                                 <span
                                   key={index}
-                                  className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-md"
+                                  className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-md"
                                 >
-                                  {getStateNameByCode(state)}
+                                  {getStateNameByCode(stateCode)}
                                   <button
                                     type="button"
-                                    onClick={() => handleRemoveOttState(state)}
-                                    className="text-purple-600 hover:text-purple-800"
+                                    onClick={() => handleRemoveOttState(stateCode)}
+                                    className="text-blue-600 hover:text-blue-800 font-bold"
                                   >
                                     ×
                                   </button>
@@ -4862,6 +4844,66 @@ const Dashboard = () => {
                               ))}
                             </div>
                           )}
+                          
+                          {/* Searchable State Input */}
+                          <div className="relative">
+                            <input
+                              type="text"
+                              value={ottStateSearch}
+                              onChange={(e) => {
+                                setOttStateSearch(e.target.value);
+                                setShowOttStateDropdown(true);
+                              }}
+                              onFocus={() => {
+                                setOttStateSearch('');
+                                setShowOttStateDropdown(true);
+                              }}
+                              onBlur={() => {
+                                setTimeout(() => {
+                                  setOttStateSearch('');
+                                  setShowOttStateDropdown(false);
+                                }, 200);
+                              }}
+                              placeholder="Search states..."
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
+                            />
+                            {showOttStateDropdown && (
+                              <>
+                                <div 
+                                  className="fixed inset-0 z-10" 
+                                  onClick={() => {
+                                    setShowOttStateDropdown(false);
+                                    setOttStateSearch('');
+                                  }}
+                                />
+                                <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
+                                  {getStateNames()
+                                    .filter(state => state.name.toLowerCase().includes(ottStateSearch.toLowerCase()))
+                                    .sort((a, b) => {
+                                      if (a.code === 'all') return -1;
+                                      if (b.code === 'all') return 1;
+                                      return a.name.localeCompare(b.name);
+                                    })
+                                    .map(state => (
+                                      <div
+                                        key={state.code}
+                                        onClick={() => {
+                                          handleAddOttState(state.code);
+                                          setOttStateSearch('');
+                                          setShowOttStateDropdown(false);
+                                        }}
+                                        className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left text-gray-900"
+                                      >
+                                        {state.name}
+                                      </div>
+                                    ))}
+                                  {getStateNames().filter(state => state.name.toLowerCase().includes(ottStateSearch.toLowerCase())).length === 0 && (
+                                    <div className="px-3 py-2 text-sm text-gray-500 text-left">No states found</div>
+                                  )}
+                                </div>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
 
