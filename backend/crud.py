@@ -769,15 +769,21 @@ def update_theater_release(db, release_id: int, release_data):
         return get_theater_release(db, release_id)
     return None
 
-def update_ott_release(db, release_id: int, release_data: dict):
+def update_ott_release(db, release_id: int, release_data):
     """Update OTT release"""
+    # Convert Pydantic model to dict if needed
+    if hasattr(release_data, 'dict'):
+        data = release_data.dict(exclude_unset=True)
+    else:
+        data = release_data
+    
     update_doc = {"updated_at": datetime.utcnow()}
     
     # Add all provided fields to update document
     for field in ["movie_name", "content_type", "release_date", "movie_image", "ott_platforms",
                   "states", "languages", "genres", "director", "producer", "banner",
                   "music_director", "dop", "editor", "cast", "runtime", "censor_rating"]:
-        value = release_data.get(field)
+        value = data.get(field)
         if value is not None:
             update_doc[field] = value
     
