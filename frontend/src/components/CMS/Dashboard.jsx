@@ -4105,57 +4105,72 @@ const Dashboard = () => {
                     <div className="bg-gray-50 p-4 rounded-lg space-y-4">
                       <h3 className="text-sm font-semibold text-gray-800 text-left">Basic Information</h3>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Movie Name *
-                          </label>
-                          <input
-                            type="text"
-                            value={theaterForm.movie_name}
-                            onChange={(e) => setTheaterForm({...theaterForm, movie_name: e.target.value})}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                            placeholder="Enter movie name"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Release Date *
-                          </label>
-                          <input
-                            type="date"
-                            value={theaterForm.release_date}
-                            onChange={(e) => setTheaterForm({...theaterForm, release_date: e.target.value})}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          YouTube Trailer URL
-                        </label>
-                        <input
-                          type="url"
-                          value={theaterForm.youtube_url}
-                          onChange={(e) => setTheaterForm({...theaterForm, youtube_url: e.target.value})}
-                          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
-                          placeholder="https://youtube.com/watch?v=..."
-                        />
-                        {theaterForm.youtube_url && (
-                          <div className="mt-2">
-                            <img
-                              src={`https://img.youtube.com/vi/${theaterForm.youtube_url.split('v=')[1]?.split('&')[0] || theaterForm.youtube_url.split('/').pop()}/mqdefault.jpg`}
-                              alt="YouTube Thumbnail"
-                              className="w-full max-w-xs rounded border border-gray-300"
-                              onError={(e) => {
-                                e.target.src = `https://img.youtube.com/vi/${theaterForm.youtube_url.split('v=')[1]?.split('&')[0] || theaterForm.youtube_url.split('/').pop()}/hqdefault.jpg`;
-                              }}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Left Column - Form Fields */}
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Movie Name *
+                            </label>
+                            <input
+                              type="text"
+                              value={theaterForm.movie_name}
+                              onChange={(e) => setTheaterForm({...theaterForm, movie_name: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="Enter movie name"
+                              required
                             />
                           </div>
-                        )}
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Release Date *
+                            </label>
+                            <input
+                              type="date"
+                              value={theaterForm.release_date}
+                              onChange={(e) => setTheaterForm({...theaterForm, release_date: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              YouTube Trailer URL
+                            </label>
+                            <input
+                              type="url"
+                              value={theaterForm.youtube_url}
+                              onChange={(e) => setTheaterForm({...theaterForm, youtube_url: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              placeholder="https://youtube.com/watch?v=..."
+                            />
+                          </div>
+                        </div>
+
+                        {/* Right Column - YouTube Preview */}
+                        <div className="flex items-center justify-center">
+                          {theaterForm.youtube_url ? (
+                            <div className="w-full">
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                                Preview
+                              </label>
+                              <img
+                                src={`https://img.youtube.com/vi/${theaterForm.youtube_url.split('v=')[1]?.split('&')[0] || theaterForm.youtube_url.split('/').pop()}/mqdefault.jpg`}
+                                alt="YouTube Thumbnail"
+                                className="w-full rounded border border-gray-300"
+                                onError={(e) => {
+                                  e.target.src = `https://img.youtube.com/vi/${theaterForm.youtube_url.split('v=')[1]?.split('&')[0] || theaterForm.youtube_url.split('/').pop()}/hqdefault.jpg`;
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-full h-40 flex items-center justify-center bg-gray-100 rounded border-2 border-dashed border-gray-300">
+                              <p className="text-sm text-gray-500">YouTube preview will appear here</p>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {/* Target States with Search */}
