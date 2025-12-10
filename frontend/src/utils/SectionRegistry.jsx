@@ -98,7 +98,7 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
         <div className="pt-2 pb-2">
           <OTTMovieReviews 
             ottMovieReviewsData={data.ottMovieReviewsData} 
-            onImageClick={handlers.handleImageClick}
+            onArticleClick={handlers.handleArticleClick}
           />
         </div>
       ),
