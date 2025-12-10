@@ -199,12 +199,13 @@ def get_articles_by_category_slug(db, category_slug: str, skip: int = 0, limit: 
 
 def get_articles_by_states(db, category_slug: str, state_codes: List[str], skip: int = 0, limit: int = 100):
     """Get articles filtered by category and state codes, excluding top stories and future-dated articles (based on EST)"""
-    # Get current time in EST (UTC-5)
+    # Get current time in EST (UTC-5) and convert to UTC
     est_tz = timezone(timedelta(hours=-5))
     current_est_time = datetime.now(est_tz)
-    
-    # Convert to UTC for MongoDB comparison
     current_utc_time = current_est_time.astimezone(timezone.utc)
+    
+    # MongoDB stores datetime objects (timezone-naive, assumed UTC)
+    current_utc_naive = current_utc_time.replace(tzinfo=None)
     
     # Articles where states field contains any of the state codes or "all"
     docs = list(
@@ -220,7 +221,7 @@ def get_articles_by_states(db, category_slug: str, state_codes: List[str], skip:
             "$and": [
                 {
                     "$or": [
-                        {"published_at": {"$lte": current_utc_time.isoformat()}},
+                        {"published_at": {"$lte": current_utc_naive}},
                         {"published_at": {"$exists": False}}
                     ]
                 }
