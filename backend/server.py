@@ -1528,13 +1528,18 @@ async def delete_ott_release(release_id: int, db = Depends(get_db)):
 
 # Frontend endpoints for homepage with Bollywood theater releases
 @api_router.get("/releases/theater-bollywood")
-async def get_homepage_theater_bollywood_releases(db = Depends(get_db)):
-    """Get theater and Bollywood theater releases for homepage display"""
-    this_week_theater = crud.get_this_week_theater_releases(db, limit=4)
-    upcoming_theater = crud.get_upcoming_theater_releases(db, limit=4)
+async def get_homepage_theater_bollywood_releases(
+    user_state: str = None,
+    db = Depends(get_db)
+):
+    """Get theater and Bollywood theater releases for homepage display with state filtering"""
+    # Get state-based theater releases (excluding 'all')
+    this_week_theater = crud.get_this_week_theater_releases_by_state(db, state=user_state, limit=4)
+    upcoming_theater = crud.get_upcoming_theater_releases_by_state(db, state=user_state, limit=4)
     
-    # Get Bollywood theater release articles instead of OTT releases
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="theater-releases-bollywood", limit=4)
+    # Get ALL states releases for Bollywood tab
+    this_week_bollywood = crud.get_this_week_theater_releases_all_states(db, limit=4)
+    upcoming_bollywood = crud.get_upcoming_theater_releases_all_states(db, limit=4)
     
     def format_release_response(releases, is_theater=True):
         result = []
