@@ -1285,9 +1285,20 @@ async def create_theater_release(
 async def update_theater_release(
     release_id: int,
     movie_name: Optional[str] = Form(None),
-    movie_banner: Optional[str] = Form(None),  # Text field
-    language: Optional[str] = Form(None),  # Added language field
     release_date: Optional[date] = Form(None),
+    youtube_url: Optional[str] = Form(None),
+    states: Optional[str] = Form(None),
+    languages: Optional[str] = Form(None),
+    genres: Optional[str] = Form(None),
+    director: Optional[str] = Form(None),
+    producer: Optional[str] = Form(None),
+    banner: Optional[str] = Form(None),
+    music_director: Optional[str] = Form(None),
+    dop: Optional[str] = Form(None),
+    editor: Optional[str] = Form(None),
+    cast: Optional[str] = Form(None),
+    runtime: Optional[str] = Form(None),
+    censor_rating: Optional[str] = Form(None),
     movie_image: UploadFile = File(None),
     db = Depends(get_db)
 ):
@@ -1300,14 +1311,36 @@ async def update_theater_release(
         
         # Prepare update data
         update_data = {}
-        if movie_name:
+        if movie_name is not None:
             update_data["movie_name"] = movie_name
-        if movie_banner:
-            update_data["movie_banner"] = movie_banner
-        if language:
-            update_data["language"] = language
-        if release_date:
+        if release_date is not None:
             update_data["release_date"] = release_date
+        if youtube_url is not None:
+            update_data["youtube_url"] = youtube_url
+        if states is not None:
+            update_data["states"] = states
+        if languages is not None:
+            update_data["languages"] = languages
+        if genres is not None:
+            update_data["genres"] = genres
+        if director is not None:
+            update_data["director"] = director
+        if producer is not None:
+            update_data["producer"] = producer
+        if banner is not None:
+            update_data["banner"] = banner
+        if music_director is not None:
+            update_data["music_director"] = music_director
+        if dop is not None:
+            update_data["dop"] = dop
+        if editor is not None:
+            update_data["editor"] = editor
+        if cast is not None:
+            update_data["cast"] = cast
+        if runtime is not None:
+            update_data["runtime"] = runtime
+        if censor_rating is not None:
+            update_data["censor_rating"] = censor_rating
         
         # Handle file upload
         if movie_image:
