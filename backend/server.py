@@ -1388,6 +1388,7 @@ async def create_ott_release(
     release_date: date = Form(...),
     created_by: str = Form(...),
     content_type: str = Form('Movie'),
+    youtube_url: str = Form(''),
     ott_platforms: str = Form('[]'),
     states: str = Form('[]'),
     languages: str = Form('[]'),
