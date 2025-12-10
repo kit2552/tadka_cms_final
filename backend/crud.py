@@ -798,6 +798,9 @@ def update_ott_release(db, release_id: int, release_data):
                   "music_director", "dop", "editor", "cast", "runtime", "censor_rating"]:
         value = data.get(field)
         if value is not None:
+            # Convert date to string if it's a date object
+            if field == "release_date" and hasattr(value, 'isoformat'):
+                value = value.isoformat()
             update_doc[field] = value
     
     result = db[OTT_RELEASES].update_one(
