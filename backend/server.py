@@ -1416,6 +1416,7 @@ async def create_ott_release(
         release_data = schemas.OTTReleaseCreate(
             movie_name=movie_name,
             content_type=content_type,
+            youtube_url=youtube_url,
             ott_platforms=ott_platforms,
             states=states,
             languages=languages,
