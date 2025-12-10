@@ -21,7 +21,6 @@ export const DragDropProvider = ({ children }) => {
     'trending-videos',          // Full width - Trending videos section
     'viral-travel-row',         // Desktop: Travel+Box Office | iPad: Travel only
     'movie-reviews',            // Full width
-    'trailers-boxoffice-row',   // Desktop: Trailers+BoxOffice+TheaterReleases | iPad: Trailers+BoxOffice
     'theater-ott-row',          // iPad only: TheaterReleases+OTTReleases
     'ott-movie-reviews',        // Full width
     'videosongs-tv-row',        // Desktop: VideoSongs+TV+OTTReleases | iPad: VideoSongs+TV
