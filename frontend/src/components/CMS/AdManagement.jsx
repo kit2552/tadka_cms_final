@@ -12,7 +12,6 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
     homepage_sponsored_ads: false
   });
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [notification, setNotification] = useState({ show: false, type: '', message: '' });
 
   useEffect(() => {
