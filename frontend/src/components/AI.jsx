@@ -3,42 +3,19 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const AI = ({ reviews, onArticleClick }) => {
+const AI = ({ aiStockMarketData = {}, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
   const [activeTab, setActiveTab] = useState('ai');
-  const [featuredItems, setFeaturedItems] = useState([]);
-  const [aiArticles, setAIArticles] = useState([]);
-  const [stockMarketArticles, setStockMarketArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch AI and Stock Market articles from API
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/articles/sections/ai-stock`);
-        if (response.ok) {
-          const data = await response.json();
-          setAIArticles(data.ai || []);
-          setStockMarketArticles(data.stock_market || []);
-        } else {
-          console.error('Failed to fetch AI articles');
-        }
-      } catch (error) {
-        console.error('Error fetching AI articles:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Get data from props (fetched at homepage level)
+  const aiArticles = aiStockMarketData.ai || [];
+  const stockMarketArticles = aiStockMarketData.stock_market || [];
 
-    fetchArticles();
-  }, []);
-
-  useEffect(() => {
-    if (reviews) {
-      setFeaturedItems(reviews);
-    }
-  }, [reviews]);
+  console.log('AI component - aiStockMarketData:', aiStockMarketData);
+  console.log('AI component - aiArticles:', aiArticles);
+  console.log('AI component - stockMarketArticles:', stockMarketArticles);
 
   const handleClick = (article) => {
     if (onArticleClick) {
