@@ -1,0 +1,177 @@
+<analysis>**original_problem_statement:**
+The user's primary goal is to enhance a full-stack movie news portal. The initial phase involved a major overhaul of the CMS, specifically the Theater Release and OTT Release creation forms, adding numerous new fields and improving the user interface. This was followed by a series of bug fixes and feature enhancements on the public-facing homepage to correctly display this new data, including implementing state-based filtering, fixing timezone issues, and adding YouTube thumbnail previews.
+
+The current task is to add a new State-Language Mapping feature within the CMS's System Settings page, allowing administrators to define a default language for each Indian state.
+
+**PRODUCT REQUIREMENTS:**
+1.  **State-Language Mapping Tab:**
+    *   Create a new tab named State-Language Mapping on the  page.
+    *   Display a table listing all Indian states (plus an ALL option).
+    *   Each row should have a dropdown to select the corresponding primary language for that state.
+    *   The mapping for ALL should default to Hindi.
+    *   Provide a Save Changes button to persist the mapping configuration.
+2.  **Homepage Theater/Bollywood Releases:**
+    *   The Theater Releases section should only display releases matching the user's selected state.
+    *   A Bollywood section should display releases where the target state is ALL.
+    *   Display YouTube video thumbnails on release cards instead of placeholders.
+    *   Ensure release dates are displayed correctly, accounting for timezones.
+    *   Fix any duplicate entries.
+    *   Increase the size of thumbnails for better visibility.
+    *   Do not show production house details on the release cards.
+3.  **CMS Form Enhancements:**
+    *   Overhaul Theater Release and OTT Release forms with new fields (Director, Cast, etc.).
+    *   Implement user-friendly, searchable multi-select dropdowns for states.
+    *   Organize the form into a clean, two-column layout with visually distinct sections.
+    *   Show a preview of the YouTube thumbnail when a URL is entered.
+    *   Fix all bugs related to creating and editing releases, ensuring data is saved and loaded correctly.
+
+**User's preferred language**: English
+
+**what currently exists?**
+The application is a full-stack news portal (React/FastAPI/MongoDB). The CMS movie release forms have been completely overhauled with new fields and a redesigned UI. The corresponding backend endpoints, database schemas, and CRUD functions have been updated to support this new data structure. The homepage has been fixed to correctly fetch and display these releases, including state-based filtering and YouTube thumbnail previews.
+
+The agent has just created the frontend UI for the new State-Language Mapping tab in the System Settings page. This includes the tab button, a state to hold the mapping data, and the JSX to render the table with language dropdowns for each state.
+
+**Last working item**:
+-   **Last item agent was working:** Implementing the new State-Language Mapping tab on the System Settings page (). The agent created a default mapping file, added the new tab to the UI, and rendered the table with dropdowns. The save functionality and backend integration are pending.
+-   **Status:** IN PROGRESS
+-   **Agent Testing Done:** N
+-   **Which testing method agent to use?** Frontend testing agent (once the full feature is implemented). For now, manual testing via the screenshot tool and curl will be required to verify the UI and backend functionality.
+-   **User Testing Done:** N
+
+**All Pending/In progress Issue list**:
+-   None. The current work is a feature implementation, not a bug fix.
+
+**In progress Task List**:
+-   **Task 1:** (P0) Complete the State-Language Mapping feature.
+    -   **Where to resume:**
+        1.  **Backend ():** Create  and  API endpoints to fetch and save the state-language mapping configuration. This will require creating or using a collection in MongoDB (e.g., ) to store the data.
+        2.  **Frontend ():**
+            -   Implement a  hook to fetch the mapping from the new backend endpoint on component load.
+            -   Implement the  function to send the updated mapping to the backend via a  request when the Save Changes button is clicked.
+    -   **What will be achieved with this?** A fully functional settings page where administrators can customize and persist the language mapping for each state.
+    -   **Status:** IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?** Both.
+    -   **Blocked on something:** None.
+
+**Upcoming and Future Tasks**
+-   **Upcoming Tasks:**
+    -   **P1: Fix National News for new users:** An issue from a previous fork where National News doesn't appear for new users (with no state selected) remains unresolved.
+-   **Future Tasks:**
+    -   **P1: Implement Live Ads:** Replace existing ad placeholders with a functional ad-serving implementation.
+    -   **P2: Full Regression Testing:** A comprehensive regression test of the CMS and public-facing site is recommended after all recent major changes.
+    -   **P3: Code Cleanup & Refactoring:**
+        -    is critically large and needs to be broken down into smaller, reusable components for forms and tables.
+        -    also needs refactoring.
+
+**Completed work in this session**
+-   **Feature: Overhauled CMS Movie Releases Forms ():**
+    -   Massively expanded the Theater and OTT release forms with new fields (director, cast, genres, etc.) and a redesigned two-column layout with visually separated sections.
+    -   Implemented searchable multi-select dropdowns for states and improved UI for other multi-select fields.
+    -   Added a YouTube URL field with an inline thumbnail preview.
+-   **Backend: Full Support for New Release Data:**
+    -   Updated , , and  to handle the creation, updating, and retrieval of all new movie release fields.
+    -   Fixed numerous backend bugs related to data serialization (), data type mismatches (Pydantic object vs. dict), and database record consistency.
+-   **Feature & Bugfix: Homepage Theater/Bollywood Releases ():**
+    -   Implemented state-based filtering: Theater Releases tab shows state-specific content, while Bollywood tab shows ALL (national) content.
+    -   Fixed a critical bug where the homepage section was failing due to calls to non-existent backend functions.
+    -   Corrected a timezone bug that caused release dates to be off by one day.
+    -   Added YouTube thumbnail previews and increased their size for better visibility.
+-   **Bug Fix: CMS Edit Functionality:**
+    -   Resolved a crash when editing releases by correctly parsing JSON string arrays (, ) from the database back into JavaScript arrays for the form state.
+-   **Data Integrity:**
+    -   Diagnosed that the wrong database () was being referenced in the agent's assumptions; the correct one is .
+    -   Ran a migration script to update old database records with missing fields (, ) to prevent validation errors on retrieval.
+-   **Feature: Began State-Language Mapping ():**
+    -   Created the complete frontend UI for the new mapping tab, pending backend integration.
+
+**Earlier issues found/mentioned but not fixed**
+-   **Issue 1: National News not showing for new users.**
+    -   **Debug checklist:** The logic in  or  should be reviewed to ensure it fetches articles with  when the user has no states selected in their .
+    -   **Why to solve this issue and what will be achieved with this?** To prevent new users from seeing an empty content section, improving their first-time experience.
+    -   **Should Test frontend/backend/both after fix:** Frontend
+    -   **Is recurring issue?** Y
+
+**Known issue recurrence from previous fork**
+-   None in this session.
+
+**Code Architecture**
+
+
+**Key Technical Concepts**
+-   **Complex React Forms:** Managing state for numerous fields, including searchable multi-select dropdowns.
+-   **Backend CRUD Operations:** Extensive work in FastAPI and MongoDB to create, read, update, and delete complex documents, including data migration and fixing serialization issues.
+-   **State-based Content Filtering:** Implementing logic on both backend (MongoDB queries) and frontend () to display relevant content to the user.
+-   **Data-Driven UI:** Rendering components dynamically based on data fetched from APIs, including conditional rendering for previews and different data states.
+-   **Debugging Data Mismatches:** Tracing and fixing issues where data formats differed between the database, backend Pydantic models, and frontend React state (e.g., JSON strings vs. arrays,  vs. ISO strings).
+
+**key DB schema**
+-   No new tables/collections, but the documents within the  and  collections have been significantly expanded with many new fields like , , , , , etc.
+
+**changes in tech stack**
+-   None.
+
+**All files of reference**
+-   : **(CRITICAL)** The primary file for the next task. Needs backend integration for saving and loading mappings.
+-   : Will need modification to add new endpoints for the State-Language mapping feature.
+-   : Contains the default data for the new feature.
+-   : Contains the heavily modified release forms.
+-   : The component responsible for rendering releases on the homepage.
+
+**Areas that need refactoring**:
+-   : **(CRITICAL)** This file is extremely large and complex. It should be a high-priority future task to break it down into smaller, manageable child components (e.g., , , ).
+
+**key api endpoints**
+-   : Updated to handle many new fields.
+-   : Updated to handle many new fields.
+-   : Updated to handle many new fields.
+-   : Updated to handle many new fields.
+-   : Overhauled to filter content by user state and separate ALL state releases into a bollywood category.
+-   : Fixed missing CRUD functions and incorrect data formatting.
+
+**Critical Info for New Agent**
+-   Your immediate priority is to complete the **State-Language Mapping** feature. The frontend UI in  is built but not functional.
+-   You must implement the backend:
+    1.  Create  and  endpoints in  for managing the mapping data.
+    2.  Use a MongoDB collection (e.g., ) for persistence.
+    3.  Connect the frontend component to these endpoints to fetch data on load and save changes on button click.
+-   Be aware that the application's active database is , and the  file's  is misleading. This has caused significant bugs in the past.
+-   The user's selected state is stored in  and is used to filter content on the homepage. This is relevant context for any future filtering tasks or debugging.
+
+**documents created in this job**
+-   
+
+**Last 10 User Messages and any pending user messages**
+1.  **User:** Theater releases not showing on the homepage. **Status:** Completed.
+2.  **User:** Homepage release date is wrong, no state filtering, no YouTube preview, and duplicates exist. **Status:** Completed.
+3.  **User:** Remove production house details and exclude ALL state releases from the main Theater Releases tab. **Status:** Completed.
+4.  **User:** Increase thumbnail size on the homepage. **Status:** Completed.
+5.  **User:** Request to add a State-Language Mapping tab to the System Settings page. **Status:** In Progress.
+6.  **User:** (Previous) Fix layout of CMS forms. **Status:** Partially completed, then superseded by other layout requests.
+7.  **User:** (Previous) Editing a release crashes the page. **Status:** Completed.
+8.  **User:** (Previous) Creating a release fails with a backend error (). **Status:** Completed.
+9.  **User:** (Previous) Creating a release fails with a date encoding error. **Status:** Completed.
+10. **User:** (Previous) A newly created release does not appear in the CMS list. **Status:** Completed.
+
+**Project Health Check:**
+-   **Broken:** The new State-Language Mapping feature is incomplete and non-functional as it lacks backend integration.
+-   **Mocked:** None.
+
+**3rd Party Integrations**
+-   **MongoDB:** Primary database.
+-   **AWS S3 (via ):** For image storage.
+-   **:** Used for image gallery sliders.
+-   **Twitter/Instagram Widgets:** For rendering embedded social media posts.
+-   **:** Used on the backend for timezone handling.
+
+**Testing status**
+-   **Testing agent used after significant changes:** NO
+-   **Troubleshoot agent used after agent stuck in loop:** NO
+-   **Test files created:** None.
+-   **Known regressions:** The National News not showing for new users bug is a known, unaddressed issue from a previous session.
+
+**Credentials to test flow:**
+-   **Admin Login:** username=, password=
+
+**What agent forgot to execute**
+-   The agent has consistently deferred the fix for the National News not showing for new users issue, which was mentioned in the initial handoff summary. This remains a pending task.</analysis>
