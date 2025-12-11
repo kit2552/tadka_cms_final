@@ -1,55 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const StockMarket = ({ articles, onArticleClick }) => {
+const StockMarket = ({ aiStockMarketData = {}, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
-  const [activeTab, setActiveTab] = useState('market');
+  const [activeTab, setActiveTab] = useState('fashion');
+  const [loading, setLoading] = useState(false);
+
+  // Get data from props (fetched at homepage level)
+  const fashionArticles = aiStockMarketData.fashion || [];
+  const travelArticles = aiStockMarketData.travel || [];
+
+  console.log('StockMarket component - aiStockMarketData:', aiStockMarketData);
+  console.log('StockMarket component - fashionArticles:', fashionArticles);
+  console.log('StockMarket component - travelArticles:', travelArticles);
 
   const handleArticleClick = (article) => {
     if (onArticleClick) {
-      onArticleClick(article, activeTab === 'market' ? 'stock_market' : 'india');
+      onArticleClick(article, activeTab === 'fashion' ? 'fashion' : 'travel');
     }
   };
 
   const getThumbnail = (index) => {
     const thumbnails = [
-      'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1559589688-f26e539c0cb4?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1509909756405-be0199881695?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=80&h=64&fit=crop'
+      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=80&h=64&fit=crop',
+      'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=80&h=64&fit=crop',
+      'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=80&h=64&fit=crop',
+      'https://images.unsplash.com/photo-1445205170230-053b83016050?w=80&h=64&fit=crop',
+      'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=80&h=64&fit=crop',
+      'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=80&h=64&fit=crop',
+      'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=80&h=64&fit=crop',
+      'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=80&h=64&fit=crop'
     ];
     return thumbnails[index % thumbnails.length];
   };
 
-  // Fashion articles sample
-  const fashionArticles = [
-    { id: 101, title: "Fashion Week Highlights Sustainable Design Trends" },
-    { id: 102, title: "Celebrity Designer Collaboration Creates Style Sensation" },
-    { id: 103, title: "Vintage Fashion Revival Captures Global Attention" },
-    { id: 104, title: "Luxury Brand Unveils Eco-Friendly Collection" },
-    { id: 105, title: "Street Style Photography Influences High Fashion" },
-    { id: 106, title: "Fashion Industry Embraces Digital Innovation" }
-  ];
-
-  // Travel articles
-  const travelArticles = [
-    { id: 201, title: "Hidden Gems: Unexplored Destinations Gaining Popularity" },
-    { id: 202, title: "Sustainable Tourism Practices Transform Travel Industry" },
-    { id: 203, title: "Adventure Travel Experiences Create Lasting Memories" },
-    { id: 204, title: "Cultural Tourism Connects Travelers with Local Traditions" },
-    { id: 205, title: "Travel Photography Tips for Social Media Success" },
-    { id: 206, title: "Budget Travel Hacks for Maximum Adventure" }
-  ];
-
   const getTabArticles = () => {
-    return activeTab === 'market' ? fashionArticles : travelArticles;
+    return activeTab === 'fashion' ? fashionArticles : travelArticles;
   };
 
   const currentArticles = getTabArticles();
@@ -59,26 +48,26 @@ const StockMarket = ({ articles, onArticleClick }) => {
       {/* Header with Tabs */}
       <div className={`${getSectionHeaderClasses().containerClass} border-b flex`}>
         <button
-          onClick={() => setActiveTab('market')}
+          onClick={() => setActiveTab('fashion')}
           className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-tl-lg ${
-            activeTab === 'market' 
+            activeTab === 'fashion' 
               ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}` 
               : getSectionHeaderClasses().unselectedTabClass
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.us_stocks', 'Fashion')}
+          {t('sections.fashion', 'Fashion')}
         </button>
         <button
-          onClick={() => setActiveTab('live')}
+          onClick={() => setActiveTab('travel')}
           className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-tr-lg ${
-            activeTab === 'live'
+            activeTab === 'travel'
               ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
               : getSectionHeaderClasses().unselectedTabClass
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.indian_stocks', 'Travel')}
+          {t('sections.travel', 'Travel')}
         </button>
       </div>
       
@@ -96,31 +85,40 @@ const StockMarket = ({ articles, onArticleClick }) => {
           }
         `}</style>
         <div className="p-2">
-          <ul className="space-y-1">
-            {currentArticles.slice(0, 4).map((article, index) => (
-                <li
-                  key={article.id}
-                  className={`group cursor-pointer py-1 ${getSectionBodyClasses().hoverClass} transition-colors duration-200 border-b ${getSectionBodyClasses().dividerClass} last:border-b-0`}
-                  onClick={() => handleArticleClick(article)}
-                >
-                  <div className="flex items-start text-left">
-                    <div className="flex items-start space-x-2 flex-1">
-                      <img
-                        src={getThumbnail(index)}
-                        alt={article.title}
-                        className="flex-shrink-0 w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
-                          {article.title}
-                        </h4>
+          {loading ? (
+            <div className="flex items-center justify-center h-32">
+              <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            </div>
+          ) : (
+            <ul className="space-y-1">
+              {currentArticles.slice(0, 4).map((article, index) => (
+                  <li
+                    key={article.id}
+                    className={`group cursor-pointer py-1 ${getSectionBodyClasses().hoverClass} transition-colors duration-200 border-b ${getSectionBodyClasses().dividerClass} last:border-b-0`}
+                    onClick={() => handleArticleClick(article)}
+                  >
+                    <div className="flex items-start text-left">
+                      <div className="flex items-start space-x-2 flex-1">
+                        <img
+                          src={article.image_url || article.image || getThumbnail(index)}
+                          alt={article.title}
+                          className="flex-shrink-0 w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.src = getThumbnail(index);
+                          }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
+                            {article.title}
+                          </h4>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              )
-            )}
-          </ul>
+                  </li>
+                )
+              )}
+            </ul>
+          )}
         </div>
       </div>
       
