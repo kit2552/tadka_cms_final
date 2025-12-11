@@ -301,6 +301,7 @@ class OTTReleaseUpdate(BaseModel):
     content_type: Optional[str] = None
     season: Optional[int] = None
     episodes_count: Optional[int] = None
+    original_language: Optional[str] = None
     release_date: Optional[date] = None
     movie_image: Optional[str] = None
     youtube_url: Optional[str] = None
