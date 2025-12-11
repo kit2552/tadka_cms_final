@@ -7,8 +7,9 @@
     "yarn": ">=1.22.0"
   },
   "resolutions": {
-    "ajv": "6.12.6",
-    "ajv-keywords": "3.5.2"
+    "**/ajv": "6.12.6",
+    "**/ajv-keywords": "3.5.2",
+    "**/ajv-formats": "1.6.1"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
