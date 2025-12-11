@@ -45,6 +45,7 @@ const Home = ({ layoutEditMode = false, onLayoutSave }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [adSettings, setAdSettings] = useState({ homepage_sponsored_ads: false });
   
   // Loading state for state-related sections refresh
   const [stateRelatedSectionsLoading, setStateRelatedSectionsLoading] = useState(false);
@@ -87,6 +88,23 @@ const Home = ({ layoutEditMode = false, onLayoutSave }) => {
     };
 
     fetchData();
+  }, []);
+
+  // Fetch ad settings
+  useEffect(() => {
+    const fetchAdSettings = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ad-settings`);
+        if (response.ok) {
+          const settings = await response.json();
+          setAdSettings(settings);
+        }
+      } catch (err) {
+        console.error('Error fetching ad settings:', err);
+      }
+    };
+
+    fetchAdSettings();
   }, []);
 
   // Listen for state preference changes and refresh state-related sections
