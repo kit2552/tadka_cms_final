@@ -109,11 +109,9 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
       id: 'events-interviews',
       name: 'Events & Interviews',
       component: (
-        <div className="pt-2 pb-2">
-          <EventsInterviews 
-            eventsInterviewsData={data.eventsInterviewsData} 
-          />
-        </div>
+        <EventsInterviews 
+          eventsInterviewsData={data.eventsInterviewsData} 
+        />
       ),
       layout: 'full-width'
     },
@@ -121,11 +119,9 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
       id: 'big-boss',
       name: 'Big Boss',
       component: (
-        <div className="pt-2 pb-2">
-          <BigBoss 
-            bigBossData={data.bigBossData} 
-          />
-        </div>
+        <BigBoss 
+          bigBossData={data.bigBossData} 
+        />
       ),
       layout: 'full-width'
     },
