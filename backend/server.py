@@ -1641,12 +1641,54 @@ async def delete_ott_release(release_id: int, db = Depends(get_db)):
 @api_router.get("/releases/theater-bollywood")
 async def get_homepage_theater_bollywood_releases(
     user_state: str = None,
+    user_states: str = None,  # New parameter for multiple states (comma-separated)
     db = Depends(get_db)
 ):
-    """Get theater and Bollywood theater releases for homepage display with state filtering"""
+    """Get theater and Bollywood theater releases for homepage display with state filtering
+    
+    Args:
+        user_state: Single state code (for backward compatibility)
+        user_states: Comma-separated state codes (e.g., 'ap,ts')
+    """
     # Get state-based theater releases (excluding 'all')
-    this_week_theater = crud.get_this_week_theater_releases_by_state(db, state=user_state, limit=4)
-    upcoming_theater = crud.get_upcoming_theater_releases_by_state(db, state=user_state, limit=4)
+    # Handle both single state and multiple states
+    states_to_query = []
+    if user_states:
+        states_to_query = [s.strip() for s in user_states.split(',')]
+    elif user_state:
+        states_to_query = [user_state]
+    
+    # Fetch releases for all states and combine
+    all_this_week = []
+    all_upcoming = []
+    
+    if states_to_query:
+        for state in states_to_query:
+            this_week = crud.get_this_week_theater_releases_by_state(db, state=state, limit=10)
+            upcoming = crud.get_upcoming_theater_releases_by_state(db, state=state, limit=10)
+            all_this_week.extend(this_week)
+            all_upcoming.extend(upcoming)
+        
+        # Remove duplicates based on ID
+        seen_ids = set()
+        this_week_theater = []
+        for release in all_this_week:
+            if release.get('id') not in seen_ids:
+                seen_ids.add(release.get('id'))
+                this_week_theater.append(release)
+        
+        upcoming_theater = []
+        for release in all_upcoming:
+            if release.get('id') not in seen_ids:
+                seen_ids.add(release.get('id'))
+                upcoming_theater.append(release)
+        
+        # Limit to 4 releases each
+        this_week_theater = this_week_theater[:4]
+        upcoming_theater = upcoming_theater[:4]
+    else:
+        this_week_theater = crud.get_this_week_theater_releases_by_state(db, state=None, limit=4)
+        upcoming_theater = crud.get_upcoming_theater_releases_by_state(db, state=None, limit=4)
     
     # Get ALL states releases for Bollywood tab
     this_week_bollywood = crud.get_this_week_theater_releases_all_states(db, limit=4)
