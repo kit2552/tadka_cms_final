@@ -1,0 +1,70 @@
+name: tadka-cms-app
+
+services:
+  # Backend Service - FastAPI
+  - name: backend
+    source_dir: /backend
+    dockerfile_path: backend/Dockerfile
+    github:
+      repo: YOUR_GITHUB_USERNAME/tadka-cms
+      branch: main
+      deploy_on_push: true
+    http_port: 8000
+    environment_slug: docker
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    envs:
+      - key: MONGO_URL
+        value: ${MONGO_URL}
+        type: SECRET
+      - key: DB_NAME
+        value: tadka_cms
+      - key: CORS_ORIGINS
+        value: ${frontend.PUBLIC_URL}
+      - key: JWT_SECRET_KEY
+        value: ${JWT_SECRET_KEY}
+        type: SECRET
+      - key: FRONTEND_URL
+        value: ${frontend.PUBLIC_URL}
+      - key: AWS_ACCESS_KEY_ID
+        value: ${AWS_ACCESS_KEY_ID}
+        type: SECRET
+      - key: AWS_SECRET_ACCESS_KEY
+        value: ${AWS_SECRET_ACCESS_KEY}
+        type: SECRET
+      - key: AWS_REGION
+        value: ${AWS_REGION}
+      - key: AWS_S3_BUCKET_NAME
+        value: ${AWS_S3_BUCKET_NAME}
+      - key: S3_ROOT_FOLDER
+        value: ${S3_ROOT_FOLDER}
+      - key: S3_MAX_FILE_SIZE
+        value: "52428800"
+    routes:
+      - path: /api
+
+  # Frontend Service - React Static Site
+  - name: frontend
+    type: static_site
+    github:
+      repo: YOUR_GITHUB_USERNAME/tadka-cms
+      branch: main
+      deploy_on_push: true
+    source_dir: /frontend
+    build_command: |
+      yarn install
+      yarn build
+      cp build/index.html build/404.html
+    output_dir: build
+    envs:
+      - key: REACT_APP_BACKEND_URL
+        value: ${backend.PUBLIC_URL}
+    routes:
+      - path: /
+
+# Database configuration (use managed MongoDB)
+databases:
+  - name: tadka-mongodb
+    engine: MONGODB
+    production: true
+    version: "7"

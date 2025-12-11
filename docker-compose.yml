@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # Frontend Service - React application
+  frontend:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL:-http://localhost:8000}
+    command: sh -c "yarn install && yarn start"
+    depends_on:
+      - backend
+    networks:
+      - tadka-network
+
+  # Backend Service - FastAPI application
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URL=${MONGO_URL}
+      - DB_NAME=tadka_cms
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+      - S3_ROOT_FOLDER=${S3_ROOT_FOLDER}
+      - S3_MAX_FILE_SIZE=${S3_MAX_FILE_SIZE:-52428800}
+    networks:
+      - tadka-network
+    depends_on:
+      - mongo
+
+  # MongoDB Service (for local development only)
+  mongo:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - tadka-network
+
+volumes:
+  mongo-data:
+
+networks:
+  tadka-network:
+    name: tadka-network
