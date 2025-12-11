@@ -5,24 +5,11 @@ import { useLanguage } from '../contexts/LanguageContext';
 import mockData from '../data/comprehensiveMockData';
 import useTabState from '../hooks/useTabState';
 
-const Sports = ({ reviews, onArticleClick }) => {
+const Sports = ({ reviews, healthFoodData = {}, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
   const [movieReviews, setMovieReviews] = useState([]);
   const [activeTab, setActiveTab] = useTabState('sports', 'health');
-
-  // Sample articles data
-  const sampleHealthArticles = [
-    { id: 901, title: "Revolutionary Fitness Program Shows Amazing Weight Loss Results" },
-    { id: 902, title: "Mental Health Awareness Campaign Reaches Million People Globally" },
-    { id: 903, title: "Healthy Lifestyle Changes Reduce Disease Risk by 40 Percent" }
-  ];
-
-  const sampleFoodArticles = [
-    { id: 904, title: "Nutritious Superfood Recipe Collection Promotes Healthy Eating" },
-    { id: 905, title: "Local Organic Farm Movement Creates Sustainable Food Options" },
-    { id: 906, title: "Celebrity Chef's Healthy Cooking Show Inspires Home Chefs" }
-  ];
 
   useEffect(() => {
     if (reviews) {
@@ -33,12 +20,12 @@ const Sports = ({ reviews, onArticleClick }) => {
     }
   }, [reviews]);
 
-  // Get articles based on active tab
+  // Get articles based on active tab from real data
   const getTabArticles = () => {
     if (activeTab === 'health') {
-      return sampleHealthArticles; // Health articles
+      return healthFoodData.health || [];
     } else {
-      return sampleFoodArticles; // Food articles
+      return healthFoodData.food || [];
     }
   };
 
