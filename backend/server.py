@@ -478,22 +478,70 @@ async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_d
     this_week_ott = crud.get_this_week_ott_releases(db, limit=50)
     upcoming_ott = crud.get_upcoming_ott_releases(db, limit=50)
     
-    # Get Bollywood OTT release articles instead of regular articles
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="ott-releases-bollywood", limit=4)
+    def parse_languages(languages_str):
+        """Parse languages field which can be JSON string or plain string"""
+        if not languages_str:
+            return []
+        try:
+            return json.loads(languages_str)
+        except:
+            return [languages_str] if languages_str else []
     
-    def format_release_response(releases, is_ott=True):
+    def filter_releases_by_language(releases, target_languages, exclude_hindi=False):
+        """Filter releases by matching languages"""
+        filtered = []
+        for release in releases:
+            release_languages = parse_languages(release.get('languages', ''))
+            
+            # Check if release has any of the target languages
+            has_target_lang = any(lang in target_languages for lang in release_languages)
+            has_hindi = 'Hindi' in release_languages
+            
+            # Apply filtering logic
+            if exclude_hindi:
+                # For OTT tab: exclude Hindi-only releases
+                if has_target_lang and not (has_hindi and len(release_languages) == 1):
+                    filtered.append(release)
+            else:
+                # For Bollywood tab: include all Hindi releases
+                if has_hindi:
+                    filtered.append(release)
+        
+        return filtered
+    
+    # Combine all releases
+    all_ott_releases = this_week_ott + upcoming_ott
+    
+    # Filter for OTT Releases tab
+    if user_languages:
+        # User has selected states - show releases matching state-mapped languages (excluding Hindi-only)
+        ott_filtered = filter_releases_by_language(all_ott_releases, user_languages, exclude_hindi=True)
+    else:
+        # No states selected - show all non-Hindi releases
+        ott_filtered = [r for r in all_ott_releases if 'Hindi' not in parse_languages(r.get('languages', ''))]
+    
+    # Filter for Bollywood tab - always show all Hindi releases
+    bollywood_filtered = filter_releases_by_language(all_ott_releases, ['Hindi'], exclude_hindi=False)
+    
+    def format_release_response(releases):
         result = []
         for release in releases:
+            # Parse languages array
+            languages_list = parse_languages(release.get('languages', ''))
+            
             release_data = {
-                "id": release.id,
-                "movie_name": release.movie_name,
-                "language": release.language,
-                "release_date": release.release_date,
-                "movie_image": release.movie_image,
-                "created_at": release.created_at
+                "id": release.get('id'),
+                "movie_name": release.get('movie_name'),
+                "content_type": release.get('content_type', 'Movie'),
+                "season": release.get('season'),
+                "episodes_count": release.get('episodes_count'),
+                "languages": languages_list,
+                "release_date": release.get('release_date'),
+                "movie_image": release.get('movie_image'),
+                "youtube_url": release.get('youtube_url'),
+                "ott_platforms": release.get('ott_platforms'),
+                "created_at": release.get('created_at')
             }
-            if is_ott:
-                release_data["ott_platform"] = release.ott_platform
             result.append(release_data)
         return result
     
