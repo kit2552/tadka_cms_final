@@ -14,6 +14,7 @@ class AdSettings(BaseModel):
     homepage_banner: bool = False  # Homepage top banner (future)
     homepage_sidebar: bool = False  # Homepage sidebar (future)
     category_page_top: bool = False  # Category pages top (future)
+    homepage_sponsored_ads: bool = False  # Homepage sponsored ads section
 
 @router.get("/ad-settings")
 def get_ad_settings(db = Depends(get_db)):
@@ -27,7 +28,8 @@ def get_ad_settings(db = Depends(get_db)):
             "article_sidebar_comments": False,
             "homepage_banner": False,
             "homepage_sidebar": False,
-            "category_page_top": False
+            "category_page_top": False,
+            "homepage_sponsored_ads": False
         }
     
     return settings
