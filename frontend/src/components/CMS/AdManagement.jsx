@@ -132,7 +132,7 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
   }
 
   return (
-    <div className={`mx-auto ${showCreateAdForm ? 'p-0' : 'max-w-6xl p-4'}`}>
+    <div className={`mx-auto ${showCreateAdForm ? 'p-0' : ''}`}>
       {/* Tabs with Create Ad Button - Hide when form is open */}
       {!showCreateAdForm && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
