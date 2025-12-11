@@ -3,27 +3,27 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const Fashion = ({ hotTopicsData = {}, onArticleClick }) => {
+const Fashion = ({ hotTopicsData = {}, fashionTravelData = {}, onArticleClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses } = useTheme();
   const [activeTab, setActiveTab] = useState('fashion');
 
   // Get data from API instead of mock data
-  const hotTopicsArticles = hotTopicsData.hot_topics || [];
-  const bollywoodArticles = hotTopicsData.bollywood || [];
+  const fashionArticles = fashionTravelData.fashion || [];
+  const travelArticles = fashionTravelData.travel || [];
 
   const handleClick = (article) => {
     if (onArticleClick) {
-      onArticleClick(article, 'hot-topics');
+      onArticleClick(article, 'fashion-travel');
     }
   };
 
   // Get articles based on active tab
   const getTabArticles = () => {
     if (activeTab === 'fashion') {
-      return hotTopicsArticles; // Hot Topics articles
+      return fashionArticles;
     } else {
-      return bollywoodArticles; // Bollywood articles
+      return travelArticles;
     }
   };
 
