@@ -1917,20 +1917,6 @@ const CreateSponsoredAd = ({ onClose }) => {
                               required
                             />
                           </div>
-                          
-                          {/* Enable Comments Checkbox */}
-                          <div className="bg-white border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
-                            <label className="flex items-center space-x-3 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                name="comments_enabled"
-                                checked={formData.comments_enabled}
-                                onChange={handleInputChange}
-                                className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-                              />
-                              <span className="text-sm font-semibold text-gray-800">Enable Comments</span>
-                            </label>
-                          </div>
                         </div>
                         
                         {/* Right Column - Preview */}
