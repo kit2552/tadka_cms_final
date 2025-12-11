@@ -1258,6 +1258,9 @@ const Dashboard = () => {
       if (ottForm.season) {
         formData.append('season', ottForm.season);
       }
+      if (ottForm.episodes_count) {
+        formData.append('episodes_count', ottForm.episodes_count);
+      }
       formData.append('youtube_url', ottForm.youtube_url || '');
       formData.append('ott_platforms', JSON.stringify(ottForm.ott_platforms));
       formData.append('states', JSON.stringify(ottForm.states));
