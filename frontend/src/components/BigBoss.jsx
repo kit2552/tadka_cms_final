@@ -47,7 +47,7 @@ const BigBoss = ({ bigBossData = {} }) => {
   };
 
   return (
-    <div className="max-w-5xl-plus mx-auto px-8 pt-2 pb-2 -mb-[8px]">
+    <div className="max-w-5xl-plus mx-auto px-8 pt-2 pb-2">
       {/* Header with tabs matching TopStories style */}
       <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-3`}>
         <button
