@@ -117,6 +117,18 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
       ),
       layout: 'full-width'
     },
+    'big-boss': {
+      id: 'big-boss',
+      name: 'Big Boss',
+      component: (
+        <div className="pt-2 pb-2">
+          <BigBoss 
+            bigBossData={data.bigBossData} 
+          />
+        </div>
+      ),
+      layout: 'full-width'
+    },
     'viral-shorts': {
       id: 'viral-shorts',
       name: 'Viral Shorts',
