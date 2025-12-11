@@ -64,9 +64,8 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build && cp build/index.html build/404.html",
-    "test": "craco test",
-    "heroku-postbuild": "yarn build"
+    "build": "craco build",
+    "test": "craco test"
   },
   "proxy": "http://localhost:8001",
   "browserslist": {

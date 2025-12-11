@@ -1,14 +1,13 @@
 name: tadka-cms-app
 
 services:
-  # Backend Service - FastAPI
+  # Backend - Docker Web Service
   - name: tadka-backend
     source_dir: /backend
     dockerfile_path: backend/Dockerfile
     github:
       repo: YOUR_GITHUB_USERNAME/tadka-cms
       branch: main
-      deploy_on_push: true
     http_port: 8000
     environment_slug: docker
     instance_count: 1
@@ -16,22 +15,18 @@ services:
     envs:
       - key: MONGO_URL
         value: ${MONGO_URL}
-        type: SECRET
       - key: DB_NAME
         value: tadka_cms
       - key: CORS_ORIGINS
-        value: ${tadka-frontend.PUBLIC_URL}
+        value: ${CORS_ORIGINS}
       - key: JWT_SECRET_KEY
         value: ${JWT_SECRET_KEY}
-        type: SECRET
       - key: FRONTEND_URL
-        value: ${tadka-frontend.PUBLIC_URL}
+        value: ${FRONTEND_URL}
       - key: AWS_ACCESS_KEY_ID
         value: ${AWS_ACCESS_KEY_ID}
-        type: SECRET
       - key: AWS_SECRET_ACCESS_KEY
         value: ${AWS_SECRET_ACCESS_KEY}
-        type: SECRET
       - key: AWS_REGION
         value: ${AWS_REGION}
       - key: AWS_S3_BUCKET_NAME
@@ -40,31 +35,22 @@ services:
         value: ${S3_ROOT_FOLDER}
       - key: S3_MAX_FILE_SIZE
         value: "52428800"
-    routes:
-      - path: /api
 
-  # Frontend Service - React Static Site
+# Frontend - Static Site
+static_sites:
   - name: tadka-frontend
-    type: static_site
+    source_dir: /frontend
     github:
       repo: YOUR_GITHUB_USERNAME/tadka-cms
       branch: main
-      deploy_on_push: true
-    source_dir: /frontend
+    build_command: yarn build
     output_dir: build
+    index_document: index.html
+    error_document: index.html
     envs:
       - key: REACT_APP_BACKEND_URL
+        scope: BUILD_TIME
         value: ${tadka-backend.PUBLIC_URL}
       - key: NODE_ENV
+        scope: BUILD_TIME
         value: production
-      - key: NODE_OPTIONS
-        value: --max_old_space_size=4096
-    routes:
-      - path: /
-
-# Database configuration (use managed MongoDB)
-databases:
-  - name: tadka-mongodb
-    engine: MONGODB
-    production: true
-    version: "7"

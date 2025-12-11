@@ -47,15 +47,57 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 # Create the main app without any rate limiting
 app = FastAPI(title="Blog CMS API", version="1.0.0")
 
+# Detailed request logging middleware
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    # Get request details
+    client_host = request.client.host if request.client else "unknown"
+    client_port = request.client.port if request.client else "unknown"
+    
+    logger.info(f"""
+    ========================================
+    🔍 INCOMING REQUEST:
+    - Method: {request.method}
+    - Full URL: {request.url}
+    - Scheme: {request.url.scheme}
+    - Host: {request.url.hostname}
+    - Port: {request.url.port}
+    - Path: {request.url.path}
+    - Query: {request.url.query}
+    - Client: {client_host}:{client_port}
+    - Headers: {dict(request.headers)}
+    ========================================
+    """)
+    
+    # Process the request
+    response = await call_next(request)
+    
+    # Log response
+    logger.info(f"""
+    📤 RESPONSE:
+    - Path: {request.url.path}
+    - Status: {response.status_code}
+    ========================================
+    """)
+    
+    return response
+
 # Serve uploaded files statically
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
-# Health check endpoint
+# Health check endpoint with detailed logging
 @api_router.get("/")
 async def root(request: Request):
+    logger.info(f"""
+    ✅ HEALTH CHECK ENDPOINT HIT:
+    - Full URL: {request.url}
+    - Base URL: {request.base_url}
+    - Path: {request.url.path}
+    - Method: {request.method}
+    """)
     return {"message": "Blog CMS API is running", "status": "healthy"}
 
 # Seed database endpoint (for development)
@@ -1962,7 +2004,14 @@ def initialize_ott_platforms():
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("Blog CMS API starting up...")
+    logger.info("""
+    ========================================
+    🚀 BLOG CMS API STARTING UP
+    - Port: 8000
+    - Host: 0.0.0.0
+    - Health Check: /api or /api/
+    ========================================
+    """)
     # Create default admin user
     await create_default_admin()
     
@@ -1983,6 +2032,15 @@ async def startup_event():
     # Initialize the article scheduler
     article_scheduler.initialize_scheduler()
     article_scheduler.start_scheduler()
+    
+    logger.info("""
+    ========================================
+    ✅ STARTUP COMPLETE - SERVER READY
+    - Listening on: http://0.0.0.0:8000
+    - Health endpoint: http://0.0.0.0:8000/api
+    - All systems initialized
+    ========================================
+    """)
 
 @app.on_event("shutdown")
 async def shutdown_event():
