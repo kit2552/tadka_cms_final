@@ -539,6 +539,7 @@ async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_d
                 "content_type": release.get('content_type', 'Movie'),
                 "season": release.get('season'),
                 "episodes_count": release.get('episodes_count'),
+                "original_language": release.get('original_language'),
                 "languages": languages_list,
                 "release_date": release.get('release_date'),
                 "movie_image": release.get('movie_image'),
