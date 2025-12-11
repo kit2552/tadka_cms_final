@@ -56,13 +56,13 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
         'Ladakh': 'ld'
       };
       
-      const userStateCode = userStateNames.length > 0 ? stateNameToCode[userStateNames[0]] : null;
+      const userStateCodes = userStateNames.map(name => stateNameToCode[name]).filter(code => code);
       
       console.log('MovieSchedules - User state names:', userStateNames);
-      console.log('MovieSchedules - User state code:', userStateCode);
+      console.log('MovieSchedules - User state codes:', userStateCodes);
       
-      const url = userStateCode 
-        ? `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood?user_state=${userStateCode}`
+      const url = userStateCodes.length > 0
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood?user_states=${userStateCodes.join(',')}`
         : `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood`;
       
       console.log('MovieSchedules - Fetching URL:', url);
