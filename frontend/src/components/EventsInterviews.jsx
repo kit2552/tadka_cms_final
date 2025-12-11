@@ -102,10 +102,10 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
                 style={{ minWidth: '200px' }}
                 onClick={() => handleVideoClick(item)}
               >
-                <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
                   <div className="relative">
                     <img
-                      src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
+                      src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || item.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
                       alt={item.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       style={{ width: '200px', height: '120px' }}
@@ -113,6 +113,11 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
                         e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
                       }}
                     />
+                  </div>
+                  <div className="p-3 text-left">
+                    <h3 style={{fontSize: '13px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300 line-clamp-2">
+                      {item.title}
+                    </h3>
                   </div>
                 </div>
               </div>
