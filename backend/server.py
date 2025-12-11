@@ -435,14 +435,14 @@ async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
         "bollywood": bollywood_articles
     }
 
-@api_router.get("/articles/sections/events-interviews", response_model=dict)
+@api_router.get("/articles/sections/events-interviews")
 async def get_events_interviews_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Events & Interviews section with Events and Bollywood tabs"""
     events_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews", limit=limit)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews-bollywood", limit=limit)
     
     return {
-        "events": events_articles,
+        "events_interviews": events_articles,
         "bollywood": bollywood_articles
     }
 
