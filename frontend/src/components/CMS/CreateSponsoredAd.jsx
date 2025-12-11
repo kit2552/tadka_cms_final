@@ -1569,7 +1569,6 @@ const CreateSponsoredAd = ({ onClose }) => {
                       className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     >
-                      <option value="movie_review">Movie Review</option>
                       <option value="photo">Photo Gallery</option>
                       <option value="post">Post</option>
                       <option value="video">Video</option>
