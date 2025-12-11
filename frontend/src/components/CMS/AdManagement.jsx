@@ -176,20 +176,20 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
             </div>
           </div>
 
-      {/* Notification */}
-      {notification.show && (
-        <div className={`mb-3 p-3 rounded-lg ${
-          notification.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
-        }`}>
-          {notification.message}
-        </div>
-      )}
+          {/* Notification */}
+          {notification.show && (
+            <div className={`m-4 p-3 rounded-lg ${
+              notification.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
+            }`}>
+              {notification.message}
+            </div>
+          )}
 
-      {/* Google Ads Tab Content */}
-      {activeAdTab === 'google-ads' && (
-        <>
-          {/* Ad Placements Grid */}
-          <div className="space-y-2 mb-4">
+          {/* Google Ads Tab Content */}
+          {activeAdTab === 'google-ads' && (
+            <div className="p-4">
+              {/* Ad Placements Grid */}
+              <div className="space-y-2 mb-4">
         {adPlacements.map((placement) => (
           <div
             key={placement.key}
@@ -249,29 +249,29 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
         ))}
           </div>
 
-          {/* Info Box */}
-          <div className="mt-3">
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded text-left">
-              <div className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div>
-                  <p className="text-xs text-blue-800">
-                    Enable or disable Google Ad placements across your website. Changes are saved automatically.
-                  </p>
+              {/* Info Box */}
+              <div className="mt-3">
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded text-left">
+                  <div className="flex items-start gap-2">
+                    <svg className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <p className="text-xs text-blue-800">
+                        Enable or disable Google Ad placements across your website. Changes are saved automatically.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
+          )}
 
-      {/* Sponsored Ads Tab Content */}
-      {activeAdTab === 'sponsored-ads' && !showCreateAdForm && (
-        <>
-          {/* Sponsored Ads Placement */}
-          <div className="space-y-2 mb-4">
+          {/* Sponsored Ads Tab Content */}
+          {activeAdTab === 'sponsored-ads' && !showCreateAdForm && (
+            <div className="p-4">
+              {/* Sponsored Ads Placement */}
+              <div className="space-y-2 mb-4">
             <div
               className={`bg-white rounded border ${
                 adSettings.homepage_sponsored_ads ? 'border-green-500 bg-green-50' : 'border-gray-200'
@@ -318,22 +318,9 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
             </div>
           </div>
 
-          {/* Info Box */}
-          <div className="mt-3">
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded text-left">
-              <div className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div>
-                  <p className="text-xs text-blue-800">
-                    Enable to show the Sponsored Ads section on the homepage. When disabled, the section will be hidden from visitors. Changes are saved automatically.
-                  </p>
-                </div>
-              </div>
             </div>
-          </div>
-        </>
+          )}
+        </div>
       )}
 
       {/* Create Sponsored Ad - Renders inline */}
