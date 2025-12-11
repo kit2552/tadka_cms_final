@@ -268,7 +268,7 @@ const AdManagement = () => {
       )}
 
       {/* Sponsored Ads Tab Content */}
-      {activeAdTab === 'sponsored-ads' && (
+      {activeAdTab === 'sponsored-ads' && !showCreateAdModal && (
         <>
           {/* Sponsored Ads Placement */}
           <div className="space-y-2 mb-4">
