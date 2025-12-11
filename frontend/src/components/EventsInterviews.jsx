@@ -99,7 +99,7 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
               <div
                 key={item.id}
                 className="flex-shrink-0 cursor-pointer"
-                style={{ minWidth: '240px' }}
+                style={{ width: '240px' }}
                 onClick={() => handleVideoClick(item)}
               >
                 <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
@@ -114,8 +114,8 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
                       }}
                     />
                   </div>
-                  <div className="p-3 text-left">
-                    <h3 style={{fontSize: '13px', fontWeight: '600', lineHeight: '1.4'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
+                  <div className="p-3 text-left" style={{ width: '240px' }}>
+                    <h3 style={{fontSize: '13px', fontWeight: '600', lineHeight: '1.4', wordWrap: 'break-word'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
                       {item.title}
                     </h3>
                   </div>
