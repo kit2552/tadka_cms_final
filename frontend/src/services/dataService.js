@@ -329,6 +329,21 @@ export const dataService = {
     }
   },
 
+  async getAiStockMarketData() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/articles/sections/ai-stock?limit=20`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch AI & Stock Market data');
+      }
+      const data = await response.json();
+      console.log('AI & Stock Market data:', data); // Debug log
+      return data;
+    } catch (error) {
+      console.error('Error fetching AI & Stock Market data:', error);
+      return { ai: [], stock_market: [], fashion: [], travel: [] };
+    }
+  },
+
   // Fetch viral shorts data from backend - viral shorts and bollywood with state filtering for viral shorts
   async getViralShortsData(userStates = null) {
     try {
