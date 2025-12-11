@@ -457,6 +457,17 @@ async def get_health_food_articles(limit: int = 4, db = Depends(get_db)):
         "food": food_articles
     }
 
+@api_router.get("/articles/sections/fashion-travel")
+async def get_fashion_travel_articles(limit: int = 4, db = Depends(get_db)):
+    """Get articles for Fashion & Travel section with Fashion and Travel tabs"""
+    fashion_articles = crud.get_articles_by_category_slug(db, category_slug="fashion", limit=limit)
+    travel_articles = crud.get_articles_by_category_slug(db, category_slug="travel", limit=limit)
+    
+    return {
+        "fashion": fashion_articles,
+        "travel": travel_articles
+    }
+
 @api_router.get("/articles/sections/tv-shows")
 async def get_tv_shows_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for TV Shows section with TV Spotlight and National tabs"""
