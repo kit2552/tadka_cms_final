@@ -446,7 +446,7 @@ async def get_events_interviews_articles(limit: int = 4, db = Depends(get_db)):
         "bollywood": bollywood_articles
     }
 
-@api_router.get("/articles/sections/big-boss", response_model=dict)
+@api_router.get("/articles/sections/big-boss")
 async def get_big_boss_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for Big Boss section with Big Boss and Bollywood tabs"""
     big_boss_articles = crud.get_articles_by_category_slug(db, category_slug="big-boss", limit=limit)
