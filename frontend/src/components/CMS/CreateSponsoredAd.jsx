@@ -3766,4 +3766,4 @@ const CreateSponsoredAd = ({ onClose }) => {
   );
 };
 
-export default CreateArticle;
+export default CreateSponsoredAd;
