@@ -135,13 +135,13 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
     <div className={`mx-auto ${showCreateAdForm ? 'p-0' : 'max-w-6xl p-4'}`}>
       {/* Tabs with Create Ad Button - Hide when form is open */}
       {!showCreateAdForm && (
-        <div className="mb-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="border-b border-gray-200">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between px-4">
               <nav className="-mb-px flex space-x-8">
                 <button
                   onClick={() => setActiveAdTab('google-ads')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-3 px-1 border-b-2 font-medium text-sm ${
                     activeAdTab === 'google-ads'
                       ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -151,7 +151,7 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
                 </button>
                 <button
                   onClick={() => setActiveAdTab('sponsored-ads')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-3 px-1 border-b-2 font-medium text-sm ${
                     activeAdTab === 'sponsored-ads'
                       ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -165,7 +165,7 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
               {activeAdTab === 'sponsored-ads' && (
                 <button
                   onClick={() => setShowCreateAdForm(true)}
-                  className="flex items-center gap-2 px-4 py-1.5 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors"
+                  className="flex items-center gap-2 px-4 py-1.5 bg-black text-white text-sm font-medium rounded hover:bg-gray-800 transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -175,8 +175,6 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
               )}
             </div>
           </div>
-        </div>
-      )}
 
       {/* Notification */}
       {notification.show && (
