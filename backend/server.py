@@ -468,17 +468,6 @@ async def get_fashion_travel_articles(limit: int = 4, db = Depends(get_db)):
         "travel": travel_articles
     }
 
-@api_router.get("/articles/sections/ai-stock")
-async def get_ai_stock_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for AI & Stock Market section"""
-    ai_articles = crud.get_articles_by_category_slug(db, category_slug="ai", limit=limit)
-    stock_articles = crud.get_articles_by_category_slug(db, category_slug="stock-market", limit=limit)
-    
-    return {
-        "ai": ai_articles,
-        "stock_market": stock_articles
-    }
-
 @api_router.get("/articles/sections/tv-shows")
 async def get_tv_shows_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for TV Shows section with TV Spotlight and National tabs"""
