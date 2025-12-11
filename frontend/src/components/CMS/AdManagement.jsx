@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const AdManagement = () => {
   const [activeAdTab, setActiveAdTab] = useState('google-ads');
+  const [showCreateAdModal, setShowCreateAdModal] = useState(false);
   const [adSettings, setAdSettings] = useState({
     article_content_mid: false,
     article_sidebar_comments: false,
@@ -119,31 +120,46 @@ const AdManagement = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-4">
-      {/* Tabs */}
+      {/* Tabs with Create Ad Button */}
       <div className="mb-4">
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            <button
-              onClick={() => setActiveAdTab('google-ads')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeAdTab === 'google-ads'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Google Ads
-            </button>
-            <button
-              onClick={() => setActiveAdTab('sponsored-ads')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeAdTab === 'sponsored-ads'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Sponsored Ads
-            </button>
-          </nav>
+          <div className="flex items-center justify-between">
+            <nav className="-mb-px flex space-x-8">
+              <button
+                onClick={() => setActiveAdTab('google-ads')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeAdTab === 'google-ads'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                Google Ads
+              </button>
+              <button
+                onClick={() => setActiveAdTab('sponsored-ads')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeAdTab === 'sponsored-ads'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                Sponsored Ads
+              </button>
+            </nav>
+            
+            {/* Create Ad Button - only show in Sponsored Ads tab */}
+            {activeAdTab === 'sponsored-ads' && (
+              <button
+                onClick={() => setShowCreateAdModal(true)}
+                className="flex items-center gap-2 px-4 py-1.5 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Create Ad
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
