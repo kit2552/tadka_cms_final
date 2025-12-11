@@ -87,10 +87,15 @@ async def lifespan(app: FastAPI):
     """)
     
     try:
-        # Create default admin user
-        await create_default_admin()
+        logger.info("Step 1: Creating default admin user...")
+        try:
+            await create_default_admin()
+            logger.info("✅ Admin user ready")
+        except Exception as e:
+            logger.error(f"❌ Admin user creation failed: {e}")
+            # Don't raise - continue startup
         
-        # Initialize S3 service with stored configuration
+        logger.info("Step 2: Initializing S3 service...")
         try:
             aws_config = crud.get_aws_config(db)
             if aws_config and aws_config.get('is_enabled'):
@@ -101,12 +106,20 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.warning(f"⚠️ S3 initialization failed: {e}. Using local storage.")
         
-        # Initialize default OTT platforms
-        initialize_ott_platforms()
+        logger.info("Step 3: Initializing OTT platforms...")
+        try:
+            initialize_ott_platforms()
+            logger.info("✅ OTT platforms ready")
+        except Exception as e:
+            logger.warning(f"⚠️ OTT initialization failed: {e}")
         
-        # Initialize the article scheduler
-        article_scheduler.initialize_scheduler()
-        article_scheduler.start_scheduler()
+        logger.info("Step 4: Initializing article scheduler...")
+        try:
+            article_scheduler.initialize_scheduler()
+            article_scheduler.start_scheduler()
+            logger.info("✅ Scheduler started")
+        except Exception as e:
+            logger.warning(f"⚠️ Scheduler initialization failed: {e}")
         
         logger.info("""
         ========================================
@@ -117,10 +130,11 @@ async def lifespan(app: FastAPI):
         ========================================
         """)
     except Exception as e:
-        logger.error(f"❌ STARTUP FAILED: {e}")
+        logger.error(f"❌ FATAL STARTUP ERROR: {e}")
         import traceback
         logger.error(traceback.format_exc())
-        raise
+        # Don't raise - let the server start anyway
+        logger.warning("⚠️ Continuing startup despite errors...")
     
     yield
     
@@ -128,6 +142,7 @@ async def lifespan(app: FastAPI):
     logger.info("Blog CMS API shutting down...")
     try:
         article_scheduler.stop_scheduler()
+        logger.info("✅ Scheduler stopped")
     except Exception as e:
         logger.warning(f"⚠️ Shutdown warning: {e}")
 

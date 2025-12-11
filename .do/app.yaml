@@ -14,7 +14,7 @@ services:
     instance_size_slug: basic-xxs
     envs:
       - key: MONGO_URL
-        value: "mongodb+srv://doadmin:U3p18Bi6o542Z9uF@primepixel-mongodb-76909177.mongo.ondigitalocean.com/admin?retryWrites=true&w=majority"
+        value: ${MONGO_URL}
       - key: DB_NAME
         value: tadka_cms
       - key: CORS_ORIGINS
