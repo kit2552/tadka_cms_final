@@ -338,6 +338,7 @@ const Dashboard = () => {
     content_type: 'Movie',
     season: '',
     episodes_count: '',
+    original_language: '',
     youtube_url: '',
     ott_platforms: [],
     states: [],
