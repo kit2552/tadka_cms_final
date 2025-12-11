@@ -115,7 +115,7 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
                     />
                   </div>
                   <div className="p-3 text-left">
-                    <h3 style={{fontSize: '13px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300 line-clamp-2">
+                    <h3 style={{fontSize: '13px', fontWeight: '600', lineHeight: '1.4'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
                       {item.title}
                     </h3>
                   </div>
