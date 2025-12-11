@@ -1388,6 +1388,7 @@ async def create_ott_release(
     release_date: date = Form(...),
     created_by: str = Form(...),
     content_type: str = Form('Movie'),
+    season: Optional[int] = Form(None),
     youtube_url: str = Form(''),
     ott_platforms: str = Form('[]'),
     states: str = Form('[]'),
@@ -1416,6 +1417,7 @@ async def create_ott_release(
         release_data = schemas.OTTReleaseCreate(
             movie_name=movie_name,
             content_type=content_type,
+            season=season,
             youtube_url=youtube_url,
             ott_platforms=ott_platforms,
             states=states,
