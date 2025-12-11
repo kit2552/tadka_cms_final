@@ -56,7 +56,9 @@ const OTTReleases = ({ articles, onArticleClick }) => {
     const comingSoon = currentTabData.coming_soon || [];
     
     // Combine and limit to 4 items
-    return [...thisWeek, ...comingSoon].slice(0, 4);
+    const combined = [...thisWeek, ...comingSoon].slice(0, 4);
+    console.log(`${activeTab} tab releases:`, combined.map(r => r.movie_name)); // Debug log
+    return combined;
   };
 
   const currentReleases = getCurrentTabReleases();
