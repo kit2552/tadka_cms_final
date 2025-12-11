@@ -47,7 +47,7 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
   };
 
   return (
-    <div className="bg-white pt-2 pb-2 -mt-[9px] -mb-[9px]">
+    <div className="bg-white pt-2 pb-2">
       {/* Header Container with Normal Width */}
       <div className="max-w-5xl-plus mx-auto px-8">
         {/* Header with tabs matching TrendingVideos style */}
