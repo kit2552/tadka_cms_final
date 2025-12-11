@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter, Depends, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from typing import List, Optional
+from contextlib import asynccontextmanager
 import logging
 from pathlib import Path
 from datetime import datetime, date
@@ -44,8 +45,11 @@ ROOT_DIR = Path(__file__).parent
 UPLOAD_DIR = ROOT_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 
+# Lifespan must be defined before app creation
+# (will be moved above after we locate the create_default_admin function)
+
 # Create the main app without any rate limiting
-app = FastAPI(title="Blog CMS API", version="1.0.0")
+app = FastAPI(title="Blog CMS API", version="1.0.0", lifespan=lifespan)
 
 # Detailed request logging middleware
 @app.middleware("http")
@@ -2002,48 +2006,58 @@ def initialize_ott_platforms():
     except Exception as e:
         logger.warning(f"⚠️ OTT platforms initialization failed: {e}")
 
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
     logger.info("""
     ========================================
     🚀 BLOG CMS API STARTING UP
+    - Python Version: 3.11
     - Port: 8000
     - Host: 0.0.0.0
     - Health Check: /api or /api/
     ========================================
     """)
-    # Create default admin user
-    await create_default_admin()
     
-    # Initialize S3 service with stored configuration
     try:
-        aws_config = crud.get_aws_config(db)
-        if aws_config and aws_config.get('is_enabled'):
-            s3_service.initialize(aws_config)
-            logger.info("✅ S3 service initialized")
-        else:
-            logger.info("ℹ️ S3 not enabled, using local storage")
+        # Create default admin user
+        await create_default_admin()
+        
+        # Initialize S3 service with stored configuration
+        try:
+            aws_config = crud.get_aws_config(db)
+            if aws_config and aws_config.get('is_enabled'):
+                s3_service.initialize(aws_config)
+                logger.info("✅ S3 service initialized")
+            else:
+                logger.info("ℹ️ S3 not enabled, using local storage")
+        except Exception as e:
+            logger.warning(f"⚠️ S3 initialization failed: {e}. Using local storage.")
+        
+        # Initialize default OTT platforms
+        initialize_ott_platforms()
+        
+        # Initialize the article scheduler
+        article_scheduler.initialize_scheduler()
+        article_scheduler.start_scheduler()
+        
+        logger.info("""
+        ========================================
+        ✅ STARTUP COMPLETE - SERVER READY
+        - Listening on: http://0.0.0.0:8000
+        - Health endpoint: http://0.0.0.0:8000/api
+        - All systems initialized
+        ========================================
+        """)
     except Exception as e:
-        logger.warning(f"⚠️ S3 initialization failed: {e}. Using local storage.")
+        logger.error(f"❌ STARTUP FAILED: {e}")
+        raise
     
-    # Initialize default OTT platforms
-    initialize_ott_platforms()
+    yield
     
-    # Initialize the article scheduler
-    article_scheduler.initialize_scheduler()
-    article_scheduler.start_scheduler()
-    
-    logger.info("""
-    ========================================
-    ✅ STARTUP COMPLETE - SERVER READY
-    - Listening on: http://0.0.0.0:8000
-    - Health endpoint: http://0.0.0.0:8000/api
-    - All systems initialized
-    ========================================
-    """)
-
-@app.on_event("shutdown")
-async def shutdown_event():
+    # Shutdown
     logger.info("Blog CMS API shutting down...")
-    # Stop the article scheduler
-    article_scheduler.stop_scheduler()
+    try:
+        article_scheduler.stop_scheduler()
+    except Exception as e:
+        logger.warning(f"⚠️ Shutdown warning: {e}")
