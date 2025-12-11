@@ -589,6 +589,7 @@ export const dataService = {
         eventsInterviewsData,
         bigBossData,
         healthFoodData,
+        fashionTravelData,
         hotTopicsData,
         tadkaPicsData,
         boxOfficeData,
