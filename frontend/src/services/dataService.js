@@ -299,6 +299,21 @@ export const dataService = {
     }
   },
 
+  async getHealthFoodData() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/articles/sections/health-food?limit=20`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch health & food data');
+      }
+      const data = await response.json();
+      console.log('Health & Food data:', data); // Debug log
+      return data;
+    } catch (error) {
+      console.error('Error fetching health & food data:', error);
+      return { health: [], food: [] };
+    }
+  },
+
   // Fetch viral shorts data from backend - viral shorts and bollywood with state filtering for viral shorts
   async getViralShortsData(userStates = null) {
     try {
