@@ -1254,6 +1254,9 @@ const Dashboard = () => {
       const formData = new FormData();
       formData.append('movie_name', ottForm.movie_name);
       formData.append('content_type', ottForm.content_type);
+      if (ottForm.season) {
+        formData.append('season', ottForm.season);
+      }
       formData.append('youtube_url', ottForm.youtube_url || '');
       formData.append('ott_platforms', JSON.stringify(ottForm.ott_platforms));
       formData.append('states', JSON.stringify(ottForm.states));
