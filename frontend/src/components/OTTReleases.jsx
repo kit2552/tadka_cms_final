@@ -18,9 +18,50 @@ const OTTReleases = ({ articles, onArticleClick }) => {
 
   const fetchReleaseData = async () => {
     try {
-      // Get user's selected states from localStorage
-      const userStates = JSON.parse(localStorage.getItem('selectedStates') || '[]');
-      const statesParam = userStates.length > 0 ? `?user_states=${userStates.join(',')}` : '';
+      // Get user's selected states from localStorage (using correct key 'tadka_state')
+      const userStateNames = JSON.parse(localStorage.getItem('tadka_state') || '[]');
+      console.log('User selected state names:', userStateNames);
+      
+      // Convert state names to state codes (e.g., "Andhra Pradesh" -> "ap")
+      const stateNameToCode = {
+        'Andhra Pradesh': 'ap',
+        'Telangana': 'ts',
+        'Tamil Nadu': 'tn',
+        'Karnataka': 'ka',
+        'Kerala': 'kl',
+        'Maharashtra': 'mh',
+        'Gujarat': 'gj',
+        'Rajasthan': 'rj',
+        'Punjab': 'pb',
+        'Haryana': 'hr',
+        'Delhi': 'dl',
+        'Uttar Pradesh': 'up',
+        'Bihar': 'br',
+        'West Bengal': 'wb',
+        'Odisha': 'or',
+        'Madhya Pradesh': 'mp',
+        'Chhattisgarh': 'cg',
+        'Jharkhand': 'jh',
+        'Assam': 'as',
+        'Uttarakhand': 'uk',
+        'Himachal Pradesh': 'hp',
+        'Jammu and Kashmir': 'jk',
+        'Goa': 'ga',
+        'Manipur': 'mn',
+        'Meghalaya': 'ml',
+        'Tripura': 'tr',
+        'Mizoram': 'mz',
+        'Nagaland': 'nl',
+        'Arunachal Pradesh': 'ar',
+        'Sikkim': 'sk',
+        'Ladakh': 'ld'
+      };
+      
+      const userStateCodes = userStateNames.map(name => stateNameToCode[name]).filter(code => code);
+      console.log('User state codes:', userStateCodes);
+      
+      const statesParam = userStateCodes.length > 0 ? `?user_states=${userStateCodes.join(',')}` : '';
+      console.log('API request with states:', statesParam);
       
       // Add timestamp to prevent caching
       const cacheBuster = `${statesParam ? '&' : '?'}t=${Date.now()}`;
