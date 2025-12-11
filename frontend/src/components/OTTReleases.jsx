@@ -127,11 +127,22 @@ const OTTReleases = ({ articles, onArticleClick }) => {
                   >
                     <div className="flex items-start justify-between text-left">
                       <div className="flex items-start space-x-2 flex-1">
-                        <div className="relative flex-shrink-0 w-20 h-16 rounded overflow-hidden border border-gray-300">
-                          {release.movie_image ? (
+                        <div className="relative flex-shrink-0 w-32 h-20 rounded overflow-hidden border border-gray-300">
+                          {release.youtube_url ? (
                             <>
                               <img
-                                src={release.movie_image}
+                                src={`https://img.youtube.com/vi/${release.youtube_url.split('v=')[1]?.split('&')[0] || release.youtube_url.split('/').pop()}/mqdefault.jpg`}
+                                alt={release.movie_name || release.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                onError={(e) => {
+                                  e.target.src = `https://img.youtube.com/vi/${release.youtube_url.split('v=')[1]?.split('&')[0] || release.youtube_url.split('/').pop()}/hqdefault.jpg`;
+                                }}
+                              />
+                            </>
+                          ) : release.movie_image ? (
+                            <>
+                              <img
+                                src={release.movie_image.startsWith('http') ? release.movie_image : `${process.env.REACT_APP_BACKEND_URL}/${release.movie_image}`}
                                 alt={release.movie_name || release.title}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 onError={(e) => {
@@ -157,10 +168,18 @@ const OTTReleases = ({ articles, onArticleClick }) => {
                           <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
                             {release.movie_name || release.title}
                           </h4>
-                          {release.ott_platform && (
-                            <p className="text-xs text-gray-500 mt-1">{release.ott_platform}</p>
+                          {release.ott_platforms && (
+                            <p className="text-xs text-gray-500 mt-1">
+                              {Array.isArray(release.ott_platforms) ? release.ott_platforms.join(', ') : 
+                               typeof release.ott_platforms === 'string' && release.ott_platforms.startsWith('[') ? 
+                               JSON.parse(release.ott_platforms).join(', ') : release.ott_platforms}
+                            </p>
                           )}
-                          <p className="text-xs text-gray-500 mt-1">{release.language || 'Hindi'}</p>
+                          {release.languages && (
+                            <p className="text-xs text-blue-600 mt-1">
+                              {Array.isArray(release.languages) ? release.languages.join(', ') : release.languages}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 ml-2">
