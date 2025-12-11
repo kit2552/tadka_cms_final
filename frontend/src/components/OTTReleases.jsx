@@ -18,7 +18,11 @@ const OTTReleases = ({ articles, onArticleClick }) => {
 
   const fetchReleaseData = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/ott-bollywood`);
+      // Get user's selected states from localStorage
+      const userStates = JSON.parse(localStorage.getItem('selectedStates') || '[]');
+      const statesParam = userStates.length > 0 ? `?user_states=${userStates.join(',')}` : '';
+      
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/ott-bollywood${statesParam}`);
       if (response.ok) {
         const data = await response.json();
         setReleaseData(data);
