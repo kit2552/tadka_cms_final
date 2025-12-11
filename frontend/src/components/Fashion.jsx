@@ -12,6 +12,10 @@ const Fashion = ({ hotTopicsData = {}, fashionTravelData = {}, onArticleClick })
   const fashionArticles = fashionTravelData.fashion || [];
   const travelArticles = fashionTravelData.travel || [];
 
+  console.log('Fashion component - fashionTravelData:', fashionTravelData);
+  console.log('Fashion component - fashionArticles:', fashionArticles);
+  console.log('Fashion component - travelArticles:', travelArticles);
+
   const handleClick = (article) => {
     if (onArticleClick) {
       onArticleClick(article, 'fashion-travel');
@@ -28,6 +32,7 @@ const Fashion = ({ hotTopicsData = {}, fashionTravelData = {}, onArticleClick })
   };
 
   const currentArticles = getTabArticles();
+  console.log('Fashion component - activeTab:', activeTab, 'currentArticles:', currentArticles);
 
   const getThumbnail = (index) => {
     const thumbnails = [
