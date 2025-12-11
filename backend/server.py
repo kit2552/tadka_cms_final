@@ -380,17 +380,6 @@ async def get_ott_movie_reviews_articles(limit: int = 4, db = Depends(get_db)):
         "web_series": bollywood_articles
     }
 
-@api_router.get("/articles/sections/events-interviews", response_model=dict)
-async def get_events_interviews_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for Events & Interviews section with Events & Interviews and Events Interviews Bollywood tabs"""
-    events_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews", limit=limit)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews-bollywood", limit=limit)
-    
-    return {
-        "events_interviews": events_articles,
-        "bollywood": bollywood_articles
-    }
-
 @api_router.get("/articles/sections/new-video-songs", response_model=dict)
 async def get_new_video_songs_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for New Video Songs section with Video Songs and Bollywood tabs"""
