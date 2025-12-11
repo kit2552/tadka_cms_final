@@ -74,43 +74,32 @@ const BigBoss = ({ bigBossData = {} }) => {
         </button>
       </div>
       
-      {/* Multiple Videos Horizontal Scroll Container - Same as TrendingVideos */}
-      <div 
-        className="relative overflow-x-auto"
-        ref={scrollContainerRef}
-      >
-        <div className="flex space-x-3 pb-2 scrollbar-hide">
-          {getCurrentData().map((item, index) => (
-            <div
-              key={item.id}
-              className="flex-shrink-0 cursor-pointer"
-              style={{ minWidth: '200px' }}
-              onClick={() => handleVideoClick(item)}
-            >
-              <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                <div className="relative">
-                  <img
-                    src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    style={{ width: '200px', height: '120px' }}
-                    onError={(e) => {
-                      e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
-                    }}
-                  />
-                </div>
-              </div>
+      {/* Grid Layout - Same as TopStories */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {getCurrentData().map((item, index) => (
+          <div
+            key={item.id}
+            className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer"
+            onClick={() => handleVideoClick(item)}
+          >
+            <div className="relative">
+              <img
+                src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || item.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
+                alt={item.title}
+                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                onError={(e) => {
+                  e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+                }}
+              />
             </div>
-          ))}
-        </div>
+            <div className="p-3 text-left">
+              <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
+                {item.title}
+              </h2>
+            </div>
+          </div>
+        ))}
       </div>
-      
-      {/* Custom Scrollbar Styles */}
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
 
     </div>
   );
