@@ -70,7 +70,7 @@ const BigBoss = ({ bigBossData = {} }) => {
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.bollywood_big_boss', 'Bollywood')}
+          {t('sections.hindi_big_boss', 'Hindi Big Boss')}
         </button>
       </div>
       
