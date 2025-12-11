@@ -2737,6 +2737,7 @@ const Dashboard = () => {
       movie_name: '',
       release_date: '',
       content_type: 'Movie',
+      season: '',
       youtube_url: '',
       ott_platforms: [],
       states: [],
