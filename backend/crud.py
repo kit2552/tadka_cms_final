@@ -911,7 +911,7 @@ def update_ott_release(db, release_id: int, release_data):
     update_doc = {"updated_at": datetime.utcnow()}
     
     # Add all provided fields to update document
-    for field in ["movie_name", "content_type", "season", "release_date", "movie_image", "youtube_url", "ott_platforms",
+    for field in ["movie_name", "content_type", "season", "episodes_count", "release_date", "movie_image", "youtube_url", "ott_platforms",
                   "states", "languages", "genres", "director", "producer", "banner",
                   "music_director", "dop", "editor", "cast", "runtime", "censor_rating"]:
         value = data.get(field)
