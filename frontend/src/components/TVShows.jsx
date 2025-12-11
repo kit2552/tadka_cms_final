@@ -105,7 +105,7 @@ const TVShows = ({ articles, onArticleClick }) => {
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.bollywood_tv', 'National')}
+          {t('sections.bollywood_tv', 'Hindi')}
         </button>
       </div>
       
