@@ -119,7 +119,7 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
+    <div className={`mx-auto ${showCreateAdForm ? 'p-0' : 'max-w-6xl p-4'}`}>
       {/* Tabs with Create Ad Button - Hide when form is open */}
       {!showCreateAdForm && (
         <div className="mb-4">
