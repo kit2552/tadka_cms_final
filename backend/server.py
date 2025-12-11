@@ -459,10 +459,24 @@ async def get_tv_shows_articles(limit: int = 4, db = Depends(get_db)):
 
 # Frontend endpoint for OTT releases with Bollywood
 @api_router.get("/releases/ott-bollywood")
-async def get_ott_bollywood_releases(db = Depends(get_db)):
-    """Get OTT and Bollywood OTT releases for homepage display"""
-    this_week_ott = crud.get_this_week_ott_releases(db, limit=4)
-    upcoming_ott = crud.get_upcoming_ott_releases(db, limit=4)
+async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_db)):
+    """Get OTT and Bollywood OTT releases for homepage display
+    
+    Args:
+        user_states: Comma-separated list of state codes (e.g., 'ap,ts')
+    """
+    from state_language_mapping import get_languages_for_states
+    import json
+    
+    # Get state-language mapping
+    user_languages = []
+    if user_states:
+        state_list = [s.strip() for s in user_states.split(',')]
+        user_languages = get_languages_for_states(state_list)
+    
+    # Get all OTT releases
+    this_week_ott = crud.get_this_week_ott_releases(db, limit=50)
+    upcoming_ott = crud.get_upcoming_ott_releases(db, limit=50)
     
     # Get Bollywood OTT release articles instead of regular articles
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="ott-releases-bollywood", limit=4)
