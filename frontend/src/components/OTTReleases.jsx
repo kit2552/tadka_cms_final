@@ -233,12 +233,25 @@ const OTTReleases = ({ articles, onArticleClick }) => {
                             <p className="text-xs text-blue-600 mt-1">
                               {(() => {
                                 const langs = Array.isArray(release.languages) ? release.languages : [release.languages];
+                                const originalLang = release.original_language;
+                                
                                 // In Bollywood tab, only show "Hindi" even if release has multiple languages
                                 if (activeTab === 'bollywood') {
                                   return 'Hindi';
                                 }
-                                // In OTT tab, show all languages
-                                return langs.join(', ');
+                                
+                                // In OTT tab, show languages with (Original) and (Dubbed) labels
+                                if (!originalLang) {
+                                  return langs.join(', ');
+                                }
+                                
+                                return langs.map(lang => {
+                                  if (lang === originalLang) {
+                                    return `${lang} (Original)`;
+                                  } else {
+                                    return `${lang} (Dubbed)`;
+                                  }
+                                }).join(', ');
                               })()}
                             </p>
                           )}
