@@ -18,9 +18,9 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
 
   const fetchReleaseData = async () => {
     try {
-      // Get user's selected state from localStorage
-      const userStates = JSON.parse(localStorage.getItem('selectedStates') || '[]');
-      const userState = userStates.length > 0 ? userStates[0] : null;
+      // Get user's selected states from localStorage (using correct key 'tadka_state')
+      const userStateNames = JSON.parse(localStorage.getItem('tadka_state') || '[]');
+      const userState = userStateNames.length > 0 ? userStateNames[0] : null;
       
       const url = userState 
         ? `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood?user_state=${userState}`
