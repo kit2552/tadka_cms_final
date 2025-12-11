@@ -6,6 +6,7 @@ import TVShows from '../components/TVShows';
 import OTTReleases from '../components/OTTReleases';
 import OTTMovieReviews from '../components/OTTMovieReviews';
 import EventsInterviews from '../components/EventsInterviews';
+import BigBoss from '../components/BigBoss';
 import TrendingVideos from '../components/TrendingVideos';
 import Politics from '../components/Politics';
 import Movies from '../components/Movies';
