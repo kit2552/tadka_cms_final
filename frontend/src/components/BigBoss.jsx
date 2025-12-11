@@ -73,45 +73,44 @@ const BigBoss = ({ bigBossData = {} }) => {
           {t('sections.bollywood_big_boss', 'Bollywood')}
         </button>
       </div>
-        
-        {/* Multiple Videos Horizontal Scroll Container - Same as TrendingVideos */}
-        <div 
-          className="relative overflow-x-auto"
-          ref={scrollContainerRef}
-        >
-          <div className="flex space-x-3 pb-2 scrollbar-hide">
-            {getCurrentData().map((item, index) => (
-              <div
-                key={item.id}
-                className="flex-shrink-0 cursor-pointer"
-                style={{ minWidth: '200px' }}
-                onClick={() => handleVideoClick(item)}
-              >
-                <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                  <div className="relative">
-                    <img
-                      src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      style={{ width: '200px', height: '120px' }}
-                      onError={(e) => {
-                        e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
-                      }}
-                    />
-                  </div>
+      
+      {/* Multiple Videos Horizontal Scroll Container - Same as TrendingVideos */}
+      <div 
+        className="relative overflow-x-auto"
+        ref={scrollContainerRef}
+      >
+        <div className="flex space-x-3 pb-2 scrollbar-hide">
+          {getCurrentData().map((item, index) => (
+            <div
+              key={item.id}
+              className="flex-shrink-0 cursor-pointer"
+              style={{ minWidth: '200px' }}
+              onClick={() => handleVideoClick(item)}
+            >
+              <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                <div className="relative">
+                  <img
+                    src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    style={{ width: '200px', height: '120px' }}
+                    onError={(e) => {
+                      e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+                    }}
+                  />
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-        
-        {/* Custom Scrollbar Styles */}
-        <style>{`
-          .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
       </div>
+      
+      {/* Custom Scrollbar Styles */}
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
 
     </div>
   );
