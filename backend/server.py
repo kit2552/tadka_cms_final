@@ -209,7 +209,7 @@ async def get_hot_topics_articles(limit: int = 4, states: str = None, db = Depen
 
 
 
-@api_router.get("/articles/sections/ai-stock", response_model=dict)
+@api_router.get("/articles/sections/ai-stock")
 async def get_ai_stock_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for AI & Stock Market section"""
     ai_articles = crud.get_articles_by_category_slug(db, category_slug="ai", limit=limit)
