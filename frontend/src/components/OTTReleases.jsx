@@ -177,7 +177,15 @@ const OTTReleases = ({ articles, onArticleClick }) => {
                           )}
                           {release.languages && (
                             <p className="text-xs text-blue-600 mt-1">
-                              {Array.isArray(release.languages) ? release.languages.join(', ') : release.languages}
+                              {(() => {
+                                const langs = Array.isArray(release.languages) ? release.languages : [release.languages];
+                                // In Bollywood tab, only show "Hindi" even if release has multiple languages
+                                if (activeTab === 'bollywood') {
+                                  return 'Hindi';
+                                }
+                                // In OTT tab, show all languages
+                                return langs.join(', ');
+                              })()}
                             </p>
                           )}
                         </div>
