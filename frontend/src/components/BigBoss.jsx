@@ -59,7 +59,7 @@ const BigBoss = ({ bigBossData = {} }) => {
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.big_boss', 'Big Boss')}
+          {t('sections.tv_reality_shows', 'TV Reality Shows')}
         </button>
         <button
           onClick={() => setActiveTab('bollywood')}
@@ -70,7 +70,7 @@ const BigBoss = ({ bigBossData = {} }) => {
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.hindi_big_boss', 'Hindi Big Boss')}
+          {t('sections.hindi', 'Hindi')}
         </button>
       </div>
       
