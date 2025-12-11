@@ -7,8 +7,7 @@
     "yarn": ">=1.22.0"
   },
   "resolutions": {
-    "schema-utils": "3.1.1",
-    "babel-loader": "8.2.5"
+    "schema-utils": "3.3.0"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
