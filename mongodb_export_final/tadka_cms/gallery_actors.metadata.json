@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"b0b3f04b61f44420a1e862869406ced1","collectionName":"gallery_actors","type":"collection"}
