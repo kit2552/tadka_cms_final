@@ -34,6 +34,31 @@ const Fashion = ({ hotTopicsData = {}, fashionTravelData = {}, onArticleClick })
   const currentArticles = getTabArticles();
   console.log('Fashion component - activeTab:', activeTab, 'currentArticles:', currentArticles);
 
+  // Extract YouTube video ID and generate thumbnail
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    try {
+      const url = new URL(youtubeUrl);
+      let videoId = null;
+      
+      // Handle different YouTube URL formats
+      if (url.hostname.includes('youtube.com')) {
+        videoId = url.searchParams.get('v');
+      } else if (url.hostname.includes('youtu.be')) {
+        videoId = url.pathname.slice(1);
+      }
+      
+      if (videoId) {
+        return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+      }
+    } catch (error) {
+      console.error('Error parsing YouTube URL:', error);
+    }
+    
+    return null;
+  };
+
   const getThumbnail = (index) => {
     const thumbnails = [
       'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=80&h=64&fit=crop',
@@ -46,6 +71,18 @@ const Fashion = ({ hotTopicsData = {}, fashionTravelData = {}, onArticleClick })
       'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=80&h=64&fit=crop'
     ];
     return thumbnails[index % thumbnails.length];
+  };
+
+  // Get image URL based on content type
+  const getArticleImage = (article, index) => {
+    // If it's a video post, use YouTube thumbnail
+    if (article.content_type === 'video_post' && article.youtube_url) {
+      const thumbnail = getYouTubeThumbnail(article.youtube_url);
+      if (thumbnail) return thumbnail;
+    }
+    
+    // Otherwise use the article image or fallback
+    return article.image || article.image_url || article.main_image_url || getThumbnail(index);
   };
 
   return (
