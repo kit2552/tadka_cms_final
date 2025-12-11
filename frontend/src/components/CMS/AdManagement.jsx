@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const AdManagement = () => {
+  const [activeAdTab, setActiveAdTab] = useState('google-ads');
   const [adSettings, setAdSettings] = useState({
     article_content_mid: false,
     article_sidebar_comments: false,
