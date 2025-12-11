@@ -1288,12 +1288,12 @@ const CreateSponsoredAd = ({ onClose }) => {
           }
         `}
       </style>
-      <div className="min-h-screen bg-gray-50 pt-1 pb-4">
-        <div className="max-w-5xl-plus mx-auto px-8">
+      <div className="min-h-screen bg-gray-50 pt-0 pb-4">
+        <div className="max-w-7xl mx-auto px-8">
           {/* Sticky Header - Same pattern as Latest News */}
-          <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
-            <div className="pl-0 pr-4 py-4">
-              <div className="flex items-center justify-between mb-2">
+          <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-2`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+            <div className="pl-0 pr-4 py-3">
+              <div className="flex items-center justify-between">
                 <h1 className="text-base font-bold text-black text-left leading-tight">
                   {isEditMode ? 'Edit Ad' : 'New Ad'}
                 </h1>
@@ -1301,16 +1301,16 @@ const CreateSponsoredAd = ({ onClose }) => {
                 <button
                   onClick={onClose}
                   type="button"
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  className="text-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
               
               {/* Status text */}
-              <div className="flex items-center">
+              <div className="flex items-center mt-1">
                 <p className="text-xs text-gray-900 opacity-75 flex items-center">
                   <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
