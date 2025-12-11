@@ -191,15 +191,15 @@ const CreateSponsoredAd = ({ onClose }) => {
   };
 
   const handleNotificationClose = () => {
-    const shouldNavigate = notification.type === 'success' && 
+    const shouldClose = notification.type === 'success' && 
                           (notification.title.includes('Created Successfully') || 
                            notification.title.includes('Updated Successfully'));
     
     closeNotification();
     
-    // Only navigate to dashboard after successful create/update operations
-    if (shouldNavigate) {
-      navigate('/cms/dashboard');
+    // Close the modal after successful create/update operations
+    if (shouldClose && onClose) {
+      onClose();
     }
   };
 
