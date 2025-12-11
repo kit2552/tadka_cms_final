@@ -230,30 +230,39 @@ const OTTReleases = ({ articles, onArticleClick }) => {
                             </p>
                           )}
                           {release.languages && (
-                            <p className="text-xs text-blue-600 mt-1">
+                            <div className="text-xs text-blue-600 mt-1">
                               {(() => {
                                 const langs = Array.isArray(release.languages) ? release.languages : [release.languages];
                                 const originalLang = release.original_language;
                                 
-                                // In Bollywood tab, only show "Hindi" even if release has multiple languages
+                                // In Bollywood tab, only show "Hindi" in single line
                                 if (activeTab === 'bollywood') {
-                                  return 'Hindi';
+                                  return <div>Hindi</div>;
                                 }
                                 
-                                // In OTT tab, show languages with (Original) and (Dubbed) labels
+                                // In OTT tab, show languages vertically with dubbed first, then original
                                 if (!originalLang) {
-                                  return langs.join(', ');
+                                  return langs.map((lang, index) => (
+                                    <div key={index}>{lang}</div>
+                                  ));
                                 }
                                 
-                                return langs.map(lang => {
-                                  if (lang === originalLang) {
-                                    return `${lang} (Original)`;
-                                  } else {
-                                    return `${lang} (Dubbed)`;
-                                  }
-                                }).join(', ');
+                                // Separate dubbed and original languages
+                                const dubbedLangs = langs.filter(lang => lang !== originalLang);
+                                const originalLangs = langs.filter(lang => lang === originalLang);
+                                
+                                return (
+                                  <>
+                                    {dubbedLangs.map((lang, index) => (
+                                      <div key={`dubbed-${index}`}>{lang} (Dubbed)</div>
+                                    ))}
+                                    {originalLangs.map((lang, index) => (
+                                      <div key={`original-${index}`}>{lang} (Original)</div>
+                                    ))}
+                                  </>
+                                );
                               })()}
-                            </p>
+                            </div>
                           )}
                         </div>
                       </div>
