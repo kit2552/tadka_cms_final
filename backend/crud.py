@@ -797,6 +797,7 @@ def create_ott_release(db, release):
         "movie_name": release_data.get("movie_name"),
         "content_type": release_data.get("content_type"),
         "season": release_data.get("season"),
+        "episodes_count": release_data.get("episodes_count"),
         "release_date": release_date,
         "movie_image": release_data.get("movie_image"),
         "youtube_url": release_data.get("youtube_url"),
