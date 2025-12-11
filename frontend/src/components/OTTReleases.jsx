@@ -50,14 +50,21 @@ const OTTReleases = ({ articles, onArticleClick }) => {
     if (loading) return [];
     
     const currentTabData = releaseData[activeTab];
+    console.log('getCurrentTabReleases - activeTab:', activeTab);
+    console.log('getCurrentTabReleases - currentTabData:', currentTabData);
+    
     if (!currentTabData) return [];
     
     const thisWeek = currentTabData.this_week || [];
     const comingSoon = currentTabData.coming_soon || [];
     
+    console.log('getCurrentTabReleases - thisWeek count:', thisWeek.length);
+    console.log('getCurrentTabReleases - comingSoon count:', comingSoon.length);
+    console.log('getCurrentTabReleases - thisWeek data:', thisWeek);
+    
     // Combine and limit to 4 items
     const combined = [...thisWeek, ...comingSoon].slice(0, 4);
-    console.log(`${activeTab} tab releases:`, combined.map(r => r.movie_name)); // Debug log
+    console.log('getCurrentTabReleases - combined releases:', combined);
     return combined;
   };
 
