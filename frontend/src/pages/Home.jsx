@@ -452,6 +452,11 @@ const Home = ({ layoutEditMode = false, onLayoutSave }) => {
           const section = sectionRegistry[sectionId];
           if (!section) return null;
 
+          // Hide sponsored-ads-row if disabled in settings
+          if (sectionId === 'sponsored-ads-row' && !adSettings.homepage_sponsored_ads) {
+            return null;
+          }
+
           // Each section (including rows) is rendered as a single draggable unit
           return (
             <DraggableSection 
