@@ -509,9 +509,6 @@ async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_d
         
         return filtered
     
-    # Combine all releases
-    all_ott_releases = this_week_ott + upcoming_ott
-    
     # Filter for OTT Releases tab
     if user_languages:
         # User has selected states - show releases matching state-mapped languages (excluding Hindi-only)
