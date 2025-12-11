@@ -103,9 +103,12 @@ const Sports = ({ reviews, healthFoodData = {}, onArticleClick }) => {
                 <div className="flex items-start space-x-2 text-left">
                   <div className="relative flex-shrink-0">
                     <img
-                      src={getThumbnail(index)}
+                      src={review.image || review.image_url || getThumbnail(index)}
                       alt={review.title}
                       className="w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        e.target.src = getThumbnail(index);
+                      }}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
