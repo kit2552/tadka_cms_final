@@ -1289,7 +1289,7 @@ const CreateSponsoredAd = ({ onClose }) => {
         `}
       </style>
       <div className="min-h-screen bg-gray-50 pt-0 pb-4">
-        <div className="max-w-7xl mx-auto px-8">
+        <div className="max-w-5xl-plus mx-auto px-8">
           {/* Sticky Header - Same pattern as Latest News */}
           <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-2`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
             <div className="pl-0 pr-4 py-3">
