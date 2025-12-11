@@ -210,8 +210,9 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
               />
             </div>
             <div>
-              <TravelPics 
-                tadkaPicsData={data.tadkaPicsData} 
+              <Fashion 
+                fashionTravelData={data.fashionTravelData}
+                hotTopicsData={data.hotTopicsData}
                 onArticleClick={handlers.handleArticleClick}
               />
             </div>
