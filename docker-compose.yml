@@ -11,12 +11,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL:-http://localhost:8000}
+      - REACT_APP_BACKEND_URL=http://localhost:8000
     command: sh -c "yarn install && yarn start"
     depends_on:
       - backend
-    networks:
-      - tadka-network
+
 
   # Backend Service - FastAPI application
   backend:
@@ -26,35 +25,12 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - MONGO_URL=${MONGO_URL}
+      - MONGO_URL=mongodb+srv://doadmin:U3p18Bi6o542Z9uF@primepixel-mongodb-76909177.mongo.ondigitalocean.com/tadka_cms?authSource=admin&replicaSet=primepixel-mongodb&tls=true
       - DB_NAME=tadka_cms
-      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000}
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION:-us-east-1}
-      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
-      - S3_ROOT_FOLDER=${S3_ROOT_FOLDER}
-      - S3_MAX_FILE_SIZE=${S3_MAX_FILE_SIZE:-52428800}
-    networks:
-      - tadka-network
-    depends_on:
-      - mongo
-
-  # MongoDB Service (for local development only)
-  mongo:
-    image: mongo:7.0
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - tadka-network
-
-volumes:
-  mongo-data:
+      - CORS_ORIGINS=http://localhost:3000
+      - JWT_SECRET_KEY=your-very-secret-jwt-key-change-this-in-production
+      - FRONTEND_URL=http://localhost:3000
 
 networks:
-  tadka-network:
+  default:
     name: tadka-network
