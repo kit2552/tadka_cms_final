@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import CreateSponsoredAd from './CreateSponsoredAd';
 
 const AdManagement = () => {
   const [activeAdTab, setActiveAdTab] = useState('google-ads');
