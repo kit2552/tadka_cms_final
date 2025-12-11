@@ -22,9 +22,13 @@ const OTTReleases = ({ articles, onArticleClick }) => {
       const userStates = JSON.parse(localStorage.getItem('selectedStates') || '[]');
       const statesParam = userStates.length > 0 ? `?user_states=${userStates.join(',')}` : '';
       
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/ott-bollywood${statesParam}`);
+      // Add timestamp to prevent caching
+      const cacheBuster = `${statesParam ? '&' : '?'}t=${Date.now()}`;
+      
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/ott-bollywood${statesParam}${cacheBuster}`);
       if (response.ok) {
         const data = await response.json();
+        console.log('OTT Releases fetched:', data); // Debug log
         setReleaseData(data);
       }
     } catch (error) {
