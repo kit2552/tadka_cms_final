@@ -7,7 +7,7 @@ import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import NotificationModal from '../NotificationModal';
 
-const CreateArticle = () => {
+const CreateSponsoredAd = ({ onClose }) => {
   const navigate = useNavigate();
   const { id } = useParams(); // Changed from articleId to id to match the route
   const isEditMode = Boolean(id);
