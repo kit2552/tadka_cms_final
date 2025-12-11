@@ -1449,6 +1449,7 @@ async def update_ott_release(
     movie_name: Optional[str] = Form(None),
     content_type: Optional[str] = Form(None),
     season: Optional[int] = Form(None),
+    episodes_count: Optional[int] = Form(None),
     release_date: Optional[date] = Form(None),
     youtube_url: Optional[str] = Form(None),
     ott_platforms: Optional[str] = Form(None),
@@ -1482,6 +1483,8 @@ async def update_ott_release(
             update_data["content_type"] = content_type
         if season is not None:
             update_data["season"] = season
+        if episodes_count is not None:
+            update_data["episodes_count"] = episodes_count
         if release_date is not None:
             update_data["release_date"] = release_date
         if youtube_url is not None:
