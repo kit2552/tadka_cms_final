@@ -333,14 +333,14 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
             </div>
             <div>
               <StockMarket 
-                reviews={data.reviews} 
+                aiStockMarketData={data.fashionTravelData}
                 onArticleClick={handlers.handleArticleClick}
               />
             </div>
             {!isIpad && (
               <div>
                 <AI 
-                  reviews={data.reviews} 
+                  aiStockMarketData={data.aiStockMarketData}
                   onArticleClick={handlers.handleArticleClick}
                 />
               </div>
@@ -359,7 +359,7 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
           <div className="grid gap-4 grid-cols-1">
             <div>
               <AI 
-                reviews={data.reviews} 
+                aiStockMarketData={data.aiStockMarketData}
                 onArticleClick={handlers.handleArticleClick}
               />
             </div>
