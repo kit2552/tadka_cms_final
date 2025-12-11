@@ -5,18 +5,18 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import dataService from '../services/dataService';
 
-const EventsInterviews = ({ eventsInterviewsData = {} }) => {
+const BigBoss = ({ bigBossData = {} }) => {
   const { t } = useLanguage();
   const { theme, getSectionHeaderClasses } = useTheme();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useTabState('events-interviews', 'events');
+  const [activeTab, setActiveTab] = useTabState('big-boss', 'big-boss');
   const scrollContainerRef = useRef(null);
   
   // Get data from API instead of mock data
-  const eventsVideos = eventsInterviewsData.events_interviews || [];
-  const bollywoodVideos = eventsInterviewsData.bollywood || [];
+  const bigBossVideos = bigBossData.big_boss || [];
+  const bollywoodVideos = bigBossData.bollywood || [];
   
-  const currentData = activeTab === 'bollywood' ? bollywoodVideos : eventsVideos;
+  const currentData = activeTab === 'bollywood' ? bollywoodVideos : bigBossVideos;
 
   // Get YouTube thumbnail from video URL
   const getYouTubeThumbnail = (youtubeUrl) => {
