@@ -3030,50 +3030,16 @@ const Dashboard = () => {
               >
                 Topics
               </button>
-              
-              {/* More Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowMoreDropdown(!showMoreDropdown)}
-                  className={`py-3 px-6 text-sm font-medium border-b-2 flex items-center gap-1 ${
-                    activeTab === 'ads'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  } transition-colors duration-200`}
-                >
-                  More
-                  <svg className={`w-4 h-4 transition-transform ${showMoreDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {showMoreDropdown && (
-                  <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50">
-                    <button
-                      onClick={() => {
-                        setActiveTab('ads');
-                        setShowMoreDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                        activeTab === 'ads' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700'
-                      }`}
-                    >
-                      Ad Management
-                    </button>
-                    <button
-                      onClick={() => {
-                        setActiveTab('artists');
-                        setShowMoreDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                        activeTab === 'artists' ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700'
-                      }`}
-                    >
-                      Manage Artists
-                    </button>
-                  </div>
-                )}
-              </div>
+              <button
+                onClick={() => setActiveTab('ads')}
+                className={`py-3 px-6 text-sm font-medium border-b-2 ${
+                  activeTab === 'ads'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } transition-colors duration-200`}
+              >
+                Ads
+              </button>
             </nav>
           </div>
         </div>
