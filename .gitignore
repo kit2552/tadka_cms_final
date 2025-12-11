@@ -96,4 +96,7 @@ coverage/
 *.bak
 *.backup
 *.old
-*.tmp
+*.tmp-e 
+# Environment files
+*.env
+*.env.*
