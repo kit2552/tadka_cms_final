@@ -45,8 +45,91 @@ ROOT_DIR = Path(__file__).parent
 UPLOAD_DIR = ROOT_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 
-# Lifespan must be defined before app creation
-# (will be moved above after we locate the create_default_admin function)
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def initialize_ott_platforms():
+    """Initialize default OTT platforms if they don't exist"""
+    try:
+        # Check if any platforms exist
+        existing_count = db.ott_platforms.count_documents({})
+        if existing_count == 0:
+            default_platforms = [
+                {"id": 1, "name": "Amazon Prime Video", "is_active": True},
+                {"id": 2, "name": "Netflix", "is_active": True},
+                {"id": 3, "name": "Disney+ Hotstar", "is_active": True},
+                {"id": 4, "name": "Aha", "is_active": True},
+                {"id": 5, "name": "Zee5", "is_active": True},
+                {"id": 6, "name": "SonyLIV", "is_active": True},
+                {"id": 7, "name": "JioCinema", "is_active": True},
+                {"id": 8, "name": "Apple TV+", "is_active": True},
+                {"id": 9, "name": "MX Player", "is_active": True},
+                {"id": 10, "name": "Voot", "is_active": True},
+            ]
+            db.ott_platforms.insert_many(default_platforms)
+            logger.info("✅ Default OTT platforms initialized")
+    except Exception as e:
+        logger.warning(f"⚠️ OTT platforms initialization failed: {e}")
+
+# Define lifespan context manager BEFORE creating app
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    logger.info("""
+    ========================================
+    🚀 BLOG CMS API STARTING UP
+    - Python Version: 3.11
+    - Port: 8000
+    - Host: 0.0.0.0
+    - Health Check: /api or /api/
+    ========================================
+    """)
+    
+    try:
+        # Create default admin user
+        await create_default_admin()
+        
+        # Initialize S3 service with stored configuration
+        try:
+            aws_config = crud.get_aws_config(db)
+            if aws_config and aws_config.get('is_enabled'):
+                s3_service.initialize(aws_config)
+                logger.info("✅ S3 service initialized")
+            else:
+                logger.info("ℹ️ S3 not enabled, using local storage")
+        except Exception as e:
+            logger.warning(f"⚠️ S3 initialization failed: {e}. Using local storage.")
+        
+        # Initialize default OTT platforms
+        initialize_ott_platforms()
+        
+        # Initialize the article scheduler
+        article_scheduler.initialize_scheduler()
+        article_scheduler.start_scheduler()
+        
+        logger.info("""
+        ========================================
+        ✅ STARTUP COMPLETE - SERVER READY
+        - Listening on: http://0.0.0.0:8000
+        - Health endpoint: http://0.0.0.0:8000/api
+        - All systems initialized
+        ========================================
+        """)
+    except Exception as e:
+        logger.error(f"❌ STARTUP FAILED: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        raise
+    
+    yield
+    
+    # Shutdown
+    logger.info("Blog CMS API shutting down...")
+    try:
+        article_scheduler.stop_scheduler()
+    except Exception as e:
+        logger.warning(f"⚠️ Shutdown warning: {e}")
 
 # Create the main app without any rate limiting
 app = FastAPI(title="Blog CMS API", version="1.0.0", lifespan=lifespan)
