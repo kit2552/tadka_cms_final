@@ -314,6 +314,21 @@ export const dataService = {
     }
   },
 
+  async getFashionTravelData() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/articles/sections/fashion-travel?limit=20`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch fashion & travel data');
+      }
+      const data = await response.json();
+      console.log('Fashion & Travel data:', data); // Debug log
+      return data;
+    } catch (error) {
+      console.error('Error fetching fashion & travel data:', error);
+      return { fashion: [], travel: [] };
+    }
+  },
+
   // Fetch viral shorts data from backend - viral shorts and bollywood with state filtering for viral shorts
   async getViralShortsData(userStates = null) {
     try {
