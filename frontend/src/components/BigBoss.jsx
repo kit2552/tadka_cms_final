@@ -132,4 +132,4 @@ const BigBoss = ({ bigBossData = {} }) => {
   );
 };
 
-export default EventsInterviews;
+export default BigBoss;
