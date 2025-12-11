@@ -545,33 +545,21 @@ async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_d
             result.append(release_data)
         return result
     
-    def format_article_response(articles):
-        result = []
-        for article in articles:
-            result.append({
-                "id": article.id,
-                "title": article.title,
-                "movie_name": article.title,  # Use title as movie name
-                "summary": article.summary,
-                "image_url": article.image,
-                "movie_image": article.image,  # Use article image as movie image
-                "author": article.author,
-                "language": article.get("article_language", article.get("language", "en")) or "Hindi",
-                "category": article.category,
-                "published_at": article.published_at,
-                "release_date": article.published_at,  # Use published date as release date
-                "ott_platform": "Netflix"  # Default platform for Bollywood articles
-            })
-        return result
+    # Split filtered releases into this_week and coming_soon
+    ott_this_week = format_release_response(ott_filtered[:4])
+    ott_coming_soon = format_release_response(ott_filtered[4:8])
+    
+    bollywood_this_week = format_release_response(bollywood_filtered[:4])
+    bollywood_coming_soon = format_release_response(bollywood_filtered[4:8])
     
     return {
         "ott": {
-            "this_week": format_release_response(this_week_ott, True),
-            "coming_soon": format_release_response(upcoming_ott, True)
+            "this_week": ott_this_week,
+            "coming_soon": ott_coming_soon
         },
         "bollywood": {
-            "this_week": format_article_response(bollywood_articles[:2]),  # First 2 as this week
-            "coming_soon": format_article_response(bollywood_articles[2:])  # Rest as coming soon
+            "this_week": bollywood_this_week,
+            "coming_soon": bollywood_coming_soon
         }
     }
 
