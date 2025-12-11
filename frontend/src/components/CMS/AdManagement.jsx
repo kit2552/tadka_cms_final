@@ -348,13 +348,9 @@ const AdManagement = () => {
         </>
       )}
 
-      {/* Create Sponsored Ad Modal */}
+      {/* Create Sponsored Ad - Renders inline */}
       {showCreateAdModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center overflow-y-auto">
-          <div className="relative w-full min-h-screen">
-            <CreateSponsoredAd onClose={() => setShowCreateAdModal(false)} />
-          </div>
-        </div>
+        <CreateSponsoredAd onClose={() => setShowCreateAdModal(false)} />
       )}
     </div>
   );
