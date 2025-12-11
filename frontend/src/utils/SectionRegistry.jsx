@@ -117,7 +117,7 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
     },
     'big-boss': {
       id: 'big-boss',
-      name: 'Big Boss',
+      name: 'TV Reality Shows',
       component: (
         <BigBoss 
           bigBossData={data.bigBossData} 
