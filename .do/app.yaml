@@ -51,18 +51,14 @@ services:
       branch: main
       deploy_on_push: true
     source_dir: /frontend
-    build_command: |
-      corepack enable
-      yarn set version stable
-      yarn install
-      yarn build
-      cp build/index.html build/404.html
     output_dir: build
     envs:
       - key: REACT_APP_BACKEND_URL
         value: ${backend.PUBLIC_URL}
       - key: NODE_ENV
         value: production
+      - key: NODE_OPTIONS
+        value: --max_old_space_size=4096
     routes:
       - path: /
 
