@@ -58,13 +58,19 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
       
       const userStateCode = userStateNames.length > 0 ? stateNameToCode[userStateNames[0]] : null;
       
+      console.log('MovieSchedules - User state names:', userStateNames);
+      console.log('MovieSchedules - User state code:', userStateCode);
+      
       const url = userStateCode 
         ? `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood?user_state=${userStateCode}`
         : `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood`;
       
+      console.log('MovieSchedules - Fetching URL:', url);
+      
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
+        console.log('MovieSchedules - Theater releases data:', data);
         setReleaseData(data);
       }
     } catch (error) {
