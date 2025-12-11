@@ -13,13 +13,6 @@ services:
     environment_slug: docker
     instance_count: 1
     instance_size_slug: basic-xxs
-    health_check:
-      http_path: /api
-      initial_delay_seconds: 120
-      period_seconds: 10
-      timeout_seconds: 10
-      success_threshold: 1
-      failure_threshold: 3
     envs:
       - key: MONGO_URL
         value: ${MONGO_URL}
