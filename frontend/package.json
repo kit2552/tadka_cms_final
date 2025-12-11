@@ -6,7 +6,6 @@
     "node": "18.x || 20.x",
     "yarn": ">=1.22.0"
   },
-  "resolutions": {},
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-accordion": "^1.2.8",
