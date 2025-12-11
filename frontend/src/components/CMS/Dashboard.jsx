@@ -234,6 +234,7 @@ const Dashboard = () => {
   const initialTab = searchParams.get('tab') || 'posts';
   
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [showCreateAdForm, setShowCreateAdForm] = useState(false);
   const [articles, setArticles] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -2958,15 +2959,18 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-4">
       <div className="max-w-5xl-plus mx-auto px-8">
-        {/* Page Title */}
-        <div className="mb-4">
-          <h1 className="text-lg font-semibold text-gray-900 text-left">Manage Content</h1>
-        </div>
+        {/* Page Title - Hide when create ad form is open */}
+        {!showCreateAdForm && (
+          <div className="mb-4">
+            <h1 className="text-lg font-semibold text-gray-900 text-left">Manage Content</h1>
+          </div>
+        )}
 
-        {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex">
+        {/* Tab Navigation - Hide when create ad form is open */}
+        {!showCreateAdForm && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+            <div className="border-b border-gray-200">
+              <nav className="-mb-px flex">
               <button
                 onClick={() => setActiveTab('posts')}
                 className={`py-3 px-6 text-sm font-medium border-b-2 ${
@@ -3029,7 +3033,8 @@ const Dashboard = () => {
               </button>
             </nav>
           </div>
-        </div>
+          </div>
+        )}
 
         {/* Tab Content */}
         {activeTab === 'posts' && (
@@ -6307,7 +6312,10 @@ const Dashboard = () => {
         )}
 
         {activeTab === 'ads' && (
-          <AdManagement />
+          <AdManagement 
+            showCreateAdForm={showCreateAdForm}
+            setShowCreateAdForm={setShowCreateAdForm}
+          />
         )}
       </div>
 
