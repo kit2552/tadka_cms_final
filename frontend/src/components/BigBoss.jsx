@@ -47,47 +47,32 @@ const BigBoss = ({ bigBossData = {} }) => {
   };
 
   return (
-    <div className="bg-white pt-0 pb-2 -mt-[9px] -mb-[17px]">
-      {/* Header Container with Normal Width */}
-      <div className="max-w-5xl-plus mx-auto px-8">
-        {/* Header with tabs matching TrendingVideos style */}
-        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-3`}>
-          <button
-            onClick={() => setActiveTab('events')}
-            className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-l-lg ${
-              activeTab === 'events' 
-                ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}` 
-                : getSectionHeaderClasses().unselectedTabClass
-            }`}
-            style={{fontSize: '14px', fontWeight: '500'}}
-          >
-            {t('sections.big_boss', 'Big Boss')}
-          </button>
-          <button
-            onClick={() => setActiveTab('bollywood')}
-            className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-r-lg ${
-              activeTab === 'bollywood'
-                ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
-                : getSectionHeaderClasses().unselectedTabClass
-            }`}
-            style={{fontSize: '14px', fontWeight: '500'}}
-          >
-            {t('sections.bollywood_big_boss', 'Bollywood')}
-          </button>
-          <Link 
-            to="/events-interviews" 
-            className={`absolute top-1/2 transform -translate-y-1/2 right-4 group flex items-center justify-center text-xs ${getSectionHeaderClasses().moreButtonClass} transition-colors duration-200`}
-          >
-            <svg 
-              className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </Link>
-        </div>
+    <div className="max-w-5xl-plus mx-auto px-8 pt-2 pb-2 -mb-[8px]">
+      {/* Header with tabs matching TopStories style */}
+      <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-3`}>
+        <button
+          onClick={() => setActiveTab('big-boss')}
+          className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-l-lg ${
+            activeTab === 'big-boss' 
+              ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}` 
+              : getSectionHeaderClasses().unselectedTabClass
+          }`}
+          style={{fontSize: '14px', fontWeight: '500'}}
+        >
+          {t('sections.big_boss', 'Big Boss')}
+        </button>
+        <button
+          onClick={() => setActiveTab('bollywood')}
+          className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-r-lg ${
+            activeTab === 'bollywood'
+              ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
+              : getSectionHeaderClasses().unselectedTabClass
+          }`}
+          style={{fontSize: '14px', fontWeight: '500'}}
+        >
+          {t('sections.bollywood_big_boss', 'Bollywood')}
+        </button>
+      </div>
         
         {/* Multiple Videos Horizontal Scroll Container - Same as TrendingVideos */}
         <div 
