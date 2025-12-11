@@ -541,7 +541,13 @@ const CreateSponsoredAd = ({ onClose }) => {
       const data = await response.json();
       setLanguages(data.languages);
       setStates(data.states); // Now uses updated backend states
-      setCategories(data.categories);
+      
+      // Only set sponsored ad categories
+      const sponsoredCategories = [
+        { slug: 'sponsored-post', name: 'Sponsored Post' },
+        { slug: 'landing-page-ad', name: 'Landing Page Ad' }
+      ];
+      setCategories(sponsoredCategories);
       // No default category - user must select one
     } catch (error) {
       console.error('Error fetching CMS config:', error);
