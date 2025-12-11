@@ -538,6 +538,7 @@ export const dataService = {
         viralVideosData,
         viralShortsData,
         eventsInterviewsData,
+        bigBossData,
         hotTopicsData,
         tadkaPicsData,
         boxOfficeData,
