@@ -474,9 +474,9 @@ async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_d
         state_list = [s.strip() for s in user_states.split(',')]
         user_languages = get_languages_for_states(state_list)
     
-    # Get all OTT releases
-    this_week_ott = crud.get_this_week_ott_releases(db, limit=50)
-    upcoming_ott = crud.get_upcoming_ott_releases(db, limit=50)
+    # Get all OTT releases (not filtered by date - we want to show all recent releases)
+    all_ott_docs = list(db.ott_releases.find({}, {"_id": 0}).sort("release_date", -1).limit(50))
+    all_ott_releases = all_ott_docs
     
     def parse_languages(languages_str):
         """Parse languages field which can be JSON string or plain string"""
