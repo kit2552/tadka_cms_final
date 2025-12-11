@@ -522,7 +522,14 @@ async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_d
     
     def format_release_response(releases):
         result = []
+        seen_ids = set()
         for release in releases:
+            # Skip duplicates
+            release_id = release.get('id')
+            if release_id in seen_ids:
+                continue
+            seen_ids.add(release_id)
+            
             # Parse languages array
             languages_list = parse_languages(release.get('languages', ''))
             
