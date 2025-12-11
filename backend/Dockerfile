@@ -22,4 +22,4 @@ EXPOSE 8000
 
 # Run the application
 # Using --timeout-keep-alive to prevent connection timeouts during startup
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--timeout-keep-alive", "300"]
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
