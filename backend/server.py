@@ -446,6 +446,17 @@ async def get_big_boss_articles(limit: int = 4, db = Depends(get_db)):
         "bollywood": bollywood_articles
     }
 
+@api_router.get("/articles/sections/health-food")
+async def get_health_food_articles(limit: int = 4, db = Depends(get_db)):
+    """Get articles for Health & Food section with Health and Food tabs"""
+    health_articles = crud.get_articles_by_category_slug(db, category_slug="health", limit=limit)
+    food_articles = crud.get_articles_by_category_slug(db, category_slug="food", limit=limit)
+    
+    return {
+        "health": health_articles,
+        "food": food_articles
+    }
+
 @api_router.get("/articles/sections/tv-shows")
 async def get_tv_shows_articles(limit: int = 4, db = Depends(get_db)):
     """Get articles for TV Shows section with TV Spotlight and National tabs"""
