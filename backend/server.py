@@ -1116,6 +1116,47 @@ async def get_related_articles_for_page(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# State-Language Mapping endpoints
+@api_router.get("/system-settings/state-language-mapping")
+async def get_state_language_mapping(db = Depends(get_db)):
+    """Get state-language mapping configuration"""
+    try:
+        from state_language_mapping import DEFAULT_STATE_LANGUAGE_MAPPING
+        
+        # Try to get custom mapping from database
+        mapping_doc = db.system_settings.find_one({"setting_key": "state_language_mapping"})
+        
+        if mapping_doc and "mapping" in mapping_doc:
+            return mapping_doc["mapping"]
+        
+        # Return default mapping if no custom mapping exists
+        return DEFAULT_STATE_LANGUAGE_MAPPING
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/system-settings/state-language-mapping")
+async def update_state_language_mapping(mapping: dict, db = Depends(get_db)):
+    """Update state-language mapping configuration"""
+    try:
+        from datetime import datetime
+        
+        # Update or create the mapping in database
+        result = db.system_settings.update_one(
+            {"setting_key": "state_language_mapping"},
+            {
+                "$set": {
+                    "setting_key": "state_language_mapping",
+                    "mapping": mapping,
+                    "updated_at": datetime.utcnow()
+                }
+            },
+            upsert=True
+        )
+        
+        return {"success": True, "message": "State-language mapping updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # File upload helper functions
 def get_next_image_filename(date: datetime = None, content_type: str = "articles") -> tuple:
     """
