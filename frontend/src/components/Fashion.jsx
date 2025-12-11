@@ -141,7 +141,7 @@ const Fashion = ({ hotTopicsData = {}, fashionTravelData = {}, onArticleClick })
                 <div className="flex items-start space-x-2 text-left">
                   <div className="relative flex-shrink-0">
                     <img
-                      src={article.image_url || article.image || getThumbnail(index)}
+                      src={getArticleImage(article, index)}
                       alt={article.title}
                       className="w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
