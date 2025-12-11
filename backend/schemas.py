@@ -297,6 +297,7 @@ class OTTReleaseCreate(OTTReleaseBase):
 class OTTReleaseUpdate(BaseModel):
     movie_name: Optional[str] = None
     content_type: Optional[str] = None
+    season: Optional[int] = None
     release_date: Optional[date] = None
     movie_image: Optional[str] = None
     youtube_url: Optional[str] = None
