@@ -251,22 +251,24 @@ const AdManagement = () => {
 
       {/* Sponsored Ads Tab Content */}
       {activeAdTab === 'sponsored-ads' && (
-        <div className="bg-white rounded-lg border border-gray-200 p-8">
-          <div className="text-center">
-            <div className="mb-4">
-              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white rounded border border-gray-200 p-6">
+          <div className="text-left">
+            <div className="flex items-start gap-3 mb-3">
+              <svg className="h-8 w-8 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Sponsored Ads</h3>
-            <p className="text-gray-600 mb-6">
-              Manage sponsored content and promotional ads for your website. This feature allows you to create and manage custom sponsored ad placements.
-            </p>
-            <div className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Coming Soon
+              <div>
+                <h3 className="text-base font-medium text-gray-900 mb-1">Sponsored Ads</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Manage sponsored content and promotional ads for your website. This feature allows you to create and manage custom sponsored ad placements.
+                </p>
+                <div className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-600 rounded text-xs">
+                  <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Coming Soon
+                </div>
+              </div>
             </div>
           </div>
         </div>
