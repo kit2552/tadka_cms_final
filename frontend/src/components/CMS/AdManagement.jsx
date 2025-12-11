@@ -117,20 +117,14 @@ const AdManagement = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Ads Management</h1>
-        <p className="text-gray-600">Control where advertisements appear on your website</p>
-      </div>
-
+    <div className="max-w-6xl mx-auto p-4">
       {/* Tabs */}
-      <div className="mb-6">
+      <div className="mb-4">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
             <button
               onClick={() => setActiveAdTab('google-ads')}
-              className={`py-3 px-1 border-b-2 font-medium text-sm ${
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeAdTab === 'google-ads'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -140,7 +134,7 @@ const AdManagement = () => {
             </button>
             <button
               onClick={() => setActiveAdTab('sponsored-ads')}
-              className={`py-3 px-1 border-b-2 font-medium text-sm ${
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeAdTab === 'sponsored-ads'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -154,7 +148,7 @@ const AdManagement = () => {
 
       {/* Notification */}
       {notification.show && (
-        <div className={`mb-6 p-4 rounded-lg ${
+        <div className={`mb-3 p-3 rounded-lg ${
           notification.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
         }`}>
           {notification.message}
@@ -165,33 +159,33 @@ const AdManagement = () => {
       {activeAdTab === 'google-ads' && (
         <>
           {/* Ad Placements Grid */}
-          <div className="space-y-4 mb-6">
+          <div className="space-y-2 mb-4">
         {adPlacements.map((placement) => (
           <div
             key={placement.key}
-            className={`bg-white rounded-lg border-2 ${
+            className={`bg-white rounded border ${
               adSettings[placement.key] ? 'border-green-500 bg-green-50' : 'border-gray-200'
-            } p-6 transition-all duration-200`}
+            } p-3 transition-all duration-200`}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-lg font-semibold text-gray-900">{placement.title}</h3>
+            <div className="flex items-center justify-between">
+              <div className="flex-1 text-left">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-sm font-semibold text-gray-900">{placement.title}</h3>
                   {placement.status !== 'Active' && (
-                    <span className="px-2 py-1 text-xs font-medium bg-gray-200 text-gray-600 rounded">
+                    <span className="px-1.5 py-0.5 text-xs font-medium bg-gray-200 text-gray-600 rounded">
                       {placement.status}
                     </span>
                   )}
                   {adSettings[placement.key] && placement.status === 'Active' && (
-                    <span className="px-2 py-1 text-xs font-medium bg-green-500 text-white rounded">
+                    <span className="px-1.5 py-0.5 text-xs font-medium bg-green-500 text-white rounded">
                       Enabled
                     </span>
                   )}
                 </div>
-                <p className="text-gray-600 mb-2">{placement.description}</p>
-                <div className="flex items-center gap-4 text-sm text-gray-500">
+                <p className="text-xs text-gray-600 mb-1">{placement.description}</p>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
                   <span className="flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -201,11 +195,11 @@ const AdManagement = () => {
               </div>
 
               {/* Toggle Switch */}
-              <div className="flex items-center ml-4">
+              <div className="flex items-center ml-3">
                 <button
                   onClick={() => placement.status === 'Active' && handleToggle(placement.key)}
                   disabled={placement.status !== 'Active'}
-                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     placement.status !== 'Active'
                       ? 'bg-gray-300 cursor-not-allowed'
                       : adSettings[placement.key]
@@ -214,8 +208,8 @@ const AdManagement = () => {
                   }`}
                 >
                   <span
-                    className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-200 ${
-                      adSettings[placement.key] ? 'translate-x-7' : 'translate-x-1'
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+                      adSettings[placement.key] ? 'translate-x-6' : 'translate-x-1'
                     }`}
                   />
                 </button>
@@ -225,33 +219,32 @@ const AdManagement = () => {
         ))}
           </div>
 
-          {/* Save Button */}
-          <div className="flex justify-end">
+          {/* Save Button and Info Box in same row */}
+          <div className="flex items-start justify-between gap-4 mt-3">
+            {/* Info Box */}
+            <div className="flex-1 p-3 bg-blue-50 border border-blue-200 rounded text-left">
+              <div className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="text-xs text-blue-800">
+                    Enable or disable Google Ad placements across your website. Changes take effect immediately after saving.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Save Button */}
             <button
               onClick={handleSave}
               disabled={saving}
-              className={`px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${
+              className={`px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors flex-shrink-0 ${
                 saving ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
-          </div>
-
-          {/* Info Box */}
-          <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                <h4 className="text-sm font-semibold text-blue-900 mb-1">How it works</h4>
-                <p className="text-sm text-blue-800">
-                  Enable or disable Google Ad placements across your website. When disabled, the ad placeholder will not be shown to visitors. 
-                  Changes take effect immediately after saving.
-                </p>
-              </div>
-            </div>
           </div>
         </>
       )}
