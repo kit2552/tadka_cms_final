@@ -5081,10 +5081,35 @@ const Dashboard = () => {
                         <h3 className="text-sm font-semibold text-gray-800 text-left">Languages & Genres</h3>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Original Language */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                              Original Language *
+                            </label>
+                            <select
+                              value={ottForm.original_language}
+                              onChange={(e) => setOttForm({...ottForm, original_language: e.target.value})}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+                              required
+                            >
+                              <option value="">Select Original Language</option>
+                              <option value="Telugu">Telugu</option>
+                              <option value="Hindi">Hindi</option>
+                              <option value="Tamil">Tamil</option>
+                              <option value="Malayalam">Malayalam</option>
+                              <option value="Kannada">Kannada</option>
+                              <option value="English">English</option>
+                              <option value="Bengali">Bengali</option>
+                              <option value="Marathi">Marathi</option>
+                              <option value="Punjabi">Punjabi</option>
+                              <option value="Gujarati">Gujarati</option>
+                            </select>
+                          </div>
+                          
                           {/* Languages Multi-select */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-                              Languages
+                              Languages (including dubbed)
                             </label>
                             <div className="flex gap-2 mb-2">
                               <select
