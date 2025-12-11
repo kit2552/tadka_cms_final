@@ -1955,35 +1955,90 @@ const CreateArticle = () => {
                     </div>
                   )}
 
-                  {/* VIDEO Type Fields */}
-                  {formData.content_type === 'video' && (
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          YouTube Video URL
-                        </label>
-                        <input
-                          type="url"
-                          name="youtube_url"
-                          value={formData.youtube_url}
-                          onChange={handleInputChange}
-                          className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="https://www.youtube.com/watch?v=..."
-                        />
-                      </div>
+                  {/* VIDEO POST Type Fields */}
+                  {formData.content_type === 'video_post' && (
+                    <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-5 mb-6">
+                      <h4 className="text-base font-bold text-gray-900 mb-4 text-left">
+                        Video Information
+                      </h4>
                       
-                      {/* Enable Comments Checkbox for Video */}
-                      <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
-                        <label className="flex items-center space-x-3 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            name="comments_enabled"
-                            checked={formData.comments_enabled}
-                            onChange={handleInputChange}
-                            className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-                          />
-                          <span className="text-sm font-semibold text-gray-800">Enable Comments</span>
-                        </label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Left Column - Form Fields */}
+                        <div className="space-y-4">
+                          {/* Title Field */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Title *
+                            </label>
+                            <input
+                              type="text"
+                              name="title"
+                              value={formData.title}
+                              onChange={handleInputChange}
+                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              required
+                            />
+                          </div>
+                          
+                          {/* YouTube URL */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              YouTube Video URL *
+                            </label>
+                            <input
+                              type="url"
+                              name="youtube_url"
+                              value={formData.youtube_url}
+                              onChange={handleInputChange}
+                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="https://www.youtube.com/watch?v=..."
+                              required
+                            />
+                          </div>
+                          
+                          {/* Enable Comments Checkbox */}
+                          <div className="bg-white border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
+                            <label className="flex items-center space-x-3 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                name="comments_enabled"
+                                checked={formData.comments_enabled}
+                                onChange={handleInputChange}
+                                className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                              />
+                              <span className="text-sm font-semibold text-gray-800">Enable Comments</span>
+                            </label>
+                          </div>
+                        </div>
+                        
+                        {/* Right Column - Preview */}
+                        <div className="space-y-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            YouTube Preview
+                          </label>
+                          <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-gray-100">
+                            {formData.youtube_url ? (
+                              <img
+                                src={`https://img.youtube.com/vi/${formData.youtube_url.split('v=')[1]?.split('&')[0] || formData.youtube_url.split('/').pop()}/maxresdefault.jpg`}
+                                alt="YouTube Preview"
+                                className="w-full h-auto"
+                                onError={(e) => {
+                                  e.target.src = `https://img.youtube.com/vi/${formData.youtube_url.split('v=')[1]?.split('&')[0] || formData.youtube_url.split('/').pop()}/hqdefault.jpg`;
+                                }}
+                              />
+                            ) : (
+                              <div className="flex items-center justify-center h-48 text-gray-400">
+                                <div className="text-center">
+                                  <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  <p className="text-sm">Enter YouTube URL to see preview</p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
