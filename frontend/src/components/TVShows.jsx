@@ -94,7 +94,7 @@ const TVShows = ({ articles, onArticleClick }) => {
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.tv_shows', 'TV')}
+          {t('sections.tv_shows', 'TV Spotlight')}
         </button>
         <button
           onClick={() => setActiveTab('bollywood')}
@@ -105,7 +105,7 @@ const TVShows = ({ articles, onArticleClick }) => {
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.bollywood_tv', 'Bollywood')}
+          {t('sections.bollywood_tv', 'National')}
         </button>
       </div>
       
