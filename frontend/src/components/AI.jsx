@@ -34,6 +34,31 @@ const AI = ({ aiStockMarketData = {}, onArticleClick }) => {
 
   const currentItems = getTabArticles();
 
+  // Extract YouTube video ID and generate thumbnail
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    try {
+      const url = new URL(youtubeUrl);
+      let videoId = null;
+      
+      // Handle different YouTube URL formats
+      if (url.hostname.includes('youtube.com')) {
+        videoId = url.searchParams.get('v');
+      } else if (url.hostname.includes('youtu.be')) {
+        videoId = url.pathname.slice(1);
+      }
+      
+      if (videoId) {
+        return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+      }
+    } catch (error) {
+      console.error('Error parsing YouTube URL:', error);
+    }
+    
+    return null;
+  };
+
   const getThumbnail = (index) => {
     const thumbnails = [
       'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=80&h=64&fit=crop',
@@ -46,6 +71,18 @@ const AI = ({ aiStockMarketData = {}, onArticleClick }) => {
       'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=80&h=64&fit=crop'
     ];
     return thumbnails[index % thumbnails.length];
+  };
+
+  // Get image URL based on content type
+  const getArticleImage = (article, index) => {
+    // If it's a video post, use YouTube thumbnail
+    if (article.content_type === 'video_post' && article.youtube_url) {
+      const thumbnail = getYouTubeThumbnail(article.youtube_url);
+      if (thumbnail) return thumbnail;
+    }
+    
+    // Otherwise use the article image or fallback
+    return article.image || article.main_image_url || getThumbnail(index);
   };
 
   return (
@@ -105,9 +142,12 @@ const AI = ({ aiStockMarketData = {}, onArticleClick }) => {
                   <div className="flex items-start space-x-2 text-left">
                     <div className="relative flex-shrink-0">
                       <img
-                        src={article.main_image_url || getThumbnail(index)}
+                        src={getArticleImage(article, index)}
                         alt={article.title}
                         className="w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.target.src = getThumbnail(index);
+                        }}
                       />
                     </div>
                     <div className="flex-1 min-w-0">
