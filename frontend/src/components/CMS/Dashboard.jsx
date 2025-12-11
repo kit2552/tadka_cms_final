@@ -2783,6 +2783,7 @@ const Dashboard = () => {
       release_date: release.release_date || '',
       content_type: release.content_type || 'Movie',
       season: release.season || '',
+      episodes_count: release.episodes_count || '',
       youtube_url: release.youtube_url || '',
       ott_platforms: parseJsonArray(release.ott_platforms),
       states: parseJsonArray(release.states),
