@@ -34,34 +34,48 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
     }
   };
 
-  const handleToggle = (key) => {
+  const handleToggle = async (key) => {
+    const newValue = !adSettings[key];
+    
+    // Optimistically update UI
     setAdSettings(prev => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: newValue
     }));
-  };
 
-  const handleSave = async () => {
-    setSaving(true);
+    // Auto-save immediately
     try {
+      const updatedSettings = {
+        ...adSettings,
+        [key]: newValue
+      };
+      
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ad-settings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(adSettings)
+        body: JSON.stringify(updatedSettings)
       });
 
       if (response.ok) {
-        showNotification('success', 'Ad settings saved successfully!');
+        showNotification('success', 'Setting saved automatically');
       } else {
-        throw new Error('Failed to save settings');
+        // Revert on failure
+        setAdSettings(prev => ({
+          ...prev,
+          [key]: !newValue
+        }));
+        showNotification('error', 'Failed to save setting');
       }
     } catch (error) {
       console.error('Error saving ad settings:', error);
-      showNotification('error', 'Failed to save ad settings');
-    } finally {
-      setSaving(false);
+      // Revert on failure
+      setAdSettings(prev => ({
+        ...prev,
+        [key]: !newValue
+      }));
+      showNotification('error', 'An error occurred while saving');
     }
   };
 
