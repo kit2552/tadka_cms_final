@@ -5,60 +5,7 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL
   ? `${process.env.REACT_APP_BACKEND_URL}/api`
   : 'http://localhost:8001/api';
 
-// Simple in-memory cache to prevent excessive API calls
-const apiCache = new Map();
-const pendingRequests = new Map(); // Track pending requests to prevent duplicates
-const CACHE_DURATION = 30 * 1000; // 30 seconds - reduced for faster updates
-const CACHE_VERSION = 'v5'; // Increment this to bust all caches
-
-// Helper function to get cached data or fetch fresh data
-const getCachedData = async (key, fetchFunction) => {
-  const cached = apiCache.get(key);
-  const now = Date.now();
-  
-  // Return cached data if still valid
-  if (cached && (now - cached.timestamp) < CACHE_DURATION) {
-    console.log(`📋 Using cached data for: ${key}`);
-    return cached.data;
-  }
-  
-  // Check if request is already pending
-  if (pendingRequests.has(key)) {
-    console.log(`⏳ Waiting for pending request: ${key}`);
-    return await pendingRequests.get(key);
-  }
-  
-  console.log(`🌐 Fetching fresh data for: ${key}`);
-  
-  // Create and store the pending promise
-  const fetchPromise = (async () => {
-    try {
-      const data = await fetchFunction();
-      apiCache.set(key, { data, timestamp: now });
-      pendingRequests.delete(key);
-      return data;
-    } catch (error) {
-      pendingRequests.delete(key);
-      // If fetch fails but we have expired cache, use it
-      if (cached) {
-        console.log(`⚠️ Using expired cache due to fetch error for: ${key}`);
-        return cached.data;
-      }
-      throw error;
-    }
-  })();
-  
-  pendingRequests.set(key, fetchPromise);
-  return await fetchPromise;
-};
-
 export const dataService = {
-  // Clear all cached data - useful for forcing fresh data fetch
-  clearCache() {
-    apiCache.clear();
-    pendingRequests.clear();
-    console.log('🗑️ All caches cleared');
-  },
 
   // Helper function to parse user state string into array of individual states
   parseUserStates(stateString) {
