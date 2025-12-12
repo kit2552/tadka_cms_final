@@ -482,11 +482,9 @@ export const dataService = {
       // Get user's actual state preferences from localStorage
       const userStateString = localStorage.getItem('tadka_state') || JSON.stringify(DEFAULT_SELECTED_STATES);
       const userStates = this.parseUserStates(userStateString);
-      const cacheKeyPrefix = `${CACHE_VERSION}_homepage_${userStates.join('_')}`;
+      console.log('🏠 Loading homepage data...');
 
-      console.log('🏠 Loading homepage data with caching...');
-
-      // Use Promise.all to batch requests but with caching to prevent excessive calls
+      // Fetch all data in parallel - no caching, CDN handles it
       const [
         topStoriesData,
         movieReviewsData,
@@ -509,26 +507,26 @@ export const dataService = {
         travelPicsData,
         boxOfficeData
       ] = await Promise.all([
-        getCachedData(`${cacheKeyPrefix}_top_stories`, () => this.getTopStoriesData()),
-        getCachedData(`${cacheKeyPrefix}_movie_reviews`, () => this.getMovieReviewsData()),
-        getCachedData(`${cacheKeyPrefix}_ott_reviews`, () => this.getOTTMovieReviewsData()),
-        getCachedData(`${cacheKeyPrefix}_politics`, () => this.getPoliticsData(userStates)),
-        getCachedData(`${cacheKeyPrefix}_movies`, () => this.getMoviesData(userStates)),
-        getCachedData(`${cacheKeyPrefix}_sports`, () => this.getSportsData()),
-        getCachedData(`${cacheKeyPrefix}_trending_videos`, () => this.getTrendingVideosData(userStates)),
-        getCachedData(`${cacheKeyPrefix}_trailers`, () => this.getTrailersData()),
-        getCachedData(`${cacheKeyPrefix}_nri_news`, () => this.getNRINewsData(userStates)),
-        getCachedData(`${cacheKeyPrefix}_world_news`, () => this.getWorldNewsData()),
-        getCachedData(`${cacheKeyPrefix}_viral_shorts`, () => this.getViralShortsData(userStates)),
-        getCachedData(`${cacheKeyPrefix}_events_interviews`, () => this.getEventsInterviewsData()),
-        getCachedData(`${cacheKeyPrefix}_big_boss`, () => this.getBigBossData()),
-        getCachedData(`${cacheKeyPrefix}_health_food`, () => this.getHealthFoodData()),
-        getCachedData(`${cacheKeyPrefix}_fashion_travel`, () => this.getFashionTravelData()),
-        getCachedData(`${cacheKeyPrefix}_ai_stock_market`, () => this.getAiStockMarketData()),
-        getCachedData(`${cacheKeyPrefix}_hot_topics`, () => this.getHotTopicsData(userStates)),
-        getCachedData(`${cacheKeyPrefix}_photoshoots`, () => this.getPhotoshootsData()),
-        getCachedData(`${cacheKeyPrefix}_travel_pics`, () => this.getTravelPicsData()),
-        getCachedData(`${cacheKeyPrefix}_box_office`, () => this.getBoxOfficeData())
+        this.getTopStoriesData(),
+        this.getMovieReviewsData(),
+        this.getOTTMovieReviewsData(),
+        this.getPoliticsData(userStates),
+        this.getMoviesData(userStates),
+        this.getSportsData(),
+        this.getTrendingVideosData(userStates),
+        this.getTrailersData(),
+        this.getNRINewsData(userStates),
+        this.getWorldNewsData(),
+        this.getViralShortsData(userStates),
+        this.getEventsInterviewsData(),
+        this.getBigBossData(),
+        this.getHealthFoodData(),
+        this.getFashionTravelData(),
+        this.getAiStockMarketData(),
+        this.getHotTopicsData(userStates),
+        this.getPhotoshootsData(),
+        this.getTravelPicsData(),
+        this.getBoxOfficeData()
       ]);
 
       console.log('✅ Homepage data loaded successfully');
