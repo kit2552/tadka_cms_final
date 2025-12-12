@@ -53,6 +53,13 @@ const getCachedData = async (key, fetchFunction) => {
 };
 
 export const dataService = {
+  // Clear all cached data - useful for forcing fresh data fetch
+  clearCache() {
+    apiCache.clear();
+    pendingRequests.clear();
+    console.log('🗑️ All caches cleared');
+  },
+
   // Helper function to parse user state string into array of individual states
   parseUserStates(stateString) {
     return parseStoredStates(stateString);
