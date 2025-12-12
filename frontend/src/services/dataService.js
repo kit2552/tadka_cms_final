@@ -8,8 +8,8 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL
 // Simple in-memory cache to prevent excessive API calls
 const apiCache = new Map();
 const pendingRequests = new Map(); // Track pending requests to prevent duplicates
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-const CACHE_VERSION = 'v4'; // Increment this to bust all caches
+const CACHE_DURATION = 30 * 1000; // 30 seconds - reduced for faster updates
+const CACHE_VERSION = 'v5'; // Increment this to bust all caches
 
 // Helper function to get cached data or fetch fresh data
 const getCachedData = async (key, fetchFunction) => {
