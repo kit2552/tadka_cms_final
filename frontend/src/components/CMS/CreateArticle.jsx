@@ -3071,6 +3071,8 @@ const CreateArticle = () => {
                           borderRadius: '0.375rem 0.375rem 0 0',
                           marginBottom: '0'
                         }}
+                        toolbarHidden={false}
+                        readOnly={false}
                       />
                     </div>
                     <p className="text-xs text-gray-500 mt-2 text-left">
@@ -3204,6 +3206,8 @@ const CreateArticle = () => {
                           borderRadius: '0.375rem 0.375rem 0 0',
                           marginBottom: '0'
                         }}
+                        toolbarHidden={false}
+                        readOnly={false}
                       />
                     </div>
                   </div>
