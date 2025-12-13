@@ -3318,6 +3318,7 @@ const CreateArticle = () => {
                         wrapperClassName="wrapper-class"
                         editorClassName="editor-class"
                         toolbarClassName="toolbar-class"
+                        customDecorators={[decorator]}
                         customStyleMap={{
                           BOLD: {
                             fontWeight: 'bold'
