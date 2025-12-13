@@ -6449,7 +6449,208 @@ const Dashboard = () => {
           <TopicsManagement />
         )}
 
-        {activeTab === 'ads' && (
+        {/* Ads List Tab - Shows all ads with filters similar to Posts */}
+        {activeTab === 'ads-list' && (
+          <>
+            {/* Header with Filters */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+              <div className="px-4 py-3 border-b border-gray-200">
+                <div className="space-y-3">
+                  {/* Filters Row */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    {/* Ad Type Filter */}
+                    <select
+                      value={selectedAdType}
+                      onChange={(e) => setSelectedAdType(e.target.value)}
+                      className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">All Ad Types</option>
+                      <option value="Ad in Sponsored Section">Sponsored Section</option>
+                      <option value="Landing Page">Landing Page</option>
+                      <option value="Banner Ad">Banner Ad</option>
+                      <option value="Sidebar Ad">Sidebar Ad</option>
+                    </select>
+
+                    {/* Status Filter */}
+                    <select
+                      value={selectedAdStatus}
+                      onChange={(e) => setSelectedAdStatus(e.target.value)}
+                      className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">All Status</option>
+                      <option value="published">Published</option>
+                      <option value="draft">Draft</option>
+                    </select>
+
+                    {/* Items per page */}
+                    <select
+                      value={adsItemsPerPage}
+                      onChange={(e) => setAdsItemsPerPage(Number(e.target.value))}
+                      className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="15">15 per page</option>
+                      <option value="30">30 per page</option>
+                      <option value="50">50 per page</option>
+                      <option value="100">100 per page</option>
+                    </select>
+
+                    <div className="ml-auto text-sm text-gray-600">
+                      Total: {adsTotalCount} ads
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ads Table */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              {adsLoading ? (
+                <div className="text-center py-12">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  <p className="mt-2 text-gray-600">Loading ads...</p>
+                </div>
+              ) : ads.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  No ads found
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Title
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Ad Type
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Created
+                        </th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {ads.map((ad) => (
+                        <tr key={ad.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              {ad.image_url && (
+                                <img
+                                  src={ad.image_url}
+                                  alt={ad.title}
+                                  className="h-10 w-16 object-cover rounded mr-3"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                  }}
+                                />
+                              )}
+                              <div className="text-sm font-medium text-gray-900 max-w-md truncate">
+                                {ad.title}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                              {ad.ad_type || 'Sponsored Ad'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span
+                              className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                ad.is_published
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-gray-100 text-gray-800'
+                              }`}
+                            >
+                              {ad.is_published ? 'Published' : 'Draft'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {ad.created_at ? new Date(ad.created_at).toLocaleDateString() : 'N/A'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button
+                              onClick={() => {
+                                setEditingArticle(ad);
+                                setShowCreateAdForm(true);
+                              }}
+                              className="text-blue-600 hover:text-blue-900 mr-3"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDeleteArticle(ad.id)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {adsTotalPages > 1 && (
+                <div className="px-6 py-4 flex items-center justify-between border-t border-gray-200">
+                  <div className="flex-1 flex justify-between sm:hidden">
+                    <button
+                      onClick={() => setAdsCurrentPage(Math.max(1, adsCurrentPage - 1))}
+                      disabled={adsCurrentPage === 1}
+                      className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => setAdsCurrentPage(Math.min(adsTotalPages, adsCurrentPage + 1))}
+                      disabled={adsCurrentPage === adsTotalPages}
+                      className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next
+                    </button>
+                  </div>
+                  <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-sm text-gray-700">
+                        Showing page <span className="font-medium">{adsCurrentPage}</span> of{' '}
+                        <span className="font-medium">{adsTotalPages}</span>
+                      </p>
+                    </div>
+                    <div>
+                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <button
+                          onClick={() => setAdsCurrentPage(Math.max(1, adsCurrentPage - 1))}
+                          disabled={adsCurrentPage === 1}
+                          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Previous
+                        </button>
+                        <button
+                          onClick={() => setAdsCurrentPage(Math.min(adsTotalPages, adsCurrentPage + 1))}
+                          disabled={adsCurrentPage === adsTotalPages}
+                          className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Next
+                        </button>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* Ad Settings Tab - Create and manage ad forms */}
+        {activeTab === 'ad-settings' && (
           <AdManagement 
             showCreateAdForm={showCreateAdForm}
             setShowCreateAdForm={setShowCreateAdForm}
