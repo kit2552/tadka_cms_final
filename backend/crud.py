@@ -1594,9 +1594,6 @@ def get_galleries(db, skip: int = 0, limit: int = 100):
 
 def get_tadka_pics_galleries(db, limit: int = 20):
     """Get latest Tadka Pics enabled galleries"""
-    print(f"[DEBUG] DB name: {db.name}, Collection: {GALLERIES}")
-    print(f"[DEBUG] Total docs in {GALLERIES}: {db[GALLERIES].count_documents({})}")
-    
     galleries = list(db[GALLERIES].find(
         {
             "gallery_type": "vertical",
@@ -1604,10 +1601,6 @@ def get_tadka_pics_galleries(db, limit: int = 20):
         }, 
         {"_id": 0}
     ).sort("created_at", -1).limit(limit))
-    
-    print(f"[DEBUG] get_tadka_pics_galleries: Found {len(galleries)} galleries")
-    for g in galleries:
-        print(f"[DEBUG]   - ID {g.get('id')}: {g.get('title')} - created: {g.get('created_at')}")
     
     # Parse JSON fields
     for gallery in galleries:
