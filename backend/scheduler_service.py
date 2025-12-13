@@ -59,8 +59,50 @@ class ArticleSchedulerService:
             
             logger.info(f"Published {published_articles} scheduled articles and {published_galleries} scheduled galleries")
             
+            # Check for expired top stories
+            self.check_and_expire_top_stories()
+            
         except Exception as e:
             logger.error(f"Error in scheduled content check: {str(e)}")
+    
+    def check_and_expire_top_stories(self):
+        """Check for top stories that have expired and move them back to category"""
+        try:
+            from datetime import datetime
+            
+            # Get all articles that are top stories with an expiration time
+            expired_top_stories = list(db.articles.find({
+                "is_top_story": True,
+                "top_story_expires_at": {"$lte": datetime.utcnow()}
+            }, {"_id": 0, "id": 1, "title": 1, "top_story_expires_at": 1}))
+            
+            if not expired_top_stories:
+                logger.info("No expired top stories found")
+                return
+            
+            # Move each expired top story back to category
+            expired_count = 0
+            for article in expired_top_stories:
+                try:
+                    db.articles.update_one(
+                        {"id": article.get('id')},
+                        {
+                            "$set": {
+                                "is_top_story": False,
+                                "top_story_expires_at": None,
+                                "updated_at": datetime.utcnow()
+                            }
+                        }
+                    )
+                    expired_count += 1
+                    logger.info(f"Moved expired top story to category: {article.get('title')} (ID: {article.get('id')})")
+                except Exception as e:
+                    logger.error(f"Failed to expire top story {article.get('id')}: {str(e)}")
+            
+            logger.info(f"Expired {expired_count} top stories")
+            
+        except Exception as e:
+            logger.error(f"Error in top story expiration check: {str(e)}")
     
     def start_scheduler(self):
         """Start the background scheduler"""
