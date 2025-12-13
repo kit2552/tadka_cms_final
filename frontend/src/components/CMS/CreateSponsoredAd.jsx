@@ -3223,7 +3223,40 @@ const CreateSponsoredAd = ({ onClose }) => {
                     />
                     <span className="text-sm text-gray-700">Schedule for Later</span>
                   </label>
+
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="is_top_story"
+                      checked={formData.is_top_story}
+                      onChange={(e) => setFormData(prev => ({ ...prev, is_top_story: e.target.checked }))}
+                      className="form-checkbox h-4 w-4 text-blue-600"
+                    />
+                    <span className="text-sm text-gray-700">Feature as Top Story</span>
+                  </label>
                 </div>
+
+                {/* Top Story Duration Section */}
+                {formData.is_top_story && (
+                  <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-md">
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      Top Story Duration (Hours) *
+                    </label>
+                    <input
+                      type="number"
+                      name="top_story_duration_hours"
+                      value={formData.top_story_duration_hours}
+                      onChange={handleInputChange}
+                      min="1"
+                      max="168"
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      required={formData.is_top_story}
+                    />
+                    <p className="text-xs text-gray-600 mt-1">
+                      This ad will appear in the Top Stories section for {formData.top_story_duration_hours} hours from publish time, then automatically move to its category section.
+                    </p>
+                  </div>
+                )}
 
                 {/* Scheduling Section */}
                 {formData.is_scheduled && (
