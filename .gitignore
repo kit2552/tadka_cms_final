@@ -176,3 +176,6 @@ coverage/
 # Environment files
 *.env
 *.env.*
+
+# Ruff linter cache
+.ruff_cache/
