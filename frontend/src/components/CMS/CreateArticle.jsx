@@ -1591,7 +1591,8 @@ const CreateArticle = () => {
                       name="content_type"
                       value={formData.content_type}
                       onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      disabled={['movie-reviews', 'movie-reviews-bollywood', 'ott-reviews', 'ott-reviews-bollywood'].includes(formData.category)}
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                       required
                     >
                       <option value="movie_review">Movie Review</option>
@@ -1600,6 +1601,9 @@ const CreateArticle = () => {
                       <option value="video">Video</option>
                       <option value="video_post">Video Post</option>
                     </select>
+                    {['movie-reviews', 'movie-reviews-bollywood', 'ott-reviews', 'ott-reviews-bollywood'].includes(formData.category) && (
+                      <p className="text-xs text-gray-500 mt-1">Content type automatically set to Movie Review for this category</p>
+                    )}
                   </div>
                 </div>
               )}
