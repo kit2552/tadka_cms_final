@@ -9,9 +9,12 @@ import NotificationModal from '../NotificationModal';
 
 // Link component for rendering links in the editor
 const Link = (props) => {
-  const { url } = props.contentState.getEntity(props.entityKey).getData();
+  console.log('🔗 Link component rendering:', props);
+  const entityData = props.contentState.getEntity(props.entityKey).getData();
+  console.log('🔗 Entity data:', entityData);
+  const { url } = entityData;
   return (
-    <a href={url} style={{ color: '#2563eb', textDecoration: 'underline', cursor: 'text' }}>
+    <a href={url} style={{ color: '#2563eb', textDecoration: 'underline', cursor: 'text' }} onClick={(e) => e.preventDefault()}>
       {props.children}
     </a>
   );
@@ -19,16 +22,24 @@ const Link = (props) => {
 
 // Find link entities in content
 const findLinkEntities = (contentBlock, callback, contentState) => {
+  console.log('🔍 Finding link entities in block:', contentBlock.getText());
+  let foundCount = 0;
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK'
-      );
+      if (entityKey !== null) {
+        const entityType = contentState.getEntity(entityKey).getType();
+        console.log('🔍 Found entity:', entityType, 'Key:', entityKey);
+        if (entityType === 'LINK') {
+          foundCount++;
+          return true;
+        }
+      }
+      return false;
     },
     callback
   );
+  console.log('🔍 Total link entities found in block:', foundCount);
 };
 
 // Create decorator for links
