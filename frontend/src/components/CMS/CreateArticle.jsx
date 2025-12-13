@@ -3345,7 +3345,13 @@ const CreateArticle = () => {
                           },
                           link: {
                             inDropdown: false,
-                            options: ['link', 'unlink']
+                            showOpenOptionOnHover: false,
+                            defaultTargetOption: '_blank',
+                            options: ['link', 'unlink'],
+                            linkCallback: (params) => {
+                              console.log('🔗 Link callback:', params);
+                              return { ...params, target: '_blank' };
+                            }
                           },
                           image: {
                             urlEnabled: true,
