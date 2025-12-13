@@ -6651,13 +6651,7 @@ const Dashboard = () => {
           </>
         )}
 
-        {/* Ad Settings Tab - Create and manage ad forms */}
-        {activeTab === 'ad-settings' && (
-          <AdManagement 
-            showCreateAdForm={showCreateAdForm}
-            setShowCreateAdForm={setShowCreateAdForm}
-          />
-        )}
+ 
       </div>
 
       {/* Custom Modal */}
