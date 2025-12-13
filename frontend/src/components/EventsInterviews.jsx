@@ -47,11 +47,11 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
   };
 
   return (
-    <div className="bg-white pt-2 pb-2">
+    <div className="bg-white pt-2 pb-1">
       {/* Header Container with Normal Width */}
       <div className="max-w-5xl-plus mx-auto px-8">
         {/* Header with tabs matching TrendingVideos style */}
-        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-3`}>
+        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-2`}>
           <button
             onClick={() => setActiveTab('events')}
             className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-l-lg ${
@@ -94,7 +94,7 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
           className="relative overflow-x-auto"
           ref={scrollContainerRef}
         >
-          <div className="flex space-x-3 pb-2 scrollbar-hide">
+          <div className="flex space-x-3 pb-1 scrollbar-hide">
             {getCurrentData().map((item, index) => (
               <div
                 key={item.id}
