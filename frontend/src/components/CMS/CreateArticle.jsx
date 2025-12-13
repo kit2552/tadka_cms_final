@@ -3182,7 +3182,7 @@ const CreateArticle = () => {
                             options: ['left', 'center', 'right', 'justify']
                           },
                           link: {
-                            inDropdown: false,
+                            inDropdown: true,
                             showOpenOptionOnHover: false,
                             defaultTargetOption: '_blank',
                             options: ['link', 'unlink']
