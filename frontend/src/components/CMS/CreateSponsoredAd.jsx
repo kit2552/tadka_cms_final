@@ -3208,8 +3208,10 @@ const CreateSponsoredAd = ({ onClose }) => {
                 </div>
               )}
             </div>
+            )}
 
-            {/* FAQs Section - Accordion */}
+            {/* FAQs Section - Accordion - Hide for landing pages */}
+            {formData.ad_type !== 'landing_home' && formData.ad_type !== 'landing_inner' && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div 
                 className="px-6 py-4 border-b border-gray-200 cursor-pointer flex items-center justify-between hover:bg-gray-50"
