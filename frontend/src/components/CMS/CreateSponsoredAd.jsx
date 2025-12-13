@@ -63,7 +63,8 @@ const CreateSponsoredAd = ({ onClose }) => {
     tags: '',
     artists: [], // New field for artists
     movie_rating: '', // New field for movie rating
-    is_featured: false,
+    // Sponsored/Featured flags
+    is_featured: true, // All ads are sponsored by default
     is_published: true,
     is_scheduled: false,
     scheduled_publish_at: '',
