@@ -17,16 +17,16 @@ const CreateSponsoredAd = ({ onClose }) => {
   const [languages, setLanguages] = useState([]);
   const [states, setStates] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [editorStateSecondary, setEditorStateSecondary] = useState(EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
+  const [editorStateSecondary, setEditorStateSecondary] = useState(() => EditorState.createEmpty());
   
   // Movie Review Editor States
-  const [editorPlotSummary, setEditorPlotSummary] = useState(EditorState.createEmpty());
-  const [editorPerformances, setEditorPerformances] = useState(EditorState.createEmpty());
-  const [editorWhatWorks, setEditorWhatWorks] = useState(EditorState.createEmpty());
-  const [editorWhatDoesntWork, setEditorWhatDoesntWork] = useState(EditorState.createEmpty());
-  const [editorTechnicalAspects, setEditorTechnicalAspects] = useState(EditorState.createEmpty());
-  const [editorFinalVerdict, setEditorFinalVerdict] = useState(EditorState.createEmpty());
+  const [editorPlotSummary, setEditorPlotSummary] = useState(() => EditorState.createEmpty());
+  const [editorPerformances, setEditorPerformances] = useState(() => EditorState.createEmpty());
+  const [editorWhatWorks, setEditorWhatWorks] = useState(() => EditorState.createEmpty());
+  const [editorWhatDoesntWork, setEditorWhatDoesntWork] = useState(() => EditorState.createEmpty());
+  const [editorTechnicalAspects, setEditorTechnicalAspects] = useState(() => EditorState.createEmpty());
+  const [editorFinalVerdict, setEditorFinalVerdict] = useState(() => EditorState.createEmpty());
   
   // Movie Review Accordion States
   const [reviewAccordions, setReviewAccordions] = useState({
