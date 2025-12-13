@@ -815,7 +815,11 @@ const ArticlePage = () => {
                   .prose p a,
                   .prose div a,
                   .prose-lg a,
-                  .prose-lg a[style] {
+                  .prose-lg a[style],
+                  .prose a span,
+                  .prose a span[style],
+                  .prose-lg a span,
+                  .prose-lg a span[style] {
                     color: #2563eb !important;
                     text-decoration: underline !important;
                     background: none !important;
@@ -823,7 +827,9 @@ const ArticlePage = () => {
                     font-style: normal !important;
                   }
                   .prose a:hover,
-                  .prose-lg a:hover {
+                  .prose-lg a:hover,
+                  .prose a:hover span,
+                  .prose-lg a:hover span {
                     color: #1d4ed8 !important;
                   }
                 `}</style>
