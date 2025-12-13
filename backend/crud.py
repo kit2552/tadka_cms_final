@@ -329,7 +329,8 @@ def create_article(db, article: dict):
         "tags": article.get("tags"),
         "artists": article.get("artists"),
         "movie_rating": article.get("movie_rating"),
-        "is_featured": True,  # All ads are sponsored by default
+        "is_featured": article.get("is_featured", False),
+        "is_sponsored": True,  # All ads are sponsored by default
         "is_top_story": article.get("is_top_story", False),
         "top_story_duration_hours": article.get("top_story_duration_hours", 24),
         "top_story_expires_at": None,
