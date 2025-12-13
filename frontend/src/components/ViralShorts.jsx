@@ -65,11 +65,11 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
   };
 
   return (
-    <div className="bg-white pt-0 pb-2 -mt-[9px] -mb-[17px]">
+    <div className="bg-white pt-1 pb-0">
       {/* Header Container with Normal Width */}
       <div className="max-w-5xl-plus mx-auto px-8">
         {/* Header with Tabs and More Button */}
-        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-1.5`}>
+        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-1`}>
         <button
           onClick={() => setActiveTab('viral-shorts')}
           className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-l-lg ${
@@ -108,13 +108,13 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
       </div>
 
       {/* Viral Shorts Grid - Vertical like YouTube Shorts */}
-      <div className="bg-white px-3 py-1.5">
+      <div className="bg-white px-3 py-0">
         {/* Multiple Videos Grid Container - Vertical Layout */}
         <div 
           className="overflow-x-auto"
           ref={sliderRef}
         >
-          <div className={`flex space-x-3 pb-2 scrollbar-hide`}>
+          <div className={`flex space-x-3 pt-1 pb-0 scrollbar-hide`}>
             {getCurrentData().map((item, index) => (
               <div
                 key={item.id}

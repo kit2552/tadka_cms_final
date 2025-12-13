@@ -107,11 +107,11 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   };
 
   return (
-    <div className="bg-white pt-0 pb-2 -mt-[10px] -mb-[18px]">
+    <div className="bg-white pt-1 pb-0">
       {/* Header Container with Normal Width */}
       <div className="max-w-5xl-plus mx-auto px-8">
         {/* Header with tabs matching BoxOffice style */}
-        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-3`}>
+        <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-1`}>
           <button
             onClick={() => setActiveTab('general')}
             className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-l-lg ${
@@ -162,7 +162,7 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
               <p className="text-sm">No movie reviews available at the moment.</p>
             </div>
           ) : (
-            <div className="flex space-x-3 pb-2 scrollbar-hide">
+            <div className="flex space-x-3 pt-1 pb-0 scrollbar-hide">
               {getDisplayData().map((item, index) => {
                 const rating = parseFloat(item.movie_rating || getMovieRating(item));
                 const formattedRating = rating % 1 === 0 ? rating.toFixed(0) : rating.toString();
