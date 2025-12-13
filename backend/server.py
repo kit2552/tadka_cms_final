@@ -1113,6 +1113,7 @@ async def get_most_read_articles(limit: int = 15, db = Depends(get_db)):
             "is_published": article.is_published,
             "is_scheduled": article.is_scheduled,
             "scheduled_publish_at": article.scheduled_publish_at,
+            "scheduled_timezone": article.get("scheduled_timezone", "IST") if isinstance(article, dict) else getattr(article, "scheduled_timezone", "IST"),
             "published_at": article.published_at,
             "view_count": article.view_count
         })
