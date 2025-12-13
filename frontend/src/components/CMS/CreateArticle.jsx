@@ -9,15 +9,42 @@ import NotificationModal from '../NotificationModal';
 
 // Link component for rendering links in the editor
 const Link = (props) => {
-  console.log('🔗 Link component rendering:', props);
-  const entityData = props.contentState.getEntity(props.entityKey).getData();
-  console.log('🔗 Entity data:', entityData);
-  const { url } = entityData;
-  return (
-    <a href={url} style={{ color: '#2563eb', textDecoration: 'underline', cursor: 'text' }} onClick={(e) => e.preventDefault()}>
-      {props.children}
-    </a>
-  );
+  try {
+    console.log('🔗 Link component rendering');
+    console.log('🔗 Props:', { 
+      hasEntityKey: !!props.entityKey, 
+      hasContentState: !!props.contentState,
+      hasChildren: !!props.children,
+      childrenText: props.children
+    });
+    
+    if (!props.entityKey || !props.contentState) {
+      console.error('❌ Missing entityKey or contentState');
+      return <span style={{ color: 'red' }}>{props.children}</span>;
+    }
+    
+    const entity = props.contentState.getEntity(props.entityKey);
+    console.log('🔗 Entity:', entity);
+    
+    const entityData = entity.getData();
+    console.log('🔗 Entity data:', entityData);
+    
+    const { url } = entityData;
+    console.log('🔗 Rendering link with URL:', url);
+    
+    return (
+      <a 
+        href={url} 
+        style={{ color: '#2563eb', textDecoration: 'underline', cursor: 'text' }} 
+        onClick={(e) => e.preventDefault()}
+      >
+        {props.children}
+      </a>
+    );
+  } catch (error) {
+    console.error('❌ Error in Link component:', error);
+    return <span style={{ color: 'red', textDecoration: 'underline' }}>{props.children}</span>;
+  }
 };
 
 // Find link entities in content
