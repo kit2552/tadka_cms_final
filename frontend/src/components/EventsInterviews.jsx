@@ -94,7 +94,7 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
           className="relative overflow-x-auto"
           ref={scrollContainerRef}
         >
-          <div className="flex space-x-3 pb-0 scrollbar-hide">
+          <div className="flex space-x-3 pt-1 pb-0 scrollbar-hide">
             {getCurrentData().map((item, index) => (
               <div
                 key={item.id}
