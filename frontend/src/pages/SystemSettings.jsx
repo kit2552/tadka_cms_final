@@ -766,18 +766,108 @@ const SystemSettings = () => {
               </div>
             )}
 
-            {/* Placeholders Tab */}
-            {activeTab === 'placeholders' && (
-              <div className="py-16">
-                <div className="flex items-start gap-4">
-                  <svg className="w-12 h-12 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                  </svg>
-                  <div className="text-left">
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">Placeholders Configuration</h3>
-                    <p className="text-gray-600">Configure placeholder images and defaults</p>
+            {/* Google Ads Tab */}
+            {activeTab === 'google-ads' && (
+              <div className="space-y-6">
+                {adsLoading ? (
+                  <div className="flex items-center justify-center h-64">
+                    <div className="text-gray-500">Loading ad settings...</div>
                   </div>
-                </div>
+                ) : (
+                  <>
+                    {/* Notification */}
+                    {adsNotification.show && (
+                      <div className={`p-3 rounded-lg ${
+                        adsNotification.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
+                      }`}>
+                        {adsNotification.message}
+                      </div>
+                    )}
+
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">Google Ads Placements</h3>
+                      <p className="text-sm text-gray-600 text-left">Enable or disable Google Ads at different locations across your site. Changes are saved automatically.</p>
+                    </div>
+
+                    {/* Ad Placements Grid */}
+                    <div className="space-y-2">
+                      {adPlacements.map((placement) => (
+                        <div
+                          key={placement.key}
+                          className={`bg-white rounded border ${
+                            adSettings[placement.key] ? 'border-green-500 bg-green-50' : 'border-gray-200'
+                          } p-3 transition-all duration-200`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1 text-left">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="text-sm font-semibold text-gray-900">{placement.title}</h3>
+                                {placement.status !== 'Active' && (
+                                  <span className="px-1.5 py-0.5 text-xs font-medium bg-gray-200 text-gray-600 rounded">
+                                    {placement.status}
+                                  </span>
+                                )}
+                                {adSettings[placement.key] && placement.status === 'Active' && (
+                                  <span className="px-1.5 py-0.5 text-xs font-medium bg-green-500 text-white rounded">
+                                    Enabled
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-600 mb-1">{placement.description}</p>
+                              <div className="flex items-center gap-2 text-xs text-gray-500">
+                                <span className="flex items-center gap-1">
+                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  </svg>
+                                  {placement.location}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Toggle Switch */}
+                            <div className="flex items-center ml-3">
+                              <button
+                                onClick={() => placement.status === 'Active' && handleAdToggle(placement.key)}
+                                disabled={placement.status !== 'Active'}
+                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                                  placement.status !== 'Active'
+                                    ? 'bg-gray-300 cursor-not-allowed'
+                                    : adSettings[placement.key]
+                                    ? 'bg-green-500'
+                                    : 'bg-gray-300'
+                                }`}
+                              >
+                                <span
+                                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+                                    adSettings[placement.key] ? 'translate-x-6' : 'translate-x-1'
+                                  }`}
+                                />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div className="text-left">
+                          <h4 className="text-sm font-semibold text-blue-900 mb-1">Important Information</h4>
+                          <ul className="text-xs text-blue-800 space-y-1">
+                            <li>• Make sure you have added your Google AdSense code to your site</li>
+                            <li>• Enabled placements will show Google Ads automatically</li>
+                            <li>• Changes take effect immediately on your live site</li>
+                            <li>• "Coming Soon" placements are under development</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
