@@ -246,8 +246,7 @@ def get_articles_count_for_cms(
     query = {
         "article_language": language,
         # Exclude ads from posts count
-        "ad_type": {"$exists": False},
-        "category": {"$ne": "Sponsored Ad"}
+        "ad_type": {"$exists": False}
     }
     
     if category:
@@ -306,9 +305,8 @@ def get_articles_for_cms(
     """Get paginated articles for CMS with filters - EXCLUDES ads"""
     query = {
         "article_language": language,
-        # Exclude ads from posts - ads are articles with ad_type field or category 'Sponsored Ad'
-        "ad_type": {"$exists": False},
-        "category": {"$ne": "Sponsored Ad"}
+        # Exclude ads from posts - ads are articles with ad_type field
+        "ad_type": {"$exists": False}
     }
     
     if category:
