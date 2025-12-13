@@ -742,9 +742,12 @@ const CreateArticle = () => {
       
       const { contentBlocks, entityMap } = blocksFromHtml;
       const newContentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
-      const newEditorState = EditorState.push(savedEditorState, newContentState, 'insert-characters');
       
-      console.log('New editor state created');
+      // Create new editor state with decorator to render links
+      const newEditorStateWithoutDecorator = EditorState.createWithContent(newContentState);
+      const newEditorState = EditorState.set(newEditorStateWithoutDecorator, { decorator });
+      
+      console.log('New editor state created with decorator');
       console.log('New plain text:', newContentState.getPlainText());
       
       // Close modal first
