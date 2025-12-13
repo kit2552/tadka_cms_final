@@ -667,6 +667,9 @@ const CreateArticle = () => {
       return;
     }
     
+    const savedEditorState = savedEditorStateRef.current;
+    const savedSelection = savedSelectionRef.current;
+    
     if (!savedEditorState || !savedSelection) {
       console.error('No saved editor state or selection');
       alert('Error: Lost editor state. Please try again.');
@@ -674,67 +677,78 @@ const CreateArticle = () => {
       return;
     }
     
-    try {
-      console.log('Adding link:', linkUrl);
-      
-      const contentState = savedEditorState.getCurrentContent();
-      
-      // Create entity
-      const contentStateWithEntity = contentState.createEntity(
-        'LINK',
-        'MUTABLE',
-        { url: linkUrl }
-      );
-      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-      
-      // Apply entity to selection
-      const newContentState = Modifier.applyEntity(
-        contentStateWithEntity,
-        savedSelection,
-        entityKey
-      );
-      
-      // Push new content state
-      const newEditorState = EditorState.push(
-        savedEditorState,
-        newContentState,
-        'apply-entity'
-      );
-      
-      // Force selection after the link
-      const selectionAfterLink = savedSelection.merge({
-        anchorOffset: savedSelection.getEndOffset(),
-        focusOffset: savedSelection.getEndOffset(),
-      });
-      
-      const finalEditorState = EditorState.forceSelection(newEditorState, selectionAfterLink);
-      
-      console.log('Setting new editor state');
-      
-      // Directly set the editor state
-      setEditorState(finalEditorState);
-      
-      // Manually update form data
-      const htmlContent = draftToHtml(convertToRaw(finalEditorState.getCurrentContent()));
-      console.log('Generated HTML:', htmlContent);
-      setFormData(prev => ({
-        ...prev,
-        content: htmlContent
-      }));
-      
-      console.log('Link added successfully');
-      
-    } catch (error) {
-      console.error('Error adding link:', error);
-      alert('Error adding link: ' + error.message);
-    } finally {
-      // Close modal and clear saved state
-      setShowLinkModal(false);
-      setLinkUrl('');
-      setLinkText('');
-      setSavedEditorState(null);
-      setSavedSelection(null);
-    }
+    // Close modal first
+    setShowLinkModal(false);
+    setLinkUrl('');
+    setLinkText('');
+    
+    // Use setTimeout to ensure modal closes before state update
+    setTimeout(() => {
+      try {
+        console.log('Adding link:', linkUrl);
+        
+        const contentState = savedEditorState.getCurrentContent();
+        console.log('Content text before:', contentState.getPlainText());
+        
+        // Create entity
+        const contentStateWithEntity = contentState.createEntity(
+          'LINK',
+          'MUTABLE',
+          { url: linkUrl }
+        );
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+        
+        // Apply entity to selection
+        const newContentState = Modifier.applyEntity(
+          contentStateWithEntity,
+          savedSelection,
+          entityKey
+        );
+        
+        console.log('Content text after:', newContentState.getPlainText());
+        
+        // Push new content state
+        const newEditorState = EditorState.push(
+          savedEditorState,
+          newContentState,
+          'apply-entity'
+        );
+        
+        // Force selection after the link
+        const selectionAfterLink = savedSelection.merge({
+          anchorOffset: savedSelection.getEndOffset(),
+          focusOffset: savedSelection.getEndOffset(),
+        });
+        
+        const finalEditorState = EditorState.acceptSelection(newEditorState, selectionAfterLink);
+        
+        console.log('Setting new editor state');
+        
+        // Update both editor state and form data together
+        setEditorState(finalEditorState);
+        
+        const htmlContent = draftToHtml(convertToRaw(finalEditorState.getCurrentContent()));
+        console.log('Generated HTML:', htmlContent);
+        
+        setFormData(prev => {
+          console.log('Updating formData');
+          return {
+            ...prev,
+            content: htmlContent
+          };
+        });
+        
+        console.log('Link added successfully');
+        
+        // Clear refs
+        savedEditorStateRef.current = null;
+        savedSelectionRef.current = null;
+        
+      } catch (error) {
+        console.error('Error adding link:', error);
+        alert('Error adding link: ' + error.message);
+      }
+    }, 100);
   };
 
   const onEditorStateChangeSecondary = (editorState) => {
