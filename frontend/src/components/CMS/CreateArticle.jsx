@@ -3136,23 +3136,8 @@ const CreateArticle = () => {
                     </label>
                     <div className="border border-gray-300 rounded-md">
                       <Editor
-                        ref={editorRef}
                         editorState={editorState}
                         onEditorStateChange={onEditorStateChange}
-                        onFocus={() => {
-                          console.log('Editor focused');
-                        }}
-                        onBlur={(event) => {
-                          console.log('Editor blur prevented');
-                          // Try to keep focus
-                          setTimeout(() => {
-                            if (editorRef.current) {
-                              editorRef.current.focusEditor();
-                            }
-                          }, 0);
-                        }}
-                        handlePastedText={() => false}
-                        stripPastedStyles={false}
                         wrapperClassName="wrapper-class"
                         editorClassName="editor-class"
                         toolbarClassName="toolbar-class"
@@ -3182,9 +3167,7 @@ const CreateArticle = () => {
                             options: ['left', 'center', 'right', 'justify']
                           },
                           link: {
-                            inDropdown: true,
-                            showOpenOptionOnHover: false,
-                            defaultTargetOption: '_blank',
+                            inDropdown: false,
                             options: ['link', 'unlink']
                           },
                           image: {
