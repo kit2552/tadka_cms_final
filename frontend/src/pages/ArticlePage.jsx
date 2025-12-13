@@ -25,14 +25,6 @@ const ArticlePage = () => {
   });
   const [twitterEmbedError, setTwitterEmbedError] = useState(false);
 
-  // Utility function to strip inline styles from links
-  const stripLinkStyles = (html) => {
-    if (!html) return html;
-    return html
-      .replace(/<a([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1$2>') // Remove inline styles (double quotes)
-      .replace(/<a([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1$2>'); // Remove inline styles (single quotes)
-  };
-
   // Update page title, meta tags, and schema markup for SEO/AEO
   useEffect(() => {
     if (article) {
