@@ -1916,74 +1916,23 @@ const CreateSponsoredAd = ({ onClose }) => {
                     </div>
                   )}
 
-                  {/* VIDEO POST Type Fields - Similar to POST but with YouTube URL */}
+                  {/* VIDEO POST Type Fields - Just Title, YouTube URL in Video Section */}
                   {formData.content_type === 'video_post' && (
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-4">
-                      {/* Left Column: Title and YouTube URL (60% = 3 cols) */}
-                      <div className="space-y-4 md:col-span-3">
-                        {/* Title Field */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Title *
-                          </label>
-                          <input
-                            type="text"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          />
-                        </div>
-
-                        {/* YouTube Video URL */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            YouTube Video URL *
-                          </label>
-                          <input
-                            type="url"
-                            name="youtube_url"
-                            value={formData.youtube_url}
-                            onChange={handleInputChange}
-                            placeholder="https://www.youtube.com/watch?v=..."
-                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          />
-                          <p className="text-xs text-gray-600 mt-1 text-left">
-                            This will be used as the thumbnail and video player
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Right Column: Video Preview (40% = 2 cols) */}
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          Video Preview
-                        </label>
-                        <div className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center" style={{ minHeight: '200px' }}>
-                          {formData.youtube_url ? (
-                            <div className="w-full p-2">
-                              <iframe
-                                src={formData.youtube_url.replace('watch?v=', 'embed/').split('&')[0]}
-                                className="w-full rounded"
-                                style={{ height: '180px' }}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                title="YouTube Video Preview"
-                              />
-                            </div>
-                          ) : (
-                            <div className="text-center p-4">
-                              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                              </svg>
-                              <p className="mt-2 text-sm text-gray-500">No video URL</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                        Title *
+                      </label>
+                      <input
+                        type="text"
+                        name="title"
+                        value={formData.title}
+                        onChange={handleInputChange}
+                        className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1 text-left">
+                        Add the YouTube URL in the Video Section below
+                      </p>
                     </div>
                   )}
 
