@@ -256,6 +256,20 @@ const ArticlePage = () => {
       case 'reddit':
         shareUrl = `https://reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
         break;
+      case 'copy':
+        // Copy link to clipboard
+        navigator.clipboard.writeText(url).then(() => {
+          alert('Link copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy link:', err);
+        });
+        return;
+      case 'email':
+        // Open email client with pre-filled content
+        const subject = encodeURIComponent(title);
+        const body = encodeURIComponent(`Check out this article: ${title}\n\n${url}`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        return;
       default:
         return;
     }
