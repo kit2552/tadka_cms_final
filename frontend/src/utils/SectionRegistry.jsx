@@ -290,7 +290,7 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
       id: 'videosongs-tv-row',
       name: 'Theater Releases & OTT & TV Row',
       component: (
-        <div className="max-w-5xl-plus mx-auto px-8 pt-0 pb-2">
+        <div className="max-w-5xl-plus mx-auto px-8 pt-0 pb-2 -mb-3">
           <div className={`grid gap-4 ${isIpad ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 lg:grid-cols-3'}`}>
             <div>
               <MovieSchedules 
