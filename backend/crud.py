@@ -737,6 +737,28 @@ def get_latest_theater_releases(db, limit: int = 100):
     ]).limit(limit))
     return serialize_doc(docs)
 
+def get_latest_theater_releases_by_state(db, limit: int = 100):
+    """Get latest state-targeted theater releases (excluding 'all' state)"""
+    query = {
+        "states": {"$not": {"$regex": '"all"'}}
+    }
+    docs = list(db[THEATER_RELEASES].find(query).sort([
+        ("updated_at", -1),
+        ("created_at", -1)
+    ]).limit(limit))
+    return serialize_doc(docs)
+
+def get_latest_theater_releases_all_states(db, limit: int = 100):
+    """Get latest theater releases with state='all' (Bollywood)"""
+    query = {
+        "states": {"$regex": '"all"'}
+    }
+    docs = list(db[THEATER_RELEASES].find(query).sort([
+        ("updated_at", -1),
+        ("created_at", -1)
+    ]).limit(limit))
+    return serialize_doc(docs)
+
 def get_this_week_theater_releases(db, limit: int = 100):
     """Get this week's theater releases - kept for backward compatibility"""
     from datetime import date, timedelta
