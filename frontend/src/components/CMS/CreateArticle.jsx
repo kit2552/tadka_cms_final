@@ -649,9 +649,9 @@ const CreateArticle = () => {
       console.log('Selected text for link:', selectedText);
       console.log('Saving editor state and selection');
       
-      // Save the current editor state and selection
-      setSavedEditorState(editorState);
-      setSavedSelection(selection);
+      // Save the current editor state and selection using refs
+      savedEditorStateRef.current = editorState;
+      savedSelectionRef.current = selection;
       
       setLinkText(selectedText);
       setLinkUrl('');
