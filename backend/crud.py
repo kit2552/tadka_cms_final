@@ -328,6 +328,8 @@ def create_article(db, article: dict):
         "movie_rating": article.get("movie_rating"),
         "is_featured": article.get("is_featured", False),
         "is_top_story": article.get("is_top_story", False),
+        "top_story_duration_hours": article.get("top_story_duration_hours", 24),
+        "top_story_expires_at": None,
         "is_published": article.get("is_published", True),
         "is_scheduled": article.get("is_scheduled", False),
         "scheduled_publish_at": article.get("scheduled_publish_at"),
