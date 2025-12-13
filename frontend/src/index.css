@@ -355,7 +355,9 @@ code {
 
 /* Link modal popup - DEBUG VERSION */
 .rdw-link-modal,
-.rdw-image-modal {
+.rdw-image-modal,
+.rdw-link-modal *,
+.rdw-image-modal * {
   position: absolute !important;
   top: 35px !important;
   left: 5px !important;
@@ -363,6 +365,7 @@ code {
   flex-direction: column;
   width: 235px !important;
   height: auto !important;
+  min-height: 100px !important;
   border: 3px solid red !important;
   padding: 15px !important;
   border-radius: 4px;
@@ -372,6 +375,15 @@ code {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
+}
+
+/* Debug: Make ANY element with rdw-link in class visible */
+[class*="rdw-link"] {
+  border: 2px solid blue !important;
+  background: lightblue !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
 }
 
 .rdw-link-modal-label {
