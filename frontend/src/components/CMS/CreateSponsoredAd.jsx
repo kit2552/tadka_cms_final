@@ -1470,7 +1470,14 @@ const CreateSponsoredAd = ({ onClose }) => {
                 </h1>
                 {/* Close Button */}
                 <button
-                  onClick={onClose}
+                  onClick={() => {
+                    if (onClose) {
+                      onClose();
+                    } else {
+                      navigate('/cms/dashboard?tab=ads-list');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
                   type="button"
                   className="text-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center pt-[7px]"
                 >
