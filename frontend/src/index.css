@@ -307,7 +307,6 @@ code {
 .DraftEditor-root,
 .public-DraftEditor-content,
 .public-DraftEditor-content div,
-.public-DraftEditor-content span,
 .public-DraftEditor-content p {
   font-size: 1rem !important;
   font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
@@ -315,7 +314,14 @@ code {
   line-height: 1.75;
 }
 
-/* Bold text in rich text editor */
+/* Default weight for normal spans */
+.public-DraftEditor-content span {
+  font-size: 1rem !important;
+  font-family: 'Merriweather Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  line-height: 1.75;
+}
+
+/* Bold text in rich text editor - must override default */
 .public-DraftEditor-content strong,
 .public-DraftEditor-content b,
 .public-DraftEditor-content span[style*="font-weight: bold"],
