@@ -1621,9 +1621,17 @@ const CreateArticle = () => {
             cursor: text !important;
             pointer-events: none !important;
           }
-          /* Hide default link popup */
-          .rdw-link-decorator-wrapper {
+          /* Hide only the popup controls, not the link */
+          .rdw-link-decorator-icon {
             display: none !important;
+          }
+          /* Style the link decorator wrapper */
+          .rdw-link-decorator-wrapper {
+            display: inline !important;
+          }
+          .rdw-link-decorator-wrapper a {
+            color: #2563eb !important;
+            text-decoration: underline !important;
           }
           /* Make sure the editor content inherits styles properly */
           .rdw-editor-main {
