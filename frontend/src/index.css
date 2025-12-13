@@ -519,7 +519,11 @@ code {
 .prose-lg p a,
 .prose-lg div a,
 div.prose a,
-div.prose-lg a {
+div.prose-lg a,
+.prose a span,
+.prose a span[style],
+.prose-lg a span,
+.prose-lg a span[style] {
   color: #2563eb !important;
   text-decoration: underline !important;
   cursor: pointer !important;
@@ -536,7 +540,9 @@ div.prose-lg a {
 .prose-lg a[style*="Color"],
 div.prose a[style],
 div.prose-lg a[style],
-.prose.prose-lg a[style] {
+.prose.prose-lg a[style],
+.prose a span[style*="color"],
+.prose-lg a span[style*="color"] {
   color: #2563eb !important;
 }
 
