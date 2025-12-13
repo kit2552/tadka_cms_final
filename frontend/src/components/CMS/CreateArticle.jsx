@@ -478,8 +478,17 @@ const CreateArticle = () => {
             console.log('📝 Entity map:', contentBlock.entityMap);
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks, contentBlock.entityMap);
             const editorStateWithContent = EditorState.createWithContent(contentState, decorator);
-            console.log('📝 Editor state created with decorator');
+            console.log('📝 Editor state created with decorator:', !!editorStateWithContent.getDecorator());
+            console.log('📝 Decorator details:', editorStateWithContent.getDecorator());
             setEditorState(editorStateWithContent);
+            
+            // Force re-render after a small delay to ensure decorator is applied
+            setTimeout(() => {
+              console.log('📝 Force applying decorator again');
+              const currentContent = editorStateWithContent.getCurrentContent();
+              const newState = EditorState.createWithContent(currentContent, decorator);
+              setEditorState(newState);
+            }, 100);
           }
         }
 
