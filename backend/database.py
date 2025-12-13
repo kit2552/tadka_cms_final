@@ -1,10 +1,14 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import MongoClient
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Get MongoDB URL from environment variable
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017/')
-DATABASE_NAME = "tadka_cms"
+DATABASE_NAME = os.environ.get('DB_NAME', 'tadka_cms')
 
 # Synchronous client for non-async operations
 mongo_client = MongoClient(MONGO_URL)
