@@ -729,8 +729,16 @@ def get_upcoming_theater_releases(db, limit: int = 100):
     ).sort("release_date", 1).limit(limit))
     return serialize_doc(docs)
 
+def get_latest_theater_releases(db, limit: int = 100):
+    """Get latest theater releases sorted by updated_at/created_at"""
+    docs = list(db[THEATER_RELEASES].find({}).sort([
+        ("updated_at", -1),
+        ("created_at", -1)
+    ]).limit(limit))
+    return serialize_doc(docs)
+
 def get_this_week_theater_releases(db, limit: int = 100):
-    """Get this week's theater releases"""
+    """Get this week's theater releases - kept for backward compatibility"""
     from datetime import date, timedelta
     today = date.today()
     week_end = (today + timedelta(days=7)).isoformat()
@@ -836,8 +844,16 @@ def get_upcoming_ott_releases(db, limit: int = 100):
     ).sort("release_date", 1).limit(limit))
     return serialize_doc(docs)
 
+def get_latest_ott_releases(db, limit: int = 100):
+    """Get latest OTT releases sorted by updated_at/created_at"""
+    docs = list(db[OTT_RELEASES].find({}).sort([
+        ("updated_at", -1),
+        ("created_at", -1)
+    ]).limit(limit))
+    return serialize_doc(docs)
+
 def get_this_week_ott_releases(db, limit: int = 100):
-    """Get this week's OTT releases"""
+    """Get this week's OTT releases - kept for backward compatibility"""
     from datetime import date, timedelta
     today = date.today()
     week_end = (today + timedelta(days=7)).isoformat()
