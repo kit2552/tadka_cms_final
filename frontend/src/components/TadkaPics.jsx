@@ -259,12 +259,12 @@ const TadkaPics = ({ images, onImageClick }) => {
                 className="flex-shrink-0 cursor-pointer group transition-transform duration-300 hover:scale-105"
                 onClick={() => handleImageClick(index)}
               >
-                <div className="relative w-32 h-48 rounded-lg overflow-hidden border-2 border-gray-200 group-hover:border-gray-300 transition-colors duration-300">
+                <div className="relative w-32 h-48 rounded-lg overflow-hidden border-2 border-gray-200 group-hover:border-gray-300 transition-colors duration-300 bg-gray-100">
                   <img
                     src={actress.image}
                     alt={actress.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    style={{ objectFit: 'cover', minHeight: '100%' }}
+                    className="w-full h-full object-contain transition-transform duration-300"
+                    style={{ objectFit: 'contain' }}
                     loading="lazy"
                     onError={(e) => {
                       e.target.style.display = 'none';
