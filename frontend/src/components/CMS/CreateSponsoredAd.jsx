@@ -1297,21 +1297,37 @@ const CreateSponsoredAd = ({ onClose }) => {
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
           }
           .rdw-option-active {
-            background: #6b7280 !important;
-            color: white !important;
-            border-color: #4b5563 !important;
+            background: #d1d5db !important;
+            color: #374151 !important;
+            border-color: #9ca3af !important;
           }
           .rdw-option-wrapper img {
             pointer-events: none;
           }
-          /* Ensure bold text actually shows as bold */
-          .editor-class strong, .editor-class b {
+          /* Ensure bold text actually shows as bold - Draft.js specific */
+          .editor-class strong, 
+          .editor-class b,
+          .DraftEditor-root strong,
+          .DraftEditor-root b,
+          .public-DraftStyleDefault-block strong,
+          .public-DraftStyleDefault-block b,
+          .rdw-editor-main strong,
+          .rdw-editor-main b {
             font-weight: 700 !important;
           }
-          .editor-class em, .editor-class i {
+          /* Draft.js uses span with data-text attribute for inline styles */
+          .rdw-editor-main [style*="font-weight: bold"],
+          .rdw-editor-main [style*="font-weight:bold"] {
+            font-weight: 700 !important;
+          }
+          .editor-class em, 
+          .editor-class i,
+          .rdw-editor-main em,
+          .rdw-editor-main i {
             font-style: italic !important;
           }
-          .editor-class u {
+          .editor-class u,
+          .rdw-editor-main u {
             text-decoration: underline !important;
           }
           /* Make sure the editor content inherits styles properly */
@@ -1321,6 +1337,10 @@ const CreateSponsoredAd = ({ onClose }) => {
           }
           .public-DraftEditor-content {
             min-height: inherit;
+          }
+          /* Force Draft.js inline styles to work */
+          .public-DraftStyleDefault-block {
+            font-family: inherit;
           }
           .rdw-link-modal, .rdw-image-modal {
             z-index: 9999 !important;
