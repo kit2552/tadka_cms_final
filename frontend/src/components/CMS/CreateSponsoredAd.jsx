@@ -3227,8 +3227,24 @@ const CreateSponsoredAd = ({ onClose }) => {
                 {/* Scheduling Section */}
                 {formData.is_scheduled && (
                   <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+                    <div className="mb-3">
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                        Timezone *
+                      </label>
+                      <select
+                        name="scheduled_timezone"
+                        value={formData.scheduled_timezone}
+                        onChange={handleInputChange}
+                        className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required={formData.is_scheduled}
+                      >
+                        <option value="IST">IST (Indian Standard Time - UTC+5:30)</option>
+                        <option value="EST">EST (Eastern Standard Time - UTC-5:00)</option>
+                      </select>
+                    </div>
+
                     <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                      Scheduled Publish Date & Time (IST) *
+                      Scheduled Publish Date & Time ({formData.scheduled_timezone}) *
                     </label>
                     <input
                       type="datetime-local"
@@ -3240,7 +3256,7 @@ const CreateSponsoredAd = ({ onClose }) => {
                       required={formData.is_scheduled}
                     />
                     <p className="text-xs text-gray-600 mt-1">
-                      The post will be automatically published at the scheduled time if auto-publishing is enabled by admin.
+                      The post will be automatically published at the scheduled time ({formData.scheduled_timezone}) if auto-publishing is enabled by admin.
                     </p>
                   </div>
                 )}
