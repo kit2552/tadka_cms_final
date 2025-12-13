@@ -43,9 +43,22 @@ const SystemSettings = () => {
   const [stateLanguageMapping, setStateLanguageMapping] = useState(DEFAULT_STATE_LANGUAGE_MAPPING);
   const [editingMapping, setEditingMapping] = useState(null);
 
+  // Google Ads State
+  const [adSettings, setAdSettings] = useState({
+    article_content_mid: false,
+    article_sidebar_comments: false,
+    homepage_banner: false,
+    homepage_sidebar: false,
+    category_page_top: false,
+    homepage_sponsored_ads: false
+  });
+  const [adsLoading, setAdsLoading] = useState(true);
+  const [adsNotification, setAdsNotification] = useState({ show: false, type: '', message: '' });
+
   useEffect(() => {
     loadAWSConfig();
     loadUsers();
+    fetchAdSettings();
   }, []);
 
   const loadAWSConfig = async () => {
