@@ -635,33 +635,57 @@ const CreateArticle = () => {
   };
 
   const handleConfirmLink = () => {
+    if (!linkUrl) return;
+    
     const selection = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
     
+    // Create entity
     const contentStateWithEntity = contentState.createEntity(
       'LINK',
       'MUTABLE',
       { url: linkUrl, target: '_blank' }
     );
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
     
+    // Apply entity to selection
     const contentStateWithLink = Modifier.applyEntity(
       contentStateWithEntity,
       selection,
       entityKey
     );
     
-    const editorStateWithLink = EditorState.push(
-      newEditorState,
+    // Create new editor state with the link
+    const newEditorState = EditorState.push(
+      editorState,
       contentStateWithLink,
       'apply-entity'
     );
     
-    setEditorState(editorStateWithLink);
+    // Move selection to end of the link to continue typing
+    const newSelection = newEditorState.getSelection().merge({
+      anchorOffset: selection.getEndOffset(),
+      focusOffset: selection.getEndOffset()
+    });
+    
+    const finalEditorState = EditorState.forceSelection(newEditorState, newSelection);
+    
+    // Update editor state
+    setEditorState(finalEditorState);
+    
+    // Update form data with HTML
+    const htmlContent = draftToHtml(convertToRaw(finalEditorState.getCurrentContent()));
+    setFormData(prev => ({
+      ...prev,
+      content: htmlContent
+    }));
+    
+    // Close modal
     setShowLinkModal(false);
     setLinkUrl('');
     setLinkText('');
+    
+    console.log('Link added successfully');
   };
 
   const onEditorStateChangeSecondary = (editorState) => {
