@@ -179,3 +179,11 @@ coverage/
 
 # Ruff linter cache
 .ruff_cache/
+
+# Database backups and exports
+dump/
+*dump*/
+mongodb_export*/
+database_export*
+*_export.json
+*_export.sql
