@@ -319,6 +319,7 @@ def create_article(db, article: dict):
         "states": article.get("states"),
         "category": article.get("category"),
         "content_type": article.get("content_type", "post"),
+        "ad_type": article.get("ad_type", "ad_post"),
         "image": article.get("image"),
         "image_gallery": article.get("image_gallery"),
         "gallery_id": article.get("gallery_id"),
