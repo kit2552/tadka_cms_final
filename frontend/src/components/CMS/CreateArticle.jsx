@@ -203,6 +203,7 @@ const CreateArticle = () => {
     review_comments_enabled: true,
     social_media_type: '',
     social_media_embed: '',
+    social_media_embeds: [], // Array of {content, platform, embed_code}
     // Top Story
     is_top_story: false
   });
