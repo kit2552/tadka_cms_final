@@ -2957,8 +2957,9 @@ const CreateSponsoredAd = ({ onClose }) => {
                     </div>
                   )}
 
-                  {/* Secondary Content (Hidden for Movie Reviews and Video, shown for other types including Video Post) */}
-                  {formData.content_type !== 'movie_review' && formData.content_type !== 'video' && (
+                  {/* Secondary Content (Hidden for Movie Reviews, Video, and Landing Pages) */}
+                  {formData.content_type !== 'movie_review' && formData.content_type !== 'video' && 
+                   formData.ad_type !== 'landing_home' && formData.ad_type !== 'landing_inner' && (
                   <div className="mt-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
                       Secondary Content (Optional)
