@@ -1913,6 +1913,48 @@ async def get_homepage_theater_bollywood_releases(
         }
     }
 
+# Main /releases endpoint for homepage MovieSchedules component
+@api_router.get("/releases")
+async def get_movie_releases(db = Depends(get_db)):
+    """Get theater and OTT releases for homepage MovieSchedules section"""
+    this_week_theater = crud.get_this_week_theater_releases(db, limit=4)
+    upcoming_theater = crud.get_upcoming_theater_releases(db, limit=4)
+    
+    this_week_ott = crud.get_this_week_ott_releases(db, limit=4)
+    upcoming_ott = crud.get_upcoming_ott_releases(db, limit=4)
+    
+    def format_release_response(releases, is_theater=True):
+        result = []
+        for release in releases:
+            release_data = {
+                "id": release.get("id"),
+                "movie_name": release.get("movie_name"),
+                "languages": release.get("languages"),
+                "release_date": release.get("release_date"),
+                "movie_image": release.get("movie_image"),
+                "youtube_url": release.get("youtube_url"),
+                "states": release.get("states"),
+                "genres": release.get("genres"),
+                "created_at": release.get("created_at")
+            }
+            if is_theater:
+                release_data["banner"] = release.get("banner")
+            else:
+                release_data["ott_platforms"] = release.get("ott_platforms")
+            result.append(release_data)
+        return result
+    
+    return {
+        "theater": {
+            "this_week": format_release_response(this_week_theater, True),
+            "coming_soon": format_release_response(upcoming_theater, True)
+        },
+        "ott": {
+            "this_week": format_release_response(this_week_ott, False),
+            "coming_soon": format_release_response(upcoming_ott, False)
+        }
+    }
+
 # Original endpoint kept for backward compatibility
 @api_router.get("/releases/theater-ott")
 async def get_homepage_releases(db = Depends(get_db)):
