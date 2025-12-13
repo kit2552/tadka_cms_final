@@ -3028,7 +3028,46 @@ const CreateSponsoredAd = ({ onClose }) => {
               )}
             </div>
 
-            {/* SEO Section - Accordion */}
+            {/* Landing Page Specific Fields - Only show for landing pages */}
+            {(formData.ad_type === 'landing_home' || formData.ad_type === 'landing_inner') && (
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4 text-left">Landing Page Settings</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      Sponsored Link
+                    </label>
+                    <input
+                      type="url"
+                      name="sponsored_link"
+                      value={formData.sponsored_link}
+                      onChange={handleInputChange}
+                      placeholder="https://example.com"
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">URL where users will be redirected when clicking on this landing page</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      Sponsored Label
+                    </label>
+                    <input
+                      type="text"
+                      name="sponsored_label"
+                      value={formData.sponsored_label}
+                      onChange={handleInputChange}
+                      placeholder="e.g., 'Sponsored', 'Advertisement', 'Promoted'"
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Label to display indicating this is sponsored content</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SEO Section - Accordion - Hide for landing pages */}
+            {formData.ad_type !== 'landing_home' && formData.ad_type !== 'landing_inner' && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div 
                 className="px-6 py-4 border-b border-gray-200 cursor-pointer flex items-center justify-between hover:bg-gray-50"
