@@ -1392,6 +1392,21 @@ const CreateArticle = () => {
           .rdw-editor-main u {
             text-decoration: underline !important;
           }
+          /* Style links in editor */
+          .editor-class a,
+          .rdw-editor-main a,
+          .public-DraftEditor-content a {
+            color: #2563eb !important;
+            text-decoration: underline !important;
+          }
+          .editor-class a:hover,
+          .rdw-editor-main a:hover {
+            color: #1d4ed8 !important;
+          }
+          /* Hide default link popup */
+          .rdw-link-decorator-wrapper {
+            display: none !important;
+          }
           /* Make sure the editor content inherits styles properly */
           .rdw-editor-main {
             font-size: 14px;
