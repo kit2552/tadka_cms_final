@@ -278,10 +278,7 @@ def get_ads_count_for_cms(
     query = {
         "article_language": language,
         # Only count ads
-        "$or": [
-            {"ad_type": {"$exists": True}},
-            {"category": "Sponsored Ad"}
-        ]
+        "ad_type": {"$exists": True}
     }
     
     if ad_type:
@@ -351,10 +348,7 @@ def get_ads_for_cms(
     query = {
         "article_language": language,
         # Only get ads - articles with ad_type field
-        "$or": [
-            {"ad_type": {"$exists": True}},
-            {"category": "Sponsored Ad"}
-        ]
+        "ad_type": {"$exists": True}
     }
     
     if ad_type:
