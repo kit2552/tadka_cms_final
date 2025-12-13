@@ -1,1 +1,0 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"release_date":{"$numberInt":"1"}},"name":"release_date_1"}],"uuid":"df72b9e850124b539dd02833fcdff074","collectionName":"ott_releases","type":"collection"}
