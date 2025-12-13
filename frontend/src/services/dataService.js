@@ -610,7 +610,7 @@ export const dataService = {
         telanganaNews: mockData.telanganaNews,
         gossip: mockData.gossip,
         reviews: mockData.reviews,
-        movieSchedules: [], // Will be populated from releases API below
+        movieSchedules: movieSchedulesData,
         features: mockData.features,
         mostPopular: mockData.mostPopular
       };
