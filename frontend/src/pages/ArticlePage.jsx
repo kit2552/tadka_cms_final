@@ -805,11 +805,9 @@ const ArticlePage = () => {
                   {/* Main Content */}
                   {article.content ? (
                     <div dangerouslySetInnerHTML={{ 
-                      __html: stripLinkStyles(
-                        article.content
-                          .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>\s*$/gi, '') // Remove trailing empty paragraphs
-                          .trim()
-                      )
+                      __html: article.content
+                        .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>\s*$/gi, '') // Remove trailing empty paragraphs
+                        .trim()
                     }} />
                   ) : (
                     <>
