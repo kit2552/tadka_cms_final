@@ -1605,7 +1605,7 @@ const CreateArticle = () => {
           .rdw-editor-main u {
             text-decoration: underline !important;
           }
-          /* Style all links in editor */
+          /* Style all links in editor - including decorated ones */
           .editor-class a,
           .rdw-editor-main a,
           .public-DraftEditor-content a,
@@ -1613,7 +1613,9 @@ const CreateArticle = () => {
           .DraftEditor-editorContainer a,
           .DraftEditor-root a,
           [data-offset-key] a,
-          .public-DraftStyleDefault-ltr a {
+          .public-DraftStyleDefault-ltr a,
+          .editor-class span[data-text="true"] a,
+          .DraftEditor-editorContainer span a {
             color: #2563eb !important;
             text-decoration: underline !important;
             cursor: text !important;
@@ -1622,10 +1624,6 @@ const CreateArticle = () => {
           /* Hide default link popup */
           .rdw-link-decorator-wrapper {
             display: none !important;
-          }
-          /* Debug - show any anchor tags */
-          a {
-            background: rgba(37, 99, 235, 0.1);
           }
           /* Make sure the editor content inherits styles properly */
           .rdw-editor-main {
