@@ -2968,7 +2968,23 @@ const CreateArticle = () => {
                                 toolbarClassName="toolbar-class"
                                 toolbar={{
                                   options: ['inline', 'list', 'textAlign', 'history'],
-                                  inline: { options: ['bold', 'italic', 'underline'] }
+                                  inline: {
+                                    options: ['bold', 'italic', 'underline'],
+                                    bold: { className: 'rdw-bold-button' },
+                                    italic: { className: 'rdw-italic-button' },
+                                    underline: { className: 'rdw-underline-button' }
+                                  }
+                                }}
+                                customStyleMap={{
+                                  'BOLD': {
+                                    fontWeight: 700
+                                  },
+                                  'ITALIC': {
+                                    fontStyle: 'italic'
+                                  },
+                                  'UNDERLINE': {
+                                    textDecoration: 'underline'
+                                  }
                                 }}
                                 placeholder="Overall recommendation and who should watch this movie..."
                                 editorStyle={{ minHeight: '120px', padding: '12px', fontSize: '14px' }}
