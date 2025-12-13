@@ -342,110 +342,16 @@ code {
   overflow: visible !important;
 }
 
-/* Ensure link button is visible and functional */
+/* Ensure link and image wrappers are visible */
 .rdw-link-wrapper,
 .rdw-image-wrapper {
   display: inline-flex !important;
-  position: relative;
 }
 
-.rdw-editor-wrapper {
-  overflow: visible !important;
-}
-
-/* Link modal popup - DEBUG VERSION */
+/* Make sure modals appear above everything */
 .rdw-link-modal,
-.rdw-image-modal,
-.rdw-link-modal *,
-.rdw-image-modal * {
-  position: absolute !important;
-  top: 35px !important;
-  left: 5px !important;
-  display: flex !important;
-  flex-direction: column;
-  width: 235px !important;
-  height: auto !important;
-  min-height: 100px !important;
-  border: 3px solid red !important;
-  padding: 15px !important;
-  border-radius: 4px;
-  z-index: 99999 !important;
-  background: yellow !important;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.5) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-/* Debug: Make ANY element with rdw-link in class visible */
-[class*="rdw-link"] {
-  border: 2px solid blue !important;
-  background: lightblue !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  display: block !important;
-}
-
-/* Demo popup class */
-.demo-popup {
-  position: absolute !important;
-  display: flex !important;
-  flex-direction: column !important;
-  background: red !important;
-  border: 5px solid green !important;
-  padding: 20px !important;
-  z-index: 99999 !important;
-  width: 300px !important;
-  height: 200px !important;
-  top: 40px !important;
-  left: 0 !important;
-}
-
-.demo-link-wrapper {
-  position: relative !important;
-}
-
-.rdw-link-modal-label {
-  font-size: 14px;
-  margin-bottom: 5px;
-  display: block;
-}
-
-.rdw-link-modal-input {
-  width: 100%;
-  padding: 6px 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
-.rdw-link-modal-buttonsection {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
-.rdw-link-modal-btn {
-  padding: 6px 12px;
-  border-radius: 4px;
-  border: 1px solid #d1d5db;
-  background: white;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.rdw-link-modal-btn:hover {
-  background: #f3f4f6;
-}
-
-.rdw-link-modal-target-option {
-  margin-top: 10px;
-  font-size: 13px;
-}
-
-.rdw-link-modal-target-option input {
-  margin-right: 5px;
+.rdw-image-modal {
+  z-index: 100;
 }
 
 .rdw-option-wrapper {
