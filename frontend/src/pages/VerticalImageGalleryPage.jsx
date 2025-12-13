@@ -347,6 +347,15 @@ const VerticalImageGalleryPage = () => {
     });
   };
 
+  const shareViaEmail = () => {
+    const url = window.location.href;
+    const title = currentGallery.title;
+    const subject = encodeURIComponent(title);
+    const body = encodeURIComponent(`Check out this gallery: ${title}\n\n${url}`);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    trackSocialShare('email');
+  };
+
   const trackSocialShare = async (platform) => {
     try {
       const trackingData = {
