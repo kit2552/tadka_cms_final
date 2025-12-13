@@ -110,7 +110,6 @@ const SponsoredAds = ({
             <p className="text-gray-500">No sponsored ads available</p>
           </div>
         )}
-        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
           {/* Economic Growth section removed */}
