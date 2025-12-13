@@ -6577,8 +6577,7 @@ const Dashboard = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button
                               onClick={() => {
-                                setEditingArticle(ad);
-                                setShowCreateAdForm(true);
+                                window.location.href = `/cms/edit-ad/${ad.id}`;
                               }}
                               className="text-blue-600 hover:text-blue-900 mr-3"
                             >
