@@ -542,23 +542,26 @@ const CreateArticle = () => {
     }
   }, [formData, selectedStates, selectedArtist, selectedGallery, isEditMode]);
 
-  // Prevent toolbar from stealing editor focus
+  // Intercept link button clicks to use custom modal
   useEffect(() => {
-    const handleToolbarMouseDown = (e) => {
-      // If clicking on toolbar button, prevent default to keep editor focused
-      if (e.target.closest('.rdw-option-wrapper') || e.target.closest('.rdw-dropdown-wrapper')) {
+    const handleLinkClick = (e) => {
+      const linkWrapper = e.target.closest('.rdw-link-wrapper');
+      if (linkWrapper) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('Link button clicked - opening custom modal');
+        handleAddLink();
       }
     };
 
     const toolbar = document.querySelector('.toolbar-class');
     if (toolbar) {
-      toolbar.addEventListener('mousedown', handleToolbarMouseDown, true);
+      toolbar.addEventListener('click', handleLinkClick, true);
       return () => {
-        toolbar.removeEventListener('mousedown', handleToolbarMouseDown, true);
+        toolbar.removeEventListener('click', handleLinkClick, true);
       };
     }
-  }, []);
+  }, [editorState]);
 
   const fetchCMSConfig = async () => {
     try {
