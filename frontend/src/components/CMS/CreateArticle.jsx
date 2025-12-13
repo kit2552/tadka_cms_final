@@ -542,10 +542,30 @@ const CreateArticle = () => {
   useEffect(() => {
     console.log('=== LINK MODAL DEBUG ===');
     
+    // Prevent toolbar from stealing focus
+    const preventFocusLoss = () => {
+      const toolbar = document.querySelector('.toolbar-class');
+      if (toolbar) {
+        toolbar.addEventListener('mousedown', (e) => {
+          // Prevent default to keep editor focus
+          if (e.target.closest('.rdw-option-wrapper')) {
+            e.preventDefault();
+          }
+        });
+      }
+    };
+    
+    preventFocusLoss();
+    
     // Add click listener to link buttons
     const addClickListeners = () => {
       const linkWrappers = document.querySelectorAll('.rdw-link-wrapper, .demo-link-wrapper');
       linkWrappers.forEach(wrapper => {
+        wrapper.addEventListener('mousedown', (e) => {
+          console.log('🔗 LINK BUTTON MOUSEDOWN - preventing default');
+          e.preventDefault();
+        });
+        
         wrapper.addEventListener('click', () => {
           console.log('🔗 LINK BUTTON CLICKED!');
           
