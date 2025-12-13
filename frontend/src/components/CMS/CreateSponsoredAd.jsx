@@ -65,6 +65,7 @@ const CreateSponsoredAd = ({ onClose }) => {
     is_published: true,
     is_scheduled: false,
     scheduled_publish_at: '',
+    scheduled_timezone: 'IST',
     seo_title: '',
     seo_description: '',
     seo_keywords: '',
