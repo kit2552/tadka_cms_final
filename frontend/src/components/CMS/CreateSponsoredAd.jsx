@@ -1265,6 +1265,8 @@ const CreateSponsoredAd = ({ onClose }) => {
           .wrapper-class {
             border: 1px solid #d1d5db;
             border-radius: 0.375rem;
+            position: relative;
+            overflow: visible !important;
           }
           .toolbar-class {
             border: none;
@@ -1272,6 +1274,8 @@ const CreateSponsoredAd = ({ onClose }) => {
             border-radius: 0.375rem 0.375rem 0 0;
             background: #f9fafb;
             padding: 8px;
+            position: relative;
+            overflow: visible !important;
           }
           .editor-class {
             min-height: 300px;
