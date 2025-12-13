@@ -90,6 +90,111 @@ const SystemSettings = () => {
     }
   };
 
+  const fetchAdSettings = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ad-settings`);
+      if (response.ok) {
+        const data = await response.json();
+        setAdSettings(data);
+      }
+    } catch (error) {
+      console.error('Error fetching ad settings:', error);
+      showAdsNotification('error', 'Failed to load ad settings');
+    } finally {
+      setAdsLoading(false);
+    }
+  };
+
+  const handleAdToggle = async (key) => {
+    const newValue = !adSettings[key];
+    
+    // Optimistically update UI
+    setAdSettings(prev => ({
+      ...prev,
+      [key]: newValue
+    }));
+
+    // Auto-save immediately
+    try {
+      const updatedSettings = {
+        ...adSettings,
+        [key]: newValue
+      };
+      
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ad-settings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedSettings)
+      });
+
+      if (response.ok) {
+        showAdsNotification('success', 'Setting saved automatically');
+      } else {
+        // Revert on failure
+        setAdSettings(prev => ({
+          ...prev,
+          [key]: !newValue
+        }));
+        showAdsNotification('error', 'Failed to save setting');
+      }
+    } catch (error) {
+      console.error('Error saving ad settings:', error);
+      // Revert on failure
+      setAdSettings(prev => ({
+        ...prev,
+        [key]: !newValue
+      }));
+      showAdsNotification('error', 'An error occurred while saving');
+    }
+  };
+
+  const showAdsNotification = (type, message) => {
+    setAdsNotification({ show: true, type, message });
+    setTimeout(() => {
+      setAdsNotification({ show: false, type: '', message: '' });
+    }, 3000);
+  };
+
+  const adPlacements = [
+    {
+      key: 'article_content_mid',
+      title: 'Article Content - Mid Article',
+      description: 'Ad space between main content and secondary content',
+      location: 'Article Pages',
+      status: 'Active'
+    },
+    {
+      key: 'article_sidebar_comments',
+      title: 'Article Sidebar - Comments Section',
+      description: 'Ad space between comments and related posts in right sidebar',
+      location: 'Article Pages',
+      status: 'Active'
+    },
+    {
+      key: 'homepage_banner',
+      title: 'Homepage - Top Banner',
+      description: 'Full-width banner ad at the top of homepage',
+      location: 'Homepage',
+      status: 'Coming Soon'
+    },
+    {
+      key: 'homepage_sidebar',
+      title: 'Homepage - Sidebar',
+      description: 'Sidebar ad on homepage',
+      location: 'Homepage',
+      status: 'Coming Soon'
+    },
+    {
+      key: 'category_page_top',
+      title: 'Category Pages - Top Banner',
+      description: 'Banner ad at the top of category pages',
+      location: 'Category Pages',
+      status: 'Coming Soon'
+    }
+  ];
+
   const handleAWSConfigChange = (e) => {
     const { name, value, type, checked } = e.target;
     setAwsConfig(prev => ({
