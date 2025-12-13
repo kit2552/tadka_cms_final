@@ -548,9 +548,33 @@ const CreateArticle = () => {
       linkWrappers.forEach(wrapper => {
         wrapper.addEventListener('click', () => {
           console.log('🔗 LINK BUTTON CLICKED!');
+          
+          // Check editor selection
+          const selection = window.getSelection();
+          console.log('Window selection:', {
+            text: selection.toString(),
+            hasSelection: selection.toString().length > 0,
+            rangeCount: selection.rangeCount
+          });
+          
+          // Check Draft.js selection
+          console.log('Editor state selection:', {
+            hasText: editorState.getSelection().getHasFocus(),
+            isCollapsed: editorState.getSelection().isCollapsed(),
+            anchorKey: editorState.getSelection().getAnchorKey(),
+            focusKey: editorState.getSelection().getFocusKey()
+          });
+          
           setTimeout(() => {
             const modal = document.querySelector('.rdw-link-modal, .demo-popup');
             console.log('Modal after click:', !!modal);
+            
+            // Check all children of toolbar
+            const toolbar = document.querySelector('.toolbar-class');
+            if (toolbar) {
+              console.log('Toolbar children:', toolbar.children.length);
+              console.log('Toolbar HTML:', toolbar.innerHTML.substring(0, 200));
+            }
           }, 100);
         });
       });
