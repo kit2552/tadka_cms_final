@@ -315,6 +315,15 @@ code {
   line-height: 1.75;
 }
 
+/* Bold text in rich text editor */
+.public-DraftEditor-content strong,
+.public-DraftEditor-content b,
+.public-DraftEditor-content span[style*="font-weight: bold"],
+.public-DraftEditor-content span[style*="font-weight: 700"],
+.public-DraftEditor-content span[style*="fontWeight"] {
+  font-weight: 700 !important;
+}
+
 .rdw-editor-main {
   min-height: 300px;
   padding: 12px;
