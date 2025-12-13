@@ -459,6 +459,25 @@ export const dataService = {
     }
   },
 
+  // Fetch Movie Schedules (Theater & OTT Releases) data from backend
+  async getMovieSchedulesData() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/releases`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch Movie Schedules data');
+      }
+      const data = await response.json();
+      // Format data for MovieSchedules component
+      return {
+        theater: data.theater || { this_week: [], coming_soon: [] },
+        ott: data.ott || { this_week: [], coming_soon: [] }
+      };
+    } catch (error) {
+      console.error('Error fetching Movie Schedules data:', error);
+      return { theater: { this_week: [], coming_soon: [] }, ott: { this_week: [], coming_soon: [] } };
+    }
+  },
+
   // Fetch Box Office data from backend
   async getBoxOfficeData() {
     try {
