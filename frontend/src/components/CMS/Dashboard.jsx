@@ -398,12 +398,20 @@ const Dashboard = () => {
   // Gallery form states
   const [galleryForm, setGalleryForm] = useState({
     title: '',
-    images: []
+    images: [],
+    is_published: true,
+    is_scheduled: false,
+    scheduled_publish_at: '',
+    scheduled_timezone: 'IST'
   });
 
   const [horizontalGalleryForm, setHorizontalGalleryForm] = useState({
     title: '',
-    images: []
+    images: [],
+    is_published: true,
+    is_scheduled: false,
+    scheduled_publish_at: '',
+    scheduled_timezone: 'IST'
   });
 
   // Gallery topic states
