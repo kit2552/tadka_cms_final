@@ -539,6 +539,24 @@ const CreateArticle = () => {
     }
   }, [formData, selectedStates, selectedArtist, selectedGallery, isEditMode]);
 
+  // Prevent toolbar from stealing editor focus
+  useEffect(() => {
+    const handleToolbarMouseDown = (e) => {
+      // If clicking on toolbar button, prevent default to keep editor focused
+      if (e.target.closest('.rdw-option-wrapper') || e.target.closest('.rdw-dropdown-wrapper')) {
+        e.preventDefault();
+      }
+    };
+
+    const toolbar = document.querySelector('.toolbar-class');
+    if (toolbar) {
+      toolbar.addEventListener('mousedown', handleToolbarMouseDown, true);
+      return () => {
+        toolbar.removeEventListener('mousedown', handleToolbarMouseDown, true);
+      };
+    }
+  }, []);
+
   const fetchCMSConfig = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/config`);
