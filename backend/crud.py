@@ -320,6 +320,8 @@ def create_article(db, article: dict):
         "category": article.get("category"),
         "content_type": article.get("content_type", "post"),
         "ad_type": article.get("ad_type", "ad_post"),
+        "sponsored_link": article.get("sponsored_link"),
+        "sponsored_label": article.get("sponsored_label"),
         "image": article.get("image"),
         "image_gallery": article.get("image_gallery"),
         "gallery_id": article.get("gallery_id"),
