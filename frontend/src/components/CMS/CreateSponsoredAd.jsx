@@ -253,9 +253,19 @@ const CreateSponsoredAd = ({ onClose }) => {
     
     closeNotification();
     
-    // Close the modal after successful create/update operations
-    if (shouldClose && onClose) {
-      onClose();
+    // Navigate to Ads tab in dashboard after successful create/update operations
+    if (shouldClose) {
+      if (onClose) {
+        // If onClose prop exists (inline usage in AdManagement), call it
+        onClose();
+      } else {
+        // If no onClose (route-based usage), navigate to dashboard Ads tab
+        navigate('/cms/dashboard?tab=ads-list');
+        // Scroll to top after navigation
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
+      }
     }
   };
 
