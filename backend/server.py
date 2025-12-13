@@ -277,6 +277,7 @@ async def get_articles_by_category(category_slug: str, skip: int = 0, limit: int
             "is_published": article.get("is_published"),
             "is_scheduled": article.get("is_scheduled"),
             "scheduled_publish_at": article.get("scheduled_publish_at"),
+            "scheduled_timezone": article.get("scheduled_timezone", "IST"),
             "published_at": article.get("published_at"),
             "view_count": article.get("view_count")
         })
