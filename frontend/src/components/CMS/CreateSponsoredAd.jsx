@@ -1587,7 +1587,7 @@ const CreateSponsoredAd = ({ onClose }) => {
                             : {}
                         }
                       />
-                      {showCategoryDropdown && formData.ad_type !== 'sponsored_section' && (
+                      {showCategoryDropdown && formData.ad_type !== 'sponsored_section' && formData.ad_type !== 'landing_home' && formData.ad_type !== 'landing_inner' && (
                         <>
                           <div 
                             className="fixed inset-0 z-10" 
