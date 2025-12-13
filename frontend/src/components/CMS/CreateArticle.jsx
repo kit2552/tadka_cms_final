@@ -497,7 +497,9 @@ const CreateArticle = () => {
           const contentBlock = htmlToDraft(article.content_secondary);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks, contentBlock.entityMap);
-            setEditorStateSecondary(EditorState.createWithContent(contentState, decorator));
+            const editorStateWithoutDecorator = EditorState.createWithContent(contentState);
+            const editorStateWithDecorator = EditorState.set(editorStateWithoutDecorator, { decorator: decorator });
+            setEditorStateSecondary(editorStateWithDecorator);
           }
         }
 
