@@ -1297,11 +1297,30 @@ const CreateSponsoredAd = ({ onClose }) => {
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
           }
           .rdw-option-active {
-            background: #3b82f6 !important;
+            background: #6b7280 !important;
             color: white !important;
+            border-color: #4b5563 !important;
           }
           .rdw-option-wrapper img {
             pointer-events: none;
+          }
+          /* Ensure bold text actually shows as bold */
+          .editor-class strong, .editor-class b {
+            font-weight: 700 !important;
+          }
+          .editor-class em, .editor-class i {
+            font-style: italic !important;
+          }
+          .editor-class u {
+            text-decoration: underline !important;
+          }
+          /* Make sure the editor content inherits styles properly */
+          .rdw-editor-main {
+            font-size: 14px;
+            line-height: 1.6;
+          }
+          .public-DraftEditor-content {
+            min-height: inherit;
           }
           .rdw-link-modal, .rdw-image-modal {
             z-index: 9999 !important;
