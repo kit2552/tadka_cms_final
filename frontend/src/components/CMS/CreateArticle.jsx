@@ -1466,14 +1466,21 @@ const CreateArticle = () => {
           .public-DraftEditor-content a,
           .public-DraftStyleDefault-block a,
           .DraftEditor-editorContainer a,
-          .DraftEditor-root a {
+          .DraftEditor-root a,
+          [data-offset-key] a,
+          .public-DraftStyleDefault-ltr a {
             color: #2563eb !important;
             text-decoration: underline !important;
             cursor: text !important;
+            pointer-events: none !important;
           }
           /* Hide default link popup */
           .rdw-link-decorator-wrapper {
             display: none !important;
+          }
+          /* Debug - show any anchor tags */
+          a {
+            background: rgba(37, 99, 235, 0.1);
           }
           /* Make sure the editor content inherits styles properly */
           .rdw-editor-main {
