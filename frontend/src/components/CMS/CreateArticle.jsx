@@ -1226,8 +1226,26 @@ const CreateArticle = () => {
       // Clean image URL by removing cache-busting timestamp
       const cleanImageUrl = formData.image ? formData.image.split('?t=')[0] : '';
       
+      // Clean inline styles from links in all content fields
+      const cleanedContent = stripLinkStyles(formData.content);
+      const cleanedContentSecondary = stripLinkStyles(formData.content_secondary);
+      const cleanedReviewPlotSummary = stripLinkStyles(formData.review_plot_summary);
+      const cleanedReviewPerformances = stripLinkStyles(formData.review_performances);
+      const cleanedReviewWhatWorks = stripLinkStyles(formData.review_what_works);
+      const cleanedReviewWhatDoesntWork = stripLinkStyles(formData.review_what_doesnt_work);
+      const cleanedReviewTechnicalAspects = stripLinkStyles(formData.review_technical_aspects);
+      const cleanedReviewFinalVerdict = stripLinkStyles(formData.review_final_verdict);
+      
       const submitData = {
         ...formData,
+        content: cleanedContent, // Use cleaned content
+        content_secondary: cleanedContentSecondary, // Use cleaned secondary content
+        review_plot_summary: cleanedReviewPlotSummary, // Use cleaned review content
+        review_performances: cleanedReviewPerformances,
+        review_what_works: cleanedReviewWhatWorks,
+        review_what_doesnt_work: cleanedReviewWhatDoesntWork,
+        review_technical_aspects: cleanedReviewTechnicalAspects,
+        review_final_verdict: cleanedReviewFinalVerdict,
         image: cleanImageUrl, // Use clean URL without timestamp
         article_language: formData.article_language || 'en', // Use backend field name
         summary: textContent.substring(0, 200) + '...', // Generate summary from content
