@@ -541,6 +541,23 @@ const CreateArticle = () => {
   // DEBUG: Monitor for link modal in DOM
   useEffect(() => {
     console.log('=== LINK MODAL DEBUG ===');
+    
+    // Add click listener to link buttons
+    const addClickListeners = () => {
+      const linkWrappers = document.querySelectorAll('.rdw-link-wrapper, .demo-link-wrapper');
+      linkWrappers.forEach(wrapper => {
+        wrapper.addEventListener('click', () => {
+          console.log('🔗 LINK BUTTON CLICKED!');
+          setTimeout(() => {
+            const modal = document.querySelector('.rdw-link-modal, .demo-popup');
+            console.log('Modal after click:', !!modal);
+          }, 100);
+        });
+      });
+    };
+    
+    addClickListeners();
+    
     const interval = setInterval(() => {
       const linkModal = document.querySelector('.rdw-link-modal');
       const demoPopup = document.querySelector('.demo-popup');
