@@ -13,12 +13,12 @@ const CreateArticle = () => {
   const isEditMode = Boolean(id);
   
   const editorRef = useRef(null);
+  const savedSelectionRef = useRef(null);
+  const savedEditorStateRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
   const [linkText, setLinkText] = useState('');
-  const [savedSelection, setSavedSelection] = useState(null);
-  const [savedEditorState, setSavedEditorState] = useState(null);
   const [loadingArticle, setLoadingArticle] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [states, setStates] = useState([]);
