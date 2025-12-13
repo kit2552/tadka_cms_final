@@ -378,6 +378,16 @@ code {
   display: none !important;
 }
 
+/* Override inline styles on links in editor */
+.rdw-link-decorator-wrapper a,
+.rdw-link-decorator-wrapper a[style],
+.rdw-link-decorator-wrapper a[style*="color"] {
+  color: #2563eb !important;
+  text-decoration: underline !important;
+  background: none !important;
+  background-color: transparent !important;
+}
+
 /* Style links in the editor */
 .public-DraftEditor-content a,
 .DraftEditor-editorContainer a,
