@@ -441,18 +441,24 @@ const CreateArticle = () => {
         
         // Set editor content
         if (article.content) {
+          console.log('📝 Loading article content:', article.content.substring(0, 200));
           const contentBlock = htmlToDraft(article.content);
           if (contentBlock) {
-            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorState(EditorState.createWithContent(contentState, decorator));
+            console.log('📝 Content blocks:', contentBlock.contentBlocks.length);
+            console.log('📝 Entity map:', contentBlock.entityMap);
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks, contentBlock.entityMap);
+            const editorStateWithContent = EditorState.createWithContent(contentState, decorator);
+            console.log('📝 Editor state created with decorator');
+            setEditorState(editorStateWithContent);
           }
         }
 
         // Set secondary editor content
         if (article.content_secondary) {
+          console.log('📝 Loading secondary content');
           const contentBlock = htmlToDraft(article.content_secondary);
           if (contentBlock) {
-            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks, contentBlock.entityMap);
             setEditorStateSecondary(EditorState.createWithContent(contentState, decorator));
           }
         }
