@@ -242,8 +242,13 @@ def get_articles_count_for_cms(
     content_type: str = None,
     status: str = None
 ):
-    """Count articles for CMS with filters"""
-    query = {"article_language": language}
+    """Count articles for CMS with filters - EXCLUDES ads"""
+    query = {
+        "article_language": language,
+        # Exclude ads from posts count
+        "ad_type": {"$exists": False},
+        "category": {"$ne": "Sponsored Ad"}
+    }
     
     if category:
         query["category"] = category
@@ -253,6 +258,34 @@ def get_articles_count_for_cms(
     
     if content_type:
         query["content_type"] = content_type
+    
+    if status == "published":
+        query["is_published"] = True
+    elif status == "draft":
+        query["is_published"] = False
+    elif status == "scheduled":
+        query["is_scheduled"] = True
+    
+    return db[ARTICLES].count_documents(query)
+
+def get_ads_count_for_cms(
+    db,
+    language: str = "en",
+    ad_type: str = None,
+    status: str = None
+):
+    """Count ads for CMS with filters - ONLY ads"""
+    query = {
+        "article_language": language,
+        # Only count ads
+        "$or": [
+            {"ad_type": {"$exists": True}},
+            {"category": "Sponsored Ad"}
+        ]
+    }
+    
+    if ad_type:
+        query["ad_type"] = ad_type
     
     if status == "published":
         query["is_published"] = True
