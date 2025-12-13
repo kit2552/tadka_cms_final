@@ -12,6 +12,14 @@ const CreateSponsoredAd = ({ onClose }) => {
   const { id } = useParams(); // Changed from articleId to id to match the route
   const isEditMode = Boolean(id);
   
+  // Utility function to strip inline styles from links before saving
+  const stripLinkStyles = (html) => {
+    if (!html) return html;
+    return html
+      .replace(/<a([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1$2>') // Remove inline styles (double quotes)
+      .replace(/<a([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1$2>'); // Remove inline styles (single quotes)
+  };
+  
   const [loading, setLoading] = useState(false);
   const [loadingArticle, setLoadingArticle] = useState(false);
   const [languages, setLanguages] = useState([]);
