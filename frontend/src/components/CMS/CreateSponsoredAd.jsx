@@ -2858,6 +2858,11 @@ const CreateSponsoredAd = ({ onClose }) => {
                                 wrapperClassName="wrapper-class"
                                 editorClassName="editor-class"
                                 toolbarClassName="toolbar-class"
+                                customStyleMap={{
+                                  BOLD: { fontWeight: 'bold' },
+                                  ITALIC: { fontStyle: 'italic' },
+                                  UNDERLINE: { textDecoration: 'underline' }
+                                }}
                                 toolbar={{
                                   options: ['inline', 'list', 'textAlign', 'history'],
                                   inline: { options: ['bold', 'italic', 'underline'] }
