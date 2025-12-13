@@ -1465,28 +1465,20 @@ const CreateArticle = () => {
           .rdw-editor-main u {
             text-decoration: underline !important;
           }
-          /* Style links in editor - use data attribute selector */
+          /* Style all links in editor */
           .editor-class a,
           .rdw-editor-main a,
           .public-DraftEditor-content a,
           .public-DraftStyleDefault-block a,
           .DraftEditor-editorContainer a,
-          [data-offset-key] a {
+          .DraftEditor-root a {
             color: #2563eb !important;
             text-decoration: underline !important;
-            pointer-events: auto !important;
-          }
-          .editor-class a:hover,
-          .rdw-editor-main a:hover {
-            color: #1d4ed8 !important;
+            cursor: text !important;
           }
           /* Hide default link popup */
           .rdw-link-decorator-wrapper {
             display: none !important;
-          }
-          /* Ensure link spans are visible */
-          span[style*="color"][data-offset-key] {
-            color: #2563eb !important;
           }
           /* Make sure the editor content inherits styles properly */
           .rdw-editor-main {
