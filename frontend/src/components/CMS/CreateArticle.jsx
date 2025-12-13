@@ -472,7 +472,12 @@ const CreateArticle = () => {
         // Set editor content
         if (article.content) {
           console.log('📝 Loading article content:', article.content.substring(0, 200));
-          const contentBlock = htmlToDraft(article.content);
+          
+          // Strip inline styles from links before loading into editor
+          const cleanedContent = stripLinkStyles(article.content);
+          console.log('📝 Cleaned content (first 200 chars):', cleanedContent.substring(0, 200));
+          
+          const contentBlock = htmlToDraft(cleanedContent);
           if (contentBlock) {
             console.log('📝 Content blocks:', contentBlock.contentBlocks.length);
             console.log('📝 Entity map:', contentBlock.entityMap);
