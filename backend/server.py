@@ -742,6 +742,17 @@ async def get_trailers_articles(limit: int = 4, db = Depends(get_db)):
     articles = crud.get_articles_by_category_slug(db, category_slug="trailers", limit=limit)
     return articles
 
+@api_router.get("/articles/sections/sponsored-ads")
+async def get_sponsored_ads(limit: int = 4, db = Depends(get_db)):
+    """Get sponsored ads for homepage"""
+    ads = list(db[crud.ARTICLES].find({
+        "ad_type": "Ad in Sponsored Section",
+        "category": "Sponsored Ad",
+        "is_published": True
+    }, {"_id": 0}).sort("created_at", -1).limit(limit))
+    
+    return crud.serialize_doc(ads)
+
 @api_router.get("/articles/sections/top-stories")
 async def get_top_stories_articles(limit: int = 4, states: str = None, db = Depends(get_db)):
     """
