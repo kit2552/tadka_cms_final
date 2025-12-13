@@ -669,6 +669,18 @@ const Dashboard = () => {
     setReleasesCurrentPage(1);
   }, [releaseActiveTab, selectedDateFilter, selectedReleaseLanguage, releasesItemsPerPage]);
 
+  // Fetch ads when filters change or page changes
+  useEffect(() => {
+    if (activeTab === 'ads-list') {
+      fetchAds();
+    }
+  }, [adsCurrentPage, adsItemsPerPage, selectedAdType, selectedAdStatus, selectedLanguage, activeTab]);
+
+  // Reset ads pagination when filters change
+  useEffect(() => {
+    setAdsCurrentPage(1);
+  }, [selectedAdType, selectedAdStatus, adsItemsPerPage]);
+
   // Handle galleries pagination
   useEffect(() => {
     const filteredVerticalGalleries = verticalGalleries.filter(gallery => selectedArtist === '' || gallery.artist === selectedArtist);
