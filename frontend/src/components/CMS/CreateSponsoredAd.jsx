@@ -1515,8 +1515,12 @@ const CreateSponsoredAd = ({ onClose }) => {
                         setFormData(prev => ({
                           ...prev,
                           ad_type: newAdType,
-                          // Auto-set category to sponsored-ads for sponsored_section type
-                          category: newAdType === 'sponsored_section' ? 'sponsored-ads' : prev.category
+                          // Auto-set category based on ad type
+                          category: newAdType === 'sponsored_section' 
+                            ? 'sponsored-ads' 
+                            : (newAdType === 'landing_home' || newAdType === 'landing_inner') 
+                              ? 'landing-page' 
+                              : prev.category
                         }));
                       }}
                       className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
