@@ -52,6 +52,7 @@ import VideoView from "./pages/VideoView";
 import GalleryArticle from "./pages/GalleryArticle";
 import Dashboard from "./components/CMS/Dashboard";
 import CreateArticle from "./components/CMS/CreateArticle";
+import CreateSponsoredAd from "./components/CMS/CreateSponsoredAd";
 import SystemSettings from "./pages/SystemSettings";
 import CreateTopic from "./components/CMS/CreateTopic";
 import AdminControls from "./components/CMS/AdminControls";
