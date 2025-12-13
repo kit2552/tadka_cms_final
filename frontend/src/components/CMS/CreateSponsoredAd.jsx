@@ -42,7 +42,7 @@ const decorator = new CompositeDecorator([
 const CreateSponsoredAd = ({ onClose }) => {
   const navigate = useNavigate();
   const { id } = useParams(); // Changed from articleId to id to match the route
-  const isEditMode = Boolean(id);
+  const isEditMode = Boolean(id) && id !== 'new'; // Don't treat 'new' as edit mode
   
   // Utility function to strip inline styles from links and their child elements before saving
   const stripLinkStyles = (html) => {
