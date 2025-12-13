@@ -367,12 +367,25 @@ def create_article(db, article: dict):
     
     # Manage top stories if is_top_story is True
     if article.get("is_top_story", False):
+        from datetime import timedelta
+        
+        # Calculate expiration time
+        duration_hours = article.get("top_story_duration_hours", 24)
+        published_at = article_doc.get("published_at", datetime.utcnow())
+        expires_at = published_at + timedelta(hours=duration_hours)
+        
+        # Update article with expiration time
+        db[ARTICLES].update_one(
+            {"id": new_id},
+            {"$set": {"top_story_expires_at": expires_at}}
+        )
+        
         manage_top_stories(
             db,
             str(new_id),
             article.get("content_type", "post"),
             article.get("states", "[]"),
-            article_doc.get("published_at", datetime.utcnow()),
+            published_at,
             True
         )
     
