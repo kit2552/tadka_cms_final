@@ -1137,6 +1137,33 @@ const CreateArticle = () => {
     }));
   };
 
+  // Social Media Embeds management functions
+  const handleAddSocialEmbed = () => {
+    setFormData(prev => ({
+      ...prev,
+      social_media_embeds: [
+        ...prev.social_media_embeds,
+        { content: '', platform: '', embed_code: '' }
+      ]
+    }));
+  };
+
+  const handleRemoveSocialEmbed = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      social_media_embeds: prev.social_media_embeds.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleSocialEmbedChange = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      social_media_embeds: prev.social_media_embeds.map((embed, i) => 
+        i === index ? { ...embed, [field]: value } : embed
+      )
+    }));
+  };
+
   // Artist management functions
   const fetchAvailableArtists = async () => {
     try {
