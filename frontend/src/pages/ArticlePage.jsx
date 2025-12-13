@@ -813,11 +813,11 @@ const ArticlePage = () => {
                   {/* Main Content */}
                   {article.content ? (
                     <div dangerouslySetInnerHTML={{ 
-                      __html: article.content
-                        .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>\s*$/gi, '') // Remove trailing empty paragraphs
-                        .replace(/<a([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1$2>') // Remove inline styles from links
-                        .replace(/<a([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1$2>') // Remove inline styles from links (single quotes)
-                        .trim()
+                      __html: stripLinkStyles(
+                        article.content
+                          .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>\s*$/gi, '') // Remove trailing empty paragraphs
+                          .trim()
+                      )
                     }} />
                   ) : (
                     <>
