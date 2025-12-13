@@ -367,10 +367,14 @@ code {
   display: inline-flex !important;
 }
 
-/* Hide default link modal and link decorator popup */
+/* Hide default link modal */
 .rdw-link-modal,
-.rdw-image-modal,
-.rdw-link-decorator-wrapper {
+.rdw-image-modal {
+  display: none !important;
+}
+
+/* Hide only the popup controls on link hover, not the link itself */
+.rdw-link-decorator-icon {
   display: none !important;
 }
 
