@@ -538,6 +538,38 @@ const CreateArticle = () => {
     }
   }, [formData, selectedStates, selectedArtist, selectedGallery, isEditMode]);
 
+  // DEBUG: Monitor for link modal in DOM
+  useEffect(() => {
+    console.log('=== LINK MODAL DEBUG ===');
+    const interval = setInterval(() => {
+      const linkModal = document.querySelector('.rdw-link-modal');
+      const linkWrapper = document.querySelector('.rdw-link-wrapper');
+      const allRdwElements = document.querySelectorAll('[class*="rdw-link"]');
+      
+      console.log('Link wrapper found:', !!linkWrapper);
+      console.log('Link modal found:', !!linkModal);
+      console.log('All rdw-link elements:', allRdwElements.length);
+      
+      if (linkModal) {
+        console.log('MODAL FOUND! Styles:', {
+          display: window.getComputedStyle(linkModal).display,
+          visibility: window.getComputedStyle(linkModal).visibility,
+          opacity: window.getComputedStyle(linkModal).opacity,
+          position: window.getComputedStyle(linkModal).position,
+          zIndex: window.getComputedStyle(linkModal).zIndex,
+          top: window.getComputedStyle(linkModal).top,
+          left: window.getComputedStyle(linkModal).left
+        });
+      }
+      
+      allRdwElements.forEach((el, idx) => {
+        console.log(`Element ${idx}:`, el.className, el.style.display);
+      });
+    }, 2000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   const fetchCMSConfig = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/config`);
