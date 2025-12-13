@@ -25,16 +25,22 @@ const ArticlePage = () => {
   });
   const [twitterEmbedError, setTwitterEmbedError] = useState(false);
 
-  // Utility function to strip inline styles from links before rendering
+  // Utility function to strip inline styles from links and their child elements before rendering
   const stripLinkStyles = (html) => {
     if (!html) return html;
-    const cleaned = html
-      .replace(/<a([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1$2>') // Remove inline styles (double quotes)
-      .replace(/<a([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1$2>'); // Remove inline styles (single quotes)
+    let cleaned = html;
+    
+    // Remove inline styles from <a> tags
+    cleaned = cleaned.replace(/<a([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1$2>');
+    cleaned = cleaned.replace(/<a([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1$2>');
+    
+    // Remove inline styles from <span> tags inside <a> tags
+    cleaned = cleaned.replace(/<a([^>]*?)>(\s*)<span([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1>$2<span$3$4>');
+    cleaned = cleaned.replace(/<a([^>]*?)>(\s*)<span([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1>$2<span$3$4>');
     
     // Log if any changes were made
     if (cleaned !== html) {
-      console.log('🧹 Stripped inline styles from links');
+      console.log('🧹 Stripped inline styles from links and child elements');
     }
     return cleaned;
   };
