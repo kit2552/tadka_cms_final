@@ -187,3 +187,10 @@ mongodb_export*/
 database_export*
 *_export.json
 *_export.sql
+
+# Temporary archive and download files
+*.tar.gz
+*_complete_*.html
+session_code_download.html
+download_server.log
+.DS_Store
