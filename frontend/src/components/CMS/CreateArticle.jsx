@@ -765,64 +765,91 @@ const CreateArticle = () => {
     }
     
     const savedEditorState = savedEditorStateRef.current;
+    const savedSelection = savedSelectionRef.current;
     
-    if (!savedEditorState) {
-      console.error('No saved editor state');
+    if (!savedEditorState || !savedSelection) {
+      console.error('No saved editor state or selection');
       alert('Error: Lost editor state. Please try again.');
       setShowLinkModal(false);
       return;
     }
     
     try {
-      console.log('Adding link:', linkUrl);
-      console.log('Link text:', linkText);
+      console.log('✅ Adding link:', linkUrl);
+      console.log('✅ Link text:', linkText);
+      console.log('✅ Selection:', {
+        start: savedSelection.getStartOffset(),
+        end: savedSelection.getEndOffset(),
+        key: savedSelection.getStartKey()
+      });
       
-      // Get current HTML
-      const currentContentState = savedEditorState.getCurrentContent();
-      const currentHtml = draftToHtml(convertToRaw(currentContentState));
-      console.log('Current HTML:', currentHtml);
+      const contentState = savedEditorState.getCurrentContent();
       
-      // Create link HTML - escape special characters in linkText for regex
-      const escapedLinkText = linkText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const linkHtml = `<a href="${linkUrl}" target="_blank">${linkText}</a>`;
-      console.log('Link HTML:', linkHtml);
+      // Create entity
+      const contentStateWithEntity = contentState.createEntity(
+        'LINK',
+        'MUTABLE',
+        { url: linkUrl }
+      );
+      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+      console.log('✅ Created entity with key:', entityKey);
       
-      // Replace the selected text with link (first occurrence only)
-      const newHtml = currentHtml.replace(new RegExp(escapedLinkText), linkHtml);
-      console.log('New HTML:', newHtml);
+      // Apply entity to the saved selection
+      const contentStateWithLink = Modifier.applyEntity(
+        contentStateWithEntity,
+        savedSelection,
+        entityKey
+      );
       
-      // Convert HTML back to Draft.js content
-      const blocksFromHtml = htmlToDraft(newHtml);
-      if (!blocksFromHtml) {
-        throw new Error('Failed to convert HTML to Draft blocks');
-      }
+      console.log('✅ Applied entity to selection');
       
-      const { contentBlocks, entityMap } = blocksFromHtml;
-      const newContentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+      // Push the new content state
+      const editorStateWithLink = EditorState.push(
+        savedEditorState,
+        contentStateWithLink,
+        'apply-entity'
+      );
       
-      // Create new editor state with decorator to render links
-      const newEditorStateWithoutDecorator = EditorState.createWithContent(newContentState);
-      const newEditorState = EditorState.set(newEditorStateWithoutDecorator, { decorator });
+      // Apply decorator explicitly
+      const editorStateWithDecorator = EditorState.set(editorStateWithLink, { decorator: decorator });
       
-      console.log('New editor state created with decorator');
-      console.log('New plain text:', newContentState.getPlainText());
+      console.log('✅ Created new editor state with decorator');
       
-      // Close modal first
+      // Move cursor to end of link
+      const selectionAfterLink = savedSelection.merge({
+        anchorOffset: savedSelection.getEndOffset(),
+        focusOffset: savedSelection.getEndOffset(),
+      });
+      
+      const finalEditorState = EditorState.forceSelection(editorStateWithDecorator, selectionAfterLink);
+      
+      console.log('✅ Final editor state ready');
+      
+      // Close modal
       setShowLinkModal(false);
       setLinkUrl('');
       setLinkText('');
       savedEditorStateRef.current = null;
       savedSelectionRef.current = null;
       
-      // Use a small timeout to let modal close, then update editor
+      // Update editor state
       setTimeout(() => {
-        console.log('Calling onEditorStateChange...');
-        onEditorStateChange(newEditorState);
-        console.log('Link added successfully');
+        console.log('✅ Updating editor state');
+        setEditorState(finalEditorState);
+        
+        // Also update form data
+        const htmlContent = draftToHtml(convertToRaw(finalEditorState.getCurrentContent()));
+        console.log('✅ Generated HTML:', htmlContent.substring(0, 200));
+        setFormData(prev => ({
+          ...prev,
+          content: htmlContent
+        }));
+        
+        console.log('✅ Link added successfully!');
       }, 50);
       
     } catch (error) {
-      console.error('Error adding link:', error);
+      console.error('❌ Error adding link:', error);
       alert('Error adding link: ' + error.message);
       setShowLinkModal(false);
       setLinkUrl('');
