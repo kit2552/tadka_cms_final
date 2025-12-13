@@ -546,7 +546,8 @@ export const dataService = {
         this.getHotTopicsData(userStates),
         this.getPhotoshootsData(),
         this.getTravelPicsData(),
-        this.getBoxOfficeData()
+        this.getBoxOfficeData(),
+        this.getMovieSchedulesData()
       ]);
 
       console.log('✅ Homepage data loaded successfully');
