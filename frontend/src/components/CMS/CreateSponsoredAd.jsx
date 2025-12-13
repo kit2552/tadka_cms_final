@@ -44,12 +44,20 @@ const CreateSponsoredAd = ({ onClose }) => {
   const { id } = useParams(); // Changed from articleId to id to match the route
   const isEditMode = Boolean(id);
   
-  // Utility function to strip inline styles from links before saving
+  // Utility function to strip inline styles from links and their child elements before saving
   const stripLinkStyles = (html) => {
     if (!html) return html;
-    return html
-      .replace(/<a([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1$2>') // Remove inline styles (double quotes)
-      .replace(/<a([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1$2>'); // Remove inline styles (single quotes)
+    let cleaned = html;
+    
+    // Remove inline styles from <a> tags
+    cleaned = cleaned.replace(/<a([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1$2>');
+    cleaned = cleaned.replace(/<a([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1$2>');
+    
+    // Remove inline styles from <span> tags inside <a> tags
+    cleaned = cleaned.replace(/<a([^>]*?)>(\s*)<span([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1>$2<span$3$4>');
+    cleaned = cleaned.replace(/<a([^>]*?)>(\s*)<span([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1>$2<span$3$4>');
+    
+    return cleaned;
   };
   
   const [loading, setLoading] = useState(false);
