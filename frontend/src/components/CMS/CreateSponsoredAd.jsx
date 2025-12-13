@@ -438,7 +438,7 @@ const CreateSponsoredAd = ({ onClose }) => {
           const contentBlock = htmlToDraft(article.content);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorState(EditorState.createWithContent(contentState));
+            setEditorState(EditorState.createWithContent(contentState, decorator));
           }
         }
 
@@ -447,7 +447,7 @@ const CreateSponsoredAd = ({ onClose }) => {
           const contentBlock = htmlToDraft(article.content_secondary);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorStateSecondary(EditorState.createWithContent(contentState));
+            setEditorStateSecondary(EditorState.createWithContent(contentState, decorator));
           }
         }
 
@@ -456,42 +456,42 @@ const CreateSponsoredAd = ({ onClose }) => {
           const contentBlock = htmlToDraft(article.review_plot_summary);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorPlotSummary(EditorState.createWithContent(contentState));
+            setEditorPlotSummary(EditorState.createWithContent(contentState, decorator));
           }
         }
         if (article.review_performances) {
           const contentBlock = htmlToDraft(article.review_performances);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorPerformances(EditorState.createWithContent(contentState));
+            setEditorPerformances(EditorState.createWithContent(contentState, decorator));
           }
         }
         if (article.review_what_works) {
           const contentBlock = htmlToDraft(article.review_what_works);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorWhatWorks(EditorState.createWithContent(contentState));
+            setEditorWhatWorks(EditorState.createWithContent(contentState, decorator));
           }
         }
         if (article.review_what_doesnt_work) {
           const contentBlock = htmlToDraft(article.review_what_doesnt_work);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorWhatDoesntWork(EditorState.createWithContent(contentState));
+            setEditorWhatDoesntWork(EditorState.createWithContent(contentState, decorator));
           }
         }
         if (article.review_technical_aspects) {
           const contentBlock = htmlToDraft(article.review_technical_aspects);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorTechnicalAspects(EditorState.createWithContent(contentState));
+            setEditorTechnicalAspects(EditorState.createWithContent(contentState, decorator));
           }
         }
         if (article.review_final_verdict) {
           const contentBlock = htmlToDraft(article.review_final_verdict);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorFinalVerdict(EditorState.createWithContent(contentState));
+            setEditorFinalVerdict(EditorState.createWithContent(contentState, decorator));
           }
         }
         
@@ -543,7 +543,7 @@ const CreateSponsoredAd = ({ onClose }) => {
             const contentBlock = htmlToDraft(draft.formData.content);
             if (contentBlock) {
               const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-              setEditorState(EditorState.createWithContent(contentState));
+              setEditorState(EditorState.createWithContent(contentState, decorator));
             }
           }
 
@@ -552,7 +552,7 @@ const CreateSponsoredAd = ({ onClose }) => {
             const contentBlock = htmlToDraft(draft.formData.content_secondary);
             if (contentBlock) {
               const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-              setEditorStateSecondary(EditorState.createWithContent(contentState));
+              setEditorStateSecondary(EditorState.createWithContent(contentState, decorator));
             }
           }
           
