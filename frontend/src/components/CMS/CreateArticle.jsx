@@ -3137,6 +3137,10 @@ const CreateArticle = () => {
                       <Editor
                         editorState={editorState}
                         onEditorStateChange={onEditorStateChange}
+                        onFocus={() => console.log('Editor focused')}
+                        onBlur={() => console.log('Editor blurred')}
+                        handlePastedText={() => false}
+                        stripPastedStyles={false}
                         wrapperClassName="wrapper-class"
                         editorClassName="editor-class"
                         toolbarClassName="toolbar-class"
