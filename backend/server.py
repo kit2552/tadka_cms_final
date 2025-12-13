@@ -1916,12 +1916,17 @@ async def get_homepage_theater_bollywood_releases(
 # Main /releases endpoint for homepage MovieSchedules component
 @api_router.get("/releases")
 async def get_movie_releases(db = Depends(get_db)):
-    """Get latest theater and OTT releases for homepage MovieSchedules section"""
-    # Get all latest releases sorted by updated_at/created_at
-    latest_theater = crud.get_latest_theater_releases(db, limit=10)
-    latest_ott = crud.get_latest_ott_releases(db, limit=10)
+    """Get latest theater releases for homepage MovieSchedules section
+    Theater tab: state-targeted releases
+    Bollywood tab: releases with state='all'
+    """
+    # Get state-targeted theater releases (not 'all')
+    state_theater = crud.get_latest_theater_releases_by_state(db, limit=10)
     
-    def format_release_response(releases, is_theater=True):
+    # Get 'all' state theater releases (Bollywood)
+    bollywood_theater = crud.get_latest_theater_releases_all_states(db, limit=10)
+    
+    def format_release_response(releases):
         result = []
         for release in releases:
             release_data = {
@@ -1934,22 +1939,19 @@ async def get_movie_releases(db = Depends(get_db)):
                 "states": release.get("states"),
                 "genres": release.get("genres"),
                 "created_at": release.get("created_at"),
-                "updated_at": release.get("updated_at")
+                "updated_at": release.get("updated_at"),
+                "banner": release.get("banner")
             }
-            if is_theater:
-                release_data["banner"] = release.get("banner")
-            else:
-                release_data["ott_platforms"] = release.get("ott_platforms")
             result.append(release_data)
         return result
     
     return {
         "theater": {
-            "this_week": format_release_response(latest_theater, True),
+            "this_week": format_release_response(state_theater),
             "coming_soon": []
         },
         "ott": {
-            "this_week": format_release_response(latest_ott, False),
+            "this_week": format_release_response(bollywood_theater),
             "coming_soon": []
         }
     }
