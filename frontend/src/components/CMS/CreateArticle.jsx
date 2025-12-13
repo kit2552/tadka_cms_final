@@ -613,6 +613,54 @@ const CreateArticle = () => {
     }));
   };
 
+  const handleAddLink = () => {
+    const selection = editorState.getSelection();
+    if (!selection.isCollapsed()) {
+      const contentState = editorState.getCurrentContent();
+      const startKey = selection.getStartKey();
+      const startOffset = selection.getStartOffset();
+      const endOffset = selection.getEndOffset();
+      const blockWithLink = contentState.getBlockForKey(startKey);
+      const selectedText = blockWithLink.getText().slice(startOffset, endOffset);
+      
+      setLinkText(selectedText);
+      setLinkUrl('');
+      setShowLinkModal(true);
+    } else {
+      alert('Please select some text first to add a link');
+    }
+  };
+
+  const handleConfirmLink = () => {
+    const selection = editorState.getSelection();
+    const contentState = editorState.getCurrentContent();
+    
+    const contentStateWithEntity = contentState.createEntity(
+      'LINK',
+      'MUTABLE',
+      { url: linkUrl, target: '_blank' }
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+    
+    const contentStateWithLink = Modifier.applyEntity(
+      contentStateWithEntity,
+      selection,
+      entityKey
+    );
+    
+    const editorStateWithLink = EditorState.push(
+      newEditorState,
+      contentStateWithLink,
+      'apply-entity'
+    );
+    
+    setEditorState(editorStateWithLink);
+    setShowLinkModal(false);
+    setLinkUrl('');
+    setLinkText('');
+  };
+
   const onEditorStateChangeSecondary = (editorState) => {
     setEditorStateSecondary(editorState);
     const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
