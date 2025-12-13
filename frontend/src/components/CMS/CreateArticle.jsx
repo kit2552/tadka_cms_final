@@ -3320,11 +3320,12 @@ const CreateArticle = () => {
                     </>
                   )}
 
-                  {/* Main Content (Hidden for Movie Reviews and Video, shown for other types including Video Post) */}
+                  {/* Main Content (Hidden for Movie Reviews and Video, Optional for Photo Gallery, Required for other types) */}
                   {formData.content_type !== 'movie_review' && formData.content_type !== 'video' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                      Main Content *
+                      Main Content {formData.content_type !== 'photo' && '*'}
+                      {formData.content_type === 'photo' && <span className="text-xs text-gray-500 ml-1">(Optional)</span>}
                     </label>
                     <div className="border border-gray-300 rounded-md">
                       <Editor
