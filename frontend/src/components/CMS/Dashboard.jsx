@@ -284,6 +284,16 @@ const Dashboard = () => {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   
+  // Ads management state
+  const [ads, setAds] = useState([]);
+  const [adsCurrentPage, setAdsCurrentPage] = useState(1);
+  const [adsItemsPerPage, setAdsItemsPerPage] = useState(15);
+  const [adsTotalPages, setAdsTotalPages] = useState(1);
+  const [adsTotalCount, setAdsTotalCount] = useState(0);
+  const [selectedAdType, setSelectedAdType] = useState('');
+  const [selectedAdStatus, setSelectedAdStatus] = useState('');
+  const [adsLoading, setAdsLoading] = useState(false);
+  
   // Manage Related Articles state
   const [relatedArticlesConfig, setRelatedArticlesConfig] = useState({});
   const [selectedPage, setSelectedPage] = useState('');
