@@ -2328,7 +2328,13 @@ const Dashboard = () => {
         category_type: galleryCategory,
         entity_name: selectedEntity,
         folder_path: folderPath,
-        tadka_pics_enabled: galleryType === 'vertical' ? tadkaPicsEnabled : false
+        tadka_pics_enabled: galleryType === 'vertical' ? tadkaPicsEnabled : false,
+        is_published: galleryForm.is_published,
+        is_scheduled: galleryForm.is_scheduled,
+        scheduled_publish_at: galleryForm.is_scheduled && galleryForm.scheduled_publish_at 
+          ? new Date(galleryForm.scheduled_publish_at).toISOString() 
+          : null,
+        scheduled_timezone: galleryForm.scheduled_timezone
       };
       
       console.log('=== SUBMITTING GALLERY ===');
