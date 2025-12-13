@@ -800,18 +800,24 @@ const ArticlePage = () => {
               /* Regular Article Content - No background, no horizontal padding */
               <div className="prose prose-lg max-w-none mb-3 pt-3 pb-3">
                 <style>{`
-                  /* Override ALL link styles in article content */
+                  /* Override ALL link styles in article content - maximum specificity */
                   .prose a,
                   .prose a[style],
                   .prose a[style*="color"],
                   .prose a[style*="Color"],
+                  .prose a[style*="background"],
                   .prose p a,
-                  .prose div a {
+                  .prose div a,
+                  .prose-lg a,
+                  .prose-lg a[style] {
                     color: #2563eb !important;
                     text-decoration: underline !important;
                     background: none !important;
+                    background-color: transparent !important;
+                    font-style: normal !important;
                   }
-                  .prose a:hover {
+                  .prose a:hover,
+                  .prose-lg a:hover {
                     color: #1d4ed8 !important;
                   }
                 `}</style>
