@@ -492,23 +492,31 @@ code {
 .prose a[href],
 .prose p a,
 .prose div a,
-.prose span a {
+.prose span a,
+.prose-lg a,
+.prose-lg a[style],
+.prose-lg p a,
+.prose-lg div a {
   color: #2563eb !important;
   text-decoration: underline !important;
   cursor: pointer !important;
   background: none !important;
   background-color: transparent !important;
+  border-bottom: none !important;
 }
 
 /* Force override for any link with inline color in prose only */
 .prose a[style*="color"],
-.prose a[style*="Color"] {
+.prose a[style*="Color"],
+.prose-lg a[style*="color"],
+.prose-lg a[style*="Color"] {
   color: #2563eb !important;
 }
 
 .prose a:hover,
 .prose a[style]:hover,
-.prose a[href]:hover {
+.prose a[href]:hover,
+.prose-lg a:hover {
   color: #1d4ed8 !important;
   text-decoration: underline !important;
 }
