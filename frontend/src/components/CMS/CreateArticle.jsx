@@ -63,8 +63,8 @@ const CreateArticle = () => {
   const [languages, setLanguages] = useState([]);
   const [states, setStates] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
-  const [editorStateSecondary, setEditorStateSecondary] = useState(() => EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty(decorator));
+  const [editorStateSecondary, setEditorStateSecondary] = useState(() => EditorState.createEmpty(decorator));
   
   // Movie Review Editor States
   const [editorPlotSummary, setEditorPlotSummary] = useState(() => EditorState.createEmpty());
