@@ -59,6 +59,7 @@ const CreateSponsoredAd = ({ onClose }) => {
     image: '',
     image_gallery: [], // New field for image gallery
     youtube_url: '',
+    media_type: 'image', // New field: 'image' or 'youtube'
     tags: '',
     artists: [], // New field for artists
     movie_rating: '', // New field for movie rating
