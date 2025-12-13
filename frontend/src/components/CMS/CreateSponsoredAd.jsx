@@ -3424,8 +3424,8 @@ const CreateSponsoredAd = ({ onClose }) => {
                   )}
                 </div>
 
-                {/* Top Story Duration Section */}
-                {formData.is_top_story && (
+                {/* Top Story Duration Section - Only for Ad Post type */}
+                {formData.ad_type === 'ad_post' && formData.is_top_story && (
                   <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-md">
                     <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                       Top Story Duration (Hours) *
