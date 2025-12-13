@@ -338,6 +338,8 @@ code {
 .rdw-editor-toolbar {
   border-bottom: 1px solid #e5e7eb;
   margin-bottom: 0;
+  position: relative;
+  overflow: visible !important;
 }
 
 /* Ensure link button is visible and functional */
