@@ -1911,28 +1911,6 @@ const CreateSponsoredAd = ({ onClose }) => {
                                 <p className="mt-2 text-sm text-gray-500">No image uploaded</p>
                               </div>
                             )
-                          ) : (
-                            // YouTube Video Preview
-                            formData.youtube_url ? (
-                              <iframe
-                                width="100%"
-                                height="200"
-                                src={formData.youtube_url.replace('watch?v=', 'embed/').split('&')[0]}
-                                title="YouTube video preview"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="rounded"
-                              ></iframe>
-                            ) : (
-                              <div className="text-center p-4">
-                                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <p className="mt-2 text-sm text-gray-500">No video URL entered</p>
-                              </div>
-                            )
                           )}
                         </div>
                       </div>
