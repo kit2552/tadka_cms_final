@@ -299,6 +299,8 @@ const CreateSponsoredAd = ({ onClose }) => {
           review_comments_enabled: article.review_comments_enabled !== undefined ? article.review_comments_enabled : true,
           // Top Story flag
           is_top_story: article.is_top_story || false,
+          top_story_duration_hours: article.top_story_duration_hours || 24,
+          scheduled_timezone: article.scheduled_timezone || 'IST',
           social_media_type: article.social_media_type || '',
           social_media_embed: article.social_media_embed || ''
         });
