@@ -119,11 +119,11 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
               <div
                 key={item.id}
                 className="flex-shrink-0 cursor-pointer"
-                style={{ minWidth: '120px' }}
+                style={{ minWidth: '145px' }}
                 onClick={() => handleVideoClick(item)}
               >
                 <div className="bg-black rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                  <div className="relative" style={{ width: '120px', height: '200px', overflow: 'hidden', backgroundColor: '#000' }}>
+                  <div className="relative" style={{ width: '145px', height: '200px', overflow: 'hidden', backgroundColor: '#000' }}>
                     {/* Vertical aspect ratio for YouTube Shorts style - crop to fit without black bars */}
                     <img
                       src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop')}
