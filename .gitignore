@@ -194,3 +194,7 @@ database_export*
 session_code_download.html
 download_server.log
 .DS_Store
+-e 
+# Environment files
+*.env
+*.env.*
