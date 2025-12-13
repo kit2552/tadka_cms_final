@@ -665,7 +665,9 @@ const CreateArticle = () => {
     console.log('handleAddLink called, selection:', {
       isCollapsed: selection.isCollapsed(),
       anchorKey: selection.getAnchorKey(),
-      focusKey: selection.getFocusKey()
+      focusKey: selection.getFocusKey(),
+      anchorOffset: selection.getAnchorOffset(),
+      focusOffset: selection.getFocusOffset()
     });
     
     if (!selection.isCollapsed()) {
@@ -677,6 +679,12 @@ const CreateArticle = () => {
       const selectedText = blockWithLink.getText().slice(startOffset, endOffset);
       
       console.log('Selected text for link:', selectedText);
+      console.log('Saving editor state and selection');
+      
+      // Save the current editor state and selection
+      setSavedEditorState(editorState);
+      setSavedSelection(selection);
+      
       setLinkText(selectedText);
       setLinkUrl('');
       setShowLinkModal(true);
