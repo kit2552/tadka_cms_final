@@ -346,6 +346,67 @@ code {
   display: inline-flex !important;
 }
 
+/* Link modal popup */
+.rdw-link-modal,
+.rdw-image-modal {
+  position: absolute;
+  top: 35px;
+  left: 5px;
+  display: flex;
+  flex-direction: column;
+  width: 235px;
+  height: auto;
+  border: 1px solid #d1d5db;
+  padding: 15px;
+  border-radius: 4px;
+  z-index: 9999 !important;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.rdw-link-modal-label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.rdw-link-modal-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.rdw-link-modal-buttonsection {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.rdw-link-modal-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.rdw-link-modal-btn:hover {
+  background: #f3f4f6;
+}
+
+.rdw-link-modal-target-option {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.rdw-link-modal-target-option input {
+  margin-right: 5px;
+}
+
 .rdw-option-wrapper {
   border: 1px solid #e5e7eb;
   min-width: 30px;
