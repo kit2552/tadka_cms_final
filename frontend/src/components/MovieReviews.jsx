@@ -107,7 +107,7 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   };
 
   return (
-    <div className="bg-white pt-1 pb-0">
+    <div className="bg-white pt-1 pb-0 -mb-5">
       {/* Header Container with Normal Width */}
       <div className="max-w-5xl-plus mx-auto px-8">
         {/* Header with tabs matching BoxOffice style */}
