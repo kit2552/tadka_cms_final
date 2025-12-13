@@ -699,17 +699,18 @@ const CreateArticle = () => {
       return;
     }
     
+    if (!savedEditorState || !savedSelection) {
+      console.error('No saved editor state or selection');
+      alert('Error: Lost editor state. Please try again.');
+      setShowLinkModal(false);
+      return;
+    }
+    
     console.log('Adding link:', linkUrl);
-    console.log('Current editor state:', editorState.getCurrentContent().getPlainText());
+    console.log('Using saved editor state');
     
-    const selection = editorState.getSelection();
-    console.log('Selection:', {
-      isCollapsed: selection.isCollapsed(),
-      anchorOffset: selection.getAnchorOffset(),
-      focusOffset: selection.getFocusOffset()
-    });
-    
-    const contentState = editorState.getCurrentContent();
+    const contentState = savedEditorState.getCurrentContent();
+    console.log('Content before link:', contentState.getPlainText());
     
     // Create entity
     const contentStateWithEntity = contentState.createEntity(
@@ -720,34 +721,36 @@ const CreateArticle = () => {
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
     console.log('Entity created:', entityKey);
     
-    // Apply entity to selection
+    // Apply entity to the SAVED selection
     const contentStateWithLink = Modifier.applyEntity(
       contentStateWithEntity,
-      selection,
+      savedSelection,
       entityKey
     );
     
     console.log('Content after link:', contentStateWithLink.getPlainText());
     
-    // Create new editor state with the link and decorator
+    // Create new editor state with the link
     const newEditorState = EditorState.push(
-      editorState,
+      savedEditorState,
       contentStateWithLink,
       'apply-entity'
     );
     
-    // Apply decorator to new state
+    // Apply decorator
     const decoratedEditorState = EditorState.set(newEditorState, { decorator });
     
-    console.log('New editor state created');
+    console.log('New editor state created, updating...');
     
     // Update editor state - call onEditorStateChange to trigger all updates
     onEditorStateChange(decoratedEditorState);
     
-    // Close modal
+    // Close modal and clear saved state
     setShowLinkModal(false);
     setLinkUrl('');
     setLinkText('');
+    setSavedEditorState(null);
+    setSavedSelection(null);
     
     console.log('Link added successfully');
   };
