@@ -6494,8 +6494,21 @@ const Dashboard = () => {
                       <option value="100">100 per page</option>
                     </select>
 
-                    <div className="ml-auto text-sm text-gray-600">
-                      Total: {adsTotalCount} ads
+                    <div className="ml-auto flex items-center gap-3">
+                      <span className="text-sm text-gray-600">
+                        Total: {adsTotalCount} ads
+                      </span>
+                      <button
+                        onClick={() => {
+                          window.location.href = '/cms/edit-ad/new';
+                        }}
+                        className="flex items-center gap-2 px-4 py-1.5 bg-black text-white text-sm font-medium rounded hover:bg-gray-800 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Create Ad
+                      </button>
                     </div>
                   </div>
                 </div>
