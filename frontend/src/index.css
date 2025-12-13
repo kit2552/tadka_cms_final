@@ -486,6 +486,17 @@ code {
   font-weight: 700 !important;
 }
 
+/* Style links in prose (published articles) */
+.prose a {
+  color: #2563eb !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+
+.prose a:hover {
+  color: #1d4ed8 !important;
+}
+
 /* Override default mb-6 spacing from 1.5rem to 1rem */
 .mb-6 {
   margin-bottom: 1rem !important;
