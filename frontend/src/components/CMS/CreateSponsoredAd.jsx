@@ -1490,6 +1490,39 @@ const CreateSponsoredAd = ({ onClose }) => {
               </div>
               {accordionStates.category && (
                 <div className="p-6 space-y-4">
+                  {/* Ad Type Selection */}
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                      Ad Type *
+                    </label>
+                    <select
+                      name="ad_type"
+                      value={formData.ad_type}
+                      onChange={(e) => {
+                        const newAdType = e.target.value;
+                        setFormData(prev => ({
+                          ...prev,
+                          ad_type: newAdType,
+                          // Auto-set category to sponsored-ads for sponsored_section type
+                          category: newAdType === 'sponsored_section' ? 'sponsored-ads' : prev.category
+                        }));
+                      }}
+                      className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    >
+                      <option value="sponsored_section">Ad in Sponsored Section</option>
+                      <option value="ad_post">Ad Post</option>
+                      <option value="landing_home">Landing Page - Home Page</option>
+                      <option value="landing_inner">Landing Page - Inner Pages</option>
+                    </select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {formData.ad_type === 'sponsored_section' && 'This ad will appear in the Sponsored Ads section of the home page'}
+                      {formData.ad_type === 'ad_post' && 'This ad will appear as a regular post in the selected category'}
+                      {formData.ad_type === 'landing_home' && 'Landing page functionality - Coming soon'}
+                      {formData.ad_type === 'landing_inner' && 'Landing page functionality - Coming soon'}
+                    </p>
+                  </div>
+
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                       Category *
@@ -1497,14 +1530,22 @@ const CreateSponsoredAd = ({ onClose }) => {
                     <div className="relative">
                       <input
                         type="text"
-                        value={showCategoryDropdown ? categorySearchQuery : (formData.category ? categories.find(cat => cat.slug === formData.category)?.name : '')}
+                        value={
+                          formData.ad_type === 'sponsored_section' 
+                            ? 'Sponsored Ad' 
+                            : (showCategoryDropdown ? categorySearchQuery : (formData.category ? categories.find(cat => cat.slug === formData.category)?.name : ''))
+                        }
                         onChange={(e) => {
-                          setCategorySearchQuery(e.target.value);
-                          setShowCategoryDropdown(true);
+                          if (formData.ad_type !== 'sponsored_section') {
+                            setCategorySearchQuery(e.target.value);
+                            setShowCategoryDropdown(true);
+                          }
                         }}
                         onFocus={() => {
-                          setCategorySearchQuery('');
-                          setShowCategoryDropdown(true);
+                          if (formData.ad_type !== 'sponsored_section') {
+                            setCategorySearchQuery('');
+                            setShowCategoryDropdown(true);
+                          }
                         }}
                         onBlur={() => {
                           // Small delay to allow click on dropdown items
@@ -1512,9 +1553,11 @@ const CreateSponsoredAd = ({ onClose }) => {
                             setCategorySearchQuery('');
                           }, 200);
                         }}
-                        placeholder="Search..."
+                        placeholder={formData.ad_type === 'sponsored_section' ? '' : 'Search...'}
                         className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
                         required
+                        disabled={formData.ad_type === 'sponsored_section'}
+                        style={formData.ad_type === 'sponsored_section' ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
                       />
                       {showCategoryDropdown && (
                         <>
