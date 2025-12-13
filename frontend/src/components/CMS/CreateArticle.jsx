@@ -543,12 +543,16 @@ const CreateArticle = () => {
     console.log('=== LINK MODAL DEBUG ===');
     const interval = setInterval(() => {
       const linkModal = document.querySelector('.rdw-link-modal');
+      const demoPopup = document.querySelector('.demo-popup');
       const linkWrapper = document.querySelector('.rdw-link-wrapper');
       const allRdwElements = document.querySelectorAll('[class*="rdw-link"]');
+      const allDemoElements = document.querySelectorAll('[class*="demo"]');
       
       console.log('Link wrapper found:', !!linkWrapper);
       console.log('Link modal found:', !!linkModal);
+      console.log('Demo popup found:', !!demoPopup);
       console.log('All rdw-link elements:', allRdwElements.length);
+      console.log('All demo elements:', allDemoElements.length);
       
       if (linkModal) {
         console.log('MODAL FOUND! Styles:', {
@@ -560,6 +564,10 @@ const CreateArticle = () => {
           top: window.getComputedStyle(linkModal).top,
           left: window.getComputedStyle(linkModal).left
         });
+      }
+      
+      if (demoPopup) {
+        console.log('DEMO POPUP FOUND!', demoPopup);
       }
       
       allRdwElements.forEach((el, idx) => {
