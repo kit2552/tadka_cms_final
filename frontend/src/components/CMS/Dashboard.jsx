@@ -3096,14 +3096,24 @@ const Dashboard = () => {
                 Topics
               </button>
               <button
-                onClick={() => setActiveTab('ads')}
+                onClick={() => setActiveTab('ads-list')}
                 className={`py-3 px-6 text-sm font-medium border-b-2 ${
-                  activeTab === 'ads'
+                  activeTab === 'ads-list'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 } transition-colors duration-200`}
               >
                 Ads
+              </button>
+              <button
+                onClick={() => setActiveTab('ad-settings')}
+                className={`py-3 px-6 text-sm font-medium border-b-2 ${
+                  activeTab === 'ad-settings'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } transition-colors duration-200`}
+              >
+                Ad Settings
               </button>
             </nav>
           </div>
