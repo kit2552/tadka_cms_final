@@ -3021,52 +3021,108 @@ const CreateSponsoredAd = ({ onClose }) => {
                   </div>
                   )}
 
-                  {/* Social Media Embed Section - Between Main and Secondary Content - Hide for landing pages */}
+                  {/* Social Media Embeds Section - Multiple embeds support - Hide for landing pages */}
                   {(formData.content_type === 'post' || formData.content_type === 'video_post' || formData.content_type === 'photo') && 
                    formData.ad_type !== 'landing_home' && formData.ad_type !== 'landing_inner' && (
-                    <div className="space-y-3 mt-6 p-4 bg-blue-50 border-2 border-blue-200 rounded-lg">
-                      <h3 className="text-sm font-semibold text-gray-800 text-left">Social Media Embed (Optional)</h3>
-                      <p className="text-xs text-gray-600 text-left">Embed will appear between main content and secondary content</p>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          Platform
-                        </label>
-                        <select
-                          name="social_media_type"
-                          value={formData.social_media_type}
-                          onChange={handleInputChange}
-                          className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                        >
-                          <option value="">None</option>
-                          <option value="twitter">Twitter/X</option>
-                          <option value="instagram">Instagram</option>
-                          <option value="facebook">Facebook</option>
-                          <option value="tiktok">TikTok</option>
-                          <option value="youtube">YouTube</option>
-                        </select>
-                      </div>
-                      
-                      {formData.social_media_type && (
+                    <div className="space-y-4 mt-6">
+                      <div className="flex items-center justify-between">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Embed Code (Recommended) or Share Link
-                          </label>
-                          <textarea
-                            name="social_media_embed"
-                            value={formData.social_media_embed}
-                            onChange={handleInputChange}
-                            placeholder="Paste embed code or share link here..."
-                            rows="4"
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                          />
-                          <p className="text-xs text-gray-600 mt-1 text-left">
-                            {formData.social_media_type === 'twitter' && 'Paste Twitter/X embed code'}
-                            {formData.social_media_type === 'instagram' && 'Paste Instagram embed code or post URL'}
-                            {formData.social_media_type === 'facebook' && 'Paste Facebook embed code or post URL'}
-                            {formData.social_media_type === 'tiktok' && 'Paste TikTok embed code or video URL'}
-                            {formData.social_media_type === 'youtube' && 'Paste YouTube embed code or video URL'}
-                          </p>
+                          <h3 className="text-sm font-semibold text-gray-800 text-left">Social Media Embeds (Optional)</h3>
+                          <p className="text-xs text-gray-600 text-left">Embeds will appear between main and secondary content</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleAddSocialEmbed}
+                          className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                          </svg>
+                          Add Social Media Embed
+                        </button>
+                      </div>
+
+                      {/* List of Social Media Embeds */}
+                      {formData.social_media_embeds.map((embed, index) => (
+                        <div key={index} className="p-4 bg-blue-50 border-2 border-blue-200 rounded-lg space-y-3">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-semibold text-gray-800">Embed #{index + 1}</h4>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveSocialEmbed(index)}
+                              className="text-red-600 hover:text-red-800 text-sm font-medium"
+                            >
+                              Remove
+                            </button>
+                          </div>
+
+                          {/* Content before embed */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Content (Optional)
+                            </label>
+                            <textarea
+                              value={embed.content}
+                              onChange={(e) => handleSocialEmbedChange(index, 'content', e.target.value)}
+                              placeholder="Add text before this embed..."
+                              rows="2"
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                            />
+                          </div>
+
+                          {/* Platform selection */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Platform *
+                            </label>
+                            <select
+                              value={embed.platform}
+                              onChange={(e) => handleSocialEmbedChange(index, 'platform', e.target.value)}
+                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                              required
+                            >
+                              <option value="">Select Platform</option>
+                              <option value="twitter">Twitter/X</option>
+                              <option value="instagram">Instagram</option>
+                              <option value="facebook">Facebook</option>
+                              <option value="tiktok">TikTok</option>
+                              <option value="youtube">YouTube</option>
+                            </select>
+                          </div>
+
+                          {/* Embed code */}
+                          {embed.platform && (
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                                Embed Code or Share Link *
+                              </label>
+                              <textarea
+                                value={embed.embed_code}
+                                onChange={(e) => handleSocialEmbedChange(index, 'embed_code', e.target.value)}
+                                placeholder="Paste embed code or share link here..."
+                                rows="4"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                                required
+                              />
+                              <p className="text-xs text-gray-600 mt-1 text-left">
+                                {embed.platform === 'twitter' && 'Paste Twitter/X embed code'}
+                                {embed.platform === 'instagram' && 'Paste Instagram embed code or post URL'}
+                                {embed.platform === 'facebook' && 'Paste Facebook embed code or post URL'}
+                                {embed.platform === 'tiktok' && 'Paste TikTok embed code or video URL'}
+                                {embed.platform === 'youtube' && 'Paste YouTube embed code or video URL'}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+
+                      {formData.social_media_embeds.length === 0 && (
+                        <div className="text-center py-8 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
+                          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          </svg>
+                          <p className="mt-2 text-sm text-gray-500">No social media embeds added yet</p>
+                          <p className="text-xs text-gray-400">Click "Add Social Media Embed" to add one</p>
                         </div>
                       )}
                     </div>
