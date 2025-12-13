@@ -465,7 +465,22 @@ def update_article_cms(db, article_id: int, article: dict):
     
     # Manage top stories if is_top_story field is present
     if "is_top_story" in article:
+        from datetime import timedelta
+        
         article_obj = db[ARTICLES].find_one({"id": article_id})
+        
+        # Calculate expiration time if being set as top story
+        if article.get("is_top_story", False):
+            duration_hours = article.get("top_story_duration_hours", article_obj.get("top_story_duration_hours", 24))
+            published_time = published_at or article_obj.get("published_at", datetime.utcnow())
+            expires_at = published_time + timedelta(hours=duration_hours)
+            
+            # Update expiration time
+            db[ARTICLES].update_one(
+                {"id": article_id},
+                {"$set": {"top_story_expires_at": expires_at}}
+            )
+        
         manage_top_stories(
             db,
             str(article_id),
