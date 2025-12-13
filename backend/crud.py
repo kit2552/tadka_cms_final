@@ -1681,6 +1681,10 @@ def create_gallery(db, gallery_data: dict):
         "entity_id": gallery_data.get("entity_id"),  # ID of the selected entity
         "folder_path": gallery_data.get("folder_path"),  # Full folder path for images
         "tadka_pics_enabled": gallery_data.get("tadka_pics_enabled", False),  # For Tadka Pics section
+        "is_published": gallery_data.get("is_published", True),
+        "is_scheduled": gallery_data.get("is_scheduled", False),
+        "scheduled_publish_at": gallery_data.get("scheduled_publish_at"),
+        "scheduled_timezone": gallery_data.get("scheduled_timezone", "IST"),
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
     }
