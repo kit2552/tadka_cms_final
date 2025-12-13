@@ -98,7 +98,7 @@ const TadkaPics = ({ images, onImageClick }) => {
     return (
       <div className="bg-white">
         <div className="max-w-5xl-plus mx-auto px-8">
-          <div className={`${getSectionHeaderClasses().containerClass} px-3 py-2 border rounded-lg text-left mb-3`}>
+          <div className={`${getSectionHeaderClasses().containerClass} px-3 py-2 border rounded-lg text-left mb-1`}>
             <h3 className={`${getSectionHeaderClasses().textClass}`} style={{fontSize: '14px', fontWeight: '500'}}>{t('sections.tadka_pics', 'Tadka Pics')}</h3>
           </div>
           <div className="text-center text-gray-500 py-8">Loading...</div>
@@ -226,7 +226,7 @@ const TadkaPics = ({ images, onImageClick }) => {
     <div className="bg-white">
       <div className="max-w-5xl-plus mx-auto px-8">
         {/* Header matching Events slider style */}
-        <div className={`${getSectionHeaderClasses().containerClass} px-3 py-2 border rounded-lg text-left mb-3 flex items-center justify-between relative`}>
+        <div className={`${getSectionHeaderClasses().containerClass} px-3 py-2 border rounded-lg text-left mb-1 flex items-center justify-between relative`}>
           <h3 className={`${getSectionHeaderClasses().textClass}`} style={{fontSize: '14px', fontWeight: '500'}}>{t('sections.tadka_pics', 'Tadka Pics')}</h3>
           <Link 
             to="/top-insta-pics" 
@@ -247,7 +247,7 @@ const TadkaPics = ({ images, onImageClick }) => {
         <div className="relative">
           <div 
             ref={scrollContainerRef}
-            className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide" 
+            className="flex space-x-2 overflow-x-auto pt-1 pb-0 scrollbar-hide" 
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
