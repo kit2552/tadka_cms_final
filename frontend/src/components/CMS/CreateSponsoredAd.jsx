@@ -3389,17 +3389,6 @@ const CreateSponsoredAd = ({ onClose }) => {
                   <label className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="checkbox"
-                      name="is_featured"
-                      checked={formData.is_featured}
-                      onChange={handleInputChange}
-                      className="form-checkbox h-4 w-4 text-blue-600"
-                    />
-                    <span className="text-sm text-gray-700">Sponsored Article</span>
-                  </label>
-
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
                       name="is_published"
                       checked={formData.is_published && !formData.is_scheduled}
                       onChange={handlePublishChange}
@@ -3420,16 +3409,19 @@ const CreateSponsoredAd = ({ onClose }) => {
                     <span className="text-sm text-gray-700">Schedule for Later</span>
                   </label>
 
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="is_top_story"
-                      checked={formData.is_top_story}
-                      onChange={(e) => setFormData(prev => ({ ...prev, is_top_story: e.target.checked }))}
-                      className="form-checkbox h-4 w-4 text-blue-600"
-                    />
-                    <span className="text-sm text-gray-700">Feature as Top Story</span>
-                  </label>
+                  {/* Feature as Top Story - Only show for Ad Post type */}
+                  {formData.ad_type === 'ad_post' && (
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="is_top_story"
+                        checked={formData.is_top_story}
+                        onChange={(e) => setFormData(prev => ({ ...prev, is_top_story: e.target.checked }))}
+                        className="form-checkbox h-4 w-4 text-blue-600"
+                      />
+                      <span className="text-sm text-gray-700">Feature as Top Story</span>
+                    </label>
+                  )}
                 </div>
 
                 {/* Top Story Duration Section */}
