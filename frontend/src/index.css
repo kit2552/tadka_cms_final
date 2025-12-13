@@ -338,8 +338,27 @@ code {
 .rdw-editor-toolbar {
   border-bottom: 1px solid #e5e7eb;
   margin-bottom: 0;
-  position: relative;
-  overflow: visible !important;
+}
+
+/* Prevent toolbar buttons from taking focus away from editor */
+.rdw-option-wrapper,
+.rdw-dropdown-wrapper {
+  user-select: none;
+}
+
+.rdw-option-wrapper {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Make toolbar items not focusable via tab */
+.rdw-option-wrapper,
+.rdw-dropdown-wrapper,
+.rdw-option-wrapper *,
+.rdw-dropdown-wrapper * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /* Ensure link and image wrappers are visible */
