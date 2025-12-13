@@ -55,6 +55,7 @@ const CreateSponsoredAd = ({ onClose }) => {
     states: 'all',
     category: '',
     content_type: 'post', // New field for content type
+    ad_type: 'sponsored_section', // New field: sponsored_section, ad_post, landing_home, landing_inner
     image: '',
     image_gallery: [], // New field for image gallery
     youtube_url: '',
