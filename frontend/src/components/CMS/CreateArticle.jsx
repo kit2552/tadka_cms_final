@@ -582,13 +582,23 @@ const CreateArticle = () => {
         e.preventDefault();
         e.stopPropagation();
         console.log('Link button clicked - opening custom modal');
-        handleAddLink();
+        
+        // Small delay to ensure selection is captured
+        setTimeout(() => {
+          handleAddLink();
+        }, 10);
       }
     };
 
     const toolbar = document.querySelector('.toolbar-class');
     if (toolbar) {
       toolbar.addEventListener('click', handleLinkClick, true);
+      toolbar.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.rdw-link-wrapper')) {
+          e.preventDefault();
+        }
+      }, true);
+      
       return () => {
         toolbar.removeEventListener('click', handleLinkClick, true);
       };
