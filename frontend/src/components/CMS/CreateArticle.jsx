@@ -677,78 +677,53 @@ const CreateArticle = () => {
       return;
     }
     
-    // Close modal first
-    setShowLinkModal(false);
-    setLinkUrl('');
-    setLinkText('');
-    
-    // Use setTimeout to ensure modal closes before state update
-    setTimeout(() => {
-      try {
-        console.log('Adding link:', linkUrl);
-        
-        const contentState = savedEditorState.getCurrentContent();
-        console.log('Content text before:', contentState.getPlainText());
-        
-        // Create entity
-        const contentStateWithEntity = contentState.createEntity(
-          'LINK',
-          'MUTABLE',
-          { url: linkUrl }
-        );
-        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-        
-        // Apply entity to selection
-        const newContentState = Modifier.applyEntity(
-          contentStateWithEntity,
-          savedSelection,
-          entityKey
-        );
-        
-        console.log('Content text after:', newContentState.getPlainText());
-        
-        // Push new content state
-        const newEditorState = EditorState.push(
-          savedEditorState,
-          newContentState,
-          'apply-entity'
-        );
-        
-        // Force selection after the link
-        const selectionAfterLink = savedSelection.merge({
-          anchorOffset: savedSelection.getEndOffset(),
-          focusOffset: savedSelection.getEndOffset(),
-        });
-        
-        const finalEditorState = EditorState.acceptSelection(newEditorState, selectionAfterLink);
-        
-        console.log('Setting new editor state');
-        
-        // Update both editor state and form data together
-        setEditorState(finalEditorState);
-        
-        const htmlContent = draftToHtml(convertToRaw(finalEditorState.getCurrentContent()));
-        console.log('Generated HTML:', htmlContent);
-        
-        setFormData(prev => {
-          console.log('Updating formData');
-          return {
-            ...prev,
-            content: htmlContent
-          };
-        });
-        
-        console.log('Link added successfully');
-        
-        // Clear refs
-        savedEditorStateRef.current = null;
-        savedSelectionRef.current = null;
-        
-      } catch (error) {
-        console.error('Error adding link:', error);
-        alert('Error adding link: ' + error.message);
-      }
-    }, 100);
+    try {
+      console.log('Adding link:', linkUrl);
+      console.log('Link text:', linkText);
+      
+      // Get current HTML
+      const currentContentState = savedEditorState.getCurrentContent();
+      const currentHtml = draftToHtml(convertToRaw(currentContentState));
+      console.log('Current HTML:', currentHtml);
+      
+      // Create link HTML
+      const linkHtml = `<a href="${linkUrl}" target="_blank">${linkText}</a>`;
+      console.log('Link HTML:', linkHtml);
+      
+      // Replace the selected text with link
+      const newHtml = currentHtml.replace(linkText, linkHtml);
+      console.log('New HTML:', newHtml);
+      
+      // Convert HTML back to Draft.js content
+      const blocksFromHtml = htmlToDraft(newHtml);
+      const { contentBlocks, entityMap } = blocksFromHtml;
+      const newContentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+      const newEditorState = EditorState.createWithContent(newContentState);
+      
+      console.log('New editor state created, updating...');
+      
+      // Update editor state
+      setEditorState(newEditorState);
+      
+      // Update form data
+      setFormData(prev => ({
+        ...prev,
+        content: newHtml
+      }));
+      
+      console.log('Link added successfully');
+      
+    } catch (error) {
+      console.error('Error adding link:', error);
+      alert('Error adding link: ' + error.message);
+    } finally {
+      // Close modal and clear
+      setShowLinkModal(false);
+      setLinkUrl('');
+      setLinkText('');
+      savedEditorStateRef.current = null;
+      savedSelectionRef.current = null;
+    }
   };
 
   const onEditorStateChangeSecondary = (editorState) => {
