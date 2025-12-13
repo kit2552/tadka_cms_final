@@ -746,8 +746,16 @@ async def get_trailers_articles(limit: int = 4, db = Depends(get_db)):
 async def get_sponsored_ads(limit: int = 4, db = Depends(get_db)):
     """Get sponsored ads for homepage"""
     ads = list(db[crud.ARTICLES].find({
-        "ad_type": "Ad in Sponsored Section",
-        "category": "Sponsored Ad",
+        "$or": [
+            {
+                "ad_type": "Ad in Sponsored Section",
+                "category": "Sponsored Ad"
+            },
+            {
+                "ad_type": "sponsored_section",
+                "category": "sponsored-ads"
+            }
+        ],
         "is_published": True
     }, {"_id": 0}).sort("created_at", -1).limit(limit))
     
