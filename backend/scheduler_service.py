@@ -17,37 +17,50 @@ class ArticleSchedulerService:
         self.est = timezone('America/New_York')
         
     def check_and_publish_scheduled_articles(self):
-        """Check for scheduled articles that need to be published"""
+        """Check for scheduled articles and galleries that need to be published"""
         try:
             # Get scheduler settings
             settings = crud.get_scheduler_settings(db)
             
             # If scheduler is disabled, return
             if not settings or not settings.get('is_enabled'):
-                logger.info("Scheduler is disabled, skipping scheduled article check")
+                logger.info("Scheduler is disabled, skipping scheduled content check")
                 return
             
             # Get articles ready for publishing
             scheduled_articles = crud.get_scheduled_articles_for_publishing(db)
             
-            if not scheduled_articles:
-                logger.info("No scheduled articles ready for publishing")
+            # Get galleries ready for publishing
+            scheduled_galleries = crud.get_scheduled_galleries_for_publishing(db)
+            
+            if not scheduled_articles and not scheduled_galleries:
+                logger.info("No scheduled content ready for publishing")
                 return
             
             # Publish each scheduled article
-            published_count = 0
+            published_articles = 0
             for article in scheduled_articles:
                 try:
                     crud.publish_scheduled_article(db, article.get('id'))
-                    published_count += 1
+                    published_articles += 1
                     logger.info(f"Published scheduled article: {article.get('title')} (ID: {article.get('id')})")
                 except Exception as e:
                     logger.error(f"Failed to publish scheduled article {article.get('id')}: {str(e)}")
             
-            logger.info(f"Published {published_count} scheduled articles")
+            # Publish each scheduled gallery
+            published_galleries = 0
+            for gallery in scheduled_galleries:
+                try:
+                    crud.publish_scheduled_gallery(db, gallery.get('id'))
+                    published_galleries += 1
+                    logger.info(f"Published scheduled gallery: {gallery.get('title')} (ID: {gallery.get('id')})")
+                except Exception as e:
+                    logger.error(f"Failed to publish scheduled gallery {gallery.get('id')}: {str(e)}")
+            
+            logger.info(f"Published {published_articles} scheduled articles and {published_galleries} scheduled galleries")
             
         except Exception as e:
-            logger.error(f"Error in scheduled article check: {str(e)}")
+            logger.error(f"Error in scheduled content check: {str(e)}")
     
     def start_scheduler(self):
         """Start the background scheduler"""
