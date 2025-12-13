@@ -1,59 +1,65 @@
 <analysis>**original_problem_statement:**
-The user's initial request was to prepare the application for deployment to Digital Ocean. This involved:
-1.  Exporting all data from the local MongoDB instance.
-2.  Creating all necessary configuration files for a Digital Ocean deployment (Dockerfiles, , Digital Ocean ).
-3.  Changing the database name to  in the configuration.
-4.  Ensuring the app could be deployed using a remote MongoDB instance.
-
-Throughout the process, the user provided numerous logs from failed Digital Ocean deployments, requiring the agent to debug a wide range of issues, from frontend dependency conflicts to backend startup failures and database connectivity problems. The final request was to migrate the local database content to the remote production database and ensure the local preview environment reflects changes made to the live data.
+The user's initial request was to fix a data inconsistency issue where the local preview environment was not reflecting live data changes from the production database. After resolving this, the user initiated a series of requests for major project cleanup and then requested a significant number of new features and enhancements for the CMS, primarily focused on the Create Article and Create Sponsored Ad forms. This included adding timezone-aware scheduling, new ad types with conditional UI, top story expiration logic, and fixing bugs in the rich text editor.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The application is a full-stack news portal. The codebase has been extensively modified to support deployment on the Digital Ocean App Platform. This includes a new  file, Dockerfiles for both frontend and backend, and numerous adjustments to  and  to handle build and runtime issues. The local development environment has been reconfigured to connect directly to the remote production MongoDB database, which has been populated with data from the local instance.
+The application is a full-stack news portal with a React frontend and FastAPI backend, now correctly configured to use the remote production MongoDB for local development. The codebase has been significantly cleaned and organized, with documentation, tests, and utility scripts moved into dedicated folders (, , ). Numerous obsolete backup files and scripts have been deleted.
+
+The CMS functionality has been heavily enhanced with several new features:
+-   **Share Buttons:** Copy Link and Email icons have been added to all public-facing content pages.
+-   **Timezone Scheduling:** Articles, Sponsored Ads, and Image Galleries can now be scheduled for future publication in either IST or EST timezones.
+-   **Advanced Ad Form:** The Create Sponsored Ad form is now highly dynamic:
+    -   An Ad Type field (, , ) controls the form's behavior.
+    -   The Category is automatically set and disabled based on the selected Ad Type.
+    -   A Media Type selector conditionally shows either an Image Upload or a YouTube URL field.
+    -   Irrelevant sections (SEO, EEAT, etc.) are hidden for Landing Page ads.
+    -   The field  has been renamed to  for consistency.
+-   **Top Story Expiration:** Ad Posts can be featured as a Top Story for a specified number of hours before a scheduler automatically removes them from that section.
+-   **Dynamic Content Types:** The Create Article form now automatically selects and disables the Movie Review content type when a review-related category is chosen.
 
 **Last working item**:
--   **Last item agent was working:** The user reported that content changes made in the production environment (which uses the remote DB) are not appearing in the local preview, even though the local environment is also configured to use the same remote DB. The agent was investigating this discrepancy.
+-   **Last item agent was working:** The user reported that the Bold button in the  rich text editor is not functioning. While other formatting buttons like *Italic* and _Underline_ work, clicking the **Bold** button does not apply the bold style to the selected text.
 -   **Status:** IN PROGRESS
 -   **Agent Testing Done:** N
--   **Which testing method agent to use?** Manual debugging. The agent needs to investigate potential caching issues or problems with the local development server's connection/hot-reloading.
--   **User Testing Done:** N
+-   **Which testing method agent to use?** Frontend testing agent. The agent has already attempted several CSS-based fixes that have failed to resolve the issue. A more in-depth debugging session is required to inspect the Draft.js component's state and style rendering.
+-   **User Testing Done:** Y (User has confirmed the issue persists after the agent's recent attempts.)
 
 **All Pending/In progress Issue list**:
--   Issue 1: (P0) Local preview does not show live data changes.
+-   Issue 1: (P0) Rich text editor Bold button not working.
 -   Issue 2: (P1) MongoDB index creation conflict on startup.
 -   Issue 3: (P2) National News not showing for new users.
 
 **Issues Detail:**
--   **Issue 1: Local preview does not show live data changes**
-    -   **Attempted fixes:** The agent confirmed that the  file is correctly pointing to the remote production MongoDB. It also verified that the backend service is running. However, a  command to the frontend failed, and the root cause of the data not refreshing was not found.
+-   **Issue 1: Rich text editor Bold button not working**
+    -   **Attempted fixes:**
+        -   Applied CSS to increase  and set  on toolbar buttons.
+        -   Added more specific CSS to style the  and  to ensure visual feedback and proper font-weight.
+        -   Attempted to add a  prop to the  component to force a  style, but the implementation was incomplete and failed to target all editor instances.
     -   **Next debug checklist:**
-        1.  Restart both  and  supervisor services to ensure they are using the latest environment variables and code.
-        2.  Check the browser's developer console for any network errors or CORS issues when fetching data in the local preview.
-        3.  Clear browser cache to rule out client-side caching.
-        4.  Temporarily add a log in the frontend data fetching service () to confirm it's making requests and inspect the responses.
-    -   **Why fix this issue and what will be achieved with this?** This is a critical blocker for the user's development workflow, as they cannot verify production data changes in their local preview environment.
+        1.  Correctly implement the  prop for **all**  instances in both  and .
+        2.  Use browser developer tools to inspect the Draft.js editor's state. Verify if the BOLD inline style is being applied to the content block when the button is clicked.
+        3.  Inspect the rendered HTML and CSS to identify any conflicting styles that might be overriding the .
+        4.  Check the browser console for any JavaScript errors related to the editor component upon clicking the bold button.
+    -   **Why fix this issue and what will be achieved with this?** This is a critical bug. The inability to bold text severely limits the content creation capabilities of the CMS.
     -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** Both.
+    -   **Is recurring issue?** Y
+    -   **Should Test frontend/backend/both after fix?** Frontend.
     -   **Blocked on other issue:** None.
 
 -   **Issue 2: MongoDB index creation conflict on startup**
-    -   **Attempted fixes:** The agent repeatedly tried to comment out or modify the  function in  but failed. The warnings persist in deployment logs.
-    -   **Next debug checklist:**
-        1.  **Do not modify  again.**
-        2.  Locate the call to  inside the  function in .
-        3.  Comment out or remove that specific line (). This is the correct place to disable the call.
-    -   **Why fix this issue and what will be achieved with this?** Although the logs classify this as a Warning, it spams the deployment logs and could potentially mask other critical startup errors. Removing it will lead to cleaner, more reliable deployments.
+    -   **Attempted fixes:** None in this session (carried over). Previous attempts to edit  failed.
+    -   **Next debug checklist:** Locate the call to  inside the  function in  and comment it out.
+    -   **Why fix this issue and what will be achieved with this?** Removing these warnings will clean up deployment logs and prevent potential masking of more critical startup errors.
     -   **Status:** NOT STARTED
     -   **Is recurring issue?** Y
     -   **Should Test frontend/backend/both after fix?** Backend.
     -   **Blocked on other issue:** None.
 
 -   **Issue 3: National News not showing for new users**
-    -   **Attempted fixes:** None. This issue was carried over from the previous session and was ignored due to the urgent focus on deployment.
-    -   **Next debug checklist:** Review the data fetching logic in  or . Ensure that if the user's state in  () is empty or null, the component fetches articles where the  array field contains .
-    -   **Why fix this issue and what will be achieved with this?** This will improve the first-time user experience by ensuring the National News section is not empty.
+    -   **Attempted fixes:** None in this session (carried over).
+    -   **Next debug checklist:** Review data fetching logic in  and  to ensure articles with the  field containing  are fetched when the user has no state preference in .
+    -   **Why fix this issue and what will be achieved with this?** Fixes a key part of the first-time user experience.
     -   **Status:** NOT STARTED
     -   **Is recurring issue?** Y
     -   **Should Test frontend/backend/both after fix?** Frontend.
@@ -64,253 +70,124 @@ The application is a full-stack news portal. The codebase has been extensively m
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks:**
-    -   **P0: Complete State-Language Mapping feature:** The original task for the previous fork was abandoned due to shifting user priorities. This involves implementing the  and  backend endpoints and connecting the frontend UI in  to fetch and save the mappings.
+    -   **P0: Define and Implement Landing Page Functionality:** The UI and backend fields for Landing Page ad types have been created, but their display logic on the frontend is undefined. This task involves implementing how these ads are rendered on the home and inner pages.
+    -   **P1: Complete State-Language Mapping feature:** (Carried over) Implement the backend endpoints and frontend UI in  to manage state-language mappings.
 -   **Future Tasks:**
-    -   **P1: Implement Live Ads:** Replace existing ad placeholders with a functional ad-serving implementation.
-    -   **P2: Full Regression Testing:** A comprehensive regression test of the CMS and public-facing site is recommended after all recent major changes.
-    -   **P3: Code Cleanup & Refactoring:**
-        -    is critically large and its complexity has increased.
-        -    also needs refactoring.
-        -   The new  is a direct, large-scale duplication of , which creates significant technical debt.
+    -   **P1: Implement Live Ads:** Replace placeholders with a functional ad-serving system.
+    -   **P2: Full Regression Testing:** Conduct a comprehensive test of the CMS and public site.
+    -   **P3: Code Cleanup & Refactoring:** The , , and  files have grown significantly and are candidates for refactoring into smaller components.
 
 **Completed work in this session**
--   **Feature: Digital Ocean Deployment Setup:**
-    -   Created and configured , , and a Digital Ocean-specific  for a two-part (backend service, frontend static site) deployment.
-    -   Resolved numerous frontend build failures by managing npm <command>
-
-Usage:
-
-npm install        install all the dependencies in your project
-npm install <foo>  add the <foo> dependency to your project
-npm test           run this project's tests
-npm run <foo>      run the script named <foo>
-npm <command> -h   quick help on <command>
-npm -l             display usage info for all commands
-npm help <term>    search for help on <term>
-npm help npm       more involved overview
-
-All commands:
-
-    access, adduser, audit, bugs, cache, ci, completion,
-    config, dedupe, deprecate, diff, dist-tag, docs, doctor,
-    edit, exec, explain, explore, find-dupes, fund, get, help,
-    help-search, hook, init, install, install-ci-test,
-    install-test, link, ll, login, logout, ls, org, outdated,
-    owner, pack, ping, pkg, prefix, profile, prune, publish,
-    query, rebuild, repo, restart, root, run-script, sbom,
-    search, set, shrinkwrap, star, stars, start, stop, team,
-    test, token, uninstall, unpublish, unstar, update, version,
-    view, whoami
-
-Specify configs in the ini-formatted file:
-    /root/.npmrc
-or on the command line via: npm <command> --key=value
-
-More configuration info: npm help config
-Configuration fields: npm help 7 config
-
-npm@10.8.2 /usr/lib/node_modules/npm/yarn install v1.22.22
-info No lockfile found.
-[1/4] Resolving packages...
-[2/4] Fetching packages...
-[3/4] Linking dependencies...
-[4/4] Building fresh packages...
-success Saved lockfile.
-Done in 0.02s. conflicts, fixing dependency issues (, , ), and ensuring a  file is generated and committed.
-    -   Set a specific Python version () for the backend build using a  file.
--   **Feature: Backend Refactoring for Deployment:**
-    -   Replaced deprecated FastAPI  handlers with the modern  context manager in .
-    -   Added robust  blocks within the startup logic to prevent crashes.
-    -   Added a request logging middleware to  for debugging purposes.
--   **Feature: Database Migration:**
-    -   Successfully exported data from the local  MongoDB database using .
-    -   Validated the exported data counts (38 articles, 2 theater releases, etc.).
-    -   Successfully imported the data into the remote production MongoDB instance using .
--   **Configuration: Environment Alignment:**
-    -   Configured the local development environment () to connect to the remote production database for consistent testing.
+-   **Bug Fix: Local Preview Data Sync:**
+    -   **Resolved:** Fixed the backend connecting to the wrong MongoDB instance by adding  in .
+    -   **Completed:** Removed all application-level data caching from the frontend () at the user's request.
+-   **Chore: Major Project Cleanup:**
+    -   **Completed:** Organized all documentation, test scripts, and utility scripts into dedicated , , and  folders.
+    -   **Completed:** Deleted over 191MB of obsolete database dumps, temporary archives, and old scripts.
+    -   **Completed:** Updated  to prevent future caching and backup files from being committed.
+-   **Feature: CMS Enhancements:**
+    -   **Completed:** Added Copy Link and Email share icons to all content pages.
+    -   **Completed:** Implemented timezone-aware (IST/EST) scheduling for Articles, Ads, and Galleries.
+    -   **Completed:** Implemented a top-story expiration system for sponsored ad posts.
+    -   **Completed:** Overhauled the Create Sponsored Ad form with dynamic UI based on Ad Type and Media Type.
+    -   **Completed:** Renamed  to  across the stack for consistency.
+    -   **Completed:** Implemented logic to auto-set the Content Type to Movie Review in the article form for specific categories.
 
 **Earlier issues found/mentioned but not fixed**
--   **Issue 1: MongoDB index conflict on startup.** (See All Pending/In progress Issue list for details).
--   **Issue 2: National News not showing for new users.** (See All Pending/In progress Issue list for details).
+-   **Issue 1:** MongoDB index conflict on startup. (Details in All Pending/In progress Issue list).
+-   **Issue 2:** National News not showing for new users. (Details in All Pending/In progress Issue list).
 
 **Known issue recurrence from previous fork**
--   **Issue recurrence in previous fork:** National News not showing for new users issue.
--   **Recurrence count:** 3
+-   **Issue recurrence in previous fork:** National News not showing for new users and MongoDB index conflict.
+-   **Recurrence count:** 4+
 -   **Status:** NOT STARTED
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
--   **Digital Ocean App Platform:** Deployment using a YAML spec file () defining services, static sites, build commands, and environment variables.
--   **Docker & Containerization:** Using Dockerfiles to create reproducible build and runtime environments for production.
--   **Dependency Management Hell:** Extensive debugging of npm <command>
-
-Usage:
-
-npm install        install all the dependencies in your project
-npm install <foo>  add the <foo> dependency to your project
-npm test           run this project's tests
-npm run <foo>      run the script named <foo>
-npm <command> -h   quick help on <command>
-npm -l             display usage info for all commands
-npm help <term>    search for help on <term>
-npm help npm       more involved overview
-
-All commands:
-
-    access, adduser, audit, bugs, cache, ci, completion,
-    config, dedupe, deprecate, diff, dist-tag, docs, doctor,
-    edit, exec, explain, explore, find-dupes, fund, get, help,
-    help-search, hook, init, install, install-ci-test,
-    install-test, link, ll, login, logout, ls, org, outdated,
-    owner, pack, ping, pkg, prefix, profile, prune, publish,
-    query, rebuild, repo, restart, root, run-script, sbom,
-    search, set, shrinkwrap, star, stars, start, stop, team,
-    test, token, uninstall, unpublish, unstar, update, version,
-    view, whoami
-
-Specify configs in the ini-formatted file:
-    /root/.npmrc
-or on the command line via: npm <command> --key=value
-
-More configuration info: npm help config
-Configuration fields: npm help 7 config
-
-npm@10.8.2 /usr/lib/node_modules/npm vs. yarn install v1.22.22
-[1/4] Resolving packages...
-success Already up-to-date.
-Done in 0.02s., and deep dependency conflicts within the React build ecosystem (especially involving , , and ). The final solution involved removing all  and letting yarn install v1.22.22
-[1/4] Resolving packages...
-success Already up-to-date.
-Done in 0.02s. generate a clean .
--   **FastAPI Lifespan Events:** Refactoring from deprecated  to the modern  for managing startup and shutdown logic.
--   **Database Migration:** Using  and  to move data between local and remote MongoDB instances.
+-   **Environment Variable Loading:** Fixed a critical bug where the backend defaulted to a local DB because  does not read  files without a library like .
+-   **Conditional Rendering (React):** Heavily used to create the dynamic UI in the  form, showing/hiding entire sections based on user selections.
+-   **Backend Scheduling (APScheduler):** The existing scheduler service was extended to manage new time-based tasks like top story expiration and timezone-aware publishing.
+-   **Rich Text Editor Debugging:** Focused on fixing UI/styling issues in  via CSS overrides and investigating component props like .
 
 **key DB schema**
-- No schema changes were made. All work was related to data migration and deployment configuration.
+-   **articles collection:**
+    -    (new, replaces )
+    -    (new, e.g., 'ad_post', 'sponsored_section', 'landing_home')
+    -    (new)
+    -    (new)
+    -    (new, e.g., 'IST', 'EST')
+    -    (new)
+    -    (new)
+-   **galleries collection:**
+    -    (new)
+    -    (new)
+    -    (new)
+    -    (new, used by scheduler)
 
 **changes in tech stack**
--   None.
+-   Added  to the backend dependencies to handle environment variable loading.
 
 **All files of reference**
--   : **(CRITICAL)** The entire deployment configuration for Digital Ocean.
--   : **(CRITICAL)** Contains the application startup logic () and needs the index creation call to be disabled.
--   : Governs the frontend build process.
--   : Defines the database connection for the local environment.
+-    (Rich text editor bug, new features)
+-    (Rich text editor bug, new features)
+-    (Backend logic for all new features)
+-    (Scheduler logic for new time-based tasks)
+-    (API responses and index creation call)
 
 **Areas that need refactoring**:
--   The startup logic within the  function in  should have the  call removed to prevent deployment warnings.
+-    and  are now extremely large (>3500 lines each) and contain complex, intertwined state and UI logic. They should be broken down into smaller, manageable components.
+-    also contains the full UI for gallery creation and should be refactored.
 
 **key api endpoints**
--   No new API endpoints were created.
+-   No new endpoints. Existing endpoints for creating/updating articles () and galleries () were modified to accept new fields (, , , etc.).
 
 **Critical Info for New Agent**
--   The user has completely pivoted from feature development to deployment. The top priority is to fix the deployment and local preview issues. Do not work on any other features until these are resolved.
--   The local environment is now connected to the **live production database**. Be extremely careful with any operations that modify data.
--   The frontend build process is very fragile. Avoid making changes to  resolutions unless absolutely necessary. The working solution was to remove all  and generate a clean .
--   The agent has repeatedly failed to disable the MongoDB index creation by editing . The correct approach is to comment out the function call inside .
+-   The user is currently focused on rapid feature development and bug fixing within the CMS. Prioritize the user's active requests over background tasks.
+-   **The top priority is fixing the Bold button in the rich text editor.** Standard CSS fixes have failed. The next step should be a deeper dive into Draft.js  or inspecting the component's state with React DevTools.
+-   The backend now depends on  being loaded in . This is critical for connecting to the correct production database.
+-   Be aware of the two outstanding high-priority issues from the previous session: the MongoDB index creation warning and the National News bug for new users. These should be addressed after the current feature/bug-fix cycle is complete.
 
 **documents created in this job**
--   Multiple deployment-related markdown files were created throughout the session (e.g., , , etc.).
--   
--   
--   
--   
--   
+-   None. All created documents were temporary and have been moved to the  folder or deleted.
 
 **Last 10 User Messages and any pending user messages**
-1.  **User:** can u connect to the remote database and ignore the local mongo database and run the app... - **Status:** Completed.
-2.  **User:** Reports deployment failure: IndexKeySpecsConflict and connection refused. - **Status:** In Progress.
-3.  **User:** i have updated the appp.yml and docker file... can u rebuild the app - **Status:** Completed.
-4.  **User:** i have updated docker compose file - can u rebuild the app - **Status:** Completed.
-5.  **User:** upon application start can u not update mongo db inex update... - **Status:** In Progress (agent failed to implement correctly).
-6.  **User:** can u add patch to the python version... - **Status:** Completed.
-7.  **User:** Reports the index warning is still happening. - **Status:** In Progress.
-8.  **User:** r we poining to the remote tadka_cms database... i am not seeing a newly added tadka image gallery in preview - **Status:** In Progress (this is the current main blocker).
-9.  **User:** change to content i am making in production are not showing up in preview local... - **Status:** In Progress (current main blocker).
+1.  **Request:** Fix the rich text editor's bold and link buttons.
+2.  **Request:** For specific categories, auto-select Movie Review as the content type and disable the dropdown.
+3.  **Request:** Hide the Movie Review content type option for all other categories.
+4.  **Report:** The bold button turns blue but the text doesn't become bold.
+5.  **Report:** Provides a screenshot confirming the bold issue.
+6.  **Report:** Still no luck with bold, while italic and underline work.
+7.  **Request:** Rename  to  in both article and ad forms for consistency.
+8.  **Request:** In the ad form, hide the Sponsored checkbox (as all ads are sponsored) and only show the Feature as Top Story option for the Ad Post type.
+9.  **Request:** For Landing Page ad types, hide irrelevant sections (SEO, EEAT, etc.) and add new fields for Sponsored Link and Sponsored Label.
+10. **Request:** When Landing Page is selected as the ad type, default the category to Landing Page and make it non-editable.
 
 **Project Health Check:**
 -   **Broken:**
-    -   The local preview environment does not reflect live data changes from the connected remote database.
-    -   The deployment process is still showing non-fatal warnings about MongoDB index conflicts.
-    -   The National News section is still broken for new users (regression).
+    -   The rich text editor's Bold functionality is broken.
+    -   (Carry-over) The deployment process shows non-fatal MongoDB index warnings.
+    -   (Carry-over) The National News section is broken for new users.
 -   **Mocked:**
     -   None.
 
 **3rd Party Integrations**
 -   MongoDB
--   Digital Ocean App Platform (new)
+-   Digital Ocean App Platform
+-    (for rich text editing)
+-    (for backend scheduled tasks)
 
 **Testing status**
 -   **Testing agent used after significant changes:** NO
 -   **Troubleshoot agent used after agent stuck in loop:** NO
--   **Test files created:** 
-╔══════════════════════════════════════════════════════════════╗
-║          MongoDB Connection Test for Tadka CMS               ║
-╚══════════════════════════════════════════════════════════════╝
-
-
-⚠️  MONGO_URL not found in environment variables
-Please provide your MongoDB connection string:
-MongoDB URL: , 
-╔══════════════════════════════════════════════════════════════╗
-║          Backend Startup Test for Tadka CMS                  ║
-╚══════════════════════════════════════════════════════════════╝
-
-
-📍 Local environment detected (using local MongoDB)
-⚠️  Set MONGO_URL to test with production database
-
-============================================================
-🧪 TESTING BACKEND STARTUP
-============================================================
-
-1️⃣  Checking environment variables...
-   ❌ MONGO_URL: NOT SET
-   ❌ DB_NAME: NOT SET
-   ❌ JWT_SECRET_KEY: NOT SET
-
-2️⃣  Testing imports...
-   📦 Importing FastAPI...
-   ✅ FastAPI imported
-   📦 Importing Motor (MongoDB)...
-   ✅ Motor imported
-   📦 Importing database module...
-   ✅ Database module imported
-   📦 Importing schemas and crud...
-   ✅ Schemas and CRUD imported
-   📦 Importing routes...
-   ✅ Routes imported
-
-3️⃣  Testing MongoDB connection...
-   ✅ MongoDB connection successful
-   ✅ Database 'tadka_cms' exists
-
-4️⃣  Testing server import...
-   📦 Importing server module...
-⚠️ Warning: Could not create some MongoDB indexes: An existing index has the same name as the requested index. When index names are not specified, they are auto generated and can cause conflicts. Please refer to our documentation. Requested index: { v: 2, unique: true, key: { slug: 1 }, name: "slug_1" }, existing index: { v: 2, key: { slug: 1 }, name: "slug_1" }, full error: {'ok': 0.0, 'errmsg': 'An existing index has the same name as the requested index. When index names are not specified, they are auto generated and can cause conflicts. Please refer to our documentation. Requested index: { v: 2, unique: true, key: { slug: 1 }, name: "slug_1" }, existing index: { v: 2, key: { slug: 1 }, name: "slug_1" }', 'code': 86, 'codeName': 'IndexKeySpecsConflict'}
-   ✅ Server module imported
-   ✅ App created: <fastapi.applications.FastAPI object at 0xfb9707bdff90>
-
-5️⃣  Checking API routes...
-   ✅ Found 151 routes
-   ✅ Health endpoint (/api) exists
-
-============================================================
-✅ STARTUP TEST COMPLETED
-============================================================
-
-💡 If all tests passed, the issue is likely:
-   • Port 8000 not accessible in production
-   • Docker container not binding correctly
-   • Environment variables not set in Digital Ocean
+-   **Test files created:** None.
 -   **Known regressions:** National News not showing for new users.
 
 **Credentials to test flow:**
 -   **Admin Login:** username=, password=
--   **Remote MongoDB URL:**  (This is configured in ).
+-   **Remote MongoDB URL:** Is correctly configured in  and loaded via .
 
 **What agent forgot to execute**
--   The agent repeatedly failed to correctly disable the  function call, despite multiple attempts and user requests.
--   The agent did not resolve the original pending tasks from the previous session (National News bug, State-Language Mapping feature).</analysis>
+-   The agent did not address the two long-standing issues carried over from the previous session: disabling the MongoDB index creation warning and fixing the National News section for new users.
+-   The agent failed to correctly fix the rich text editor's bold button after multiple attempts.</analysis>
