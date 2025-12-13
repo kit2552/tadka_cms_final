@@ -3105,8 +3105,6 @@ const CreateArticle = () => {
                         wrapperClassName="wrapper-class"
                         editorClassName="editor-class"
                         toolbarClassName="toolbar-class"
-                        toolbarCustomButtons={[<span key="debug-link" onClick={() => console.log('Custom button clicked')}></span>]}
-                        toolbarOnFocus={() => console.log('Toolbar focused')}
                         customStyleMap={{
                           BOLD: {
                             fontWeight: 'bold'
@@ -3134,17 +3132,9 @@ const CreateArticle = () => {
                           },
                           link: {
                             inDropdown: false,
-                            className: 'demo-link-wrapper',
-                            component: undefined,
-                            popupClassName: 'demo-popup',
-                            dropdownClassName: undefined,
-                            showOpenOptionOnHover: true,
+                            showOpenOptionOnHover: false,
                             defaultTargetOption: '_blank',
-                            options: ['link', 'unlink'],
-                            linkCallback: (params) => { 
-                              console.log('Link callback:', params);
-                              return params; 
-                            }
+                            options: ['link', 'unlink']
                           },
                           image: {
                             urlEnabled: true,
