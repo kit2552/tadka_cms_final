@@ -429,9 +429,9 @@ const SystemSettings = () => {
                 API Keys
               </button>
               <button
-                onClick={() => setActiveTab('google-ads')}
+                onClick={() => setActiveTab('ads')}
                 className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
-                  activeTab === 'google-ads'
+                  activeTab === 'ads'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
@@ -439,7 +439,7 @@ const SystemSettings = () => {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                Google Ads
+                Ads
               </button>
               <button
                 onClick={() => setActiveTab('appearance')}
@@ -766,8 +766,8 @@ const SystemSettings = () => {
               </div>
             )}
 
-            {/* Google Ads Tab */}
-            {activeTab === 'google-ads' && (
+            {/* Ads Tab */}
+            {activeTab === 'ads' && (
               <div className="space-y-6">
                 {adsLoading ? (
                   <div className="flex items-center justify-center h-64">
@@ -784,13 +784,15 @@ const SystemSettings = () => {
                       </div>
                     )}
 
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">Google Ads Placements</h3>
-                      <p className="text-sm text-gray-600 text-left">Enable or disable Google Ads at different locations across your site. Changes are saved automatically.</p>
-                    </div>
+                    {/* Google Ads Section */}
+                    <div className="mb-8">
+                      <div className="mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">Google Ads Placements</h3>
+                        <p className="text-sm text-gray-600 text-left">Enable or disable Google Ads at different locations across your site. Changes are saved automatically.</p>
+                      </div>
 
-                    {/* Ad Placements Grid */}
-                    <div className="space-y-2">
+                      {/* Google Ad Placements Grid */}
+                      <div className="space-y-2">
                       {adPlacements.map((placement) => (
                         <div
                           key={placement.key}
@@ -848,21 +850,95 @@ const SystemSettings = () => {
                           </div>
                         </div>
                       ))}
+                      </div>
+
+                      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <div className="text-left">
+                            <h4 className="text-sm font-semibold text-blue-900 mb-1">Important Information</h4>
+                            <ul className="text-xs text-blue-800 space-y-1">
+                              <li>• Make sure you have added your Google AdSense code to your site</li>
+                              <li>• Enabled placements will show Google Ads automatically</li>
+                              <li>• Changes take effect immediately on your live site</li>
+                              <li>• "Coming Soon" placements are under development</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <div className="flex items-start gap-3">
-                        <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <div className="text-left">
-                          <h4 className="text-sm font-semibold text-blue-900 mb-1">Important Information</h4>
-                          <ul className="text-xs text-blue-800 space-y-1">
-                            <li>• Make sure you have added your Google AdSense code to your site</li>
-                            <li>• Enabled placements will show Google Ads automatically</li>
-                            <li>• Changes take effect immediately on your live site</li>
-                            <li>• "Coming Soon" placements are under development</li>
-                          </ul>
+                    {/* Sponsored Ads Section */}
+                    <div className="mb-6">
+                      <div className="mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">Sponsored Ads</h3>
+                        <p className="text-sm text-gray-600 text-left">Manage sponsored ads created through the CMS. Toggle to show or hide the sponsored ads section on your homepage.</p>
+                      </div>
+
+                      {/* Sponsored Ads Placement */}
+                      <div className="space-y-2">
+                        <div
+                          className={`bg-white rounded border ${
+                            adSettings.homepage_sponsored_ads ? 'border-green-500 bg-green-50' : 'border-gray-200'
+                          } p-3 transition-all duration-200`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1 text-left">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="text-sm font-semibold text-gray-900">Homepage - Sponsored Ads Section</h3>
+                                {adSettings.homepage_sponsored_ads && (
+                                  <span className="px-1.5 py-0.5 text-xs font-medium bg-green-500 text-white rounded">
+                                    Enabled
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-600 mb-1">Display the Sponsored Ads section on the homepage</p>
+                              <div className="flex items-center gap-2 text-xs text-gray-500">
+                                <span className="flex items-center gap-1">
+                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  </svg>
+                                  Homepage
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Toggle Switch */}
+                            <div className="flex items-center ml-3">
+                              <button
+                                onClick={() => handleAdToggle('homepage_sponsored_ads')}
+                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                                  adSettings.homepage_sponsored_ads ? 'bg-green-500' : 'bg-gray-300'
+                                }`}
+                              >
+                                <span
+                                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+                                    adSettings.homepage_sponsored_ads ? 'translate-x-6' : 'translate-x-1'
+                                  }`}
+                                />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <div className="text-left">
+                            <h4 className="text-sm font-semibold text-purple-900 mb-1">About Sponsored Ads</h4>
+                            <ul className="text-xs text-purple-800 space-y-1">
+                              <li>• Create sponsored ads from the "Ad Settings" tab in Manage Content</li>
+                              <li>• Ads are displayed in a dedicated section on the homepage</li>
+                              <li>• Toggle this setting to show or hide all sponsored ads</li>
+                              <li>• Individual ads can be managed separately from the Ads tab in Manage Content</li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </div>
