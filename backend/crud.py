@@ -1767,6 +1767,14 @@ def update_gallery(db, gallery_id: str, gallery_data: dict, s3_service=None):
         update_fields["folder_path"] = gallery_data["folder_path"]
     if "tadka_pics_enabled" in gallery_data:
         update_fields["tadka_pics_enabled"] = gallery_data["tadka_pics_enabled"]
+    if "is_published" in gallery_data:
+        update_fields["is_published"] = gallery_data["is_published"]
+    if "is_scheduled" in gallery_data:
+        update_fields["is_scheduled"] = gallery_data["is_scheduled"]
+    if "scheduled_publish_at" in gallery_data:
+        update_fields["scheduled_publish_at"] = gallery_data["scheduled_publish_at"]
+    if "scheduled_timezone" in gallery_data:
+        update_fields["scheduled_timezone"] = gallery_data["scheduled_timezone"]
     
     db[GALLERIES].update_one(
         {"gallery_id": gallery_id},
