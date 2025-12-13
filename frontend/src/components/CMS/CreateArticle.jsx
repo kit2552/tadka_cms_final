@@ -1265,13 +1265,27 @@ const CreateArticle = () => {
             border-radius: 0.25rem;
             margin: 0 2px;
             background: white;
+            cursor: pointer;
+            pointer-events: auto;
           }
           .rdw-option-wrapper:hover {
             background: #f3f4f6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
           }
           .rdw-option-active {
-            background: #3b82f6;
-            color: white;
+            background: #3b82f6 !important;
+            color: white !important;
+          }
+          .rdw-option-wrapper img {
+            pointer-events: none;
+          }
+          .rdw-link-modal, .rdw-image-modal {
+            z-index: 9999 !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+          }
+          .rdw-link-modal-btn, .rdw-image-modal-btn {
+            cursor: pointer;
+            pointer-events: auto;
           }
           .rdw-dropdown-wrapper {
             border: 1px solid #d1d5db;
