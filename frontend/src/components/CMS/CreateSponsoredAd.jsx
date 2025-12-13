@@ -1874,62 +1874,21 @@ const CreateSponsoredAd = ({ onClose }) => {
                           />
                         </div>
 
-                        {/* Media Type Selection */}
+                        {/* Main Image Upload - Always show for ad_post */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Main Media Type *
+                            Main Image *
                           </label>
-                          <select
-                            name="media_type"
-                            value={formData.media_type}
-                            onChange={(e) => {
-                              setFormData(prev => ({
-                                ...prev,
-                                media_type: e.target.value,
-                                // Clear the other field when switching
-                                image: e.target.value === 'youtube' ? '' : prev.image,
-                                youtube_url: e.target.value === 'image' ? '' : prev.youtube_url
-                              }));
-                            }}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
                             className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          >
-                            <option value="image">Image</option>
-                            <option value="youtube">YouTube Video</option>
-                          </select>
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Upload a featured image for this ad
+                          </p>
                         </div>
-
-                        {/* Main Image Upload - Only show if media_type is 'image' */}
-                        {formData.media_type === 'image' && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                              Main Image
-                            </label>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={handleImageUpload}
-                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                          </div>
-                        )}
-
-                        {/* YouTube URL - Only show if media_type is 'youtube' */}
-                        {formData.media_type === 'youtube' && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                              YouTube URL
-                            </label>
-                            <input
-                              type="url"
-                              name="youtube_url"
-                              value={formData.youtube_url}
-                              onChange={handleInputChange}
-                              placeholder="https://www.youtube.com/watch?v=..."
-                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                          </div>
-                        )}
                       </div>
 
                       {/* Right Column: Media Preview (40% = 2 cols) */}
