@@ -524,7 +524,8 @@ export const dataService = {
         hotTopicsData,
         photoshootsData,
         travelPicsData,
-        boxOfficeData
+        boxOfficeData,
+        movieSchedulesData
       ] = await Promise.all([
         this.getTopStoriesData(),
         this.getMovieReviewsData(),
