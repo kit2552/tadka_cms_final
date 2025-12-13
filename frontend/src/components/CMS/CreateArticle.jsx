@@ -37,7 +37,10 @@ const findLinkEntities = (contentBlock, callback, contentState) => {
       }
       return false;
     },
-    callback
+    (start, end) => {
+      console.log('🎯 Callback invoked for range:', start, 'to', end);
+      callback(start, end);
+    }
   );
   console.log('🔍 Total link entities found in block:', foundCount);
 };
