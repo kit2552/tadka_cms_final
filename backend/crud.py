@@ -612,6 +612,63 @@ def publish_scheduled_article(db, article_id):
         return db[ARTICLES].find_one({"id": article_id}, {"_id": 0})
     return None
 
+def get_scheduled_galleries_for_publishing(db):
+    """Get galleries that are scheduled and ready to be published"""
+    from pytz import timezone
+    from datetime import datetime
+    
+    # Get all scheduled galleries
+    query = {
+        "is_scheduled": True,
+        "is_published": False
+    }
+    
+    docs = list(db[GALLERIES].find(query, {"_id": 0}))
+    galleries_to_publish = []
+    
+    for doc in docs:
+        scheduled_time_str = doc.get("scheduled_publish_at")
+        scheduled_timezone = doc.get("scheduled_timezone", "IST")
+        
+        if not scheduled_time_str:
+            continue
+        
+        # Parse the scheduled time
+        scheduled_time = datetime.fromisoformat(scheduled_time_str.replace("Z", ""))
+        
+        # Get current time in the gallery's timezone
+        if scheduled_timezone == "IST":
+            tz = timezone('Asia/Kolkata')
+        elif scheduled_timezone == "EST":
+            tz = timezone('America/New_York')
+        else:
+            tz = timezone('Asia/Kolkata')  # Default to IST
+        
+        current_time = datetime.now(tz).replace(tzinfo=None)
+        
+        # Check if it's time to publish
+        if scheduled_time <= current_time:
+            galleries_to_publish.append(serialize_doc(doc))
+    
+    return galleries_to_publish
+
+def publish_scheduled_gallery(db, gallery_id):
+    """Publish a scheduled gallery"""
+    result = db[GALLERIES].update_one(
+        {"id": gallery_id},
+        {
+            "$set": {
+                "is_scheduled": False,
+                "is_published": True,
+                "updated_at": datetime.utcnow()
+            }
+        }
+    )
+    
+    if result.modified_count > 0:
+        return db[GALLERIES].find_one({"id": gallery_id}, {"_id": 0})
+    return None
+
 # ==================== RELEASES ====================
 
 def get_theater_release(db, release_id: int):
