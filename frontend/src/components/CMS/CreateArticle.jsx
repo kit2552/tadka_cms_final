@@ -1252,21 +1252,9 @@ const CreateArticle = () => {
     <>
       <style>
         {`
-          /* DEBUG: Monitor DOM for link modal */
-          @keyframes debugBlink {
-            0%, 100% { outline: 3px solid red; }
-            50% { outline: 3px solid blue; }
-          }
-          
-          .rdw-link-modal {
-            animation: debugBlink 1s infinite !important;
-          }
-
           .wrapper-class {
             border: 1px solid #d1d5db;
             border-radius: 0.375rem;
-            position: relative;
-            overflow: visible !important;
           }
           .toolbar-class {
             border: none;
@@ -1274,8 +1262,6 @@ const CreateArticle = () => {
             border-radius: 0.375rem 0.375rem 0 0;
             background: #f9fafb;
             padding: 8px;
-            position: relative;
-            overflow: visible !important;
           }
           .editor-class {
             min-height: 300px;
