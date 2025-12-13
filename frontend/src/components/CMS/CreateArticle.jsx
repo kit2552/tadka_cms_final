@@ -554,6 +554,19 @@ const CreateArticle = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     
+    // Auto-set content_type to movie_review for movie/OTT review categories
+    if (name === 'category') {
+      const movieReviewCategories = ['movie-reviews', 'movie-reviews-bollywood', 'ott-reviews', 'ott-reviews-bollywood'];
+      const isMovieReviewCategory = movieReviewCategories.includes(value);
+      
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        content_type: isMovieReviewCategory ? 'movie_review' : prev.content_type
+      }));
+      return;
+    }
+    
     // Reset OTT platforms when content type changes
     if (name === 'content_type') {
       setFormData(prev => ({
