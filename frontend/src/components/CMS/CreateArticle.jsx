@@ -14,6 +14,9 @@ const CreateArticle = () => {
   
   const editorRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  const [linkText, setLinkText] = useState('');
   const [loadingArticle, setLoadingArticle] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [states, setStates] = useState([]);
