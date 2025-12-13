@@ -618,6 +618,12 @@ const CreateArticle = () => {
 
   const handleAddLink = () => {
     const selection = editorState.getSelection();
+    console.log('handleAddLink called, selection:', {
+      isCollapsed: selection.isCollapsed(),
+      anchorKey: selection.getAnchorKey(),
+      focusKey: selection.getFocusKey()
+    });
+    
     if (!selection.isCollapsed()) {
       const contentState = editorState.getCurrentContent();
       const startKey = selection.getStartKey();
@@ -626,6 +632,7 @@ const CreateArticle = () => {
       const blockWithLink = contentState.getBlockForKey(startKey);
       const selectedText = blockWithLink.getText().slice(startOffset, endOffset);
       
+      console.log('Selected text for link:', selectedText);
       setLinkText(selectedText);
       setLinkUrl('');
       setShowLinkModal(true);
