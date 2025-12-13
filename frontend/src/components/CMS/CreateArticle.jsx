@@ -3136,10 +3136,21 @@ const CreateArticle = () => {
                     </label>
                     <div className="border border-gray-300 rounded-md">
                       <Editor
+                        ref={editorRef}
                         editorState={editorState}
                         onEditorStateChange={onEditorStateChange}
-                        onFocus={() => console.log('Editor focused')}
-                        onBlur={() => console.log('Editor blurred')}
+                        onFocus={() => {
+                          console.log('Editor focused');
+                        }}
+                        onBlur={(event) => {
+                          console.log('Editor blur prevented');
+                          // Try to keep focus
+                          setTimeout(() => {
+                            if (editorRef.current) {
+                              editorRef.current.focusEditor();
+                            }
+                          }, 0);
+                        }}
                         handlePastedText={() => false}
                         stripPastedStyles={false}
                         wrapperClassName="wrapper-class"
