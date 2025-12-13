@@ -18,59 +18,14 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
 
   const fetchReleaseData = async () => {
     try {
-      // Get user's selected states from localStorage (using correct key 'tadka_state')
-      const userStateNames = JSON.parse(localStorage.getItem('tadka_state') || '[]');
+      const url = `${process.env.REACT_APP_BACKEND_URL}/api/releases`;
       
-      // Convert state name to state code
-      const stateNameToCode = {
-        'Andhra Pradesh': 'ap',
-        'Telangana': 'ts',
-        'Tamil Nadu': 'tn',
-        'Karnataka': 'ka',
-        'Kerala': 'kl',
-        'Maharashtra': 'mh',
-        'Gujarat': 'gj',
-        'Rajasthan': 'rj',
-        'Punjab': 'pb',
-        'Haryana': 'hr',
-        'Delhi': 'dl',
-        'Uttar Pradesh': 'up',
-        'Bihar': 'br',
-        'West Bengal': 'wb',
-        'Odisha': 'or',
-        'Madhya Pradesh': 'mp',
-        'Chhattisgarh': 'cg',
-        'Jharkhand': 'jh',
-        'Assam': 'as',
-        'Uttarakhand': 'uk',
-        'Himachal Pradesh': 'hp',
-        'Jammu and Kashmir': 'jk',
-        'Goa': 'ga',
-        'Manipur': 'mn',
-        'Meghalaya': 'ml',
-        'Tripura': 'tr',
-        'Mizoram': 'mz',
-        'Nagaland': 'nl',
-        'Arunachal Pradesh': 'ar',
-        'Sikkim': 'sk',
-        'Ladakh': 'ld'
-      };
-      
-      const userStateCodes = userStateNames.map(name => stateNameToCode[name]).filter(code => code);
-      
-      console.log('MovieSchedules - User state names:', userStateNames);
-      console.log('MovieSchedules - User state codes:', userStateCodes);
-      
-      const url = userStateCodes.length > 0
-        ? `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood?user_states=${userStateCodes.join(',')}`
-        : `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood`;
-      
-      console.log('MovieSchedules - Fetching URL:', url);
+      console.log('MovieSchedules - Fetching latest releases from:', url);
       
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
-        console.log('MovieSchedules - Theater releases data:', data);
+        console.log('MovieSchedules - Latest releases data:', data);
         setReleaseData(data);
       }
     } catch (error) {
