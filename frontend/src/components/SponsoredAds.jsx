@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -16,6 +16,9 @@ const SponsoredAds = ({
 }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionBodyClasses } = useTheme();
+  const [sponsoredAds, setSponsoredAds] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const leftSections = [
     { title: 'Movies', data: movieNews },
     { title: 'Movie Gossip', data: movieGossip },
@@ -30,33 +33,24 @@ const SponsoredAds = ({
     { title: 'Features', data: features }
   ];
 
-  // Sponsored ads data
-  const sponsoredAds = [
-    {
-      id: 1,
-      title: "Revolutionary Tech Solutions for Modern Businesses",
-      image: "https://images.unsplash.com/photo-1560472355-536de3962603?w=400&h=200&fit=crop",
-      description: "Discover cutting-edge technology solutions that can transform your business operations and boost productivity."
-    },
-    {
-      id: 2,
-      title: "Premium Healthcare Services Now Available",
-      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop",
-      description: "Experience world-class healthcare with state-of-the-art facilities and expert medical professionals."
-    },
-    {
-      id: 3,
-      title: "Exclusive Educational Programs for Career Growth",
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=200&fit=crop",
-      description: "Advance your career with our comprehensive educational programs designed for professional development."
-    },
-    {
-      id: 4,
-      title: "Luxury Real Estate Investment Opportunities",
-      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=200&fit=crop",
-      description: "Explore premium real estate investments with guaranteed returns and exceptional growth potential."
-    }
-  ];
+  // Fetch sponsored ads from API
+  useEffect(() => {
+    const fetchSponsoredAds = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/articles/sections/sponsored-ads?limit=4`);
+        if (response.ok) {
+          const data = await response.json();
+          setSponsoredAds(data);
+        }
+      } catch (error) {
+        console.error('Error fetching sponsored ads:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSponsoredAds();
+  }, []);
 
   const ArticleList = ({ articles }) => (
     <ul className="space-y-1 text-left">
@@ -80,23 +74,42 @@ const SponsoredAds = ({
         </div>
         
         {/* Sponsored Ads Grid - Matching page width */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {sponsoredAds.map((ad) => (
-            <div key={ad.id} className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer group`}>
-              <div className="relative">
-                <img
-                  src={ad.image}
-                  alt={ad.title}
-                  className="w-full h-32 lg:h-36 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+        {loading ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Loading sponsored ads...</p>
+          </div>
+        ) : sponsoredAds.length > 0 ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            {sponsoredAds.map((ad) => (
+              <div key={ad.id} className={`${getSectionBodyClasses().backgroundClass} border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm ${getSectionBodyClasses().hoverClass} transition-all duration-300 cursor-pointer group`}>
+                <div className="relative">
+                  <img
+                    src={ad.image_url || ad.image || 'https://images.unsplash.com/photo-1560472355-536de3962603?w=400&h=200&fit=crop'}
+                    alt={ad.title}
+                    className="w-full h-32 lg:h-36 object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      e.target.src = 'https://images.unsplash.com/photo-1560472355-536de3962603?w=400&h=200&fit=crop';
+                    }}
+                  />
+                </div>
+                <div className="p-3 text-left">
+                  <h2 className="text-sm font-semibold text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-200 mb-1">
+                    {ad.title}
+                  </h2>
+                  {ad.description && (
+                    <p className="text-xs text-gray-600 line-clamp-2">
+                      {ad.description}
+                    </p>
+                  )}
+                </div>
               </div>
-              <div className="p-3 text-left">
-                <h2 className="text-sm font-semibold text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-200 mb-1">
-                  {ad.title}
-                </h2>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No sponsored ads available</p>
+          </div>
+        )}
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
