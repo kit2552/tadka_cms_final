@@ -1625,13 +1625,16 @@ const CreateArticle = () => {
           .rdw-link-decorator-icon {
             display: none !important;
           }
-          /* Style the link decorator wrapper */
+          /* Style the link decorator wrapper - override inline styles */
           .rdw-link-decorator-wrapper {
             display: inline !important;
           }
-          .rdw-link-decorator-wrapper a {
+          .rdw-link-decorator-wrapper a,
+          .rdw-link-decorator-wrapper a[style] {
             color: #2563eb !important;
             text-decoration: underline !important;
+            background: none !important;
+            background-color: transparent !important;
           }
           /* Make sure the editor content inherits styles properly */
           .rdw-editor-main {
