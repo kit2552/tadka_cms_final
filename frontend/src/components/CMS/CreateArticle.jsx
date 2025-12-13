@@ -1,11 +1,43 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw, ContentState, SelectionState, Modifier, RichUtils } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, SelectionState, Modifier, RichUtils, CompositeDecorator } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import NotificationModal from '../NotificationModal';
+
+// Link component for rendering links in the editor
+const Link = (props) => {
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
+  return (
+    <a href={url} style={{ color: '#2563eb', textDecoration: 'underline', cursor: 'text' }}>
+      {props.children}
+    </a>
+  );
+};
+
+// Find link entities in content
+const findLinkEntities = (contentBlock, callback, contentState) => {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return (
+        entityKey !== null &&
+        contentState.getEntity(entityKey).getType() === 'LINK'
+      );
+    },
+    callback
+  );
+};
+
+// Create decorator for links
+const decorator = new CompositeDecorator([
+  {
+    strategy: findLinkEntities,
+    component: Link,
+  },
+]);
 
 const CreateArticle = () => {
   const navigate = useNavigate();
