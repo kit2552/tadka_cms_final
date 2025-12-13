@@ -108,7 +108,7 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
       </div>
 
       {/* Viral Shorts Grid - Vertical like YouTube Shorts */}
-      <div className="bg-white px-3 py-0 -mb-2">
+      <div className="bg-white pl-0 pr-3 py-0 -mb-2">
         {/* Multiple Videos Grid Container - Vertical Layout */}
         <div 
           className="overflow-x-auto"
