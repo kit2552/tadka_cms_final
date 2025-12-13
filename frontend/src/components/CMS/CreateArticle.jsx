@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, SelectionState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -12,6 +12,7 @@ const CreateArticle = () => {
   const { id } = useParams(); // Changed from articleId to id to match the route
   const isEditMode = Boolean(id);
   
+  const editorRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [loadingArticle, setLoadingArticle] = useState(false);
   const [languages, setLanguages] = useState([]);
