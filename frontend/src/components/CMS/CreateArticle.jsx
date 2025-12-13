@@ -674,53 +674,67 @@ const CreateArticle = () => {
       return;
     }
     
-    console.log('Adding link:', linkUrl);
-    console.log('Using saved editor state');
-    
-    const contentState = savedEditorState.getCurrentContent();
-    console.log('Content before link:', contentState.getPlainText());
-    
-    // Create entity
-    const contentStateWithEntity = contentState.createEntity(
-      'LINK',
-      'MUTABLE',
-      { url: linkUrl }
-    );
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    console.log('Entity created:', entityKey);
-    
-    // Apply entity to the SAVED selection
-    const contentStateWithLink = Modifier.applyEntity(
-      contentStateWithEntity,
-      savedSelection,
-      entityKey
-    );
-    
-    console.log('Content after link:', contentStateWithLink.getPlainText());
-    
-    // Create new editor state with the link
-    const newEditorState = EditorState.push(
-      savedEditorState,
-      contentStateWithLink,
-      'apply-entity'
-    );
-    
-    // Apply decorator
-    const decoratedEditorState = EditorState.set(newEditorState, { decorator });
-    
-    console.log('New editor state created, updating...');
-    
-    // Update editor state - call onEditorStateChange to trigger all updates
-    onEditorStateChange(decoratedEditorState);
-    
-    // Close modal and clear saved state
-    setShowLinkModal(false);
-    setLinkUrl('');
-    setLinkText('');
-    setSavedEditorState(null);
-    setSavedSelection(null);
-    
-    console.log('Link added successfully');
+    try {
+      console.log('Adding link:', linkUrl);
+      
+      const contentState = savedEditorState.getCurrentContent();
+      
+      // Create entity
+      const contentStateWithEntity = contentState.createEntity(
+        'LINK',
+        'MUTABLE',
+        { url: linkUrl }
+      );
+      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+      
+      // Apply entity to selection
+      const newContentState = Modifier.applyEntity(
+        contentStateWithEntity,
+        savedSelection,
+        entityKey
+      );
+      
+      // Push new content state
+      const newEditorState = EditorState.push(
+        savedEditorState,
+        newContentState,
+        'apply-entity'
+      );
+      
+      // Force selection after the link
+      const selectionAfterLink = savedSelection.merge({
+        anchorOffset: savedSelection.getEndOffset(),
+        focusOffset: savedSelection.getEndOffset(),
+      });
+      
+      const finalEditorState = EditorState.forceSelection(newEditorState, selectionAfterLink);
+      
+      console.log('Setting new editor state');
+      
+      // Directly set the editor state
+      setEditorState(finalEditorState);
+      
+      // Manually update form data
+      const htmlContent = draftToHtml(convertToRaw(finalEditorState.getCurrentContent()));
+      console.log('Generated HTML:', htmlContent);
+      setFormData(prev => ({
+        ...prev,
+        content: htmlContent
+      }));
+      
+      console.log('Link added successfully');
+      
+    } catch (error) {
+      console.error('Error adding link:', error);
+      alert('Error adding link: ' + error.message);
+    } finally {
+      // Close modal and clear saved state
+      setShowLinkModal(false);
+      setLinkUrl('');
+      setLinkText('');
+      setSavedEditorState(null);
+      setSavedSelection(null);
+    }
   };
 
   const onEditorStateChangeSecondary = (editorState) => {
