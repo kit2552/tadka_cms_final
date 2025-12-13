@@ -108,7 +108,8 @@ const CreateSponsoredAd = ({ onClose }) => {
     social_media_type: '',
     social_media_embed: '',
     // Top Story
-    is_top_story: false
+    is_top_story: false,
+    top_story_duration_hours: 24
   });
 
   const [selectedState, setSelectedState] = useState(''); // Temporary state for dropdown selection
