@@ -65,6 +65,7 @@ const CreateArticle = () => {
     is_published: true,
     is_scheduled: false,
     scheduled_publish_at: '',
+    scheduled_timezone: 'IST', // Default timezone for scheduling
     seo_title: '',
     seo_description: '',
     seo_keywords: '',
