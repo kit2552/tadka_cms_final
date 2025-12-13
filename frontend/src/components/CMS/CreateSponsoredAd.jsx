@@ -1549,16 +1549,20 @@ const CreateSponsoredAd = ({ onClose }) => {
                         value={
                           formData.ad_type === 'sponsored_section' 
                             ? 'Sponsored Ad' 
-                            : (showCategoryDropdown ? categorySearchQuery : (formData.category ? categories.find(cat => cat.slug === formData.category)?.name : ''))
+                            : (formData.ad_type === 'landing_home' || formData.ad_type === 'landing_inner')
+                              ? 'Landing Page'
+                              : (showCategoryDropdown ? categorySearchQuery : (formData.category ? categories.find(cat => cat.slug === formData.category)?.name : ''))
                         }
                         onChange={(e) => {
-                          if (formData.ad_type !== 'sponsored_section') {
+                          const isLocked = formData.ad_type === 'sponsored_section' || formData.ad_type === 'landing_home' || formData.ad_type === 'landing_inner';
+                          if (!isLocked) {
                             setCategorySearchQuery(e.target.value);
                             setShowCategoryDropdown(true);
                           }
                         }}
                         onFocus={() => {
-                          if (formData.ad_type !== 'sponsored_section') {
+                          const isLocked = formData.ad_type === 'sponsored_section' || formData.ad_type === 'landing_home' || formData.ad_type === 'landing_inner';
+                          if (!isLocked) {
                             setCategorySearchQuery('');
                             setShowCategoryDropdown(true);
                           }
@@ -1569,11 +1573,19 @@ const CreateSponsoredAd = ({ onClose }) => {
                             setCategorySearchQuery('');
                           }, 200);
                         }}
-                        placeholder={formData.ad_type === 'sponsored_section' ? '' : 'Search...'}
+                        placeholder={
+                          (formData.ad_type === 'sponsored_section' || formData.ad_type === 'landing_home' || formData.ad_type === 'landing_inner') 
+                            ? '' 
+                            : 'Search...'
+                        }
                         className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
                         required
-                        disabled={formData.ad_type === 'sponsored_section'}
-                        style={formData.ad_type === 'sponsored_section' ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
+                        disabled={formData.ad_type === 'sponsored_section' || formData.ad_type === 'landing_home' || formData.ad_type === 'landing_inner'}
+                        style={
+                          (formData.ad_type === 'sponsored_section' || formData.ad_type === 'landing_home' || formData.ad_type === 'landing_inner')
+                            ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } 
+                            : {}
+                        }
                       />
                       {showCategoryDropdown && formData.ad_type !== 'sponsored_section' && (
                         <>
