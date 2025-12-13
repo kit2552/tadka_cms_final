@@ -28,9 +28,15 @@ const ArticlePage = () => {
   // Utility function to strip inline styles from links before rendering
   const stripLinkStyles = (html) => {
     if (!html) return html;
-    return html
+    const cleaned = html
       .replace(/<a([^>]*?)style="[^"]*"([^>]*?)>/gi, '<a$1$2>') // Remove inline styles (double quotes)
       .replace(/<a([^>]*?)style='[^']*'([^>]*?)>/gi, '<a$1$2>'); // Remove inline styles (single quotes)
+    
+    // Log if any changes were made
+    if (cleaned !== html) {
+      console.log('🧹 Stripped inline styles from links');
+    }
+    return cleaned;
   };
 
   // Update page title, meta tags, and schema markup for SEO/AEO
