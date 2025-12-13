@@ -377,6 +377,18 @@ const VideoView = () => {
       case 'reddit':
         shareUrl = `https://reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
         break;
+      case 'copy':
+        navigator.clipboard.writeText(url).then(() => {
+          alert('Link copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy link:', err);
+        });
+        return;
+      case 'email':
+        const subject = encodeURIComponent(title);
+        const body = encodeURIComponent(`Check out this video: ${title}\n\n${url}`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        return;
       default:
         return;
     }
