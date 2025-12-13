@@ -6148,6 +6148,60 @@ const Dashboard = () => {
                     )}
                   </div>
 
+                  {/* Publishing Options */}
+                  <div className="border-t border-gray-200 pt-4">
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={galleryForm.is_scheduled}
+                        onChange={(e) => setGalleryForm(prev => ({
+                          ...prev,
+                          is_scheduled: e.target.checked,
+                          is_published: !e.target.checked,
+                          scheduled_publish_at: e.target.checked ? prev.scheduled_publish_at : ''
+                        }))}
+                        className="form-checkbox h-4 w-4 text-blue-600"
+                      />
+                      <span className="text-sm text-gray-700">Schedule for Later</span>
+                    </label>
+
+                    {galleryForm.is_scheduled && (
+                      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+                        <div className="mb-3">
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Timezone *
+                          </label>
+                          <select
+                            name="scheduled_timezone"
+                            value={galleryForm.scheduled_timezone}
+                            onChange={(e) => setGalleryForm(prev => ({ ...prev, scheduled_timezone: e.target.value }))}
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required={galleryForm.is_scheduled}
+                          >
+                            <option value="IST">IST (Indian Standard Time - UTC+5:30)</option>
+                            <option value="EST">EST (Eastern Standard Time - UTC-5:00)</option>
+                          </select>
+                        </div>
+
+                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                          Scheduled Publish Date & Time ({galleryForm.scheduled_timezone}) *
+                        </label>
+                        <input
+                          type="datetime-local"
+                          name="scheduled_publish_at"
+                          value={galleryForm.scheduled_publish_at}
+                          onChange={(e) => setGalleryForm(prev => ({ ...prev, scheduled_publish_at: e.target.value }))}
+                          min={new Date().toISOString().slice(0, 16)}
+                          className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required={galleryForm.is_scheduled}
+                        />
+                        <p className="text-xs text-gray-600 mt-1">
+                          The gallery will be automatically published at the scheduled time ({galleryForm.scheduled_timezone}).
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
                   {/* Form Actions */}
                   <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                     <button
