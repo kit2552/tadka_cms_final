@@ -843,6 +843,44 @@ const Dashboard = () => {
     }
   };
 
+  const fetchAds = async () => {
+    setAdsLoading(true);
+    try {
+      const params = new URLSearchParams({
+        language: selectedLanguage,
+        skip: String((adsCurrentPage - 1) * adsItemsPerPage),
+        limit: String(adsItemsPerPage)
+      });
+      
+      if (selectedAdType) {
+        params.append('ad_type', selectedAdType);
+      }
+      if (selectedAdStatus) {
+        params.append('status', selectedAdStatus);
+      }
+
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/ads?${params}`);
+      const result = await response.json();
+      
+      if (result.ads && Array.isArray(result.ads)) {
+        setAds(result.ads);
+        setAdsTotalCount(result.total || 0);
+        setAdsTotalPages(Math.ceil((result.total || 0) / adsItemsPerPage));
+      } else {
+        setAds([]);
+        setAdsTotalCount(0);
+        setAdsTotalPages(1);
+      }
+    } catch (error) {
+      console.error('Error fetching ads:', error);
+      setAds([]);
+      setAdsTotalCount(0);
+      setAdsTotalPages(1);
+    } finally {
+      setAdsLoading(false);
+    }
+  };
+
   const fetchRelatedArticlesConfig = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/related-articles-config`);
