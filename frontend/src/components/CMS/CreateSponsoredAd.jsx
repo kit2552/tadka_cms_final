@@ -550,12 +550,19 @@ const CreateSponsoredAd = ({ onClose }) => {
       setLanguages(data.languages);
       setStates(data.states); // Now uses updated backend states
       
-      // Only set sponsored ad categories
-      const sponsoredCategories = [
-        { slug: 'sponsored-post', name: 'Sponsored Post' },
-        { slug: 'landing-page-ad', name: 'Landing Page Ad' }
-      ];
-      setCategories(sponsoredCategories);
+      // Fetch all regular categories (same as Create Article form)
+      const categoriesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/categories`);
+      const categoriesData = await categoriesResponse.json();
+      
+      // Filter out sponsored-ads and landing page categories (managed by ad_type field)
+      const regularCategories = categoriesData.filter(cat => 
+        cat.slug !== 'sponsored-ads' && 
+        cat.slug !== 'sponsored-post' && 
+        cat.slug !== 'landing-page-ad' &&
+        cat.slug !== 'latest-news'
+      );
+      
+      setCategories(regularCategories);
       // No default category - user must select one
     } catch (error) {
       console.error('Error fetching CMS config:', error);
