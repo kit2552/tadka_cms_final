@@ -2095,21 +2095,6 @@ const CreateSponsoredAd = ({ onClose }) => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Left Column - Form Fields */}
                         <div className="space-y-4">
-                          {/* Title Field */}
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                              Title *
-                            </label>
-                            <input
-                              type="text"
-                              name="title"
-                              value={formData.title}
-                              onChange={handleInputChange}
-                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              required
-                            />
-                          </div>
-                          
                           {/* YouTube URL */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
