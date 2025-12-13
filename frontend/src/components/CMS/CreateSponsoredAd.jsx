@@ -1653,7 +1653,7 @@ const CreateSponsoredAd = ({ onClose }) => {
                   {/* POST Type Fields - Two Column Layout */}
                   {formData.content_type === 'post' && (
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-4">
-                      {/* Left Column: Title and Image Upload (60% = 3 cols) */}
+                      {/* Left Column: Title and Media Selection (60% = 3 cols) */}
                       <div className="space-y-4 md:col-span-3">
                         {/* Title Field */}
                         <div>
@@ -1670,18 +1670,62 @@ const CreateSponsoredAd = ({ onClose }) => {
                           />
                         </div>
 
-                        {/* Main Image Upload */}
+                        {/* Media Type Selection */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                            Main Image
+                            Main Media Type *
                           </label>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
+                          <select
+                            name="media_type"
+                            value={formData.media_type}
+                            onChange={(e) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                media_type: e.target.value,
+                                // Clear the other field when switching
+                                image: e.target.value === 'youtube' ? '' : prev.image,
+                                youtube_url: e.target.value === 'image' ? '' : prev.youtube_url
+                              }));
+                            }}
                             className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
+                            required
+                          >
+                            <option value="image">Image</option>
+                            <option value="youtube">YouTube Video</option>
+                          </select>
                         </div>
+
+                        {/* Main Image Upload - Only show if media_type is 'image' */}
+                        {formData.media_type === 'image' && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Main Image
+                            </label>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageUpload}
+                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                        )}
+
+                        {/* YouTube URL - Only show if media_type is 'youtube' */}
+                        {formData.media_type === 'youtube' && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              YouTube URL
+                            </label>
+                            <input
+                              type="url"
+                              name="youtube_url"
+                              value={formData.youtube_url}
+                              onChange={handleInputChange}
+                              placeholder="https://www.youtube.com/watch?v=..."
+                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                        )}
                       </div>
 
                       {/* Right Column: Image Preview (40% = 2 cols) */}
