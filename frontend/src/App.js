@@ -152,6 +152,7 @@ function App() {
               <Route path="/cms/create-article" element={<CreateArticle />} />
               <Route path="/cms/articles/new" element={<CreateArticle />} />
               <Route path="/cms/edit/:id" element={<CreateArticle />} />
+              <Route path="/cms/edit-ad/:id" element={<CreateSponsoredAd />} />
               <Route path="/cms/create-topic" element={<CreateTopic />} />
               <Route path="/cms/preview/:id" element={<ArticlePreview />} />
               <Route path="/cms/admin-controls" element={<AdminControls />} />
