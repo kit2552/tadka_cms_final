@@ -641,36 +641,7 @@ const CreateArticle = () => {
     }
   }, [formData, selectedStates, selectedArtist, selectedGallery, isEditMode]);
 
-  // Intercept link button clicks to use custom modal
-  useEffect(() => {
-    const handleLinkClick = (e) => {
-      const linkWrapper = e.target.closest('.rdw-link-wrapper');
-      if (linkWrapper) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Link button clicked - opening custom modal');
-        
-        // Small delay to ensure selection is captured
-        setTimeout(() => {
-          handleAddLink();
-        }, 10);
-      }
-    };
-
-    const toolbar = document.querySelector('.toolbar-class');
-    if (toolbar) {
-      toolbar.addEventListener('click', handleLinkClick, true);
-      toolbar.addEventListener('mousedown', (e) => {
-        if (e.target.closest('.rdw-link-wrapper')) {
-          e.preventDefault();
-        }
-      }, true);
-      
-      return () => {
-        toolbar.removeEventListener('click', handleLinkClick, true);
-      };
-    }
-  }, [editorState]);
+  // No longer intercepting - using default link functionality
 
   const fetchCMSConfig = async () => {
     try {
