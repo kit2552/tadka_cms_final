@@ -62,6 +62,7 @@ const CreateArticle = () => {
     artists: [], // New field for artists
     movie_rating: '', // New field for movie rating
     is_featured: false,
+    is_sponsored: false,
     is_published: true,
     is_scheduled: false,
     scheduled_publish_at: '',
