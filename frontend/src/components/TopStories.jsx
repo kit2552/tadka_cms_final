@@ -40,7 +40,7 @@ const TopStories = ({ bigStory, entertainmentStory, featuredReview, fourthStory,
   };
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-1 pb-0">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 -mt-1 -mb-3">
       
       {/* Big Story Block */}
       {bigStory && (
