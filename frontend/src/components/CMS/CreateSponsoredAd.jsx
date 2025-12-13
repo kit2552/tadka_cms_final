@@ -3632,6 +3632,18 @@ const CreateSponsoredAd = ({ onClose }) => {
                       <span className="text-sm text-gray-700">Feature as Top Story</span>
                     </label>
                   )}
+                  
+                  {/* Enable Comments Toggle */}
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="comments_enabled"
+                      checked={formData.comments_enabled}
+                      onChange={(e) => setFormData(prev => ({ ...prev, comments_enabled: e.target.checked }))}
+                      className="form-checkbox h-4 w-4 text-blue-600"
+                    />
+                    <span className="text-sm text-gray-700">Enable Comments</span>
+                  </label>
                 </div>
 
                 {/* Top Story Duration Section - Only for Ad Post type */}
@@ -3652,6 +3664,15 @@ const CreateSponsoredAd = ({ onClose }) => {
                     />
                     <p className="text-xs text-gray-600 mt-1">
                       This ad will appear in the Top Stories section for {formData.top_story_duration_hours} hours from publish time, then automatically move to its category section.
+                    </p>
+                  </div>
+                )}
+
+                {/* Comments Info Box */}
+                {!formData.comments_enabled && (
+                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <p className="text-xs text-yellow-800">
+                      Comments are disabled for this ad. The comments section will not be displayed on the published page.
                     </p>
                   </div>
                 )}
