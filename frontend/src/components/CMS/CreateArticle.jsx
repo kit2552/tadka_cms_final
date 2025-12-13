@@ -1595,11 +1595,20 @@ const CreateArticle = () => {
                       className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                       required
                     >
-                      <option value="movie_review">Movie Review</option>
-                      <option value="photo">Photo Gallery</option>
-                      <option value="post">Post</option>
-                      <option value="video">Video</option>
-                      <option value="video_post">Video Post</option>
+                      {/* Show Movie Review only for movie/OTT review categories */}
+                      {['movie-reviews', 'movie-reviews-bollywood', 'ott-reviews', 'ott-reviews-bollywood'].includes(formData.category) && (
+                        <option value="movie_review">Movie Review</option>
+                      )}
+                      
+                      {/* Show other content types for non-review categories */}
+                      {!['movie-reviews', 'movie-reviews-bollywood', 'ott-reviews', 'ott-reviews-bollywood'].includes(formData.category) && (
+                        <>
+                          <option value="photo">Photo Gallery</option>
+                          <option value="post">Post</option>
+                          <option value="video">Video</option>
+                          <option value="video_post">Video Post</option>
+                        </>
+                      )}
                     </select>
                     {['movie-reviews', 'movie-reviews-bollywood', 'ott-reviews', 'ott-reviews-bollywood'].includes(formData.category) && (
                       <p className="text-xs text-gray-500 mt-1">Content type automatically set to Movie Review for this category</p>
