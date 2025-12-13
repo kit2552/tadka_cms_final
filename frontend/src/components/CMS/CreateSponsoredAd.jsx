@@ -252,7 +252,7 @@ const CreateSponsoredAd = ({ onClose }) => {
           media_type: article.youtube_url ? 'youtube' : 'image', // Infer media type based on what's present
           tags: article.tags || '',
           movie_rating: article.movie_rating || '', // Load movie rating
-          is_featured: article.is_featured || false,
+          is_sponsored: article.is_sponsored || true,
           is_published: article.is_published || false,
           is_scheduled: article.is_scheduled || false,
           scheduled_publish_at: article.scheduled_publish_at ? new Date(article.scheduled_publish_at).toISOString().slice(0, 16) : '',
