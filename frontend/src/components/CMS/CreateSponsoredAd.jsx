@@ -1156,8 +1156,25 @@ const CreateSponsoredAd = ({ onClose }) => {
       const cleanedReviewTechnicalAspects = stripLinkStyles(formData.review_technical_aspects);
       const cleanedReviewFinalVerdict = stripLinkStyles(formData.review_final_verdict);
       
+      // Map ad_type internal values to backend expected values
+      const adTypeMapping = {
+        'sponsored_section': 'Ad in Sponsored Section',
+        'ad_post': 'Ad Post',
+        'landing_home': 'Landing Page - Home',
+        'landing_inner': 'Landing Page - Inner'
+      };
+      
+      // Map category based on ad_type
+      const getCategoryForAdType = (adType) => {
+        if (adType === 'sponsored_section') return 'Sponsored Ad';
+        if (adType === 'landing_home' || adType === 'landing_inner') return 'Landing Page';
+        return formData.category; // Use selected category for ad_post
+      };
+      
       const submitData = {
         ...formData,
+        ad_type: adTypeMapping[formData.ad_type] || formData.ad_type,
+        category: getCategoryForAdType(formData.ad_type),
         content: cleanedContent, // Use cleaned content
         content_secondary: cleanedContentSecondary, // Use cleaned secondary content
         review_plot_summary: cleanedReviewPlotSummary, // Use cleaned review content
