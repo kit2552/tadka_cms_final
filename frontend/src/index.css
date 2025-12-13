@@ -491,15 +491,13 @@ code {
   font-weight: 700 !important;
 }
 
-/* Style ALL links in prose (published articles) - override any inline styles */
+/* Style ONLY links in prose (published article content) - override any inline styles */
 .prose a,
 .prose a[style],
 .prose a[href],
 .prose p a,
 .prose div a,
-.prose span a,
-a.prose,
-a {
+.prose span a {
   color: #2563eb !important;
   text-decoration: underline !important;
   cursor: pointer !important;
@@ -507,18 +505,15 @@ a {
   background-color: transparent !important;
 }
 
-/* Force override for any link with inline color */
+/* Force override for any link with inline color in prose only */
 .prose a[style*="color"],
-.prose a[style*="Color"],
-a[style*="color"],
-a[style*="Color"] {
+.prose a[style*="Color"] {
   color: #2563eb !important;
 }
 
 .prose a:hover,
 .prose a[style]:hover,
-.prose a[href]:hover,
-a:hover {
+.prose a[href]:hover {
   color: #1d4ed8 !important;
   text-decoration: underline !important;
 }
