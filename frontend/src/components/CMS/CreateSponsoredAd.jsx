@@ -1728,25 +1728,50 @@ const CreateSponsoredAd = ({ onClose }) => {
                         )}
                       </div>
 
-                      {/* Right Column: Image Preview (40% = 2 cols) */}
+                      {/* Right Column: Media Preview (40% = 2 cols) */}
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                          Image Preview
+                          {formData.media_type === 'image' ? 'Image Preview' : 'Video Preview'}
                         </label>
                         <div className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center" style={{ minHeight: '200px' }}>
-                          {formData.image ? (
-                            <img 
-                              src={getImageUrl(formData.image)} 
-                              alt="Preview" 
-                              className="max-w-full max-h-full object-contain rounded"
-                            />
+                          {formData.media_type === 'image' ? (
+                            // Image Preview
+                            formData.image ? (
+                              <img 
+                                src={getImageUrl(formData.image)} 
+                                alt="Preview" 
+                                className="max-w-full max-h-full object-contain rounded"
+                              />
+                            ) : (
+                              <div className="text-center p-4">
+                                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <p className="mt-2 text-sm text-gray-500">No image uploaded</p>
+                              </div>
+                            )
                           ) : (
-                            <div className="text-center p-4">
-                              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                              </svg>
-                              <p className="mt-2 text-sm text-gray-500">No image uploaded</p>
-                            </div>
+                            // YouTube Video Preview
+                            formData.youtube_url ? (
+                              <iframe
+                                width="100%"
+                                height="200"
+                                src={formData.youtube_url.replace('watch?v=', 'embed/').split('&')[0]}
+                                title="YouTube video preview"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="rounded"
+                              ></iframe>
+                            ) : (
+                              <div className="text-center p-4">
+                                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <p className="mt-2 text-sm text-gray-500">No video URL entered</p>
+                              </div>
+                            )
                           )}
                         </div>
                       </div>
