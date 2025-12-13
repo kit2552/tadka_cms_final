@@ -750,6 +750,29 @@ const CreateArticle = () => {
       const selectedText = blockWithLink.getText().slice(startOffset, endOffset);
       
       console.log('Selected text for link:', selectedText);
+      
+      // Check if the selection already has a link entity
+      let existingUrl = '';
+      const block = contentState.getBlockForKey(startKey);
+      block.findEntityRanges(
+        (character) => {
+          const entityKey = character.getEntity();
+          return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
+        },
+        (start, end) => {
+          // Check if this entity overlaps with our selection
+          if (start <= startOffset && end >= endOffset) {
+            const entityKey = block.getEntityAt(startOffset);
+            if (entityKey) {
+              const entity = contentState.getEntity(entityKey);
+              const data = entity.getData();
+              existingUrl = data.url || '';
+              console.log('Found existing link with URL:', existingUrl);
+            }
+          }
+        }
+      );
+      
       console.log('Saving editor state and selection');
       
       // Save the current editor state and selection using refs
@@ -757,7 +780,7 @@ const CreateArticle = () => {
       savedSelectionRef.current = selection;
       
       setLinkText(selectedText);
-      setLinkUrl('');
+      setLinkUrl(existingUrl);
       setShowLinkModal(true);
     } else {
       alert('Please select some text first to add a link');
