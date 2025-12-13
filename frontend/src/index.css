@@ -367,10 +367,26 @@ code {
   display: inline-flex !important;
 }
 
-/* Make sure modals appear above everything */
+/* Hide default link modal and link decorator popup */
 .rdw-link-modal,
-.rdw-image-modal {
-  z-index: 100;
+.rdw-image-modal,
+.rdw-link-decorator-wrapper {
+  display: none !important;
+}
+
+/* Style links in the editor */
+.public-DraftEditor-content a,
+.DraftEditor-editorContainer a,
+.rdw-editor-main a {
+  color: #2563eb !important;
+  text-decoration: underline !important;
+  cursor: pointer;
+}
+
+.public-DraftEditor-content a:hover,
+.DraftEditor-editorContainer a:hover,
+.rdw-editor-main a:hover {
+  color: #1d4ed8 !important;
 }
 
 .rdw-option-wrapper {
