@@ -3325,8 +3325,8 @@ const CreateArticle = () => {
                   <label className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="checkbox"
-                      name="is_featured"
-                      checked={formData.is_featured}
+                      name="is_sponsored"
+                      checked={formData.is_sponsored}
                       onChange={handleInputChange}
                       className="form-checkbox h-4 w-4 text-blue-600"
                     />
