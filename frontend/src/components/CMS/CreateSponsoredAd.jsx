@@ -1559,7 +1559,7 @@ const CreateSponsoredAd = ({ onClose }) => {
                         disabled={formData.ad_type === 'sponsored_section'}
                         style={formData.ad_type === 'sponsored_section' ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
                       />
-                      {showCategoryDropdown && (
+                      {showCategoryDropdown && formData.ad_type !== 'sponsored_section' && (
                         <>
                           <div 
                             className="fixed inset-0 z-10" 
@@ -1572,6 +1572,7 @@ const CreateSponsoredAd = ({ onClose }) => {
                             {categories
                               .filter(cat => 
                                 cat.slug !== 'latest-news' && 
+                                cat.slug !== 'sponsored-ads' &&
                                 cat.name.toLowerCase() !== 'latest news' &&
                                 cat.name.toLowerCase().includes(categorySearchQuery.toLowerCase())
                               )
@@ -1593,6 +1594,7 @@ const CreateSponsoredAd = ({ onClose }) => {
                               ))}
                             {categories.filter(cat => 
                               cat.slug !== 'latest-news' && 
+                              cat.slug !== 'sponsored-ads' &&
                               cat.name.toLowerCase() !== 'latest news' &&
                               cat.name.toLowerCase().includes(categorySearchQuery.toLowerCase())
                             ).length === 0 && (
