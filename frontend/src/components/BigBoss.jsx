@@ -75,7 +75,7 @@ const BigBoss = ({ bigBossData = {} }) => {
       </div>
       
       {/* Grid Layout - Same as TopStories */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-1">
         {getCurrentData().map((item, index) => (
           <div
             key={item.id}
