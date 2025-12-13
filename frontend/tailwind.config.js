@@ -45,6 +45,11 @@ module.exports = {
                                         },
                                         a: {
                                                 fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+                                                color: '#2563eb',
+                                                textDecoration: 'underline',
+                                                '&:hover': {
+                                                        color: '#1d4ed8',
+                                                },
                                         },
                                         li: {
                                                 fontFamily: 'Merriweather Sans, -apple-system, BlinkMacSystemFont, sans-serif',
