@@ -1685,16 +1685,23 @@ const CreateSponsoredAd = ({ onClose }) => {
                       value={formData.ad_type}
                       onChange={(e) => {
                         const newAdType = e.target.value;
-                        setFormData(prev => ({
-                          ...prev,
-                          ad_type: newAdType,
-                          // Auto-set category based on ad type
-                          category: newAdType === 'sponsored_section' 
-                            ? 'sponsored-ads' 
-                            : (newAdType === 'landing_home' || newAdType === 'landing_inner') 
-                              ? 'landing-page' 
-                              : prev.category
-                        }));
+                        setFormData(prev => {
+                          // Only auto-set category if changing TO sponsored_section or landing pages
+                          // Otherwise preserve the existing category
+                          let newCategory = prev.category;
+                          if (newAdType === 'sponsored_section') {
+                            newCategory = 'Sponsored Ad';
+                          } else if (newAdType === 'landing_home' || newAdType === 'landing_inner') {
+                            newCategory = 'Landing Page';
+                          }
+                          // If changing FROM sponsored_section or landing to ad_post, preserve category only if it's valid
+                          
+                          return {
+                            ...prev,
+                            ad_type: newAdType,
+                            category: newCategory
+                          };
+                        });
                       }}
                       className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
