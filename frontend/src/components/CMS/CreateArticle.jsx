@@ -499,7 +499,8 @@ const CreateArticle = () => {
         // Set secondary editor content
         if (article.content_secondary) {
           console.log('📝 Loading secondary content');
-          const contentBlock = htmlToDraft(article.content_secondary);
+          const cleanedContentSecondary = stripLinkStyles(article.content_secondary);
+          const contentBlock = htmlToDraft(cleanedContentSecondary);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks, contentBlock.entityMap);
             const editorStateWithoutDecorator = EditorState.createWithContent(contentState);
