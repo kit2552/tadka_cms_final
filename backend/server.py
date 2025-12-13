@@ -908,14 +908,14 @@ async def get_cms_articles(
     status: str = None,
     db = Depends(get_db)
 ):
-    """Get articles for CMS dashboard with filtering and pagination"""
+    """Get articles for CMS dashboard with filtering and pagination - EXCLUDES ads"""
     # Get total count first (without pagination)
     total_count = crud.get_articles_count_for_cms(
         db, language=language, category=category, state=state, 
         content_type=content_type, status=status
     )
     
-    # Get paginated articles
+    # Get paginated articles (excludes ads)
     articles = crud.get_articles_for_cms(
         db, language=language, skip=skip, limit=limit, category=category, 
         state=state, content_type=content_type, status=status
@@ -924,6 +924,34 @@ async def get_cms_articles(
     # articles is already a list of properly serialized dicts from crud
     return {
         "articles": articles,
+        "total": total_count,
+        "skip": skip,
+        "limit": limit
+    }
+
+@api_router.get("/cms/ads")
+async def get_cms_ads(
+    language: str = "en",
+    skip: int = 0, 
+    limit: int = 20,
+    ad_type: str = None,
+    status: str = None,
+    db = Depends(get_db)
+):
+    """Get ads for CMS dashboard with filtering and pagination - ONLY ads"""
+    # Get total count first (without pagination)
+    total_count = crud.get_ads_count_for_cms(
+        db, language=language, ad_type=ad_type, status=status
+    )
+    
+    # Get paginated ads
+    ads = crud.get_ads_for_cms(
+        db, language=language, skip=skip, limit=limit, 
+        ad_type=ad_type, status=status
+    )
+    
+    return {
+        "ads": ads,
         "total": total_count,
         "skip": skip,
         "limit": limit
