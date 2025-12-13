@@ -61,12 +61,12 @@ const CreateSponsoredAd = ({ onClose }) => {
   const [editorStateSecondary, setEditorStateSecondary] = useState(() => EditorState.createEmpty(decorator));
   
   // Movie Review Editor States
-  const [editorPlotSummary, setEditorPlotSummary] = useState(() => EditorState.createEmpty());
-  const [editorPerformances, setEditorPerformances] = useState(() => EditorState.createEmpty());
-  const [editorWhatWorks, setEditorWhatWorks] = useState(() => EditorState.createEmpty());
-  const [editorWhatDoesntWork, setEditorWhatDoesntWork] = useState(() => EditorState.createEmpty());
-  const [editorTechnicalAspects, setEditorTechnicalAspects] = useState(() => EditorState.createEmpty());
-  const [editorFinalVerdict, setEditorFinalVerdict] = useState(() => EditorState.createEmpty());
+  const [editorPlotSummary, setEditorPlotSummary] = useState(() => EditorState.createEmpty(decorator));
+  const [editorPerformances, setEditorPerformances] = useState(() => EditorState.createEmpty(decorator));
+  const [editorWhatWorks, setEditorWhatWorks] = useState(() => EditorState.createEmpty(decorator));
+  const [editorWhatDoesntWork, setEditorWhatDoesntWork] = useState(() => EditorState.createEmpty(decorator));
+  const [editorTechnicalAspects, setEditorTechnicalAspects] = useState(() => EditorState.createEmpty(decorator));
+  const [editorFinalVerdict, setEditorFinalVerdict] = useState(() => EditorState.createEmpty(decorator));
   
   // Movie Review Accordion States
   const [reviewAccordions, setReviewAccordions] = useState({
