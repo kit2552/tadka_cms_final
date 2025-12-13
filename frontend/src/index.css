@@ -517,20 +517,26 @@ code {
 .prose-lg a:link,
 .prose-lg a:visited,
 .prose-lg p a,
-.prose-lg div a {
+.prose-lg div a,
+div.prose a,
+div.prose-lg a {
   color: #2563eb !important;
   text-decoration: underline !important;
   cursor: pointer !important;
   background: none !important;
   background-color: transparent !important;
   border-bottom: none !important;
+  font-style: normal !important;
 }
 
-/* Force override for any link with inline color in prose only */
+/* Force override for any link with inline color in prose only - multiple levels of specificity */
 .prose a[style*="color"],
 .prose a[style*="Color"],
 .prose-lg a[style*="color"],
-.prose-lg a[style*="Color"] {
+.prose-lg a[style*="Color"],
+div.prose a[style],
+div.prose-lg a[style],
+.prose.prose-lg a[style] {
   color: #2563eb !important;
 }
 
