@@ -584,10 +584,6 @@ const CreateArticle = () => {
   };
 
   const onEditorStateChange = (editorState) => {
-    console.log('Editor state changed, selection:', {
-      isCollapsed: editorState.getSelection().isCollapsed(),
-      hasText: editorState.getSelection().getHasFocus()
-    });
     setEditorState(editorState);
     const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
     setFormData(prev => ({
