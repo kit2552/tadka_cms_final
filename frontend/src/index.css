@@ -490,11 +490,16 @@ code {
 .prose a,
 .prose a[style],
 .prose a[href],
+.prose a:link,
+.prose a:visited,
 .prose p a,
 .prose div a,
 .prose span a,
 .prose-lg a,
 .prose-lg a[style],
+.prose-lg a[href],
+.prose-lg a:link,
+.prose-lg a:visited,
 .prose-lg p a,
 .prose-lg div a {
   color: #2563eb !important;
