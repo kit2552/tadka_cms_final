@@ -367,14 +367,9 @@ code {
   display: inline-flex !important;
 }
 
-/* Show default link modal */
+/* Hide default link modal and link decorator popup */
 .rdw-link-modal,
-.rdw-image-modal {
-  display: flex !important;
-  z-index: 100 !important;
-}
-
-/* Hide link decorator popup on hover */
+.rdw-image-modal,
 .rdw-link-decorator-wrapper {
   display: none !important;
 }
