@@ -674,18 +674,31 @@ const CreateArticle = () => {
   };
 
   const handleConfirmLink = () => {
-    if (!linkUrl) return;
+    if (!linkUrl) {
+      console.log('No URL provided');
+      return;
+    }
+    
+    console.log('Adding link:', linkUrl);
+    console.log('Current editor state:', editorState.getCurrentContent().getPlainText());
     
     const selection = editorState.getSelection();
+    console.log('Selection:', {
+      isCollapsed: selection.isCollapsed(),
+      anchorOffset: selection.getAnchorOffset(),
+      focusOffset: selection.getFocusOffset()
+    });
+    
     const contentState = editorState.getCurrentContent();
     
     // Create entity
     const contentStateWithEntity = contentState.createEntity(
       'LINK',
       'MUTABLE',
-      { url: linkUrl, target: '_blank' }
+      { url: linkUrl }
     );
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    console.log('Entity created:', entityKey);
     
     // Apply entity to selection
     const contentStateWithLink = Modifier.applyEntity(
@@ -694,30 +707,22 @@ const CreateArticle = () => {
       entityKey
     );
     
-    // Create new editor state with the link
+    console.log('Content after link:', contentStateWithLink.getPlainText());
+    
+    // Create new editor state with the link and decorator
     const newEditorState = EditorState.push(
       editorState,
       contentStateWithLink,
       'apply-entity'
     );
     
-    // Move selection to end of the link to continue typing
-    const newSelection = newEditorState.getSelection().merge({
-      anchorOffset: selection.getEndOffset(),
-      focusOffset: selection.getEndOffset()
-    });
+    // Apply decorator to new state
+    const decoratedEditorState = EditorState.set(newEditorState, { decorator });
     
-    const finalEditorState = EditorState.forceSelection(newEditorState, newSelection);
+    console.log('New editor state created');
     
-    // Update editor state
-    setEditorState(finalEditorState);
-    
-    // Update form data with HTML
-    const htmlContent = draftToHtml(convertToRaw(finalEditorState.getCurrentContent()));
-    setFormData(prev => ({
-      ...prev,
-      content: htmlContent
-    }));
+    // Update editor state - call onEditorStateChange to trigger all updates
+    onEditorStateChange(decoratedEditorState);
     
     // Close modal
     setShowLinkModal(false);
