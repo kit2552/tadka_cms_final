@@ -668,10 +668,9 @@ const CreateArticle = () => {
     }
     
     const savedEditorState = savedEditorStateRef.current;
-    const savedSelection = savedSelectionRef.current;
     
-    if (!savedEditorState || !savedSelection) {
-      console.error('No saved editor state or selection');
+    if (!savedEditorState) {
+      console.error('No saved editor state');
       alert('Error: Lost editor state. Please try again.');
       setShowLinkModal(false);
       return;
@@ -686,38 +685,45 @@ const CreateArticle = () => {
       const currentHtml = draftToHtml(convertToRaw(currentContentState));
       console.log('Current HTML:', currentHtml);
       
-      // Create link HTML
+      // Create link HTML - escape special characters in linkText for regex
+      const escapedLinkText = linkText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const linkHtml = `<a href="${linkUrl}" target="_blank">${linkText}</a>`;
       console.log('Link HTML:', linkHtml);
       
-      // Replace the selected text with link
-      const newHtml = currentHtml.replace(linkText, linkHtml);
+      // Replace the selected text with link (first occurrence only)
+      const newHtml = currentHtml.replace(new RegExp(escapedLinkText), linkHtml);
       console.log('New HTML:', newHtml);
       
       // Convert HTML back to Draft.js content
       const blocksFromHtml = htmlToDraft(newHtml);
+      if (!blocksFromHtml) {
+        throw new Error('Failed to convert HTML to Draft blocks');
+      }
+      
       const { contentBlocks, entityMap } = blocksFromHtml;
       const newContentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
-      const newEditorState = EditorState.createWithContent(newContentState);
+      const newEditorState = EditorState.push(savedEditorState, newContentState, 'insert-characters');
       
-      console.log('New editor state created, updating...');
+      console.log('New editor state created');
+      console.log('New plain text:', newContentState.getPlainText());
       
-      // Update editor state
-      setEditorState(newEditorState);
+      // Close modal first
+      setShowLinkModal(false);
+      setLinkUrl('');
+      setLinkText('');
+      savedEditorStateRef.current = null;
+      savedSelectionRef.current = null;
       
-      // Update form data
-      setFormData(prev => ({
-        ...prev,
-        content: newHtml
-      }));
-      
-      console.log('Link added successfully');
+      // Use a small timeout to let modal close, then update editor
+      setTimeout(() => {
+        console.log('Calling onEditorStateChange...');
+        onEditorStateChange(newEditorState);
+        console.log('Link added successfully');
+      }, 50);
       
     } catch (error) {
       console.error('Error adding link:', error);
       alert('Error adding link: ' + error.message);
-    } finally {
-      // Close modal and clear
       setShowLinkModal(false);
       setLinkUrl('');
       setLinkText('');
