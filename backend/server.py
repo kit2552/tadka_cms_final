@@ -252,6 +252,7 @@ async def get_articles(
             "is_published": article.get("is_published"),
             "is_scheduled": article.get("is_scheduled", False),
             "scheduled_publish_at": article.get("scheduled_publish_at"),
+            "scheduled_timezone": article.get("scheduled_timezone", "IST"),
             "published_at": article.get("published_at"),
             "view_count": article.get("view_count", 0)
         })
