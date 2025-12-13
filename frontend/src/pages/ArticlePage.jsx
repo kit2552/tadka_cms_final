@@ -786,10 +786,16 @@ const ArticlePage = () => {
               /* Regular Article Content - No background, no horizontal padding */
               <div className="prose prose-lg max-w-none mb-3 pt-3 pb-3">
                 <style>{`
+                  /* Override ALL link styles in article content */
                   .prose a,
-                  .prose a[style] {
+                  .prose a[style],
+                  .prose a[style*="color"],
+                  .prose a[style*="Color"],
+                  .prose p a,
+                  .prose div a {
                     color: #2563eb !important;
                     text-decoration: underline !important;
+                    background: none !important;
                   }
                   .prose a:hover {
                     color: #1d4ed8 !important;
