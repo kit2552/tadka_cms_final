@@ -346,6 +346,11 @@ code {
 .rdw-link-wrapper,
 .rdw-image-wrapper {
   display: inline-flex !important;
+  position: relative;
+}
+
+.rdw-editor-wrapper {
+  overflow: visible !important;
 }
 
 /* Link modal popup */
