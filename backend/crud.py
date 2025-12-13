@@ -273,8 +273,13 @@ def get_articles_for_cms(
     content_type: str = None,
     status: str = None
 ):
-    """Get paginated articles for CMS with filters"""
-    query = {"article_language": language}
+    """Get paginated articles for CMS with filters - EXCLUDES ads"""
+    query = {
+        "article_language": language,
+        # Exclude ads from posts - ads are articles with ad_type field or category 'Sponsored Ad'
+        "ad_type": {"$exists": False},
+        "category": {"$ne": "Sponsored Ad"}
+    }
     
     if category:
         query["category"] = category
@@ -284,6 +289,43 @@ def get_articles_for_cms(
     
     if content_type:
         query["content_type"] = content_type
+    
+    if status == "published":
+        query["is_published"] = True
+    elif status == "draft":
+        query["is_published"] = False
+    elif status == "scheduled":
+        query["is_scheduled"] = True
+    
+    docs = list(
+        db[ARTICLES]
+        .find(query)
+        .sort("created_at", -1)
+        .skip(skip)
+        .limit(limit)
+    )
+    return serialize_doc(docs)
+
+def get_ads_for_cms(
+    db,
+    language: str = "en",
+    skip: int = 0,
+    limit: int = 20,
+    ad_type: str = None,
+    status: str = None
+):
+    """Get paginated ads for CMS with filters - ONLY ads"""
+    query = {
+        "article_language": language,
+        # Only get ads - articles with ad_type field
+        "$or": [
+            {"ad_type": {"$exists": True}},
+            {"category": "Sponsored Ad"}
+        ]
+    }
+    
+    if ad_type:
+        query["ad_type"] = ad_type
     
     if status == "published":
         query["is_published"] = True
