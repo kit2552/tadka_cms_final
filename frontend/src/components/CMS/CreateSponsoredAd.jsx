@@ -240,6 +240,7 @@ const CreateSponsoredAd = ({ onClose }) => {
           states: article.states || 'all',
           category: article.category || '',
           content_type: article.content_type || 'post', // Load content type
+          ad_type: article.ad_type || (article.category === 'sponsored-ads' ? 'sponsored_section' : 'ad_post'), // Load or infer ad type
           image: article.image || article.main_image_url || '',
           image_gallery: article.image_gallery ? JSON.parse(article.image_gallery) : [], // Load image gallery safely
           youtube_url: article.youtube_url || '',
