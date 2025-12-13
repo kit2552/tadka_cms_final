@@ -3308,7 +3308,7 @@ const Dashboard = () => {
                             <div className="flex flex-wrap gap-2 text-xs">
                               <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-100 text-gray-700 border border-gray-200">
                                 {article.is_scheduled 
-                                  ? `Scheduled: ${formatDate(article.scheduled_publish_at)}`
+                                  ? `Scheduled: ${formatDate(article.scheduled_publish_at)} (${article.scheduled_timezone || 'IST'})`
                                   : formatDate(article.published_at)
                                 }
                               </span>
