@@ -160,19 +160,6 @@ const AdManagement = ({ showCreateAdForm, setShowCreateAdForm }) => {
                   Sponsored Ads
                 </button>
               </nav>
-              
-              {/* Create Ad Button - only show in Sponsored Ads tab */}
-              {activeAdTab === 'sponsored-ads' && (
-                <button
-                  onClick={() => setShowCreateAdForm(true)}
-                  className="flex items-center gap-2 px-4 py-1.5 bg-black text-white text-sm font-medium rounded hover:bg-gray-800 transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                  </svg>
-                  Create Ad
-                </button>
-              )}
             </div>
           </div>
 
