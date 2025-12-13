@@ -486,15 +486,25 @@ code {
   font-weight: 700 !important;
 }
 
-/* Style links in prose (published articles) */
-.prose a {
+/* Style ALL links in prose (published articles) - override any inline styles */
+.prose a,
+.prose a[style],
+.prose a[href],
+.prose p a,
+.prose div a,
+.prose span a {
   color: #2563eb !important;
   text-decoration: underline !important;
   cursor: pointer !important;
+  background: none !important;
+  background-color: transparent !important;
 }
 
-.prose a:hover {
+.prose a:hover,
+.prose a[style]:hover,
+.prose a[href]:hover {
   color: #1d4ed8 !important;
+  text-decoration: underline !important;
 }
 
 /* Override default mb-6 spacing from 1.5rem to 1rem */
