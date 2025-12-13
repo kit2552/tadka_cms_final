@@ -785,6 +785,16 @@ const ArticlePage = () => {
             ) : (
               /* Regular Article Content - No background, no horizontal padding */
               <div className="prose prose-lg max-w-none mb-3 pt-3 pb-3">
+                <style>{`
+                  .prose a,
+                  .prose a[style] {
+                    color: #2563eb !important;
+                    text-decoration: underline !important;
+                  }
+                  .prose a:hover {
+                    color: #1d4ed8 !important;
+                  }
+                `}</style>
                 <div className={`text-gray-900 leading-relaxed space-y-6 text-left`}>
                   {/* Main Content */}
                   {article.content ? (
