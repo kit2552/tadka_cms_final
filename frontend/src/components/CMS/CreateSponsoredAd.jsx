@@ -3375,6 +3375,7 @@ const CreateSponsoredAd = ({ onClose }) => {
                 </div>
               )}
             </div>
+            )}
 
             {/* Publishing & Sponsored Settings */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
