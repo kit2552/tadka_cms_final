@@ -1602,6 +1602,10 @@ def get_tadka_pics_galleries(db, limit: int = 20):
         {"_id": 0}
     ).sort("created_at", -1).limit(limit))
     
+    print(f"[DEBUG] get_tadka_pics_galleries: Found {len(galleries)} galleries")
+    for g in galleries:
+        print(f"[DEBUG]   - ID {g.get('id')}: {g.get('title')}")
+    
     # Parse JSON fields
     for gallery in galleries:
         if "artists" in gallery and isinstance(gallery["artists"], str):
