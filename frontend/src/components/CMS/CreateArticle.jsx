@@ -433,7 +433,7 @@ const CreateArticle = () => {
           const contentBlock = htmlToDraft(article.content);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorState(EditorState.createWithContent(contentState));
+            setEditorState(EditorState.createWithContent(contentState, decorator));
           }
         }
 
@@ -442,7 +442,7 @@ const CreateArticle = () => {
           const contentBlock = htmlToDraft(article.content_secondary);
           if (contentBlock) {
             const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            setEditorStateSecondary(EditorState.createWithContent(contentState));
+            setEditorStateSecondary(EditorState.createWithContent(contentState, decorator));
           }
         }
 
@@ -538,7 +538,7 @@ const CreateArticle = () => {
             const contentBlock = htmlToDraft(draft.formData.content);
             if (contentBlock) {
               const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-              setEditorState(EditorState.createWithContent(contentState));
+              setEditorState(EditorState.createWithContent(contentState, decorator));
             }
           }
 
@@ -547,7 +547,7 @@ const CreateArticle = () => {
             const contentBlock = htmlToDraft(draft.formData.content_secondary);
             if (contentBlock) {
               const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-              setEditorStateSecondary(EditorState.createWithContent(contentState));
+              setEditorStateSecondary(EditorState.createWithContent(contentState, decorator));
             }
           }
           
