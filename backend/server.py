@@ -1916,12 +1916,10 @@ async def get_homepage_theater_bollywood_releases(
 # Main /releases endpoint for homepage MovieSchedules component
 @api_router.get("/releases")
 async def get_movie_releases(db = Depends(get_db)):
-    """Get theater and OTT releases for homepage MovieSchedules section"""
-    this_week_theater = crud.get_this_week_theater_releases(db, limit=4)
-    upcoming_theater = crud.get_upcoming_theater_releases(db, limit=4)
-    
-    this_week_ott = crud.get_this_week_ott_releases(db, limit=4)
-    upcoming_ott = crud.get_upcoming_ott_releases(db, limit=4)
+    """Get latest theater and OTT releases for homepage MovieSchedules section"""
+    # Get all latest releases sorted by updated_at/created_at
+    latest_theater = crud.get_latest_theater_releases(db, limit=10)
+    latest_ott = crud.get_latest_ott_releases(db, limit=10)
     
     def format_release_response(releases, is_theater=True):
         result = []
@@ -1935,7 +1933,8 @@ async def get_movie_releases(db = Depends(get_db)):
                 "youtube_url": release.get("youtube_url"),
                 "states": release.get("states"),
                 "genres": release.get("genres"),
-                "created_at": release.get("created_at")
+                "created_at": release.get("created_at"),
+                "updated_at": release.get("updated_at")
             }
             if is_theater:
                 release_data["banner"] = release.get("banner")
@@ -1946,12 +1945,12 @@ async def get_movie_releases(db = Depends(get_db)):
     
     return {
         "theater": {
-            "this_week": format_release_response(this_week_theater, True),
-            "coming_soon": format_release_response(upcoming_theater, True)
+            "this_week": format_release_response(latest_theater, True),
+            "coming_soon": []
         },
         "ott": {
-            "this_week": format_release_response(this_week_ott, False),
-            "coming_soon": format_release_response(upcoming_ott, False)
+            "this_week": format_release_response(latest_ott, False),
+            "coming_soon": []
         }
     }
 
