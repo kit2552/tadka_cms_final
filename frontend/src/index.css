@@ -478,11 +478,6 @@ code {
   font-size: 1rem !important;
 }
 
-/* Override any inline color styles on links */
-.prose a[style*="color"] {
-  color: #2563eb !important;
-}
-
 /* Allow bold text from rich text editor */
 .prose strong,
 .prose b,
