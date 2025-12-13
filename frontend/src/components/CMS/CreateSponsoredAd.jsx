@@ -2114,8 +2114,8 @@ const CreateSponsoredAd = ({ onClose }) => {
                     </div>
                   )}
 
-                  {/* VIDEO POST Type Fields */}
-                  {formData.content_type === 'video_post' && (
+                  {/* VIDEO and VIDEO POST Type Fields */}
+                  {(formData.content_type === 'video_post' || formData.content_type === 'video') && (
                     <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-5 mb-6">
                       <h4 className="text-base font-bold text-gray-900 mb-4 text-left">
                         Video Information
