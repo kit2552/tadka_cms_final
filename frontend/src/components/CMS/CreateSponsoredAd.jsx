@@ -68,6 +68,9 @@ const CreateSponsoredAd = ({ onClose }) => {
     is_scheduled: false,
     scheduled_publish_at: '',
     scheduled_timezone: 'IST',
+    // Landing Page specific fields
+    sponsored_link: '',
+    sponsored_label: '',
     seo_title: '',
     seo_description: '',
     seo_keywords: '',
