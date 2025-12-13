@@ -49,6 +49,8 @@ const CreateArticle = () => {
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
   const [linkText, setLinkText] = useState('');
+  const [savedSelection, setSavedSelection] = useState(null);
+  const [savedEditorState, setSavedEditorState] = useState(null);
   const [loadingArticle, setLoadingArticle] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [states, setStates] = useState([]);
