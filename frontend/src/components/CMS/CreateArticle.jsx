@@ -1657,9 +1657,12 @@ const CreateArticle = () => {
           /* Style the link decorator wrapper - override inline styles */
           .rdw-link-decorator-wrapper {
             display: inline !important;
+            color: #2563eb !important;
           }
+          .rdw-link-decorator-wrapper *,
           .rdw-link-decorator-wrapper a,
-          .rdw-link-decorator-wrapper a[style] {
+          .rdw-link-decorator-wrapper a[style],
+          .rdw-link-decorator-wrapper span {
             color: #2563eb !important;
             text-decoration: underline !important;
             background: none !important;
