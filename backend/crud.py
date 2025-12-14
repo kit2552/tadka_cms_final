@@ -427,6 +427,10 @@ def create_article(db, article: dict):
         # Social media embed fields
         "social_media_type": article.get("social_media_type"),
         "social_media_embed": _clean_twitter_embed(article.get("social_media_embed")),
+        "social_media_embeds": article.get("social_media_embeds"),
+        # Comment fields
+        "comments_enabled": article.get("comments_enabled", True),
+        "review_comments_enabled": article.get("review_comments_enabled", False),
         "view_count": 0,
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow(),
