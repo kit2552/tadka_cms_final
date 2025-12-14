@@ -213,7 +213,7 @@ const MovieNews = () => {
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
           
           {/* Movie News Section - 70% width */}
-          <div className="lg:col-span-7 -mt-1">
+          <div className="lg:col-span-7">
             {/* Movie News Section Header - Sticky with filter and bottom border */}
             <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
@@ -245,10 +245,7 @@ const MovieNews = () => {
                 
                 {/* Article count and Filter on same line */}
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-900 opacity-75 flex items-center">
-                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-                    </svg>
+                  <p className="text-xs text-gray-900 opacity-75">
                     {filteredArticles.length} articles from {getCurrentFilterLabel().toLowerCase()}
                   </p>
 
@@ -330,22 +327,22 @@ const MovieNews = () => {
           </div>
 
           {/* Related Posts Sidebar - 30% width */}
-          <div className="lg:col-span-3 -mt-1">
+          <div className="lg:col-span-3">
             {/* Related Posts Sticky Header */}
             <div className="sticky top-16 z-30 border-b-2 border-gray-300 mb-3" style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
-                <h2 className="text-base font-bold text-black">Related Posts</h2>
-                <p className="text-xs text-gray-600 mt-1">Content you may like</p>
+                <h2 className="text-base font-bold text-black text-left">Related Posts</h2>
+                <p className="text-xs text-gray-600 mt-1 text-left">Content you may like</p>
               </div>
             </div>
 
             {/* Related Posts Content */}
-            <div className="space-y-4">
+            <div className="space-y-4 text-left">
               {relatedArticles.length > 0 ? (
                 relatedArticles.map((article) => (
                   <div
                     key={article.id}
-                    className="flex space-x-3 cursor-pointer group"
+                    className="flex space-x-3 cursor-pointer group text-left"
                     onClick={() => handleRelatedArticleClick(article)}
                   >
                     <img
@@ -353,18 +350,18 @@ const MovieNews = () => {
                       alt={article.title}
                       className="w-20 h-20 object-cover rounded group-hover:opacity-80 transition-opacity duration-200"
                     />
-                    <div className="flex-1">
-                      <h3 className="text-sm font-medium text-gray-900 leading-tight group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+                    <div className="flex-1 text-left">
+                      <h3 className="text-sm font-medium text-gray-900 leading-tight group-hover:text-blue-600 transition-colors duration-200 line-clamp-2 text-left">
                         {article.title}
                       </h3>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-gray-500 mt-1 text-left">
                         {formatDate(article.publishedAt)}
                       </p>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-500">No related posts found</p>
+                <p className="text-sm text-gray-500 text-left">No related posts found</p>
               )}
             </div>
           </div>
