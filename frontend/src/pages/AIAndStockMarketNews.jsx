@@ -41,7 +41,7 @@ const AIAndStockMarketNews = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using ai and stock-market categories
-        const aiResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ai?limit=50`);
+        const aiResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ai?limit=20`);
         if (aiResponse.ok) {
           const aiData = await aiResponse.json();
           setAiArticles(aiData);
