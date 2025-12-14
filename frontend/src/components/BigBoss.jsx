@@ -47,7 +47,26 @@ const BigBoss = ({ bigBossData = {} }) => {
   };
 
   return (
-    <div className="max-w-5xl-plus mx-auto px-8 pt-0 pb-2 -mb-5">
+    <div className="max-w-5xl-plus mx-auto px-8 pt-0 pb-2 -mb-5 relative">
+      {/* More Button Overlay */}
+      <div className="absolute top-0 right-8 z-10 pointer-events-none">
+        <div className="pointer-events-auto">
+          <Link 
+            to="/tv-reality-shows"
+            className="group inline-flex items-center justify-center w-8 h-8 bg-white bg-opacity-95 hover:bg-opacity-100 rounded border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-xl"
+          >
+            <svg 
+              className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200 text-gray-600 group-hover:text-gray-800"
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </Link>
+        </div>
+      </div>
+      
       {/* Header with tabs matching TopStories style */}
       <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-1`}>
         <button
