@@ -345,8 +345,8 @@ const TadkaPics = () => {
               </div>
             </div>
 
-            {/* Galleries Grid - 3 Column Vertical Layout within 70% section */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+            {/* Galleries Grid - 4 Column Vertical Layout within 85% section */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-8">
               {filteredGalleries.map((gallery) => {
                 const thumbnailImage = getRandomGalleryImage(gallery);
                 
