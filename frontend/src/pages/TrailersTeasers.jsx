@@ -423,7 +423,7 @@ const TrailersTeasers = () => {
             </div>
 
             {/* Articles Grid - YouTube Thumbnail Style */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {filteredArticles.map((article, index) => (
                 <div
                   key={article.id}
@@ -435,8 +435,8 @@ const TrailersTeasers = () => {
                       <img
                         src={article.youtube_url ? getYouTubeThumbnail(article.youtube_url) : (article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
                         alt={article.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        style={{ width: '100%', height: '160px' }}
+                        className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                        style={{ aspectRatio: '16/9' }}
                         onError={(e) => {
                           e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
                         }}
