@@ -3,13 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const EventsInterviews = () => {
+const TVRealityShows = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
-  const [activeTab, setActiveTab] = useState('events-interviews'); // 'events-interviews' or 'bollywood'
-  const [eventsInterviewsArticles, setEventsInterviewsArticles] = useState([]);
+  const [activeTab, setActiveTab] = useState('reality-shows'); // 'reality-shows' or 'bollywood'
+  const [realityShowsArticles, setRealityShowsArticles] = useState([]);
   const [bollywoodArticles, setBollywoodArticles] = useState([]);
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const EventsInterviews = () => {
 
   // Scroll restoration logic
   useEffect(() => {
-    const savedScrollPosition = sessionStorage.getItem('eventsInterviewsScrollPosition');
+    const savedScrollPosition = sessionStorage.getItem('tvRealityShowsScrollPosition');
     
     if (savedScrollPosition && location.state?.fromDetail) {
       setTimeout(() => {
