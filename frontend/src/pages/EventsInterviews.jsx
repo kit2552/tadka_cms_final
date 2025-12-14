@@ -130,6 +130,17 @@ const EventsInterviews = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Get YouTube thumbnail from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    const videoId = youtubeUrl.includes('youtube.com/watch?v=') 
+      ? youtubeUrl.split('v=')[1]?.split('&')[0]
+      : youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    
+    return videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : null;
+  };
+
   // Sample thumbnail images for related topics
   const getThumbnail = (index) => {
     const thumbnails = [
