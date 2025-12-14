@@ -302,6 +302,12 @@ const CreateSponsoredAd = ({ onClose }) => {
         
         const internalAdType = reverseAdTypeMapping[article.ad_type] || article.ad_type || 'ad_post';
         
+        console.log('Loading ad for editing:', {
+          original_ad_type: article.ad_type,
+          mapped_ad_type: internalAdType,
+          category: article.category
+        });
+        
         // Populate form data
         setFormData({
           title: article.title || '',
