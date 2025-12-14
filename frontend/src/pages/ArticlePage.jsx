@@ -350,6 +350,9 @@ const ArticlePage = () => {
         case 'ai-stock':
           navigate('/ai-and-stock-market-news', { state: { fromDetail: true } });
           break;
+        case 'tadka-shorts':
+          navigate('/tadka-shorts', { state: { fromDetail: true } });
+          break;
         default:
           // For other cases, use browser back
           if (window.history.length > 1) {
