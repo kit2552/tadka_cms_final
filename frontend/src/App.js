@@ -150,6 +150,7 @@ function App() {
               <Route path="/health-food-topics" element={<HealthFoodTopics />} />
               <Route path="/fashion-travel-topics" element={<FashionTravelTopics />} />
               <Route path="/ai-and-stock-market-news" element={<AIAndStockMarketNews />} />
+              <Route path="/tadka-shorts" element={<TadkaShorts />} />
               <Route path="/events-interviews" element={<EventsInterviews />} />
               <Route path="/ott-reviews" element={<OTTReviews />} />
               <Route path="/about-us" element={<AboutUs />} />
