@@ -67,7 +67,7 @@ const OTTReviews = () => {
             setBollywoodArticles(bollywoodData);
           } else {
             // Fallback to web series reviews
-            const webSeriesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ott-webseries-reviews?limit=50`);
+            const webSeriesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ott-webseries-reviews?limit=20`);
             if (webSeriesResponse.ok) {
               const webSeriesData = await webSeriesResponse.json();
               setBollywoodArticles(webSeriesData);
