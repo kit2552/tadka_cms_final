@@ -452,7 +452,7 @@ const OTTReleases = () => {
                   >
                     <div className="flex items-start justify-between text-left">
                       <div className="flex items-start space-x-3 flex-1">
-                        <div className="relative flex-shrink-0 w-40 h-24 rounded overflow-hidden border border-gray-300">
+                        <div className="relative flex-shrink-0 rounded overflow-hidden border border-gray-300" style={{ width: '160px', height: '90px' }}>
                         {(() => {
                           // Try to get YouTube thumbnail first
                           const youtubeThumbnail = getYouTubeThumbnail(release.youtube_url || release.trailer_url);
