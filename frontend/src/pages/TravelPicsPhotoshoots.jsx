@@ -102,18 +102,29 @@ const TravelPicsPhotoshoots = () => {
 
   // Helper function to get random image from gallery
   const getRandomGalleryImage = (article) => {
-    if (article.gallery && article.gallery.images && article.gallery.images.length > 0) {
-      const images = Array.isArray(article.gallery.images) 
-        ? article.gallery.images 
-        : (typeof article.gallery.images === 'string' ? JSON.parse(article.gallery.images) : []);
-      
-      if (images.length > 0) {
-        const randomIndex = Math.floor(Math.random() * images.length);
-        const randomImage = images[randomIndex];
-        return randomImage.url || randomImage.data || randomImage;
+    // Check if article has gallery with images
+    if (article.gallery && article.gallery.images) {
+      try {
+        const images = Array.isArray(article.gallery.images) 
+          ? article.gallery.images 
+          : (typeof article.gallery.images === 'string' ? JSON.parse(article.gallery.images) : []);
+        
+        if (images.length > 0) {
+          const randomIndex = Math.floor(Math.random() * images.length);
+          const randomImage = images[randomIndex];
+          const imageUrl = randomImage.url || randomImage.data || randomImage;
+          console.log('Using random gallery image:', imageUrl);
+          return imageUrl;
+        }
+      } catch (error) {
+        console.error('Error parsing gallery images:', error);
       }
     }
-    return article.image_url || article.image;
+    
+    // Fallback to article image
+    const fallbackImage = article.image_url || article.image || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop';
+    console.log('Using fallback image:', fallbackImage);
+    return fallbackImage;
   };
 
   // Check if the gallery is vertical
