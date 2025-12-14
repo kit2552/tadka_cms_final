@@ -115,7 +115,7 @@ const TVRealityShows = () => {
       }
     };
 
-    fetchEventsInterviewsData();
+    fetchTVRealityShowsData();
   }, []);
 
   // Update filtered articles when tab or filter changes
