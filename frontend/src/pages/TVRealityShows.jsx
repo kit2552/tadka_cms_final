@@ -338,14 +338,14 @@ const TVRealityShows = () => {
                   {/* Tabs only */}
                   <div className="flex space-x-4">
                     <button
-                      onClick={() => setActiveTab('events-interviews')}
+                      onClick={() => setActiveTab('reality-shows')}
                       className={`text-base font-bold transition-colors duration-200 ${
-                        activeTab === 'events-interviews'
+                        activeTab === 'reality-shows'
                           ? 'text-black'
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Events & Interviews
+                      Reality Shows
                     </button>
                     <button
                       onClick={() => setActiveTab('bollywood')}
