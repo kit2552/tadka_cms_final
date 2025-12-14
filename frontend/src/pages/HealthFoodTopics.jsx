@@ -250,17 +250,6 @@ const HealthFoodTopics = () => {
 
   const themeClasses = lightThemeClasses;
 
-  if (loading) {
-    return (
-      <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className={`text-lg font-medium ${themeClasses.textPrimary}`}>Loading Health & Food Topics...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
