@@ -432,15 +432,30 @@ const TadkaPics = () => {
             <div className="lg:w-[20%] border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0 -mt-1">
               {/* Tadka Shorts Header */}
               <div className={`sticky top-[63px] z-30 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
-                <div className="pl-0 pr-4 py-4">
+                <div className="pl-0 pr-4 py-4 relative">
                   <div className="mb-2">
                     <h2 className="text-base font-bold text-black text-left leading-tight">
                       Tadka Shorts
                     </h2>
                   </div>
-                  <p className="text-xs text-gray-900 opacity-75 text-left">
-                    Trending videos you may like
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-900 opacity-75 text-left">
+                      Content you may like
+                    </p>
+                    <Link 
+                      to="/tadka-shorts" 
+                      className="group flex items-center justify-center text-xs text-gray-900 opacity-75 hover:opacity-100 transition-colors duration-200"
+                    >
+                      <svg 
+                        className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
               </div>
 
