@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const BoxOffice = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('box-office'); // 'box-office' or 'bollywood'
@@ -13,9 +14,26 @@ const BoxOffice = () => {
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true); // Start with true to show loading state
   const [error, setError] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState('thisWeek');
+  const [selectedFilter, setSelectedFilter] = useState('latest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredArticles, setFilteredArticles] = useState([]);
+
+  // Scroll restoration logic
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('boxOfficeScrollPosition');
+    
+    if (savedScrollPosition && location.state?.fromDetail) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+
+    if (location.state?.fromDetail) {
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   useEffect(() => {
     const fetchBoxOfficeData = async () => {
