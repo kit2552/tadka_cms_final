@@ -447,6 +447,7 @@ const BoxOffice = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
