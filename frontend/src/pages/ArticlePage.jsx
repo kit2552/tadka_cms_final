@@ -926,6 +926,154 @@ const ArticlePage = () => {
                   )}
                 </div>
               </div>
+            ) : (
+              /* Regular Article Content - No background, no horizontal padding */
+              <div className="prose prose-lg max-w-none mb-3 pt-3 pb-3">
+                <style>{`
+                  /* Override ALL link styles in article content - maximum specificity */
+                  .prose a,
+                  .prose a[style],
+                  .prose a[style*="color"],
+                  .prose a[style*="Color"],
+                  .prose a[style*="background"],
+                  .prose p a,
+                  .prose div a,
+                  .prose-lg a,
+                  .prose-lg a[style],
+                  .prose a span,
+                  .prose a span[style],
+                  .prose-lg a span,
+                  .prose-lg a span[style] {
+                    color: #2563eb !important;
+                    text-decoration: underline !important;
+                    background: none !important;
+                    background-color: transparent !important;
+                    font-style: normal !important;
+                  }
+                  .prose a:hover,
+                  .prose-lg a:hover,
+                  .prose a:hover span,
+                  .prose-lg a:hover span {
+                    color: #1d4ed8 !important;
+                  }
+                `}</style>
+                <div className={`text-gray-900 leading-relaxed space-y-6 text-left`}>
+                  {/* Main Content */}
+                  {article.content ? (
+                    <div dangerouslySetInnerHTML={{ 
+                      __html: stripLinkStyles(
+                        article.content
+                          .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>\s*$/gi, '') // Remove trailing empty paragraphs
+                          .trim()
+                      )
+                    }} />
+                  ) : (
+                    <>
+                      <p>
+                        This is the main content of the article. In a real application, this would be 
+                        the full article content retrieved from your backend database.
+                      </p>
+                      <p>
+                        You can add rich text content here including multiple paragraphs, quotes, 
+                        and other formatted content that makes up the complete article.
+                      </p>
+                      <p>
+                        The article content would continue here with additional paragraphs, 
+                        analysis, and conclusions relevant to the topic.
+                      </p>
+                    </>
+                  )}
+
+                  {/* Social Media Embed */}
+                  {article.social_media_type && article.social_media_embed && (
+                    <div className="my-6">
+                      {article.social_media_type === 'twitter' && (
+                        <div className="flex justify-center flex-col items-center">
+                          {article.social_media_embed.includes('<blockquote') || article.social_media_embed.includes('<iframe') ? (
+                            <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                          ) : (
+                            <>
+                              <blockquote className="twitter-tweet" data-theme={theme === 'dark' ? 'dark' : 'light'}>
+                                <a href={article.social_media_embed}></a>
+                              </blockquote>
+                              {twitterEmbedError && (
+                                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg max-w-md text-center">
+                                  <p className="text-sm text-yellow-800 mb-2">⚠️ Unable to load tweet</p>
+                                  <p className="text-xs text-yellow-700">This tweet may be deleted, private, or unavailable.</p>
+                                  <a 
+                                    href={article.social_media_embed} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-xs underline mt-2 inline-block"
+                                  >
+                                    Try opening on Twitter/X
+                                  </a>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      )}
+                      {article.social_media_type === 'instagram' && (
+                        <div className="flex justify-center my-6">
+                          <div 
+                            className="instagram-embed-container"
+                            style={{ width: '100%', maxWidth: '700px' }}
+                            dangerouslySetInnerHTML={{ __html: article.social_media_embed }} 
+                          />
+                          <style>{`
+                            .instagram-embed-container .instagram-media {
+                              min-width: 326px !important;
+                              max-width: 700px !important;
+                              width: 100% !important;
+                              margin: 0 auto !important;
+                            }
+                            .instagram-embed-container iframe {
+                              max-width: 700px !important;
+                              width: 100% !important;
+                            }
+                          `}</style>
+                        </div>
+                      )}
+                      {article.social_media_type === 'facebook' && (
+                        <div className="flex justify-center">
+                          <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                        </div>
+                      )}
+                      {article.social_media_type === 'tiktok' && (
+                        <div className="flex justify-center">
+                          <div dangerouslySetInnerHTML={{ __html: article.social_media_embed }} />
+                        </div>
+                      )}
+                      {article.social_media_type === 'youtube' && article.social_media_embed.includes('iframe') && (
+                        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                          <div 
+                            className="absolute inset-0"
+                            dangerouslySetInnerHTML={{ __html: article.social_media_embed }} 
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Ad Placeholder - Only show if secondary content exists AND ad is enabled */}
+                  {article.content_secondary && adSettings.article_content_mid && (
+                    <div className="my-6 border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 text-center">
+                      <p className="text-sm text-gray-500 font-medium">Advertisement Space</p>
+                      <p className="text-xs text-gray-400 mt-1">Ad will be displayed here</p>
+                    </div>
+                  )}
+
+                  {/* Secondary Content */}
+                  {article.content_secondary && (
+                    <div dangerouslySetInnerHTML={{ 
+                      __html: article.content_secondary
+                        .replace(/^\s*<p[^>]*>\s*<br\s*\/?>\s*<\/p>/gi, '') // Remove leading empty paragraphs
+                        .trim()
+                    }} />
+                  )}
+                </div>
+              </div>
             )}
 
             {/* Share Icons - Bottom of article content */}
