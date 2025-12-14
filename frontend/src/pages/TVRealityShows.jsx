@@ -262,10 +262,10 @@ const TVRealityShows = () => {
     
     // Route to video page for video content types, otherwise to article page
     if (article.content_type === 'video' || article.content_type === 'video_post' || article.youtube_url) {
-      navigate(`/video/${article.id}`, { state: { from: 'events-interviews' } });
+      navigate(`/video/${article.id}`, { state: { from: 'reality-shows' } });
     } else {
       const slug = article.slug || article.title.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/article/${article.id}/${slug}`, { state: { from: 'events-interviews' } });
+      navigate(`/article/${article.id}/${slug}`, { state: { from: 'reality-shows' } });
     }
   };
 
