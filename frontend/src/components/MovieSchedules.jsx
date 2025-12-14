@@ -207,7 +207,7 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
       <div className="absolute bottom-2 right-2 z-10 pointer-events-none">
         <div className="pointer-events-auto">
           <Link 
-            to="/theater-ott-releases" 
+            to="/theater-releases" 
             className="group inline-flex items-center justify-center w-8 h-8 bg-white bg-opacity-95 hover:bg-opacity-100 rounded border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-xl"
           >
             <svg 
