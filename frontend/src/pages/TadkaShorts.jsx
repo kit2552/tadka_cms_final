@@ -135,11 +135,6 @@ const TadkaShorts = () => {
     return null;
   };
 
-  // Check if gallery is vertical
-  const isVerticalGallery = (article) => {
-    return article.gallery && article.gallery.gallery_type === 'vertical';
-  };
-
   // Filter options for the dropdown
   const filterOptions = [
     { value: 'latest', label: 'Latest' },
