@@ -311,10 +311,42 @@ const ArticlePage = () => {
   };
 
   const handleBackNavigation = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
+    // Check where the user came from
+    const fromPage = location.state?.from;
+    
+    if (fromPage) {
+      // Navigate back to the source page with fromDetail state for scroll restoration
+      switch (fromPage) {
+        case 'ott-reviews':
+          navigate('/ott-reviews', { state: { fromDetail: true } });
+          break;
+        case 'sports':
+          navigate('/sports', { state: { fromDetail: true } });
+          break;
+        case 'box-office':
+          navigate('/box-office', { state: { fromDetail: true } });
+          break;
+        case 'nri-world-news':
+          navigate('/nri-world-news', { state: { fromDetail: true } });
+          break;
+        case 'travel-pics-photoshoots':
+          navigate('/travel-pics-photoshoots', { state: { fromDetail: true } });
+          break;
+        default:
+          // For other cases, use browser back
+          if (window.history.length > 1) {
+            navigate(-1);
+          } else {
+            navigate('/');
+          }
+      }
     } else {
-      navigate('/');
+      // No state, use browser back
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate('/');
+      }
     }
   };
 
