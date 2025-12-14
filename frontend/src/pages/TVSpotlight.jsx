@@ -54,7 +54,7 @@ const TVSpotlight = () => {
             setTvArticles(tvData);
           }
 
-          const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood?limit=50`);
+          const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood?limit=20`);
           if (bollywoodResponse.ok) {
             const bollywoodData = await bollywoodResponse.json();
             setBollywoodArticles(bollywoodData);
