@@ -210,7 +210,7 @@ const SponsoredAds = ({
                       </div>
                     )}
                   </div>
-                  <div className="p-3 text-left">
+                  <div className="px-3 pb-3 text-left" style={{ paddingTop: '10px' }}>
                     <h2 className="text-sm font-semibold text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-200 mb-1">
                       {ad.title}
                     </h2>
