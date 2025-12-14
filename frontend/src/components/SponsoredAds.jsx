@@ -27,8 +27,8 @@ const getYouTubeThumbnail = (url) => {
 
 // Helper function to get thumbnail based on content type
 const getAdThumbnail = (ad) => {
-  // If it's a video post (YouTube), return YouTube thumbnail
-  if (ad.content_type === 'video_post' && ad.youtube_url) {
+  // If it's a video or video_post (YouTube), return YouTube thumbnail
+  if ((ad.content_type === 'video' || ad.content_type === 'video_post') && ad.youtube_url) {
     return getYouTubeThumbnail(ad.youtube_url);
   }
   
