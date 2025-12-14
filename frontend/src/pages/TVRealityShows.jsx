@@ -322,7 +322,7 @@ const TVRealityShows = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Reality Shows
+                      TV Reality Shows
                     </button>
                     <button
                       onClick={() => setActiveTab('bollywood')}
@@ -332,7 +332,7 @@ const TVRealityShows = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Bollywood
+                      Hindi
                     </button>
                   </div>
                 </div>
