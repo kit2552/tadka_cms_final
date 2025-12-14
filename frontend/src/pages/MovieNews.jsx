@@ -206,164 +206,127 @@ const MovieNews = () => {
       )}
       
       <div className={`min-h-screen ${themeClasses.pageBackground}`}>
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Main Content - Left Side */}
-          <div className="flex-1">
-            {/* Header with Tabs and Filter */}
-            <div className="mb-6">
-              {/* Title */}
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                {t('movieNews')}
-              </h1>
-
-              {/* Tabs and Filter Row */}
-              <div className="flex items-center justify-between mb-4">
-                {/* Tabs */}
-                <div className="flex space-x-1 bg-gray-200 rounded-lg p-1">
-                  <button
-                    onClick={() => setActiveTab('movie-news')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      activeTab === 'movie-news'
-                        ? 'bg-white text-blue-600 shadow-sm'
-                        : 'text-gray-700 hover:text-gray-900'
-                    }`}
-                  >
-                    Movie News
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('movie-news-bollywood')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      activeTab === 'movie-news-bollywood'
-                        ? 'bg-white text-blue-600 shadow-sm'
-                        : 'text-gray-700 hover:text-gray-900'
-                    }`}
-                  >
-                    Bollywood
-                  </button>
-                </div>
-
-                {/* Filter Dropdown */}
-                <div className="relative">
-                  <button
-                    onClick={() => setIsFilterOpen(!isFilterOpen)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                    </svg>
-                    <span className="text-sm font-medium text-gray-700">{getCurrentFilterLabel()}</span>
-                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {isFilterOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                      {filterOptions.map((option) => (
-                        <button
-                          key={option.value}
-                          onClick={() => {
-                            setSelectedFilter(option.value);
-                            setIsFilterOpen(false);
-                          }}
-                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-150 first:rounded-t-lg last:rounded-b-lg ${
-                            selectedFilter === option.value ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700'
-                          }`}
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Article Count */}
-              <p className="text-sm text-gray-600">
-                {filteredArticles.length} articles from {getCurrentFilterLabel().toLowerCase()}
-              </p>
-            </div>
-
-            {/* Articles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              {filteredArticles.map((article) => (
-                <div 
-                  key={article.id} 
-                  className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
-                  style={{ padding: '0.5rem' }}
-                  onClick={() => handleArticleClick(article)}
-                >
-                  <div className="flex items-start space-x-3 text-left pr-3">
-                    <ArticleImage
-                      src={article.image_url}
-                      alt={article.title}
-                      contentType={activeTab === 'movie-news-bollywood' ? 'movie-news-bollywood' : 'movie-news'}
-                      width="flex-shrink-0 w-32"
-                      height="h-24"
-                      imgClassName="object-cover rounded group-hover:scale-105 transition-transform duration-200"
-                      placeholderClassName="group-hover:scale-105 transition-transform duration-200"
-                    />
-                    <div className="flex-1 min-w-0 text-left">
-                      <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
-                        {article.title}
-                      </h3>
-                      <div className="text-xs text-gray-500 text-left">
-                        <p className="mb-1">
-                          {formatDate(article.published_at || article.publishedAt)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {filteredArticles.length === 0 && (
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-400 mb-1">No {activeTab === 'movie-news' ? 'movie news' : 'bollywood movie news'} articles found</p>
-                <p className="text-xs text-gray-400">Try selecting a different time period</p>
-              </div>
-            )}
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          {/* Header with Title */}
+          <div className="mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-2">
+              Movie News
+            </h1>
+            <p className="text-base text-gray-600">
+              Latest updates from the world of cinema
+            </p>
           </div>
 
-          {/* Related Posts Sidebar - Right Side */}
-          <div className="lg:w-80">
-            <div className="bg-white rounded-lg p-4 shadow-sm sticky top-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Related Posts</h2>
-              {relatedArticles.length > 0 ? (
-                <div className="space-y-4">
-                  {relatedArticles.map((article) => (
-                    <div
-                      key={article.id}
-                      className="flex space-x-3 cursor-pointer group"
-                      onClick={() => handleRelatedArticleClick(article)}
+          {/* Tabs and Filter Row */}
+          <div className="flex items-center justify-between mb-4">
+            {/* Tabs */}
+            <div className="flex space-x-1 bg-gray-200 rounded-lg p-1">
+              <button
+                onClick={() => setActiveTab('movie-news')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  activeTab === 'movie-news'
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-700 hover:text-gray-900'
+                }`}
+              >
+                Movie News
+              </button>
+              <button
+                onClick={() => setActiveTab('movie-news-bollywood')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  activeTab === 'movie-news-bollywood'
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-700 hover:text-gray-900'
+                }`}
+              >
+                Bollywood
+              </button>
+            </div>
+
+            {/* Filter Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              >
+                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                <span className="text-sm font-medium text-gray-700">{getCurrentFilterLabel()}</span>
+                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Dropdown Menu */}
+              {isFilterOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                  {filterOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setSelectedFilter(option.value);
+                        setIsFilterOpen(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-150 first:rounded-t-lg last:rounded-b-lg ${
+                        selectedFilter === option.value ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700'
+                      }`}
                     >
-                      <img
-                        src={article.image || 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=100&h=100&fit=crop'}
-                        alt={article.title}
-                        className="w-20 h-20 object-cover rounded group-hover:opacity-80 transition-opacity duration-200"
-                      />
-                      <div className="flex-1">
-                        <h3 className="text-sm font-medium text-gray-900 leading-tight group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
-                          {article.title}
-                        </h3>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {formatDate(article.publishedAt)}
-                        </p>
-                      </div>
-                    </div>
+                      {option.label}
+                    </button>
                   ))}
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500">No related posts found</p>
               )}
             </div>
           </div>
+
+          {/* Article Count */}
+          <p className="text-sm text-gray-600 mb-4">
+            {filteredArticles.length} articles from {getCurrentFilterLabel().toLowerCase()}
+          </p>
+
+          {/* Articles Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            {filteredArticles.map((article) => (
+              <div 
+                key={article.id} 
+                className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
+                style={{ padding: '0.5rem' }}
+                onClick={() => handleArticleClick(article)}
+              >
+                <div className="flex items-start space-x-3 text-left pr-3">
+                  <ArticleImage
+                    src={article.image_url}
+                    alt={article.title}
+                    contentType={activeTab === 'movie-news-bollywood' ? 'movie-news-bollywood' : 'movie-news'}
+                    width="flex-shrink-0 w-32"
+                    height="h-24"
+                    imgClassName="object-cover rounded group-hover:scale-105 transition-transform duration-200"
+                    placeholderClassName="group-hover:scale-105 transition-transform duration-200"
+                  />
+                  <div className="flex-1 min-w-0 text-left">
+                    <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
+                      {article.title}
+                    </h3>
+                    <div className="text-xs text-gray-500 text-left">
+                      <p className="mb-1">
+                        {formatDate(article.published_at || article.publishedAt)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {filteredArticles.length === 0 && (
+            <div className="text-center py-8">
+              <p className="text-sm text-gray-400 mb-1">No {activeTab === 'movie-news' ? 'movie news' : 'bollywood movie news'} articles found</p>
+              <p className="text-xs text-gray-400">Try selecting a different time period</p>
+            </div>
+          )}
         </div>
       </div>
-    </div>
     </>
   );
 };
