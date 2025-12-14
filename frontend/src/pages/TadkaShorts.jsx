@@ -360,7 +360,7 @@ const TadkaShorts = () => {
               </div>
             </div>
 
-            {/* Articles Grid - 4 Column Vertical Layout */}
+            {/* Articles Grid - 4 Column Vertical Layout (9:16 YouTube Shorts ratio) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-8">
               {filteredArticles.map((article) => {
                 const youtubeThumbnail = getYouTubeThumbnail(article.youtube_url);
@@ -368,35 +368,40 @@ const TadkaShorts = () => {
                 return (
                   <div
                     key={article.id}
-                    className="cursor-pointer group transition-transform duration-300 hover:scale-105"
+                    className="cursor-pointer group"
                     onClick={() => handleArticleClick(article)}
                   >
-                    <div className="relative w-full h-56 rounded-lg overflow-hidden border-2 border-gray-200 group-hover:border-gray-300 transition-colors duration-300">
-                      <img
-                        src={youtubeThumbnail || article.image_url || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&h=400&fit=crop'}
-                        alt={article.title}
-                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                        style={{ objectFit: 'cover', objectPosition: 'center' }}
-                        loading="lazy"
-                        onError={(e) => {
-                          e.target.src = 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&h=400&fit=crop';
-                        }}
-                      />
-                      {/* Play icon overlay for YouTube videos */}
-                      {article.youtube_url && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="bg-black bg-opacity-60 rounded-full p-3 group-hover:bg-opacity-80 transition-all">
-                            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <div className="rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
+                      <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
+                        {/* 9:16 aspect ratio: (16/9)*100 = 177.78% */}
+                        <img
+                          src={youtubeThumbnail || article.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop'}
+                          alt={article.title}
+                          className="absolute inset-0 w-full h-full group-hover:scale-105 transition-transform duration-300"
+                          style={{ 
+                            objectFit: 'cover',
+                            objectPosition: 'center',
+                            display: 'block'
+                          }}
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
+                          }}
+                        />
+                        {/* Play icon overlay for YouTube videos */}
+                        {article.youtube_url && (
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-70 transition-opacity duration-300">
+                            <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M8 5v14l11-7z"/>
                             </svg>
                           </div>
+                        )}
+                        {/* Title overlay at bottom */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-2 border-t border-gray-700">
+                          <p className="text-white text-xs font-medium line-clamp-2 text-center leading-tight">
+                            {article.title}
+                          </p>
                         </div>
-                      )}
-                      {/* Gradient overlay */}
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent h-16"></div>
-                      {/* Title overlay */}
-                      <div className="absolute bottom-2 left-2 right-2 text-white text-xs font-medium line-clamp-2">
-                        {article.title}
                       </div>
                     </div>
                   </div>
