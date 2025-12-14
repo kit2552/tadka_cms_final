@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ArticleImage from '../components/ArticleImage';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const MovieReviews = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('movie-reviews'); // 'movie-reviews' or 'movie-reviews-bollywood'
@@ -80,17 +81,29 @@ const MovieReviews = () => {
     fetchMovieReviewsData();
   }, []);
 
+  // Scroll restoration logic
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('movieReviewsScrollPosition');
+    
+    if (savedScrollPosition && location.state?.fromDetail) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+
+    if (location.state?.fromDetail) {
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   // Update filtered articles when tab or filter changes
   useEffect(() => {
     const currentArticles = activeTab === 'movie-reviews-bollywood' ? bollywoodMovieReviewsArticles : movieReviewsArticles;
     const filtered = filterArticlesByDate(currentArticles, selectedFilter);
     setFilteredArticles(filtered);
   }, [movieReviewsArticles, bollywoodMovieReviewsArticles, activeTab, selectedFilter]);
-
-  // Auto scroll to top when page loads
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   // Sample thumbnail images for related topics
   const getThumbnail = (index) => {
@@ -209,8 +222,16 @@ const MovieReviews = () => {
   };
 
   const handleArticleClick = (article) => {
-    // Navigate to article page
-    navigate(`/article/${article.id}`);
+    // Save current scroll position before navigating
+    sessionStorage.setItem('movieReviewsScrollPosition', window.scrollY.toString());
+    
+    // Route to video page for video content types, otherwise to article page
+    if (article.content_type === 'video' || article.content_type === 'video_post') {
+      navigate(`/video/${article.id}`, { state: { from: 'movie-reviews' } });
+    } else {
+      const slug = article.slug || article.title.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/article/${article.id}/${slug}`, { state: { from: 'movie-reviews' } });
+    }
   };
 
   const formatDate = (dateString) => {
@@ -234,17 +255,6 @@ const MovieReviews = () => {
 
   const themeClasses = lightThemeClasses;
 
-  if (loading) {
-    return (
-      <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className={`text-lg font-medium ${themeClasses.textPrimary}`}>Loading Movie Reviews...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
@@ -264,7 +274,20 @@ const MovieReviews = () => {
   }
 
   return (
-    <div className={`min-h-screen ${themeClasses.pageBackground}`}>
+    <>
+      {/* Loading Modal */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl px-4 py-3">
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+              <p className="text-sm font-medium text-gray-700">Loading...</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div className={`min-h-screen ${themeClasses.pageBackground}`}>
       {/* Main Container */}
       <div className="max-w-5xl-plus mx-auto px-8 pb-6">
         
@@ -358,50 +381,44 @@ const MovieReviews = () => {
 
             {/* Articles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              {filteredArticles.length > 0 ? (
-                filteredArticles.map((article) => (
-                  <div 
-                    key={article.id} 
-                    className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
-                    style={{ padding: '0.5rem' }}
-                    onClick={() => handleArticleClick(article)}
-                  >
-                    <div className="flex items-start space-x-3 text-left pr-3">
-                      <ArticleImage
-                        src={article.image_url}
-                        alt={article.title}
-                        contentType={activeTab === 'movie-reviews-bollywood' ? 'movie-reviews-bollywood' : 'movie-reviews'}
-                        width="flex-shrink-0 w-32"
-                        height="h-24"
-                        imgClassName="object-cover rounded group-hover:scale-105 transition-transform duration-200"
-                        placeholderClassName="group-hover:scale-105 transition-transform duration-200"
-                      />
-                      <div className="flex-1 min-w-0 text-left">
-                        <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
-                          {article.title}
-                        </h3>
-                        <div className="text-xs text-gray-500 text-left">
-                          <p className="mb-1">
-                            {formatDate(article.published_at || article.publishedAt)}
-                          </p>
-                        </div>
+              {filteredArticles.map((article) => (
+                <div 
+                  key={article.id} 
+                  className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
+                  style={{ padding: '0.5rem' }}
+                  onClick={() => handleArticleClick(article)}
+                >
+                  <div className="flex items-start space-x-3 text-left pr-3">
+                    <ArticleImage
+                      src={article.image_url}
+                      alt={article.title}
+                      contentType={activeTab === 'movie-reviews-bollywood' ? 'movie-reviews-bollywood' : 'movie-reviews'}
+                      width="flex-shrink-0 w-32"
+                      height="h-24"
+                      imgClassName="object-cover rounded group-hover:scale-105 transition-transform duration-200"
+                      placeholderClassName="group-hover:scale-105 transition-transform duration-200"
+                    />
+                    <div className="flex-1 min-w-0 text-left">
+                      <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
+                        {article.title}
+                      </h3>
+                      <div className="text-xs text-gray-500 text-left">
+                        <p className="mb-1">
+                          {formatDate(article.published_at || article.publishedAt)}
+                        </p>
                       </div>
                     </div>
                   </div>
-                ))
-              ) : (
-                <div className="col-span-2 text-center py-12">
-                  <div className="text-6xl mb-4">🎬</div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Movie Reviews Found</h3>
-                  <p className="text-gray-600 mb-4">
-                    No movie reviews are available for the selected time period.
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Try selecting a different time filter or check back later for new content.
-                  </p>
                 </div>
-              )}
+              ))}
             </div>
+
+            {filteredArticles.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-400 mb-1">No {activeTab === 'movie-reviews' ? 'movie reviews' : 'bollywood movie reviews'} found</p>
+                <p className="text-xs text-gray-400">Try selecting a different time period</p>
+              </div>
+            )}
           </div>
 
           {/* Related Articles Section - 30% width */}
@@ -460,6 +477,7 @@ const MovieReviews = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
