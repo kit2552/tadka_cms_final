@@ -317,7 +317,7 @@ const OTTReleases = () => {
                     onClick={() => handleReleaseClick(release)}
                   >
                     <div className="flex items-start space-x-3 text-left pr-3">
-                      <div className="relative flex-shrink-0 w-32 h-24 rounded overflow-hidden">
+                      <div className="relative flex-shrink-0 w-32 h-20 rounded overflow-hidden border border-gray-300">
                         {(() => {
                           // Try to get YouTube thumbnail first
                           const youtubeThumbnail = getYouTubeThumbnail(release.youtube_url || release.trailer_url);
@@ -350,9 +350,48 @@ const OTTReleases = () => {
                         })()}
                       </div>
                       <div className="flex-1 min-w-0 text-left">
-                        <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
+                        <h3 className="text-gray-900 leading-tight hover:text-gray-700 mb-1 transition-colors duration-200 text-left" style={{fontSize: '14px', fontWeight: '600'}}>
                           {release.movie_name || release.title}
                         </h3>
+                        {release.ott_platforms && (
+                          <p className="text-xs text-gray-500 mb-1">
+                            {Array.isArray(release.ott_platforms) ? release.ott_platforms.join(', ') : 
+                             typeof release.ott_platforms === 'string' && release.ott_platforms.startsWith('[') ? 
+                             JSON.parse(release.ott_platforms).join(', ') : release.ott_platforms}
+                          </p>
+                        )}
+                        {release.languages && (
+                          <div className="text-xs text-blue-600 mt-1">
+                            {(() => {
+                              const langs = Array.isArray(release.languages) ? release.languages : [release.languages];
+                              const originalLang = release.original_language;
+                              
+                              // In Bollywood tab, only show "Hindi" in single line
+                              if (activeTab === 'bollywood') {
+                                return <div>Hindi</div>;
+                              }
+                              
+                              // In OTT tab, show languages vertically with dubbed first, then original
+                              if (!originalLang) {
+                                return langs.map((lang, index) => (
+                                  <div key={index}>{lang}</div>
+                                ));
+                              }
+                              
+                              // Separate original and dubbed
+                              const dubbedLangs = langs.filter(lang => lang !== originalLang);
+                              
+                              return (
+                                <>
+                                  {dubbedLangs.map((lang, index) => (
+                                    <div key={`dubbed-${index}`}>{lang} (Dubbed)</div>
+                                  ))}
+                                  <div key="original">{originalLang}</div>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        )}
                         {release.ott_platform && (
                           <div className="mb-2">
                             <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
