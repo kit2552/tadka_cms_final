@@ -151,7 +151,7 @@ const SponsoredAds = ({
       <div className="max-w-5xl-plus mx-auto px-8">
         
         {/* Sponsored Ads Header - Matching width of other sections */}
-        <div className={`${getSectionHeaderClasses().containerClass} px-3 py-2 border rounded-lg text-left mb-[14px]`} style={{ marginTop: '-26px' }}>
+        <div className={`${getSectionHeaderClasses().containerClass} px-3 py-2 border rounded-lg text-left mb-[12px]`} style={{ marginTop: '-26px' }}>
           <h3 className={`text-sm font-semibold ${getSectionHeaderClasses().textClass}`}>{t('sections.sponsored_ads', 'Sponsored Ads')}</h3>
         </div>
         
