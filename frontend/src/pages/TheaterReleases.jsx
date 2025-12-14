@@ -65,29 +65,25 @@ const TheaterReleases = () => {
         const userStateCodes = userStateNames.map(name => stateNameToCode[name]).filter(code => code);
         console.log('User state codes:', userStateCodes);
         
-        const statesParam = userStateCodes.length > 0 ? `?user_states=${userStateCodes.join(',')}` : '';
-        console.log('API request with states:', statesParam);
+        // Use /api/releases endpoint like the home page does (it works!)
+        console.log('Fetching from /api/releases endpoint');
         
-        // Add timestamp to prevent caching
-        const cacheBuster = `${statesParam ? '&' : '?'}t=${Date.now()}`;
-        
-        // Fetch from theater-bollywood API endpoint with state filtering
-        const ottRegionalResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood${statesParam}${cacheBuster}`);
-        if (ottRegionalResponse.ok) {
-          const ottRegionalData = await ottRegionalResponse.json();
-          console.log('Theater Releases fetched:', ottRegionalData);
+        const releasesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases?t=${Date.now()}`);
+        if (releasesResponse.ok) {
+          const releaseData = await releasesResponse.json();
+          console.log('Theater Releases fetched:', releaseData);
           
-          // Extract Theater releases (combine this_week and coming_soon)
-          const theaterData = ottRegionalData.theater || {};
-          const theaterThisWeek = theaterData.this_week || [];
-          const theaterComingSoon = theaterData.coming_soon || [];
-          setTheaterReleases([...theaterThisWeek, ...theaterComingSoon]);
+          // Extract Theater releases - handle both array and object formats
+          const theaterData = releaseData.theater || {};
+          const theaterReleasesList = Array.isArray(theaterData) ? theaterData : (theaterData.this_week || []).concat(theaterData.coming_soon || []);
+          setTheaterReleases(theaterReleasesList);
+          console.log('Theater releases loaded:', theaterReleasesList.length);
           
-          // Extract Bollywood releases from 'ott' key (combine this_week and coming_soon)
-          const ottData = ottRegionalData.ott || {};
-          const ottThisWeek = ottData.this_week || [];
-          const ottComingSoon = ottData.coming_soon || [];
-          setRegionalReleases([...ottThisWeek, ...ottComingSoon]);
+          // Extract Bollywood/OTT releases - handle both array and object formats
+          const ottData = releaseData.ott || {};
+          const ottReleasesList = Array.isArray(ottData) ? ottData : (ottData.this_week || []).concat(ottData.coming_soon || []);
+          setRegionalReleases(ottReleasesList);
+          console.log('Bollywood releases loaded:', ottReleasesList.length);
         } else {
           // Fallback: try individual endpoints
           const theaterResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-ott/page?release_type=theater&filter_type=${selectedFilter}&limit=50`);
