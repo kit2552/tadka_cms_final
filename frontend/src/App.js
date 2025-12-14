@@ -145,6 +145,7 @@ function App() {
               <Route path="/movie-release-dates" element={<MovieReleaseDates />} />
               <Route path="/movie-schedules" element={<MovieSchedules />} />
               <Route path="/ott-releases" element={<OTTReleases />} />
+              <Route path="/theater-releases" element={<TheaterReleases />} />
               <Route path="/new-video-songs" element={<NewVideoSongs />} />
               <Route path="/tv-spotlight" element={<TVSpotlight />} />
               <Route path="/tv-reality-shows" element={<TVRealityShows />} />
