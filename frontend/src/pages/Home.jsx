@@ -378,10 +378,10 @@ const Home = ({ layoutEditMode = false, onLayoutSave }) => {
         {/* Modal Overlay */}
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
           {/* Compact Modal */}
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-xs">
-            <div className="flex flex-col items-center">
-              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-3"></div>
-              <p className="text-sm font-medium text-gray-700">Loading Personalized Content</p>
+          <div className="bg-white rounded-lg shadow-xl px-4 py-3">
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+              <p className="text-sm font-medium text-gray-700">Loading...</p>
             </div>
           </div>
         </div>
