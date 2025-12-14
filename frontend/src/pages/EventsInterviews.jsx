@@ -248,7 +248,7 @@ const EventsInterviews = () => {
   // Get current filter label
   const getCurrentFilterLabel = () => {
     const option = filterOptions.find(opt => opt.value === selectedFilter);
-    return option ? option.label : 'This Week';
+    return option ? option.label : 'Latest';
   };
 
   const handleRelatedArticleClick = (article) => {
@@ -257,8 +257,16 @@ const EventsInterviews = () => {
   };
 
   const handleArticleClick = (article) => {
-    // Navigate to article page
-    navigate(`/article/${article.id}`);
+    // Save current scroll position before navigating
+    sessionStorage.setItem('eventsInterviewsScrollPosition', window.scrollY.toString());
+    
+    // Route to video page for video content types, otherwise to article page
+    if (article.content_type === 'video' || article.content_type === 'video_post' || article.youtube_url) {
+      navigate(`/video/${article.id}`, { state: { from: 'events-interviews' } });
+    } else {
+      const slug = article.slug || article.title.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/article/${article.id}/${slug}`, { state: { from: 'events-interviews' } });
+    }
   };
 
   const formatDate = (dateString) => {
