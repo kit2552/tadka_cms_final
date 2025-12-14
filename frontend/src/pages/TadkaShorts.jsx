@@ -104,35 +104,25 @@ const TadkaShorts = () => {
 
   // Get YouTube thumbnail from video URL
   const getYouTubeThumbnail = (youtubeUrl) => {
-    if (!youtubeUrl) return null;
+    if (!youtubeUrl) return 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
     
-    // Extract video ID from various YouTube URL formats
     let videoId = null;
     
-    // Handle youtube.com/watch?v=VIDEO_ID
-    if (youtubeUrl.includes('youtube.com/watch')) {
-      const urlParams = new URLSearchParams(youtubeUrl.split('?')[1]);
-      videoId = urlParams.get('v');
-    }
-    // Handle youtu.be/VIDEO_ID
-    else if (youtubeUrl.includes('youtu.be/')) {
-      videoId = youtubeUrl.split('youtu.be/')[1].split('?')[0];
-    }
-    // Handle youtube.com/embed/VIDEO_ID
-    else if (youtubeUrl.includes('youtube.com/embed/')) {
-      videoId = youtubeUrl.split('embed/')[1].split('?')[0];
-    }
-    // Handle youtube.com/shorts/VIDEO_ID
-    else if (youtubeUrl.includes('youtube.com/shorts/')) {
-      videoId = youtubeUrl.split('shorts/')[1].split('?')[0];
+    // Handle different YouTube URL formats
+    if (youtubeUrl.includes('youtube.com/watch?v=')) {
+      videoId = youtubeUrl.split('v=')[1]?.split('&')[0];
+    } else if (youtubeUrl.includes('youtube.com/shorts/')) {
+      videoId = youtubeUrl.split('shorts/')[1]?.split('?')[0];
+    } else if (youtubeUrl.includes('youtu.be/')) {
+      videoId = youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    } else if (youtubeUrl.includes('youtube.com/embed/')) {
+      videoId = youtubeUrl.split('embed/')[1]?.split('?')[0];
     }
     
-    if (videoId) {
-      // Use maxresdefault for highest quality, fallback to hqdefault
-      return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-    }
-    
-    return null;
+    // Use hqdefault which is more reliable for shorts (480x360)
+    return videoId 
+      ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+      : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
   };
 
   // Filter options for the dropdown
