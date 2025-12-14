@@ -120,6 +120,7 @@ const Politics = () => {
 
   // Filter options for the dropdown
   const filterOptions = [
+    { value: 'latest', label: 'Latest' },
     { value: 'thisWeek', label: 'This Week' },
     { value: 'today', label: 'Today' },
     { value: 'yesterday', label: 'Yesterday' },
@@ -155,6 +156,8 @@ const Politics = () => {
       const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
       switch (filter) {
+        case 'latest':
+          return true; // Show all articles for "Latest" filter
         case 'thisWeek':
           // This week means current week (Monday to Sunday)
           const currentWeekStart = new Date(today);
@@ -200,7 +203,7 @@ const Politics = () => {
   // Get current filter label
   const getCurrentFilterLabel = () => {
     const option = filterOptions.find(opt => opt.value === selectedFilter);
-    return option ? option.label : 'This Week';
+    return option ? option.label : 'Latest';
   };
 
   const handleRelatedArticleClick = (article) => {
