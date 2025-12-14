@@ -23,7 +23,7 @@ const Politics = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using politics endpoint (fetch more articles for dedicated page)
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/politics?limit=50`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/politics?limit=20`);
         if (response.ok) {
           const data = await response.json();
           setStateArticles(data.state_politics || []);
