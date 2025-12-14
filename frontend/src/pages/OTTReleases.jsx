@@ -316,8 +316,9 @@ const OTTReleases = () => {
                     style={{ padding: '0.75rem' }}
                     onClick={() => handleReleaseClick(release)}
                   >
-                    <div className="flex items-start space-x-3 text-left pr-3">
-                      <div className="relative flex-shrink-0 w-40 h-24 rounded overflow-hidden border border-gray-300">
+                    <div className="flex items-start justify-between text-left">
+                      <div className="flex items-start space-x-3 flex-1">
+                        <div className="relative flex-shrink-0 w-40 h-24 rounded overflow-hidden border border-gray-300">
                         {(() => {
                           // Try to get YouTube thumbnail first
                           const youtubeThumbnail = getYouTubeThumbnail(release.youtube_url || release.trailer_url);
@@ -378,20 +379,31 @@ const OTTReleases = () => {
                                 ));
                               }
                               
-                              // Separate original and dubbed
+                              // Separate dubbed and original languages
                               const dubbedLangs = langs.filter(lang => lang !== originalLang);
+                              const originalLangs = langs.filter(lang => lang === originalLang);
                               
                               return (
                                 <>
                                   {dubbedLangs.map((lang, index) => (
                                     <div key={`dubbed-${index}`}>{lang} (Dubbed)</div>
                                   ))}
-                                  <div key="original">{originalLang}</div>
+                                  {originalLangs.map((lang, index) => (
+                                    <div key={`original-${index}`}>{lang} (Original)</div>
+                                  ))}
                                 </>
                               );
                             })()}
                           </div>
                         )}
+                      </div>
+                      </div>
+                      <div className="flex items-center space-x-2 ml-2">
+                        <div className="bg-gray-800 text-white px-2 py-1 rounded text-xs font-medium">
+                          {formatReleaseDate(release.release_date || release.published_at)}
+                        </div>
+                      </div>
+                    </div>
                         {release.ott_platform && (
                           <div className="mb-2">
                             <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
