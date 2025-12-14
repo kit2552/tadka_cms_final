@@ -436,7 +436,7 @@ const TrailersTeasers = () => {
                         )}
                         <div className="flex items-center justify-between text-xs text-gray-500">
                           <span>{article.author || 'Entertainment Desk'}</span>
-                          <span>{formatDate(article.publishedAt)}</span>
+                          <span>{formatDate(article.publishedAt || article.published_at)}</span>
                         </div>
                       </div>
                     </div>
