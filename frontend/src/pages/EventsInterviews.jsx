@@ -414,35 +414,39 @@ const EventsInterviews = () => {
               </div>
             </div>
 
-            {/* Articles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            {/* Articles Grid - Horizontal Cards like Home Page */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
               {filteredArticles.length > 0 ? (
-                filteredArticles.map((article) => (
-                  <div 
-                    key={article.id} 
-                    className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
-                    style={{ padding: '0.5rem' }}
-                    onClick={() => handleArticleClick(article)}
-                  >
-                    <div className="flex items-start space-x-3 text-left pr-3">
-                      <img
-                        src={article.image_url || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=200&fit=crop'}
-                        alt={article.title}
-                        className="flex-shrink-0 w-32 h-24 object-cover rounded group-hover:scale-105 transition-transform duration-200"
-                      />
-                      <div className="flex-1 min-w-0 text-left">
-                        <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
-                          {article.title}
-                        </h3>
-                        <div className="text-xs text-gray-500 text-left">
-                          <p className="mb-1">
-                            {formatDate(article.published_at || article.publishedAt)}
-                          </p>
+                filteredArticles.map((article) => {
+                  const youtubeThumbnail = getYouTubeThumbnail(article.video_url || article.youtube_url);
+                  
+                  return (
+                    <div
+                      key={article.id}
+                      className="cursor-pointer"
+                      onClick={() => handleArticleClick(article)}
+                    >
+                      <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                        <div className="relative">
+                          <img
+                            src={youtubeThumbnail || article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
+                            alt={article.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            style={{ width: '100%', height: '135px' }}
+                            onError={(e) => {
+                              e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+                            }}
+                          />
+                        </div>
+                        <div className="p-3 text-left">
+                          <h3 style={{fontSize: '13px', fontWeight: '600', lineHeight: '1.4', wordWrap: 'break-word'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
+                            {article.title}
+                          </h3>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <div className="col-span-2 text-center py-12">
                   <div className="text-6xl mb-4">🎤</div>
