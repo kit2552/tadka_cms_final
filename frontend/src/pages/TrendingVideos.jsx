@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const TrendingVideos = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('trending-videos'); // 'trending-videos' or 'bollywood'
@@ -13,7 +14,7 @@ const TrendingVideos = () => {
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState('thisWeek');
+  const [selectedFilter, setSelectedFilter] = useState('latest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredArticles, setFilteredArticles] = useState([]);
 
@@ -69,17 +70,29 @@ const TrendingVideos = () => {
     fetchTrendingVideosData();
   }, []);
 
+  // Scroll restoration logic
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('trendingVideosScrollPosition');
+    
+    if (savedScrollPosition && location.state?.fromDetail) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+
+    if (location.state?.fromDetail) {
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   // Update filtered articles when tab or filter changes
   useEffect(() => {
     const currentArticles = activeTab === 'bollywood' ? bollywoodArticles : trendingVideosArticles;
     const filtered = filterArticlesByDate(currentArticles, selectedFilter);
     setFilteredArticles(filtered);
   }, [trendingVideosArticles, bollywoodArticles, activeTab, selectedFilter]);
-
-  // Auto scroll to top when page loads
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   // Sample thumbnail images for related topics
   const getThumbnail = (index) => {
@@ -105,6 +118,7 @@ const TrendingVideos = () => {
 
   // Filter options for the dropdown
   const filterOptions = [
+    { value: 'latest', label: 'Latest' },
     { value: 'thisWeek', label: 'This Week' },
     { value: 'today', label: 'Today' },
     { value: 'yesterday', label: 'Yesterday' },
@@ -121,8 +135,8 @@ const TrendingVideos = () => {
       return [];
     }
 
-    // Use mock date as "today" to match current date (June 30, 2026)
-    const now = new Date('2026-06-30T23:59:59Z');
+    // Use current date for filtering
+    const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
     const filtered = articles.filter((article) => {
@@ -140,6 +154,8 @@ const TrendingVideos = () => {
       const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
       switch (filter) {
+        case 'latest':
+          return true; // Show all articles for "Latest" filter
         case 'thisWeek':
           // This week means current week (Monday to Sunday)
           const currentWeekStart = new Date(today);
@@ -185,7 +201,7 @@ const TrendingVideos = () => {
   // Get current filter label
   const getCurrentFilterLabel = () => {
     const option = filterOptions.find(opt => opt.value === selectedFilter);
-    return option ? option.label : 'This Week';
+    return option ? option.label : 'Latest';
   };
 
   const handleRelatedArticleClick = (article) => {
@@ -194,13 +210,29 @@ const TrendingVideos = () => {
   };
 
   const handleArticleClick = (article) => {
-    // Navigate to video view page for video content type articles
-    if (article.content_type === 'video' || article.youtube_url) {
-      navigate(`/video/${article.id}`);
+    // Save current scroll position before navigating
+    sessionStorage.setItem('trendingVideosScrollPosition', window.scrollY.toString());
+    
+    // Route to video page for video content types, otherwise to article page
+    if (article.content_type === 'video' || article.content_type === 'video_post' || article.youtube_url) {
+      navigate(`/video/${article.id}`, { state: { from: 'trending-videos' } });
     } else {
-      // Navigate to regular article page for non-video articles
-      navigate(`/article/${article.id}`);
+      const slug = article.slug || article.title.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/article/${article.id}/${slug}`, { state: { from: 'trending-videos' } });
     }
+  };
+
+  // Get YouTube thumbnail from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    const videoId = youtubeUrl.includes('youtube.com/watch?v=') 
+      ? youtubeUrl.split('v=')[1]?.split('&')[0]
+      : youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    
+    return videoId 
+      ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+      : null;
   };
 
   const formatDate = (dateString) => {
@@ -224,17 +256,6 @@ const TrendingVideos = () => {
 
   const themeClasses = lightThemeClasses;
 
-  if (loading) {
-    return (
-      <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className={`text-lg font-medium ${themeClasses.textPrimary}`}>Loading Trending Videos...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
@@ -254,7 +275,20 @@ const TrendingVideos = () => {
   }
 
   return (
-    <div className={`min-h-screen ${themeClasses.pageBackground}`}>
+    <>
+      {/* Loading Modal */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl px-4 py-3">
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+              <p className="text-sm font-medium text-gray-700">Loading...</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div className={`min-h-screen ${themeClasses.pageBackground}`}>
       {/* Main Container */}
       <div className="max-w-5xl-plus mx-auto px-8 pb-6">
         
@@ -346,35 +380,53 @@ const TrendingVideos = () => {
               </div>
             </div>
 
-            {/* Articles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              {filteredArticles.map((article) => (
-                <div 
-                  key={article.id} 
-                  className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
-                  style={{ padding: '0.5rem' }}
+            {/* Articles Grid - YouTube Thumbnail Style */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredArticles.map((article, index) => (
+                <div
+                  key={article.id}
                   onClick={() => handleArticleClick(article)}
+                  className="cursor-pointer"
                 >
-                  <div className="flex items-start space-x-3 text-left pr-3">
-                    <img
-                      src={article.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=200&fit=crop'}
-                      alt={article.title}
-                      className="flex-shrink-0 w-32 h-24 object-cover rounded group-hover:scale-105 transition-transform duration-200"
-                    />
-                    <div className="flex-1 min-w-0 text-left">
-                      <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
-                        {article.title}
-                      </h3>
-                      <div className="text-xs text-gray-500 text-left">
-                        <p className="mb-1">
-                          {formatDate(article.published_at || article.publishedAt)}
-                        </p>
+                  <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group">
+                    <div className="relative">
+                      <img
+                        src={article.youtube_url ? getYouTubeThumbnail(article.youtube_url) : (article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
+                        alt={article.title}
+                        className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                        style={{ aspectRatio: '16/9' }}
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+                        }}
+                      />
+                      
+                      {/* Title Overlay with Black Transparent Banner */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
+                        <div className="flex items-center justify-center gap-1">
+                          {/* Small play icon with white circle before title for videos */}
+                          {article.youtube_url && (
+                            <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="10" fill="none" stroke="white" strokeWidth="2"/>
+                              <path d="M10 8l6 4-6 4V8z" fill="white"/>
+                            </svg>
+                          )}
+                          <h3 className="text-white font-bold text-xs leading-tight line-clamp-2 text-center">
+                            {article.title}
+                          </h3>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+
+            {filteredArticles.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-400 mb-1">No {activeTab === 'trending-videos' ? 'trending videos' : 'bollywood videos'} found</p>
+                <p className="text-xs text-gray-400">Try selecting a different time period</p>
+              </div>
+            )}
           </div>
 
           {/* Related Articles Section - 30% width */}
@@ -433,6 +485,7 @@ const TrendingVideos = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
