@@ -320,7 +320,7 @@ const TadkaPics = () => {
             {/* Tadka Pics Section - 80% width */}
             <div className="lg:w-[80%] -mt-1">
               {/* Section Header - Sticky with filter */}
-              <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+              <div className={`sticky top-[63px] z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
                 <div className="pl-0 pr-4 py-4">
                   <div className="mb-2">
                     <h2 className="text-base font-bold text-black text-left leading-tight">
@@ -429,9 +429,9 @@ const TadkaPics = () => {
             </div>
 
             {/* Tadka Shorts Section - 20% width */}
-            <div className="lg:w-[20%] border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0">
+            <div className="lg:w-[20%] border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0 -mt-1">
               {/* Tadka Shorts Header */}
-              <div className={`sticky top-16 z-30 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+              <div className={`sticky top-[63px] z-30 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
                 <div className="pl-0 pr-4 py-4">
                   <div className="mb-2">
                     <h2 className="text-base font-bold text-black text-left leading-tight">
