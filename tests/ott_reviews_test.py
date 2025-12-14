@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://cms-upgrade-2.preview.emergentagent.com"
+BACKEND_URL = "https://cmsupgrader.preview.emergentagent.com"
 
 def test_ott_movie_reviews_endpoint():
     """Test the OTT Movie Reviews API endpoint"""
