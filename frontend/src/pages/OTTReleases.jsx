@@ -133,6 +133,15 @@ const OTTReleases = () => {
     });
   };
 
+  const formatReleaseDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric'
+    });
+  };
+
   // Get YouTube thumbnail from video URL
   const getYouTubeThumbnail = (youtubeUrl) => {
     if (!youtubeUrl) return null;
