@@ -60,6 +60,7 @@ import AdminControls from "./components/CMS/AdminControls";
 import ArticlePreview from "./components/CMS/ArticlePreview";
 import Topics from "./pages/Topics";
 import TopicDetail from "./pages/TopicDetail";
+import NRIWorldNews from "./pages/NRIWorldNews";
 
 function App() {
   const [layoutEditMode, setLayoutEditMode] = useState(false);
