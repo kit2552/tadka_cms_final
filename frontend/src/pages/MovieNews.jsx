@@ -335,6 +335,7 @@ const MovieNews = () => {
             <div className="sticky top-16 z-30 border-b-2 border-gray-300 mb-3" style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
                 <h2 className="text-base font-bold text-black">Related Posts</h2>
+                <p className="text-xs text-gray-600 mt-1">Content you may like</p>
               </div>
             </div>
 
