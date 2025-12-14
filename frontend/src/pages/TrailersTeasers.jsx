@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const TrailersTeasers = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('trailers'); // 'trailers' or 'bollywood'
   const [trailersArticles, setTrailersArticles] = useState([]);
   const [bollywoodArticles, setBollywoodArticles] = useState([]);
   const [relatedArticles, setRelatedArticles] = useState([]);
-  const [loading, setLoading] = useState(false); // Start with false to show sample data immediately
+  const [loading, setLoading] = useState(true); // Start with true to show loading modal
   const [error, setError] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('latest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
