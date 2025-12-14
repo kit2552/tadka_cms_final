@@ -108,8 +108,8 @@ const TVRealityShows = () => {
         
         setError(null);
       } catch (err) {
-        console.error('Error loading events interviews data:', err);
-        setError('Failed to load events & interviews. Please try again later.');
+        console.error('Error loading reality shows data:', err);
+        setError('Failed to load reality shows. Please try again later.');
       } finally {
         setLoading(false);
       }
