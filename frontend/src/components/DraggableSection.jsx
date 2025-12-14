@@ -101,7 +101,7 @@ const DraggableSection = ({
           <button
             onClick={handleMoveUp}
             disabled={!canMoveUp}
-            className={`p-2 rounded-lg shadow-lg transition-all duration-200 pointer-events-auto ${
+            className={`p-2 rounded-lg shadow-lg transition-all duration-200 ${
               canMoveUp 
                 ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-50' 
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -117,7 +117,7 @@ const DraggableSection = ({
           <button
             onClick={handleMoveDown}
             disabled={!canMoveDown}
-            className={`p-2 rounded-lg shadow-lg transition-all duration-200 pointer-events-auto ${
+            className={`p-2 rounded-lg shadow-lg transition-all duration-200 ${
               canMoveDown 
                 ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-50' 
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
