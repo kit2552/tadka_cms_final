@@ -143,7 +143,7 @@ function App() {
               <Route path="/movie-schedules" element={<MovieSchedules />} />
               <Route path="/ott-releases" element={<OTTReleases />} />
               <Route path="/new-video-songs" element={<NewVideoSongs />} />
-              <Route path="/tv-shows" element={<TVShows />} />
+              <Route path="/tv-spotlight" element={<TVSpotlight />} />
               <Route path="/events-interviews" element={<EventsInterviews />} />
               <Route path="/ott-reviews" element={<OTTReviews />} />
               <Route path="/about-us" element={<AboutUs />} />
