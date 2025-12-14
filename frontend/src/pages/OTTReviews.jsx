@@ -244,7 +244,7 @@ const OTTReviews = () => {
   // Get current filter label
   const getCurrentFilterLabel = () => {
     const option = filterOptions.find(opt => opt.value === selectedFilter);
-    return option ? option.label : 'This Week';
+    return option ? option.label : 'Latest';
   };
 
   const handleRelatedArticleClick = (article) => {
@@ -253,8 +253,16 @@ const OTTReviews = () => {
   };
 
   const handleArticleClick = (article) => {
-    // Navigate to article page
-    navigate(`/article/${article.id}`);
+    // Save current scroll position before navigating
+    sessionStorage.setItem('ottReviewsScrollPosition', window.scrollY.toString());
+    
+    // Route to video page for video content types, otherwise to article page
+    if (article.content_type === 'video' || article.content_type === 'video_post') {
+      navigate(`/video/${article.id}`, { state: { from: 'ott-reviews' } });
+    } else {
+      const slug = article.slug || article.title.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/article/${article.id}/${slug}`, { state: { from: 'ott-reviews' } });
+    }
   };
 
   const formatDate = (dateString) => {
