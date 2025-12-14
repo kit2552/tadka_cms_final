@@ -48,7 +48,7 @@ const TVSpotlight = () => {
           setBollywoodArticles(tvShowsData.bollywood || []);
         } else {
           // Fallback: try individual category endpoints
-          const tvResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tv-shows?limit=50`);
+          const tvResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tv-shows?limit=20`);
           if (tvResponse.ok) {
             const tvData = await tvResponse.json();
             setTvArticles(tvData);
