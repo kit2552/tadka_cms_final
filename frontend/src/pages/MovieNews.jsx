@@ -327,7 +327,7 @@ const MovieNews = () => {
           </div>
 
           {/* Related Posts Sidebar - 30% width */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 pt-1">
             {/* Related Posts Sticky Header */}
             <div className="sticky top-16 z-30 border-b-2 border-gray-300 mb-3" style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
