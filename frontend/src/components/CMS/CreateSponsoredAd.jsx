@@ -1760,7 +1760,7 @@ const CreateSponsoredAd = ({ onClose }) => {
                             ? 'Sponsored Ad' 
                             : (formData.ad_type === 'landing_home' || formData.ad_type === 'landing_inner')
                               ? 'Landing Page'
-                              : (showCategoryDropdown ? categorySearchQuery : (formData.category ? categories.find(cat => cat.slug === formData.category)?.name : ''))
+                              : (showCategoryDropdown ? categorySearchQuery : (formData.category ? (categories.find(cat => cat.slug === formData.category)?.name || formData.category) : ''))
                         }
                         onChange={(e) => {
                           const isLocked = formData.ad_type === 'sponsored_section' || formData.ad_type === 'landing_home' || formData.ad_type === 'landing_inner';
