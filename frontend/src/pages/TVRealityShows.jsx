@@ -258,7 +258,7 @@ const TVRealityShows = () => {
 
   const handleArticleClick = (article) => {
     // Save current scroll position before navigating
-    sessionStorage.setItem('eventsInterviewsScrollPosition', window.scrollY.toString());
+    sessionStorage.setItem('tvRealityShowsScrollPosition', window.scrollY.toString());
     
     // Route to video page for video content types, otherwise to article page
     if (article.content_type === 'video' || article.content_type === 'video_post' || article.youtube_url) {
