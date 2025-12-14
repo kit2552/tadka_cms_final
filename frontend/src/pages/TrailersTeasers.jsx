@@ -409,35 +409,42 @@ const TrailersTeasers = () => {
               </div>
             </div>
 
-            {/* Articles Grid */}
-            <div className="space-y-4">
+            {/* Articles Grid - YouTube Thumbnail Style */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {filteredArticles.map((article, index) => (
                 <div
                   key={article.id}
                   onClick={() => handleArticleClick(article)}
-                  className={`group cursor-pointer ${themeClasses.cardBackground} rounded-lg border ${themeClasses.border} overflow-hidden hover:shadow-lg transition-all duration-300`}
+                  className="cursor-pointer"
                 >
-                  <div className="p-4">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-20 h-16 bg-gradient-to-br from-red-500 to-purple-600 rounded-lg flex-shrink-0 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                          <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"/>
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className={`font-semibold ${themeClasses.textPrimary} group-hover:text-blue-600 transition-colors duration-200 leading-tight mb-2 text-left line-clamp-2`}>
+                  <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group">
+                    <div className="relative">
+                      <img
+                        src={article.youtube_url ? getYouTubeThumbnail(article.youtube_url) : (article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        style={{ width: '100%', height: '160px' }}
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+                        }}
+                      />
+                      
+                      {/* Play button overlay for videos */}
+                      {article.youtube_url && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="bg-black bg-opacity-60 rounded-full p-3">
+                            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Title Overlay with Black Transparent Banner */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
+                        <h3 className="text-white font-bold text-xs text-center leading-tight line-clamp-2">
                           {article.title}
                         </h3>
-                        {article.summary && (
-                          <p className={`text-sm ${themeClasses.textSecondary} line-clamp-2 mb-2 text-left`}>
-                            {article.summary}
-                          </p>
-                        )}
-                        <div className="flex items-center justify-between text-xs text-gray-500">
-                          <span>{article.author || 'Entertainment Desk'}</span>
-                          <span>{formatDate(article.publishedAt || article.published_at)}</span>
-                        </div>
                       </div>
                     </div>
                   </div>
