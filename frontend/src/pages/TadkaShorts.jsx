@@ -378,8 +378,7 @@ const TadkaShorts = () => {
             {/* Articles Grid - 4 Column Vertical Layout */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-8">
               {filteredArticles.map((article) => {
-                const galleryImage = getRandomGalleryImage(article);
-                const isVertical = isVerticalGallery(article);
+                const youtubeThumbnail = getYouTubeThumbnail(article.youtube_url);
                 
                 return (
                   <div
@@ -387,17 +386,27 @@ const TadkaShorts = () => {
                     className="cursor-pointer group transition-transform duration-300 hover:scale-105"
                     onClick={() => handleArticleClick(article)}
                   >
-                    <div className={`relative ${isVertical ? 'w-full h-56' : 'w-full h-48'} rounded-lg overflow-hidden border-2 border-gray-200 group-hover:border-gray-300 transition-colors duration-300`}>
+                    <div className="relative w-full h-56 rounded-lg overflow-hidden border-2 border-gray-200 group-hover:border-gray-300 transition-colors duration-300">
                       <img
-                        src={galleryImage || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&h=400&fit=crop'}
+                        src={youtubeThumbnail || article.image_url || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&h=400&fit=crop'}
                         alt={article.title}
-                        className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                        style={{ objectFit: 'cover', objectPosition: 'top' }}
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                        style={{ objectFit: 'cover', objectPosition: 'center' }}
                         loading="lazy"
                         onError={(e) => {
                           e.target.src = 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&h=400&fit=crop';
                         }}
                       />
+                      {/* Play icon overlay for YouTube videos */}
+                      {article.youtube_url && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="bg-black bg-opacity-60 rounded-full p-3 group-hover:bg-opacity-80 transition-all">
+                            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      )}
                       {/* Gradient overlay */}
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent h-16"></div>
                       {/* Title overlay */}
