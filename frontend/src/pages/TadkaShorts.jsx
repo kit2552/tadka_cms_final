@@ -53,16 +53,16 @@ const TadkaShorts = () => {
           setShortsArticles([]);
         }
 
-        const reelsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/reels?limit=20`);
-        console.log('Reels response status:', reelsResponse.status);
+        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tadka-shorts-bollywood?limit=20`);
+        console.log('Bollywood Tadka Shorts response status:', bollywoodResponse.status);
         
-        if (reelsResponse.ok) {
-          const reelsData = await reelsResponse.json();
-          console.log('Reels data received:', reelsData.length);
-          setReelsArticles(reelsData);
+        if (bollywoodResponse.ok) {
+          const bollywoodData = await bollywoodResponse.json();
+          console.log('Bollywood Tadka Shorts data received:', bollywoodData.length);
+          setBollywoodArticles(bollywoodData);
         } else {
-          console.log('Reels response not ok');
-          setReelsArticles([]);
+          console.log('Bollywood Tadka Shorts response not ok');
+          setBollywoodArticles([]);
         }
         
         // Get related articles
