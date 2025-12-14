@@ -834,8 +834,7 @@ const ArticlePage = () => {
                   }
                 `}</style>
                 <div className={`text-gray-900 leading-relaxed space-y-6 text-left`}>
-                  {/* For video content type, don't show main content - only video embed */}
-                  {/* Main Content is hidden for video types */}
+                  {/* For video content type, don't show main content - only video embed above is sufficient */}
 
                   {/* Social Media Embed */}
                   {article.social_media_type && article.social_media_embed && (
