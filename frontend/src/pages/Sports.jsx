@@ -204,7 +204,7 @@ const Sports = () => {
   // Get current filter label
   const getCurrentFilterLabel = () => {
     const option = filterOptions.find(opt => opt.value === selectedFilter);
-    return option ? option.label : 'This Week';
+    return option ? option.label : 'Latest';
   };
 
   const handleRelatedArticleClick = (article) => {
