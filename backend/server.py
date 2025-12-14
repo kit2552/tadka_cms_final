@@ -269,6 +269,7 @@ async def get_articles_by_category(category_slug: str, skip: int = 0, limit: int
             "short_title": article.get("short_title"),
             "summary": article.get("summary"),
             "image_url": article.get("image"),
+            "youtube_url": article.get("youtube_url"),
             "author": article.get("author"),
             "language": article.get("article_language", article.get("language", "en")),
             "category": article.get("category"),
