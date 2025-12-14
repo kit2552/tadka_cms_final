@@ -11,6 +11,7 @@ import { DragDropProvider } from "./contexts/DragDropContext";
 import Home from "./pages/Home";
 import Politics from "./pages/Politics";
 import Movies from "./pages/Movies";
+import MovieNews from "./pages/MovieNews";
 import Sports from "./pages/Sports";
 import Reviews from "./pages/Reviews";
 import TrendingVideos from "./pages/TrendingVideos";
