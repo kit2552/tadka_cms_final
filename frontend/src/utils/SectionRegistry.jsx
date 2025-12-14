@@ -199,7 +199,7 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
     // iPad Row: Global Videos + Travel Pics
     'viral-travel-row': {
       id: 'viral-travel-row',
-      name: 'Global Videos & Travel Pics & Box Office Row',
+      name: 'NRI News & Travel Pics & Box Office Row',
       component: (
         <div className="max-w-5xl-plus mx-auto px-8 pt-0 pb-2 -mb-4">
           <div className={`grid gap-4 ${isIpad ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 lg:grid-cols-3'}`}>
@@ -210,9 +210,8 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
               />
             </div>
             <div>
-              <Fashion 
-                fashionTravelData={data.fashionTravelData}
-                hotTopicsData={data.hotTopicsData}
+              <TravelPics 
+                tadkaPicsData={data.tadkaPicsData}
                 onArticleClick={handlers.handleArticleClick}
               />
             </div>
