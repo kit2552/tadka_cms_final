@@ -743,13 +743,28 @@ async def get_trailers_articles(limit: int = 4, db = Depends(get_db)):
     return articles
 
 @api_router.get("/articles/sections/sponsored-ads")
-async def get_sponsored_ads(limit: int = 4, db = Depends(get_db)):
-    """Get sponsored ads for homepage"""
-    ads = list(db[crud.ARTICLES].find({
+async def get_sponsored_ads(limit: int = 4, states: str = None, db = Depends(get_db)):
+    """Get sponsored ads for homepage filtered by state"""
+    # Parse state codes from query parameter
+    state_codes = []
+    if states:
+        state_codes = [s.strip().lower() for s in states.split(',') if s.strip()]
+    else:
+        # Default state codes (Telangana and Andhra Pradesh)
+        state_codes = ['ts', 'ap']
+    
+    # Build query with state filtering
+    query = {
         "ad_type": "Ad in Sponsored Section",
         "category": "Sponsored Ad",
-        "is_published": True
-    }, {"_id": 0}).sort("created_at", -1).limit(limit))
+        "is_published": True,
+        "$or": [
+            {"states": {"$regex": state, "$options": "i"}} 
+            for state in (state_codes + ["all"])
+        ]
+    }
+    
+    ads = list(db[crud.ARTICLES].find(query, {"_id": 0}).sort("created_at", -1).limit(limit))
     
     return crud.serialize_doc(ads)
 
