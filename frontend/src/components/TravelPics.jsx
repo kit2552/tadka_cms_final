@@ -112,20 +112,23 @@ const TravelPics = ({ tadkaPicsData = {}, onArticleClick }) => {
                     <img
                       src={getRandomGalleryImage(review)}
                       alt={review.title}
-                      className="w-20 h-28 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                      className="w-20 h-28 object-cover object-top border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                      style={{ objectFit: 'cover', objectPosition: 'top' }}
                       loading="lazy"
                       onError={(e) => {
                         e.target.style.display = 'none';
                       }}
                     />
                   ) : (
-                    <ArticleImage
+                    <img
                       src={getRandomGalleryImage(review)}
                       alt={review.title}
-                      width="w-20"
-                      height="h-16"
-                      className="object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
-                      contentType={activeTab === 'travel-pics' ? 'travel-pics' : 'photoshoots'}
+                      className="w-20 h-16 object-cover object-top border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                      style={{ objectFit: 'cover', objectPosition: 'top' }}
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
                     />
                   )}
                 </div>
