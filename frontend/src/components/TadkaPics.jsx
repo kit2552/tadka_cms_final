@@ -229,7 +229,7 @@ const TadkaPics = ({ images, onImageClick }) => {
         <div className={`${getSectionHeaderClasses().containerClass} px-3 py-2 border rounded-lg text-left mb-1 flex items-center justify-between relative`}>
           <h3 className={`${getSectionHeaderClasses().textClass}`} style={{fontSize: '14px', fontWeight: '500'}}>{t('sections.tadka_pics', 'Tadka Pics')}</h3>
           <Link 
-            to="/top-insta-pics" 
+            to="/tadka-shorts" 
             className={`group flex items-center justify-center text-xs ${getSectionHeaderClasses().moreButtonClass} transition-colors duration-200 absolute top-1/2 transform -translate-y-1/2 right-4`}
           >
             <svg 
