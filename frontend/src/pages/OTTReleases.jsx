@@ -313,11 +313,11 @@ const OTTReleases = () => {
                   <div 
                     key={release.id} 
                     className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
-                    style={{ padding: '0.5rem' }}
+                    style={{ padding: '0.75rem' }}
                     onClick={() => handleReleaseClick(release)}
                   >
                     <div className="flex items-start space-x-3 text-left pr-3">
-                      <div className="relative flex-shrink-0 w-32 h-20 rounded overflow-hidden border border-gray-300">
+                      <div className="relative flex-shrink-0 w-40 h-24 rounded overflow-hidden border border-gray-300">
                         {(() => {
                           // Try to get YouTube thumbnail first
                           const youtubeThumbnail = getYouTubeThumbnail(release.youtube_url || release.trailer_url);
