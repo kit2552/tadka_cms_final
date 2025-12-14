@@ -92,7 +92,7 @@ const DraggableSection = ({
       }}
     >
       {/* Up/Down Arrow Controls - positioned at the rightmost section border, not window border */}
-      <div className={`absolute top-2 z-50 transition-opacity duration-200 flex flex-col space-y-2 pointer-events-auto ${layoutEditMode ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+      <div className={`absolute top-2 z-50 transition-opacity duration-200 flex flex-col space-y-2 ${layoutEditMode ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} 
            style={{ 
              right: 'calc(50vw - min(640px, 50vw) + 2rem + 4px)' // Positions at right edge of max-w-5xl + px-8 container + small offset
            }}>
