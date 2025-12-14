@@ -849,6 +849,13 @@ async def get_travel_pics_articles(limit: int = 4, db = Depends(get_db)):
     
     return articles
 
+# Galleries API Endpoints
+@api_router.get("/galleries/tadka-pics")
+async def get_tadka_pics_galleries_endpoint(limit: int = 20, db = Depends(get_db)):
+    """Get Tadka Pics galleries for homepage and Tadka Pics page"""
+    galleries = crud.get_tadka_pics_galleries(db, limit=limit)
+    return galleries
+
 # Helper function removed - crud functions now return properly serialized data
 
 # CMS API Endpoints
