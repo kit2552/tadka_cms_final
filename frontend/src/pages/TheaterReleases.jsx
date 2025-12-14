@@ -77,23 +77,23 @@ const TheaterReleases = () => {
           const ottRegionalData = await ottRegionalResponse.json();
           console.log('Theater Releases fetched:', ottRegionalData);
           
-          // Extract OTT releases (combine this_week and coming_soon)
-          const ottData = ottRegionalData.ott || {};
-          const ottThisWeek = ottData.this_week || [];
-          const ottComingSoon = ottData.coming_soon || [];
-          setOttReleases([...ottThisWeek, ...ottComingSoon]);
+          // Extract Theater releases (combine this_week and coming_soon)
+          const theaterData = ottRegionalData.theater || {};
+          const theaterThisWeek = theaterData.this_week || [];
+          const theaterComingSoon = theaterData.coming_soon || [];
+          setTheaterReleases([...theaterThisWeek, ...theaterComingSoon]);
           
-          // Extract Regional releases (combine this_week and coming_soon)
-          const regionalData = ottRegionalData.regional || {};
-          const regionalThisWeek = regionalData.this_week || [];
-          const regionalComingSoon = regionalData.coming_soon || [];
-          setRegionalReleases([...regionalThisWeek, ...regionalComingSoon]);
+          // Extract Bollywood/Regional releases (combine this_week and coming_soon)
+          const bollywoodData = ottRegionalData.bollywood || {};
+          const bollywoodThisWeek = bollywoodData.this_week || [];
+          const bollywoodComingSoon = bollywoodData.coming_soon || [];
+          setRegionalReleases([...bollywoodThisWeek, ...bollywoodComingSoon]);
         } else {
           // Fallback: try individual endpoints
-          const ottResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-ott/page?release_type=ott&filter_type=${selectedFilter}&limit=50`);
-          if (ottResponse.ok) {
-            const ottData = await ottResponse.json();
-            setOttReleases(ottData);
+          const theaterResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-ott/page?release_type=theater&filter_type=${selectedFilter}&limit=50`);
+          if (theaterResponse.ok) {
+            const theaterData = await theaterResponse.json();
+            setTheaterReleases(theaterData);
           }
 
           const regionalResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/articles/category/regional?limit=50`);
