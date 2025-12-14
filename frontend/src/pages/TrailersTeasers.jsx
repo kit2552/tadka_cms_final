@@ -283,6 +283,19 @@ const TrailersTeasers = () => {
     });
   };
 
+  // Get YouTube thumbnail from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    const videoId = youtubeUrl.includes('youtube.com/watch?v=') 
+      ? youtubeUrl.split('v=')[1]?.split('&')[0]
+      : youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    
+    return videoId 
+      ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+      : null;
+  };
+
   // Force light theme for content areas regardless of user's theme selection
   const lightThemeClasses = {
     pageBackground: 'bg-gray-50',
