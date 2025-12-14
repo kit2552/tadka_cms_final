@@ -40,8 +40,8 @@ const TVRealityShows = () => {
       try {
         setLoading(true);
         
-        // Fetch articles from the backend API using tv-reality-shows and tv-reality-shows-hindi categories
-        const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tv-reality-shows?limit=20`);
+        // Fetch articles from the backend API using big-boss and big-boss-bollywood categories (same as home page)
+        const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/big-boss?limit=20`);
         console.log('TV Reality Shows response status:', realityShowsResponse.status);
         
         if (realityShowsResponse.ok) {
@@ -53,7 +53,7 @@ const TVRealityShows = () => {
           setRealityShowsArticles([]);
         }
 
-        const hindiResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tv-reality-shows-hindi?limit=20`);
+        const hindiResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/big-boss-bollywood?limit=20`);
         console.log('Hindi Reality Shows response status:', hindiResponse.status);
         
         if (hindiResponse.ok) {
