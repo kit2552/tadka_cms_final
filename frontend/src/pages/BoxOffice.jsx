@@ -415,29 +415,31 @@ const BoxOffice = () => {
                     <div
                       key={article.id || index}
                       onClick={() => handleArticleClick(article)}
-                      className={`group cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-4 border-b border-gray-200 last:border-b-0`}
+                      className={`group cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-2 ${
+                        index < relatedArticles.length - 1 ? 'border-b border-gray-200' : ''
+                      }`}
                     >
                       <div className="flex space-x-3">
-                        <div className="w-16 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded flex-shrink-0 flex items-center justify-center">
-                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd"/>
-                          </svg>
-                        </div>
+                        <img
+                          src={article.image_url || 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=60&h=45&fit=crop'}
+                          alt={article.title}
+                          className="w-20 h-16 object-cover rounded flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
+                        />
                         <div className="flex-1 min-w-0 text-left">
                           <h4 className={`font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200 leading-tight mb-2 text-left line-clamp-2`} style={{ fontSize: '0.9rem' }}>
                             {article.title}
                           </h4>
                           <p className={`text-xs text-gray-600 text-left`}>
-                            {formatDate(article.publishedAt)}
+                            {formatDate(article.published_at || article.publishedAt)}
                           </p>
                         </div>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <p className={`text-gray-600 text-sm text-left p-4`}>
-                    No related posts found
-                  </p>
+                  <div className="text-center py-8">
+                    <p className="text-sm text-gray-400">No related posts found</p>
+                  </div>
                 )}
               </div>
             </div>
