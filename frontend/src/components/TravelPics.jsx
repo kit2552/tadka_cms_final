@@ -143,16 +143,8 @@ const TravelPics = ({ tadkaPicsData = {}, onArticleClick }) => {
       {/* More Button Overlay - Square with Rounded Corners */}
       <div className="absolute bottom-2 right-2 z-10 pointer-events-none">
         <div className="pointer-events-auto">
-          <button 
-            onClick={() => {
-              // Save current scroll position
-              const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-              sessionStorage.setItem('homePageScrollPosition', currentScroll.toString());
-              console.log(`[SCROLL] Travel Pics More button - saved scroll: ${currentScroll}`);
-              
-              // Navigate to the page
-              window.location.href = '/gallery-posts';
-            }}
+          <Link 
+            to="/travel-pics-photoshoots"
             className="group inline-flex items-center justify-center w-8 h-8 bg-white bg-opacity-95 hover:bg-opacity-100 rounded border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-xl"
           >
             <svg 
