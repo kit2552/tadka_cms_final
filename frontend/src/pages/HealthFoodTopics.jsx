@@ -47,7 +47,7 @@ const HealthFoodTopics = () => {
           setHealthArticles(healthData);
         }
 
-        const foodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/food?limit=50`);
+        const foodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/food?limit=20`);
         if (foodResponse.ok) {
           const foodData = await foodResponse.json();
           setFoodArticles(foodData);
