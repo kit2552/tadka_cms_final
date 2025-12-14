@@ -165,7 +165,7 @@ const SponsoredAds = ({
                     )}
                     
                     {/* Video indicator for YouTube content */}
-                    {ad.content_type === 'video_post' && ad.youtube_url && (
+                    {(ad.content_type === 'video' || ad.content_type === 'video_post') && ad.youtube_url && (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="bg-black bg-opacity-60 rounded-full p-3">
                           <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -188,7 +188,8 @@ const SponsoredAds = ({
                     <h2 className="text-sm font-semibold text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-200 mb-1">
                       {ad.title}
                     </h2>
-                    {ad.summary && (
+                    {/* Don't show summary text for video content types */}
+                    {ad.summary && ad.content_type !== 'video' && ad.content_type !== 'video_post' && (
                       <p className="text-xs text-gray-600 line-clamp-2">
                         {ad.summary}
                       </p>
