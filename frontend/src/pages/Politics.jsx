@@ -6,7 +6,6 @@ import { useLanguage } from '../contexts/LanguageContext';
 const Politics = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('state'); // 'state' or 'national'
