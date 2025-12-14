@@ -103,28 +103,58 @@ const TravelPicsPhotoshoots = () => {
 
   // Helper function to get random image from gallery
   const getRandomGalleryImage = (article) => {
+    // Debug: log article structure
+    if (!article.gallery) {
+      console.log('Article has no gallery:', article.title, 'Using image_url:', article.image_url);
+      return article.image_url || article.image || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop';
+    }
+
     // Check if article has gallery with images
     if (article.gallery && article.gallery.images) {
       try {
-        const images = Array.isArray(article.gallery.images) 
-          ? article.gallery.images 
-          : (typeof article.gallery.images === 'string' ? JSON.parse(article.gallery.images) : []);
+        let images = article.gallery.images;
+        
+        // Handle different image data formats
+        if (typeof images === 'string') {
+          images = JSON.parse(images);
+        }
+        
+        // Ensure images is an array
+        if (!Array.isArray(images)) {
+          console.log('Gallery images is not an array:', typeof images);
+          return article.image_url || article.image || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop';
+        }
         
         if (images.length > 0) {
           const randomIndex = Math.floor(Math.random() * images.length);
           const randomImage = images[randomIndex];
-          const imageUrl = randomImage.url || randomImage.data || randomImage;
-          console.log('Using random gallery image:', imageUrl);
+          
+          // Handle different image object structures
+          let imageUrl;
+          if (typeof randomImage === 'string') {
+            imageUrl = randomImage;
+          } else if (randomImage.url) {
+            imageUrl = randomImage.url;
+          } else if (randomImage.data) {
+            imageUrl = randomImage.data;
+          } else {
+            console.log('Unknown image format:', randomImage);
+            imageUrl = article.image_url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop';
+          }
+          
+          console.log('Selected random gallery image:', imageUrl, 'from', images.length, 'images');
           return imageUrl;
+        } else {
+          console.log('Gallery has no images');
         }
       } catch (error) {
-        console.error('Error parsing gallery images:', error);
+        console.error('Error parsing gallery images for', article.title, ':', error);
       }
     }
     
     // Fallback to article image
     const fallbackImage = article.image_url || article.image || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop';
-    console.log('Using fallback image:', fallbackImage);
+    console.log('Using fallback image for', article.title, ':', fallbackImage);
     return fallbackImage;
   };
 
