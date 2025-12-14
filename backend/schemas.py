@@ -374,6 +374,7 @@ class ArticleListResponse(BaseModel):
     category: str
     content_type: Optional[str] = "post"  # Add content_type field
     artists: Optional[str] = None  # Add artists field
+    movie_rating: Optional[str] = None  # Add movie_rating field
     states: Optional[str] = None  # Add states field
     gallery: Optional[GalleryInfo] = None  # Add gallery field
     gallery_id: Optional[int] = None  # Add gallery_id field
