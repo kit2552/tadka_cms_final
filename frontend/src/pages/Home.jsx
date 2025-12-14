@@ -275,6 +275,13 @@ const Home = ({ layoutEditMode = false, onLayoutSave }) => {
       return;
     }
     
+    // Check if this is a video article (video content type)
+    if (article.content_type === 'video' || article.content_type === 'video_post') {
+      console.log(`[VIDEO] Navigating to video page: ${article.title}`);
+      navigate(`/video/${article.id}`);
+      return;
+    }
+    
     // Create SEO-friendly URL and navigate
     const seoUrl = createSEOArticleURL(article.id, article.title, section);
     console.log(`[SEO] Navigating to SEO URL: ${seoUrl}`);
