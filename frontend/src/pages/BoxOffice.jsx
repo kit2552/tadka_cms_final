@@ -42,7 +42,7 @@ const BoxOffice = () => {
         console.log('Fetching box office data...');
         
         // Fetch articles from the backend API using box office categories
-        const boxOfficeResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/box-office?limit=50`);
+        const boxOfficeResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/box-office?limit=20`);
         console.log('Box Office response status:', boxOfficeResponse.status);
         
         if (boxOfficeResponse.ok) {
@@ -54,7 +54,7 @@ const BoxOffice = () => {
           setBoxOfficeArticles([]);
         }
 
-        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood-box-office?limit=50`);
+        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood-box-office?limit=20`);
         console.log('Bollywood response status:', bollywoodResponse.status);
         
         if (bollywoodResponse.ok) {
