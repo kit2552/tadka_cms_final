@@ -41,7 +41,7 @@ const FashionTravelTopics = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using fashion and travel categories
-        const fashionResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/fashion?limit=50`);
+        const fashionResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/fashion?limit=20`);
         if (fashionResponse.ok) {
           const fashionData = await fashionResponse.json();
           setFashionArticles(fashionData);
