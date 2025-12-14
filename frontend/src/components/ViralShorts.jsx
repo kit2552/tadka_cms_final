@@ -77,9 +77,9 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
               ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
               : getSectionHeaderClasses().unselectedTabClass
           }`}
-          style={{fontSize: '14px', fontWeight: '500'}}
+          style={{fontSize: '14px', fontWeight: '600'}}
         >
-          {t('sections.viral_shorts', 'Viral Shorts')}
+          {t('sections.viral_shorts', 'Tadka Shorts')}
         </button>
         <button
           onClick={() => setActiveTab('bollywood')}
@@ -88,7 +88,7 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
               ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
               : getSectionHeaderClasses().unselectedTabClass
           }`}
-          style={{fontSize: '14px', fontWeight: '500'}}
+          style={{fontSize: '14px', fontWeight: '600'}}
         >
           {t('sections.bollywood', 'Bollywood')}
         </button>
