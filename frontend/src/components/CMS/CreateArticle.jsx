@@ -1841,18 +1841,34 @@ const CreateArticle = () => {
                   </div>
 
                   <div className="relative">
-                    <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Target States</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Target States *</label>
                     
-                    {/* Display Selected State */}
-                    {selectedStates.length > 0 && selectedStates[0] && (
-                      <div className="mb-2 text-left">
-                        <span className="inline-flex items-center px-3 py-1 rounded text-sm font-medium bg-blue-100 text-blue-800">
-                          {states.find(s => s.code === selectedStates[0])?.name || selectedStates[0]}
-                        </span>
+                    {/* Display Selected States */}
+                    {selectedStates.length > 0 && (
+                      <div className="mb-2 text-left flex flex-wrap gap-2">
+                        {selectedStates.map((stateCode) => (
+                          <span 
+                            key={stateCode}
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded text-sm font-medium bg-blue-100 text-blue-800"
+                          >
+                            {states.find(s => s.code === stateCode)?.name || stateCode}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const newStates = selectedStates.filter(s => s !== stateCode);
+                                setSelectedStates(newStates.length === 0 ? ['all'] : newStates);
+                              }}
+                              className="ml-1 hover:text-blue-600"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
                       </div>
                     )}
                     
-                    {/* Searchable Input for Single State Selection */}
+                    {/* Searchable Input for Multiple State Selection */}
                     <div className="relative">
                       <input
                         type="text"
@@ -1869,10 +1885,9 @@ const CreateArticle = () => {
                           // Small delay to allow click on dropdown items
                           setTimeout(() => {
                             setStateSearchQuery('');
-                            setShowStateDropdown(false);
                           }, 200);
                         }}
-                        placeholder="Search..."
+                        placeholder="Search and select states..."
                         className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
                       />
                       {showStateDropdown && (
@@ -1885,7 +1900,7 @@ const CreateArticle = () => {
                             }}
                           />
                           <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
-                            {/* All States and Individual States */}
+                            {/* All States and Individual States with Checkboxes */}
                             {states
                               .filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase()))
                               .sort((a, b) => {
@@ -1897,14 +1912,31 @@ const CreateArticle = () => {
                               .map(state => (
                                 <div
                                   key={state.code}
-                                  onClick={() => {
-                                    setSelectedStates([state.code]);
-                                    setStateSearchQuery('');
-                                    setShowStateDropdown(false);
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (state.code === 'all') {
+                                      // If selecting 'all', clear all other states
+                                      setSelectedStates(['all']);
+                                    } else {
+                                      // If selecting a specific state, remove 'all' and toggle this state
+                                      if (selectedStates.includes(state.code)) {
+                                        const newStates = selectedStates.filter(s => s !== state.code);
+                                        setSelectedStates(newStates.length === 0 ? ['all'] : newStates);
+                                      } else {
+                                        const newStates = selectedStates.filter(s => s !== 'all');
+                                        setSelectedStates([...newStates, state.code]);
+                                      }
+                                    }
                                   }}
-                                  className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left text-gray-900"
+                                  className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left text-gray-900 flex items-center gap-2"
                                 >
-                                  {state.name}
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedStates.includes(state.code)}
+                                    onChange={() => {}} // Handled by parent div onClick
+                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                  />
+                                  <span>{state.name}</span>
                                 </div>
                               ))}
                             {states.filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase())).length === 0 && (
