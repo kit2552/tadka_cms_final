@@ -36,12 +36,12 @@ const TVRealityShows = () => {
   }, [location]);
 
   useEffect(() => {
-    const fetchEventsInterviewsData = async () => {
+    const fetchTVRealityShowsData = async () => {
       try {
         setLoading(true);
         
         // Sample fallback data
-        const sampleEventsData = [
+        const sampleRealityShowsData = [
           {
             id: 1,
             title: "Bollywood Stars at Award Ceremony",
@@ -71,8 +71,8 @@ const TVRealityShows = () => {
           }
         ];
         
-        // Fetch articles from the backend API using events-interviews and bollywood categories
-        const eventsInterviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/events-interviews?limit=20`);
+        // Fetch articles from the backend API using reality-shows and bollywood categories
+        const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/reality-shows?limit=20`);
         if (eventsInterviewsResponse.ok) {
           const eventsInterviewsData = await eventsInterviewsResponse.json();
           setEventsInterviewsArticles(eventsInterviewsData.length > 0 ? eventsInterviewsData : sampleEventsData);
