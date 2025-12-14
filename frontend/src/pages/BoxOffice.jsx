@@ -219,6 +219,7 @@ const BoxOffice = () => {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'Recently published';
     return new Date(dateString).toLocaleString('en-IN', {
       timeZone: 'Asia/Kolkata',
       year: 'numeric',
