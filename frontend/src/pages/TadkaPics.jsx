@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import ImageModal from '../components/ImageModal';
+import VideoModal from '../components/VideoModal';
 
 const TadkaPics = () => {
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ const TadkaPics = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [galleryImages, setGalleryImages] = useState([]);
+  
+  // Modal state for video playback
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   // Scroll restoration logic
   useEffect(() => {
@@ -201,12 +206,14 @@ const TadkaPics = () => {
   };
 
   const handleShortClick = (short) => {
-    if (short.content_type === 'video' || short.content_type === 'video_post' || short.youtube_url) {
-      navigate(`/video/${short.id}`);
-    } else {
-      const slug = short.slug || short.title.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/article/${short.id}/${slug}`);
-    }
+    // Open video in modal instead of navigating to another page
+    setSelectedVideo(short);
+    setVideoModalOpen(true);
+  };
+  
+  const handleVideoModalClose = () => {
+    setVideoModalOpen(false);
+    setSelectedVideo(null);
   };
 
   const getYouTubeThumbnail = (youtubeUrl) => {
@@ -471,6 +478,15 @@ const TadkaPics = () => {
           onClose={handleModalClose}
           image={selectedImage}
           images={galleryImages}
+        />
+      )}
+      
+      {/* Video Modal for playing Tadka Shorts */}
+      {videoModalOpen && selectedVideo && (
+        <VideoModal
+          isOpen={videoModalOpen}
+          onClose={handleVideoModalClose}
+          video={selectedVideo}
         />
       )}
     </>
