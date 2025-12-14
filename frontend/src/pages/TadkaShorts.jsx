@@ -97,10 +97,10 @@ const TadkaShorts = () => {
 
   // Update filtered articles when tab or filter changes
   useEffect(() => {
-    const currentArticles = activeTab === 'reels' ? reelsArticles : shortsArticles;
+    const currentArticles = activeTab === 'bollywood' ? bollywoodArticles : shortsArticles;
     const filtered = filterArticlesByDate(currentArticles, selectedFilter);
     setFilteredArticles(filtered);
-  }, [shortsArticles, reelsArticles, activeTab, selectedFilter]);
+  }, [shortsArticles, bollywoodArticles, activeTab, selectedFilter]);
 
   // Get random image from gallery
   const getRandomGalleryImage = (article) => {
