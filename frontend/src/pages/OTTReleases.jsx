@@ -133,6 +133,24 @@ const OTTReleases = () => {
     });
   };
 
+  // Get YouTube thumbnail from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    let videoId = null;
+    if (youtubeUrl.includes('youtube.com/watch?v=')) {
+      videoId = youtubeUrl.split('v=')[1]?.split('&')[0];
+    } else if (youtubeUrl.includes('youtube.com/shorts/')) {
+      videoId = youtubeUrl.split('shorts/')[1]?.split('?')[0];
+    } else if (youtubeUrl.includes('youtu.be/')) {
+      videoId = youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    } else if (youtubeUrl.includes('youtube.com/embed/')) {
+      videoId = youtubeUrl.split('embed/')[1]?.split('?')[0];
+    }
+    
+    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
+  };
+
   // Sample thumbnail images for related articles
   const getThumbnail = (index) => {
     const thumbnails = [
@@ -300,30 +318,36 @@ const OTTReleases = () => {
                   >
                     <div className="flex items-start space-x-3 text-left pr-3">
                       <div className="relative flex-shrink-0 w-32 h-24 rounded overflow-hidden">
-                        {release.movie_image ? (
-                          <>
-                            <img
-                              src={`${process.env.REACT_APP_BACKEND_URL}/${release.movie_image}`}
-                              alt={release.movie_name || release.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.nextElementSibling.style.display = 'flex';
-                              }}
-                            />
-                            <div className="w-full h-full bg-gray-200 flex items-center justify-center" style={{display: 'none'}}>
+                        {(() => {
+                          // Try to get YouTube thumbnail first
+                          const youtubeThumbnail = getYouTubeThumbnail(release.youtube_url || release.trailer_url);
+                          const imageUrl = youtubeThumbnail || (release.movie_image ? `${process.env.REACT_APP_BACKEND_URL}/${release.movie_image}` : null) || release.image_url;
+                          
+                          return imageUrl ? (
+                            <>
+                              <img
+                                src={imageUrl}
+                                alt={release.movie_name || release.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextElementSibling.style.display = 'flex';
+                                }}
+                              />
+                              <div className="w-full h-full bg-gray-200 flex items-center justify-center" style={{display: 'none'}}>
+                                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 4v16l13-8z" />
+                                </svg>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                               <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 4v16l13-8z" />
                               </svg>
                             </div>
-                          </>
-                        ) : (
-                          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 4v16l13-8z" />
-                            </svg>
-                          </div>
-                        )}
+                          );
+                        })()}
                       </div>
                       <div className="flex-1 min-w-0 text-left">
                         <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
