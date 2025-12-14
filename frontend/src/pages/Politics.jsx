@@ -19,6 +19,23 @@ const Politics = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredArticles, setFilteredArticles] = useState([]);
 
+  // Scroll restoration logic
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('politicsScrollPosition');
+    
+    if (savedScrollPosition && location.state?.fromDetail) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+
+    if (location.state?.fromDetail) {
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   useEffect(() => {
     const fetchPoliticsData = async () => {
       try {
