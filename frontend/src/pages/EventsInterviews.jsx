@@ -428,12 +428,11 @@ const EventsInterviews = () => {
                     >
                       <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
                         {/* Full Thumbnail Image */}
-                        <div className="relative overflow-hidden bg-gray-100">
+                        <div className="relative overflow-hidden bg-gray-100" style={{ aspectRatio: '16 / 9' }}>
                           <img
                             src={youtubeThumbnail || article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
                             alt={article.title}
-                            className="w-full object-contain group-hover:scale-105 transition-transform duration-300"
-                            style={{ height: '220px' }}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             onError={(e) => {
                               e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
                             }}
