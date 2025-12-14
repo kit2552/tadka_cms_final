@@ -119,7 +119,7 @@ const TrailersTeasers = () => {
         console.log('Fetching trailers data...');
         
         // Fetch articles from the backend API using trailers categories
-        const trailersResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/trailers-teasers?limit=50`);
+        const trailersResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/trailers-teasers?limit=20`);
         console.log('Trailers response status:', trailersResponse.status);
         
         if (trailersResponse.ok) {
