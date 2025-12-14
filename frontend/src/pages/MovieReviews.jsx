@@ -394,64 +394,73 @@ const MovieReviews = () => {
 
             {/* Articles Grid - YouTube Thumbnail Style */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredArticles.map((article, index) => (
-                <div
-                  key={article.id}
-                  onClick={() => handleArticleClick(article)}
-                  className="cursor-pointer"
-                >
-                  <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group">
-                    <div className="relative">
-                      <img
-                        src={article.youtube_url ? getYouTubeThumbnail(article.youtube_url) : (article.image_url || article.image || 'https://images.unsplash.com/photo-1489599112477-990c2cb2c508?w=400&h=300&fit=crop')}
-                        alt={article.title}
-                        className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
-                        style={{ aspectRatio: '16/9' }}
-                        onError={(e) => {
-                          e.target.src = 'https://images.unsplash.com/photo-1489599112477-990c2cb2c508?w=400&h=300&fit=crop';
-                        }}
-                      />
-                      
-                      {/* Rating Overlay - Top Right */}
-                      {article.movie_rating && (
-                        <div className="absolute top-2 right-2 bg-gray-800/90 rounded-md px-2 py-1.5 flex flex-col items-center gap-0.5">
-                          <div className="text-white font-bold text-lg leading-none">
-                            {article.movie_rating}<span className="text-sm font-normal">/5</span>
+              {filteredArticles.map((article, index) => {
+                // Format rating: show "3" for 3.00, "3.5" for 3.50, "3.75" for 3.75
+                const rating = parseFloat(article.movie_rating || 0);
+                const formattedRating = rating % 1 === 0 ? rating.toFixed(0) : rating.toString();
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating % 1 >= 0.5;
+                
+                return (
+                  <div
+                    key={article.id}
+                    onClick={() => handleArticleClick(article)}
+                    className="cursor-pointer"
+                  >
+                    <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group">
+                      <div className="relative">
+                        <img
+                          src={article.youtube_url ? getYouTubeThumbnail(article.youtube_url) : (article.image_url || article.image || 'https://images.unsplash.com/photo-1489599112477-990c2cb2c508?w=400&h=300&fit=crop')}
+                          alt={article.title}
+                          className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                          style={{ aspectRatio: '16/9' }}
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1489599112477-990c2cb2c508?w=400&h=300&fit=crop';
+                          }}
+                        />
+                        
+                        {/* Rating Overlay - Top Right */}
+                        {article.movie_rating && (
+                          <div className="absolute top-2 right-2 bg-black/70 rounded px-2 py-1.5 flex flex-col items-center gap-0.5">
+                            <div className="flex items-baseline gap-0.5 mb-0.5">
+                              <span className="text-xl font-bold text-white leading-none">{formattedRating}</span>
+                              <span className="text-[10px] text-gray-300">/5</span>
+                            </div>
+                            <div className="flex items-center gap-0.5">
+                              {[...Array(5)].map((_, i) => (
+                                <svg
+                                  key={i}
+                                  className={`w-2 h-2 ${i < fullStars ? 'text-yellow-400' : (i === fullStars && hasHalfStar ? 'text-yellow-400' : 'text-gray-400')}`}
+                                  fill="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                </svg>
+                              ))}
+                            </div>
                           </div>
-                          <div className="flex gap-0.5">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <svg
-                                key={star}
-                                className="w-3 h-3"
-                                fill={star <= Math.round(parseFloat(article.movie_rating)) ? '#FCD34D' : '#6B7280'}
-                                viewBox="0 0 20 20"
-                              >
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        )}
+                        
+                        {/* Title Overlay with Black Transparent Banner */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
+                          <div className="flex items-center justify-center gap-1">
+                            {/* Small play icon with white circle before title for videos */}
+                            {(article.youtube_url || article.content_type === 'video') && (
+                              <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" fill="none" stroke="white" strokeWidth="2"/>
+                                <path d="M10 8l6 4-6 4V8z" fill="white"/>
                               </svg>
-                            ))}
+                            )}
+                            <h3 className="text-white font-bold text-xs leading-tight line-clamp-2 text-center">
+                              {article.title}
+                            </h3>
                           </div>
-                        </div>
-                      )}
-                      
-                      {/* Title Overlay with Black Transparent Banner */}
-                      <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
-                        <div className="flex items-center justify-center gap-1">
-                          {/* Small play icon with white circle before title for videos */}
-                          {(article.youtube_url || article.content_type === 'video') && (
-                            <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24">
-                              <circle cx="12" cy="12" r="10" fill="none" stroke="white" strokeWidth="2"/>
-                              <path d="M10 8l6 4-6 4V8z" fill="white"/>
-                            </svg>
-                          )}
-                          <h3 className="text-white font-bold text-xs leading-tight line-clamp-2 text-center">
-                            {article.title}
-                          </h3>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {filteredArticles.length === 0 && (
