@@ -13,9 +13,10 @@ const OTTReleases = () => {
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState('upcoming');
+  const [selectedFilter, setSelectedFilter] = useState('latest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredReleases, setFilteredReleases] = useState([]);
+  const filterDropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchOTTReleaseData = async () => {
