@@ -53,6 +53,11 @@ const VideoView = () => {
     };
   }, [article]);
 
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
