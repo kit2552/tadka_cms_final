@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import VideoModal from '../components/VideoModal';
 
 const TadkaShorts = () => {
   const navigate = useNavigate();
@@ -17,6 +18,10 @@ const TadkaShorts = () => {
   const [selectedFilter, setSelectedFilter] = useState('latest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredArticles, setFilteredArticles] = useState([]);
+  
+  // Modal state for video playback
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   // Scroll restoration logic
   useEffect(() => {
