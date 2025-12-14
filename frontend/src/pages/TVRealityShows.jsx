@@ -120,10 +120,10 @@ const TVRealityShows = () => {
 
   // Update filtered articles when tab or filter changes
   useEffect(() => {
-    const currentArticles = activeTab === 'bollywood' ? bollywoodArticles : eventsInterviewsArticles;
+    const currentArticles = activeTab === 'bollywood' ? bollywoodArticles : realityShowsArticles;
     const filtered = filterArticlesByDate(currentArticles, selectedFilter);
     setFilteredArticles(filtered);
-  }, [eventsInterviewsArticles, bollywoodArticles, activeTab, selectedFilter]);
+  }, [realityShowsArticles, bollywoodArticles, activeTab, selectedFilter]);
 
   // Auto scroll to top when page loads
   useEffect(() => {
