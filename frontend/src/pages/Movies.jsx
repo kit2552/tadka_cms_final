@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ArticleImage from '../components/ArticleImage';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -7,6 +7,7 @@ import { PlaceholderImage } from '../utils/imageUtils';
 
 const Movies = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('movies'); // 'movies' or 'bollywood'
@@ -15,7 +16,7 @@ const Movies = () => {
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState('thisWeek');
+  const [selectedFilter, setSelectedFilter] = useState('latest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredArticles, setFilteredArticles] = useState([]);
 
@@ -93,17 +94,29 @@ const Movies = () => {
     fetchMoviesData();
   }, []);
 
+  // Scroll restoration logic
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('moviesScrollPosition');
+    
+    if (savedScrollPosition && location.state?.fromDetail) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+
+    if (location.state?.fromDetail) {
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   // Update filtered articles when tab or filter changes
   useEffect(() => {
     const currentArticles = activeTab === 'bollywood' ? bollywoodArticles : moviesArticles;
     const filtered = filterArticlesByDate(currentArticles, selectedFilter);
     setFilteredArticles(filtered);
   }, [moviesArticles, bollywoodArticles, activeTab, selectedFilter]);
-
-  // Auto scroll to top when page loads
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   // Sample thumbnail images for related topics
   const getThumbnail = (index) => {
@@ -129,6 +142,7 @@ const Movies = () => {
 
   // Filter options for the dropdown
   const filterOptions = [
+    { value: 'latest', label: 'Latest' },
     { value: 'thisWeek', label: 'This Week' },
     { value: 'today', label: 'Today' },
     { value: 'yesterday', label: 'Yesterday' },
@@ -164,6 +178,8 @@ const Movies = () => {
       const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
       switch (filter) {
+        case 'latest':
+          return true; // Show all articles for "Latest" filter
         case 'thisWeek':
           // This week means Monday to Sunday + previous 2 days for better coverage
           const currentWeekStart = new Date(today);
@@ -213,7 +229,7 @@ const Movies = () => {
   // Get current filter label
   const getCurrentFilterLabel = () => {
     const option = filterOptions.find(opt => opt.value === selectedFilter);
-    return option ? option.label : 'This Week';
+    return option ? option.label : 'Latest';
   };
 
   const handleRelatedArticleClick = (article) => {
@@ -222,8 +238,16 @@ const Movies = () => {
   };
 
   const handleArticleClick = (article) => {
-    // Navigate to article page
-    navigate(`/article/${article.id}`);
+    // Save current scroll position before navigating
+    sessionStorage.setItem('moviesScrollPosition', window.scrollY.toString());
+    
+    // Route to video page for video content types, otherwise to article page
+    if (article.content_type === 'video' || article.content_type === 'video_post') {
+      navigate(`/video/${article.id}`, { state: { from: 'movies' } });
+    } else {
+      const slug = article.slug || article.title.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/article/${article.id}/${slug}`, { state: { from: 'movies' } });
+    }
   };
 
   const formatDate = (dateString) => {
@@ -247,17 +271,6 @@ const Movies = () => {
 
   const themeClasses = lightThemeClasses;
 
-  if (loading) {
-    return (
-      <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className={`text-lg font-medium ${themeClasses.textPrimary}`}>Loading Movies...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
@@ -277,7 +290,20 @@ const Movies = () => {
   }
 
   return (
-    <div className={`min-h-screen ${themeClasses.pageBackground}`}>
+    <>
+      {/* Loading Modal */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl px-4 py-3">
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+              <p className="text-sm font-medium text-gray-700">Loading...</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div className={`min-h-screen ${themeClasses.pageBackground}`}>
       {/* Main Container */}
       <div className="max-w-5xl-plus mx-auto px-8 pb-6">
         
@@ -402,6 +428,13 @@ const Movies = () => {
                 </div>
               ))}
             </div>
+
+            {filteredArticles.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-400 mb-1">No {activeTab === 'movies' ? 'movie' : 'bollywood'} articles found</p>
+                <p className="text-xs text-gray-400">Try selecting a different time period</p>
+              </div>
+            )}
           </div>
 
           {/* Related Articles Section - 30% width */}
@@ -473,6 +506,7 @@ const Movies = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
