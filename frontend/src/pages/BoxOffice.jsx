@@ -206,14 +206,16 @@ const BoxOffice = () => {
   };
 
   const handleArticleClick = (article) => {
-    const category = activeTab === 'box-office' ? 'box-office' : 'bollywood-box-office';
-    navigate(`/article/${article.slug}`, { 
-      state: { 
-        article, 
-        category,
-        from: 'box-office-page' 
-      } 
-    });
+    // Save current scroll position before navigating
+    sessionStorage.setItem('boxOfficeScrollPosition', window.scrollY.toString());
+    
+    // Route to video page for video content types, otherwise to article page
+    if (article.content_type === 'video' || article.content_type === 'video_post') {
+      navigate(`/video/${article.id}`, { state: { from: 'box-office' } });
+    } else {
+      const slug = article.slug || article.title.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/article/${article.id}/${slug}`, { state: { from: 'box-office' } });
+    }
   };
 
   const formatDate = (dateString) => {
