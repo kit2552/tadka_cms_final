@@ -474,6 +474,7 @@ const FashionTravelTopics = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
