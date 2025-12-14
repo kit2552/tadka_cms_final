@@ -341,6 +341,15 @@ const ArticlePage = () => {
         case 'reality-shows':
           navigate('/tv-reality-shows', { state: { fromDetail: true } });
           break;
+        case 'health-food':
+          navigate('/health-food-topics', { state: { fromDetail: true } });
+          break;
+        case 'fashion-travel':
+          navigate('/fashion-travel-topics', { state: { fromDetail: true } });
+          break;
+        case 'ai-stock':
+          navigate('/ai-and-stock-market-news', { state: { fromDetail: true } });
+          break;
         default:
           // For other cases, use browser back
           if (window.history.length > 1) {
