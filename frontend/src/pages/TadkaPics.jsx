@@ -281,10 +281,10 @@ const TadkaPics = () => {
         <div className="max-w-5xl-plus mx-auto px-8 pb-6">
           
           {/* Two Section Layout - 85%/15% split */}
-          <div className="grid grid-cols-1 lg:grid-cols-20 gap-6">
+          <div className="flex flex-col lg:flex-row gap-6">
             
             {/* Tadka Pics Section - 85% width */}
-            <div className="lg:col-span-17 -mt-1">
+            <div className="lg:w-[85%] -mt-1">
               {/* Section Header - Sticky with filter */}
               <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
                 <div className="pl-0 pr-4 py-4">
@@ -395,7 +395,7 @@ const TadkaPics = () => {
             </div>
 
             {/* Tadka Shorts Section - 15% width */}
-            <div className="lg:col-span-3 border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0">
+            <div className="lg:w-[15%] border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0">
               {/* Tadka Shorts Header */}
               <div className={`sticky top-16 z-30 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
                 <div className="pl-0 pr-4 py-4">
