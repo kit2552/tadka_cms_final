@@ -15,6 +15,7 @@ const TadkaPics = () => {
   const [selectedFilter, setSelectedFilter] = useState('latest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredGalleries, setFilteredGalleries] = useState([]);
+  const [tadkaShorts, setTadkaShorts] = useState([]);
   
   // Modal state for image gallery
   const [selectedImage, setSelectedImage] = useState(null);
@@ -44,16 +45,26 @@ const TadkaPics = () => {
         setLoading(true);
         
         // Fetch galleries from the backend API
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/galleries/tadka-pics?limit=100`);
-        console.log('Tadka Pics galleries response status:', response.status);
+        const galleriesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/galleries/tadka-pics?limit=100`);
+        console.log('Tadka Pics galleries response status:', galleriesResponse.status);
         
-        if (response.ok) {
-          const data = await response.json();
+        if (galleriesResponse.ok) {
+          const data = await galleriesResponse.json();
           console.log('Tadka Pics galleries received:', data.length);
           setGalleries(data);
         } else {
           console.log('Tadka Pics galleries response not ok');
           setGalleries([]);
+        }
+
+        // Fetch Tadka Shorts for sidebar
+        const shortsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/tadka-shorts?limit=20`);
+        if (shortsResponse.ok) {
+          const shortsData = await shortsResponse.json();
+          // Combine tadka_shorts and bollywood for sidebar
+          const allShorts = [...(shortsData.tadka_shorts || []), ...(shortsData.bollywood || [])];
+          setTadkaShorts(allShorts);
+          console.log('Tadka Shorts for sidebar:', allShorts.length);
         }
         
         setError(null);
@@ -187,6 +198,30 @@ const TadkaPics = () => {
     setImageModalOpen(false);
     setSelectedImage(null);
     setGalleryImages([]);
+  };
+
+  const handleShortClick = (short) => {
+    if (short.content_type === 'video' || short.content_type === 'video_post' || short.youtube_url) {
+      navigate(`/video/${short.id}`);
+    } else {
+      const slug = short.slug || short.title.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/article/${short.id}/${slug}`);
+    }
+  };
+
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    let videoId = null;
+    if (youtubeUrl.includes('youtube.com/watch?v=')) {
+      videoId = youtubeUrl.split('v=')[1]?.split('&')[0];
+    } else if (youtubeUrl.includes('youtube.com/shorts/')) {
+      videoId = youtubeUrl.split('shorts/')[1]?.split('?')[0];
+    } else if (youtubeUrl.includes('youtu.be/')) {
+      videoId = youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    }
+    
+    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
   };
 
   const formatDate = (dateString) => {
