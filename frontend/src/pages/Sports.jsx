@@ -41,13 +41,13 @@ const Sports = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using sports categories
-        const cricketResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/cricket?limit=50`);
+        const cricketResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/cricket?limit=20`);
         if (cricketResponse.ok) {
           const cricketData = await cricketResponse.json();
           setCricketArticles(cricketData);
         }
 
-        const sportsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/sports?limit=50`);
+        const sportsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/sports?limit=20`);
         if (sportsResponse.ok) {
           const sportsData = await sportsResponse.json();
           setOtherSportsArticles(sportsData);
