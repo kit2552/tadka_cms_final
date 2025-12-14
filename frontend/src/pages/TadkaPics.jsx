@@ -410,30 +410,45 @@ const TadkaPics = () => {
                 </div>
               </div>
 
-              {/* Tadka Shorts List */}
-              <div className="space-y-0">
+              {/* Tadka Shorts Vertical Grid */}
+              <div className="space-y-3">
                 {tadkaShorts.length > 0 ? (
-                  tadkaShorts.map((short, index) => (
+                  tadkaShorts.slice(0, 10).map((short) => (
                     <div
                       key={short.id}
                       onClick={() => handleShortClick(short)}
-                      className={`group cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-2 ${
-                        index < tadkaShorts.length - 1 ? 'border-b border-gray-200' : ''
-                      }`}
+                      className="cursor-pointer group"
                     >
-                      <div className="flex space-x-3">
-                        <img
-                          src={getYouTubeThumbnail(short.youtube_url) || short.image_url || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=60&h=45&fit=crop'}
-                          alt={short.title}
-                          className="w-20 h-16 object-cover rounded flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
-                        />
-                        <div className="flex-1 min-w-0 text-left">
-                          <h4 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200 leading-tight mb-2 text-left line-clamp-2" style={{ fontSize: '0.9rem' }}>
-                            {short.title}
-                          </h4>
-                          <p className="text-xs text-gray-600 text-left">
-                            {formatDate(short.published_at || short.publishedAt)}
-                          </p>
+                      <div className="rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
+                        <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
+                          {/* 9:16 aspect ratio for YouTube Shorts */}
+                          <img
+                            src={getYouTubeThumbnail(short.youtube_url) || short.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop'}
+                            alt={short.title}
+                            className="absolute inset-0 w-full h-full group-hover:scale-105 transition-transform duration-300"
+                            style={{ 
+                              objectFit: 'cover',
+                              objectPosition: 'center',
+                              display: 'block'
+                            }}
+                            onError={(e) => {
+                              e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=600&fit=crop';
+                            }}
+                          />
+                          
+                          {/* Play icon overlay */}
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-70 transition-opacity duration-300">
+                            <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                          
+                          {/* Title overlay at bottom with black bar */}
+                          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-2 border-t border-gray-700">
+                            <p className="text-white text-[10px] font-medium line-clamp-2 text-center leading-tight">
+                              {short.title}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
