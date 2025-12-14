@@ -141,6 +141,7 @@ const OTTReviews = () => {
 
   // Filter options for the dropdown
   const filterOptions = [
+    { value: 'latest', label: 'Latest' },
     { value: 'thisWeek', label: 'This Week' },
     { value: 'today', label: 'Today' },
     { value: 'yesterday', label: 'Yesterday' },
@@ -157,8 +158,8 @@ const OTTReviews = () => {
       return [];
     }
 
-    // Use mock date as "today" to match current date (June 30, 2026)
-    const now = new Date('2026-06-30T23:59:59Z');
+    // Use current date for filtering
+    const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
     const filtered = articles.filter((article) => {
@@ -176,6 +177,8 @@ const OTTReviews = () => {
       const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
       switch (filter) {
+        case 'latest':
+          return true; // Show all articles for "Latest" filter
         case 'thisWeek':
           // This week means current week (Monday to Sunday)
           const currentWeekStart = new Date(today);
