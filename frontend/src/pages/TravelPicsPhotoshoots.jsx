@@ -44,7 +44,12 @@ const TravelPicsPhotoshoots = () => {
         const travelPicsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/travel-pics?skip=0&limit=20`);
         if (travelPicsResponse.ok) {
           const travelPicsData = await travelPicsResponse.json();
-          console.log('Travel Pics data with galleries:', travelPicsData);
+          console.log('Travel Pics API response:', travelPicsData);
+          console.log('First article:', travelPicsData[0]);
+          if (travelPicsData[0]?.gallery) {
+            console.log('First article gallery:', travelPicsData[0].gallery);
+            console.log('Gallery images:', travelPicsData[0].gallery.images);
+          }
           setTravelPicsArticles(travelPicsData);
         }
 
