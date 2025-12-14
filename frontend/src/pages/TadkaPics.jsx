@@ -280,11 +280,11 @@ const TadkaPics = () => {
         {/* Main Container */}
         <div className="max-w-5xl-plus mx-auto px-8 pb-6">
           
-          {/* Two Section Layout - 85%/15% split */}
+          {/* Two Section Layout - 80%/20% split */}
           <div className="flex flex-col lg:flex-row gap-6">
             
-            {/* Tadka Pics Section - 85% width */}
-            <div className="lg:w-[85%] -mt-1">
+            {/* Tadka Pics Section - 80% width */}
+            <div className="lg:w-[80%] -mt-1">
               {/* Section Header - Sticky with filter */}
               <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
                 <div className="pl-0 pr-4 py-4">
@@ -394,8 +394,8 @@ const TadkaPics = () => {
               )}
             </div>
 
-            {/* Tadka Shorts Section - 15% width */}
-            <div className="lg:w-[15%] border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0">
+            {/* Tadka Shorts Section - 20% width */}
+            <div className="lg:w-[20%] border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0">
               {/* Tadka Shorts Header */}
               <div className={`sticky top-16 z-30 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
                 <div className="pl-0 pr-4 py-4">
@@ -410,14 +410,14 @@ const TadkaPics = () => {
                 </div>
               </div>
 
-              {/* Tadka Shorts Vertical Grid */}
-              <div className="space-y-3 flex flex-col items-center">
+              {/* Tadka Shorts 2-Column Grid */}
+              <div className="grid grid-cols-2 gap-3">
                 {tadkaShorts.length > 0 ? (
                   tadkaShorts.slice(0, 10).map((short) => (
                     <div
                       key={short.id}
                       onClick={() => handleShortClick(short)}
-                      className="cursor-pointer group w-[60%]"
+                      className="cursor-pointer group"
                     >
                       <div className="rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
                         <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
