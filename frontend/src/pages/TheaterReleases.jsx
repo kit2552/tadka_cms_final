@@ -83,11 +83,11 @@ const TheaterReleases = () => {
           const theaterComingSoon = theaterData.coming_soon || [];
           setTheaterReleases([...theaterThisWeek, ...theaterComingSoon]);
           
-          // Extract Bollywood/Regional releases (combine this_week and coming_soon)
-          const bollywoodData = ottRegionalData.bollywood || {};
-          const bollywoodThisWeek = bollywoodData.this_week || [];
-          const bollywoodComingSoon = bollywoodData.coming_soon || [];
-          setRegionalReleases([...bollywoodThisWeek, ...bollywoodComingSoon]);
+          // Extract Bollywood releases from 'ott' key (combine this_week and coming_soon)
+          const ottData = ottRegionalData.ott || {};
+          const ottThisWeek = ottData.this_week || [];
+          const ottComingSoon = ottData.coming_soon || [];
+          setRegionalReleases([...ottThisWeek, ...ottComingSoon]);
         } else {
           // Fallback: try individual endpoints
           const theaterResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-ott/page?release_type=theater&filter_type=${selectedFilter}&limit=50`);
