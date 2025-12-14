@@ -413,32 +413,63 @@ const OTTReviews = () => {
             {/* Articles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {filteredArticles.length > 0 ? (
-                filteredArticles.map((article) => (
-                  <div 
-                    key={article.id} 
-                    className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
-                    style={{ padding: '0.5rem' }}
-                    onClick={() => handleArticleClick(article)}
-                  >
-                    <div className="flex items-start space-x-3 text-left pr-3">
-                      <img
-                        src={article.image_url || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop'}
-                        alt={article.title}
-                        className="flex-shrink-0 w-32 h-24 object-cover rounded group-hover:scale-105 transition-transform duration-200"
-                      />
-                      <div className="flex-1 min-w-0 text-left">
-                        <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
-                          {article.title}
+                filteredArticles.map((article, index) => {
+                  const rating = getArticleRating(article, index);
+                  const fullStars = Math.floor(rating);
+                  const hasHalfStar = rating % 1 >= 0.5;
+                  const formattedRating = rating.toFixed(1);
+                  const youtubeThumbnail = getYouTubeThumbnail(article.video_url || article.youtube_url);
+
+                  return (
+                    <div 
+                      key={article.id} 
+                      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
+                      onClick={() => handleArticleClick(article)}
+                    >
+                      <div className="relative">
+                        <img
+                          src={youtubeThumbnail || article.image_url || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop'}
+                          alt={article.title}
+                          className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-200"
+                          onError={(e) => {
+                            e.target.src = article.image_url || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop';
+                          }}
+                        />
+                        
+                        {/* Rating Display - Compact Top Right */}
+                        <div className="absolute top-2 right-2 flex flex-col items-center justify-center px-2 py-1.5 bg-black/70 rounded">
+                          <div className="flex items-baseline gap-0.5 mb-0.5">
+                            <span className="text-xl font-bold text-white leading-none">{formattedRating}</span>
+                            <span className="text-[10px] text-gray-300">/5</span>
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            {[...Array(5)].map((_, i) => (
+                              <svg
+                                key={i}
+                                className={`w-2 h-2 ${i < fullStars ? 'text-yellow-400' : (i === fullStars && hasHalfStar ? 'text-yellow-400' : 'text-gray-400')}`}
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                              </svg>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="p-3">
+                        <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 line-clamp-2">
+                          {article.title.replace(' Review', '')}
                         </h3>
-                        <div className="text-xs text-gray-500 text-left">
-                          <p className="mb-1">
+                        <div className="text-xs text-gray-500">
+                          <p>
                             {formatDate(article.published_at || article.publishedAt)}
                           </p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <div className="col-span-2 text-center py-12">
                   <div className="text-6xl mb-4">📺</div>
