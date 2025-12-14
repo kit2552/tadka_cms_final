@@ -595,7 +595,8 @@ const OTTReleases = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
