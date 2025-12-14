@@ -200,6 +200,8 @@ const TrailersTeasers = () => {
       const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
       switch (filter) {
+        case 'latest':
+          return true; // Show all articles for "Latest" filter
         case 'thisWeek':
           const currentWeekStart = new Date(today);
           const dayOfWeek = today.getDay();
@@ -221,7 +223,7 @@ const TrailersTeasers = () => {
         case 'year':
           return daysDiff >= 0 && daysDiff <= 365;
         default:
-          return false;
+          return true; // Default to showing all articles
       }
     });
   };
