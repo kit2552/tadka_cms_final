@@ -444,11 +444,12 @@ const TrailersTeasers = () => {
                       
                       {/* Title Overlay with Black Transparent Banner */}
                       <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
-                        <h3 className="text-white font-bold text-xs text-center leading-tight line-clamp-2 flex items-center justify-center gap-1">
-                          {/* Small play icon before title for videos */}
+                        <h3 className="text-white font-bold text-xs text-center leading-tight line-clamp-2 flex items-center justify-center gap-1.5">
+                          {/* Small play icon with white circle before title for videos */}
                           {article.youtube_url && (
-                            <svg className="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M8 5v14l11-7z"/>
+                            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="10" fill="none" stroke="white" strokeWidth="1.5"/>
+                              <path d="M10 8l6 4-6 4V8z" fill="white"/>
                             </svg>
                           )}
                           <span>{article.title}</span>
