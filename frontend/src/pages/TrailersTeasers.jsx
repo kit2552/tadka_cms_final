@@ -563,6 +563,7 @@ const TrailersTeasers = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
