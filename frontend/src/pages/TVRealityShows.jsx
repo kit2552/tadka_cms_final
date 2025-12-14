@@ -73,11 +73,11 @@ const TVRealityShows = () => {
         
         // Fetch articles from the backend API using reality-shows and bollywood categories
         const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/reality-shows?limit=20`);
-        if (eventsInterviewsResponse.ok) {
-          const eventsInterviewsData = await eventsInterviewsResponse.json();
-          setEventsInterviewsArticles(eventsInterviewsData.length > 0 ? eventsInterviewsData : sampleEventsData);
+        if (realityShowsResponse.ok) {
+          const realityShowsData = await realityShowsResponse.json();
+          setRealityShowsArticles(realityShowsData.length > 0 ? realityShowsData : sampleRealityShowsData);
         } else {
-          setEventsInterviewsArticles(sampleEventsData);
+          setRealityShowsArticles(sampleRealityShowsData);
         }
 
         const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood?limit=20`);
