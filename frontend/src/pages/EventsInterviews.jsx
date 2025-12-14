@@ -72,7 +72,7 @@ const EventsInterviews = () => {
         ];
         
         // Fetch articles from the backend API using events-interviews and bollywood categories
-        const eventsInterviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/events-interviews?limit=50`);
+        const eventsInterviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/events-interviews?limit=20`);
         if (eventsInterviewsResponse.ok) {
           const eventsInterviewsData = await eventsInterviewsResponse.json();
           setEventsInterviewsArticles(eventsInterviewsData.length > 0 ? eventsInterviewsData : sampleEventsData);
