@@ -371,7 +371,7 @@ const TheaterReleases = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Hindi
+                      Theater Releases
                     </button>
                     <button
                       onClick={() => setActiveTab('regional')}
@@ -381,7 +381,7 @@ const TheaterReleases = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Regional
+                      Bollywood
                     </button>
                   </div>
                 </div>
