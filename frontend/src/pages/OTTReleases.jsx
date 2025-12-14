@@ -404,20 +404,6 @@ const OTTReleases = () => {
                         </div>
                       </div>
                     </div>
-                        {release.ott_platform && (
-                          <div className="mb-2">
-                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
-                              {release.ott_platform}
-                            </span>
-                          </div>
-                        )}
-                        <div className="text-xs text-gray-500 text-left">
-                          <div className="bg-gray-800 text-white px-2 py-1 rounded text-xs font-medium inline-block">
-                            {formatDate(release.release_date)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 ))
               ) : (
