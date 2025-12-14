@@ -318,9 +318,9 @@ const TadkaPics = () => {
           <div className="flex flex-col lg:flex-row gap-6">
             
             {/* Tadka Pics Section - 80% width */}
-            <div className="lg:w-[80%] -mt-1">
-              {/* Section Header - Sticky with filter */}
-              <div className={`sticky top-[63px] z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+            <div className="lg:w-[80%] -mt-1 flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
+              {/* Section Header - Static */}
+              <div className="flex-shrink-0 border-b-2 border-gray-300 mb-3" style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
                 <div className="pl-0 pr-4 py-4">
                   <div className="mb-2">
                     <h2 className="text-base font-bold text-black text-left leading-tight">
@@ -378,6 +378,9 @@ const TadkaPics = () => {
                 </div>
               </div>
             </div>
+            
+            {/* Scrollable Content Area */}
+            <div className="flex-1 overflow-y-auto pr-2">
 
             {/* Galleries Grid - 4 Column Vertical Layout within 85% section */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-8">
@@ -426,6 +429,7 @@ const TadkaPics = () => {
                   <p className="text-xs text-gray-400">Try selecting a different time period</p>
                 </div>
               )}
+              </div>
             </div>
 
             {/* Tadka Shorts Section - 20% width */}
