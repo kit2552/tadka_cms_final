@@ -331,7 +331,7 @@ const TVRealityShows = () => {
           
           {/* Reality Shows Section - 70% width */}
           <div className="lg:col-span-7 -mt-1">
-            {/* Events Interviews Section Header - Sticky with filter and bottom border */}
+            {/* Reality Shows Section Header - Sticky with filter and bottom border */}
             <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
                 <div className="mb-2">
