@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { extractArticleIdFromURL, createSEOArticleURL } from '../utils/seoUtils';
@@ -11,6 +11,7 @@ import GallerySlider from '../components/GallerySlider';
 const ArticlePage = () => {
   const { articleId, slug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
   const [article, setArticle] = useState(null);
