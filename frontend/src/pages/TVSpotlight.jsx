@@ -307,7 +307,7 @@ const TVSpotlight = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      TV
+                      TV Spotlight
                     </button>
                     <button
                       onClick={() => setActiveTab('bollywood')}
@@ -317,7 +317,7 @@ const TVSpotlight = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Bollywood
+                      Hindi
                     </button>
                   </div>
                 </div>
