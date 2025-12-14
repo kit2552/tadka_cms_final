@@ -538,14 +538,9 @@ const OTTReleases = () => {
                   </div>
                 ))
               ) : (
-                <div className="col-span-2 text-center py-12">
-                  <div className="text-6xl mb-4">📺</div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No {activeTab === 'bollywood' ? 'Bollywood' : 'OTT Releases'} Found</h3>
-                  <p className="text-gray-600 mb-4">
-                    No {activeTab === 'bollywood' ? 'Bollywood releases' : 'OTT releases'} are available for the selected filter.
-                  </p>
+                <div className="col-span-2 text-center py-8">
                   <p className="text-sm text-gray-500">
-                    Try selecting a different filter or check back later for new releases.
+                    No releases found for the selected dates
                   </p>
                 </div>
               )}
