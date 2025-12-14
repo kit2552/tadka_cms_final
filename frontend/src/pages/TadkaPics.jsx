@@ -205,6 +205,33 @@ const TadkaPics = () => {
     setGalleryImages([]);
   };
 
+  const handleNextImage = (currentImageId) => {
+    const currentIndex = galleryImages.findIndex(img => img.id === currentImageId);
+    if (currentIndex < galleryImages.length - 1) {
+      setSelectedImage(galleryImages[currentIndex + 1]);
+    } else {
+      // Loop back to first image
+      setSelectedImage(galleryImages[0]);
+    }
+  };
+
+  const handlePrevImage = (currentImageId) => {
+    const currentIndex = galleryImages.findIndex(img => img.id === currentImageId);
+    if (currentIndex > 0) {
+      setSelectedImage(galleryImages[currentIndex - 1]);
+    } else {
+      // Loop to last image
+      setSelectedImage(galleryImages[galleryImages.length - 1]);
+    }
+  };
+
+  const handleImageChange = (imageId) => {
+    const newImage = galleryImages.find(img => img.id === imageId);
+    if (newImage) {
+      setSelectedImage(newImage);
+    }
+  };
+
   const handleShortClick = (short) => {
     // Open video in modal instead of navigating to another page
     setSelectedVideo(short);
@@ -478,6 +505,9 @@ const TadkaPics = () => {
           onClose={handleModalClose}
           image={selectedImage}
           images={galleryImages}
+          onNext={handleNextImage}
+          onPrev={handlePrevImage}
+          onImageChange={handleImageChange}
         />
       )}
       
