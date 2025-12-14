@@ -35,7 +35,7 @@ import FashionTravelTopics from "./pages/FashionTravelTopics";
 import AIAndStockMarketNews from "./pages/AIAndStockMarketNews";
 import TopInstaPics from "./pages/TopInstaPics";
 import NewVideoSongs from "./pages/NewVideoSongs";
-import TVShows from "./pages/TVShows";
+import TVSpotlight from "./pages/TVSpotlight";
 import OTTReviews from "./pages/OTTReviews";
 import OTTReleases from "./pages/OTTReleases";
 import ArticlePage from "./pages/ArticlePage";
