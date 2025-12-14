@@ -393,7 +393,7 @@ const OTTReleases = () => {
                   </p>
 
                   {/* Filter Dropdown */}
-                  <div className="relative">
+                  <div className="relative" ref={filterDropdownRef}>
                     <button
                       onClick={() => setIsFilterOpen(!isFilterOpen)}
                       className="flex items-center space-x-2 text-xs font-medium text-gray-900 opacity-75 hover:opacity-100 focus:outline-none"
