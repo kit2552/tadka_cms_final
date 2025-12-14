@@ -1064,7 +1064,15 @@ const ArticlePage = () => {
             )}
 
             {/* Related Articles Section Header - Sticky */}
-            <div className={`sticky top-0 z-30 border-b-2 border-gray-300`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))', marginBottom: '1rem' }}>
+            <div 
+              className={`sticky top-0 z-30 border-b-2 border-gray-300`} 
+              style={{ 
+                backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))', 
+                marginBottom: '1rem',
+                marginTop: ((article.content_type === 'movie_review' && (article.review_comments_enabled === false)) || 
+                           (article.content_type !== 'movie_review' && (article.comments_enabled === false))) ? '1rem' : '0rem'
+              }}
+            >
               <div className="pl-0 pr-4" style={{ paddingTop: '0px', paddingBottom: '1rem' }}>
                 <div className="mb-1">
                   <h2 className="text-base font-bold text-black text-left leading-tight">
