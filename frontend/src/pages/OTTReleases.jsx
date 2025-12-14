@@ -132,11 +132,63 @@ const OTTReleases = () => {
     fetchOTTReleaseData();
   }, [selectedFilter]);
 
-  // Update filtered releases when tab changes
+  // Filter releases by date
+  const filterReleasesByDate = (releases, filter) => {
+    if (!releases || releases.length === 0) return [];
+    
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    return releases.filter((release) => {
+      if (!release.release_date) return filter === 'latest'; // Include releases without date only in latest
+      
+      const releaseDate = new Date(release.release_date);
+      const releaseDateOnly = new Date(releaseDate.getFullYear(), releaseDate.getMonth(), releaseDate.getDate());
+      
+      switch (filter) {
+        case 'upcoming':
+          // Show only movies NOT released yet (future dates)
+          return releaseDateOnly > today;
+          
+        case 'latest':
+          // Show all latest added 20 posts (released or not)
+          return true;
+          
+        case 'this_month':
+          // Show releases in current month (upcoming or released)
+          return releaseDate.getMonth() === now.getMonth() && 
+                 releaseDate.getFullYear() === now.getFullYear();
+          
+        case 'last_6_months':
+          // Show releases from last 6 months
+          const sixMonthsAgo = new Date(now);
+          sixMonthsAgo.setMonth(now.getMonth() - 6);
+          return releaseDate >= sixMonthsAgo && releaseDate <= now;
+          
+        case 'last_year':
+          // Show releases from last 1 year
+          const oneYearAgo = new Date(now);
+          oneYearAgo.setFullYear(now.getFullYear() - 1);
+          return releaseDate >= oneYearAgo && releaseDate <= now;
+          
+        default:
+          return true;
+      }
+    });
+  };
+
+  // Update filtered releases when tab or filter changes
   useEffect(() => {
     const currentReleases = activeTab === 'bollywood' ? bollywoodReleases : ottReleases;
-    setFilteredReleases(currentReleases);
-  }, [ottReleases, bollywoodReleases, activeTab]);
+    let filtered = filterReleasesByDate(currentReleases, selectedFilter);
+    
+    // Limit to 20 for 'latest' filter
+    if (selectedFilter === 'latest') {
+      filtered = filtered.slice(0, 20);
+    }
+    
+    setFilteredReleases(filtered);
+  }, [ottReleases, bollywoodReleases, activeTab, selectedFilter]);
 
   // Auto scroll to top when page loads
   useEffect(() => {
@@ -146,8 +198,10 @@ const OTTReleases = () => {
   // Filter options for the dropdown
   const filterOptions = [
     { value: 'upcoming', label: 'Upcoming Releases' },
+    { value: 'latest', label: 'Latest Releases' },
     { value: 'this_month', label: 'This Month' },
-    { value: 'all', label: 'All Releases' }
+    { value: 'last_6_months', label: 'Last 6 Months' },
+    { value: 'last_year', label: 'Last 1 Year' }
   ];
 
   // Handle filter change
