@@ -425,7 +425,7 @@ const TVRealityShows = () => {
                 })
               ) : (
                 <div className="col-span-full text-center py-8">
-                  <p className="text-sm text-gray-400 mb-1">No {activeTab === 'bollywood' ? 'bollywood reality shows' : 'reality shows'} found</p>
+                  <p className="text-sm text-gray-400 mb-1">No {activeTab === 'bollywood' ? 'hindi reality shows' : 'TV reality shows'} found</p>
                   <p className="text-xs text-gray-400">Try selecting a different time period</p>
                 </div>
               )}
