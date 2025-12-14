@@ -162,6 +162,19 @@ class ArticleUpdate(BaseModel):
     # Social Media Embed fields
     social_media_type: Optional[str] = None
     social_media_embed: Optional[str] = None
+    social_media_embeds: Optional[str] = None  # JSON string for multiple social media embeds
+    # Ad-specific fields
+    ad_type: Optional[str] = None  # Type of ad
+    sponsored_link: Optional[str] = None  # External link for sponsored ads
+    sponsored_label: Optional[str] = None  # Label for sponsored ads
+    is_sponsored: Optional[bool] = None
+    # Comment fields
+    comments_enabled: Optional[bool] = None
+    review_comments_enabled: Optional[bool] = None
+    # Top Story fields
+    top_story_duration_hours: Optional[int] = None
+    # Scheduling fields
+    scheduled_timezone: Optional[str] = None
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
