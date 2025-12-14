@@ -436,20 +436,11 @@ const TVRealityShows = () => {
                           />
                         </div>
                         
-                        {/* White Background Section with Play Icon and Title */}
+                        {/* White Background Section with Title */}
                         <div className="bg-white p-3">
-                          <div className="flex items-center space-x-2">
-                            <div className="flex-shrink-0">
-                              <div className="w-4 h-4 border border-black rounded-full flex items-center justify-center p-0.5">
-                                <svg className="w-full h-full text-black" fill="currentColor" viewBox="0 0 24 24" style={{ marginLeft: '1px' }}>
-                                  <path d="M8 5v14l11-7z"/>
-                                </svg>
-                              </div>
-                            </div>
-                            <h3 className="text-gray-900 font-semibold text-sm leading-tight line-clamp-2 flex-1 text-left">
-                              {article.title}
-                            </h3>
-                          </div>
+                          <h3 className="text-gray-900 font-semibold text-sm leading-tight line-clamp-2 text-left">
+                            {article.title}
+                          </h3>
                         </div>
                       </div>
                     </div>
