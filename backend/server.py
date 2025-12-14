@@ -451,7 +451,7 @@ async def get_usa_row_videos_sections(limit: int = 20, db = Depends(get_db)):
 
 @api_router.get("/articles/sections/viral-shorts")
 async def get_viral_shorts_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
-    """Get articles for Viral Shorts section with Viral Shorts and Bollywood tabs
+    """Get articles for Tadka Shorts section with Tadka Shorts and Bollywood tabs
     
     Args:
         limit: Number of articles to fetch (default 20)
@@ -507,7 +507,7 @@ async def get_viral_shorts_articles(limit: int = 20, states: str = None, db = De
     else:
         viral_shorts_articles = crud.get_articles_by_category_slug(db, category_slug="viral-shorts", limit=limit)
     
-    # For Bollywood tab - no state filtering, show all Viral Shorts Bollywood videos
+    # For Bollywood tab - no state filtering, show all Tadka Shorts Bollywood videos
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="viral-shorts-bollywood", limit=limit)
     
     return {
