@@ -411,13 +411,13 @@ const TadkaPics = () => {
               </div>
 
               {/* Tadka Shorts Vertical Grid */}
-              <div className="space-y-3">
+              <div className="space-y-3 flex flex-col items-center">
                 {tadkaShorts.length > 0 ? (
                   tadkaShorts.slice(0, 10).map((short) => (
                     <div
                       key={short.id}
                       onClick={() => handleShortClick(short)}
-                      className="cursor-pointer group"
+                      className="cursor-pointer group w-[60%]"
                     >
                       <div className="rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
                         <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
