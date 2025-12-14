@@ -40,6 +40,7 @@ import TVRealityShows from "./pages/TVRealityShows";
 import TadkaShorts from "./pages/TadkaShorts";
 import OTTReviews from "./pages/OTTReviews";
 import OTTReleases from "./pages/OTTReleases";
+import TheaterReleases from "./pages/TheaterReleases";
 import ArticlePage from "./pages/ArticlePage";
 import SimpleArticlePage from "./pages/SimpleArticlePage";
 import ImageGalleryPage from "./pages/ImageGalleryPage";
