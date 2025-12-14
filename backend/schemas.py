@@ -29,8 +29,8 @@ class CategoryCreate(CategoryBase):
     pass
 
 class Category(CategoryBase):
-    id: Optional[PyObjectId] = Field(alias="_id", default=None)
-    created_at: datetime
+    id: Optional[Any] = None  # Support both ObjectId, int, and string IDs
+    created_at: Optional[datetime] = None  # Make created_at optional for legacy categories
     
     class Config:
         populate_by_name = True
