@@ -473,6 +473,7 @@ const HealthFoodTopics = () => {
           </div>
         </div>
       </div>
+      </div>
     </>
   );
 };
