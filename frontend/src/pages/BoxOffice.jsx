@@ -108,19 +108,30 @@ const BoxOffice = () => {
 
   // Filter articles based on date
   const filterArticlesByDate = (articles, filter) => {
+    if (!articles || articles.length === 0) {
+      return [];
+    }
+
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    return articles.filter((article) => {
-      if (!article.publishedAt) return false;
+    
+    const filtered = articles.filter((article) => {
+      // Use actual publishedAt date from article data
+      let articleDate;
+      if (article.published_at || article.publishedAt) {
+        articleDate = new Date(article.published_at || article.publishedAt);
+      } else {
+        return false; // Don't include articles without dates
+      }
       
-      const articleDate = new Date(article.publishedAt);
+      // Reset time to start of day for accurate comparison
+      const articleDateOnly = new Date(articleDate.getFullYear(), articleDate.getMonth(), articleDate.getDate());
       const timeDiff = now - articleDate;
       const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
       switch (filter) {
+        case 'latest':
+          return true; // Show all articles for "Latest" filter
         case 'thisWeek':
           const currentWeekStart = new Date(today);
           const dayOfWeek = today.getDay();
