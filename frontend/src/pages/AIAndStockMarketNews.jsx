@@ -47,7 +47,7 @@ const AIAndStockMarketNews = () => {
           setAiArticles(aiData);
         }
 
-        const stockMarketResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/stock-market?limit=50`);
+        const stockMarketResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/stock-market?limit=20`);
         if (stockMarketResponse.ok) {
           const stockMarketData = await stockMarketResponse.json();
           setStockMarketArticles(stockMarketData);
