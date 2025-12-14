@@ -220,7 +220,7 @@ const Navigation = ({ onLayoutModeChange }) => {
     { name: t('nav.box_office', 'Box Office'), path: '/box-office' },
     { name: t('nav.movie_schedules', 'Theater Releases'), path: '/theater-releases' },
     { name: t('nav.new_video_songs', 'New Video Songs'), path: '/latest-new-video-songs' },
-    { name: t('nav.tv_shows', 'TV Shows'), path: '/tv-shows' },
+    { name: t('nav.tv_shows', 'TV Spotlight'), path: '/tv-spotlight' },
     { name: t('nav.ott_releases', 'OTT Releases'), path: '/ott-releases' },
     { name: t('nav.ott_reviews', 'OTT Reviews'), path: '/ott-reviews' },
     { name: t('nav.events_interviews', 'Events & Interviews'), path: '/events-interviews' },
