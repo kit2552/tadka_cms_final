@@ -113,6 +113,27 @@ const TrailersTeasers = () => {
     setRelatedArticles(sampleTrailersArticles.slice(0, 5));
   }, []);
 
+  // Scroll restoration logic
+  useEffect(() => {
+    // Check if we're returning from a detail page
+    const savedScrollPosition = sessionStorage.getItem('trailersScrollPosition');
+    
+    if (savedScrollPosition && location.state?.fromDetail) {
+      // Restore scroll position when returning from detail page
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+      }, 100);
+    } else {
+      // Scroll to top on fresh page load
+      window.scrollTo(0, 0);
+    }
+
+    // Cleanup: remove the flag after restoring
+    if (location.state?.fromDetail) {
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   useEffect(() => {
     const fetchTrailersData = async () => {
       try {
