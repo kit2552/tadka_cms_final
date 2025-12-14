@@ -197,8 +197,8 @@ const OTTReleases = () => {
 
   // Filter options for the dropdown
   const filterOptions = [
-    { value: 'upcoming', label: 'Upcoming Releases' },
-    { value: 'latest', label: 'Latest Releases' },
+    { value: 'latest', label: 'Latest' },
+    { value: 'upcoming', label: 'Upcoming' },
     { value: 'this_month', label: 'This Month' },
     { value: 'last_6_months', label: 'Last 6 Months' },
     { value: 'last_year', label: 'Last 1 Year' }
