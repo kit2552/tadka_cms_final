@@ -426,22 +426,26 @@ const EventsInterviews = () => {
                       className="cursor-pointer"
                       onClick={() => handleArticleClick(article)}
                     >
-                      <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                        <div className="relative">
-                          <img
-                            src={youtubeThumbnail || article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
-                            alt={article.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            style={{ width: '100%', height: '180px' }}
-                            onError={(e) => {
-                              e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
-                            }}
-                          />
-                        </div>
-                        <div className="p-3 text-left">
-                          <h3 style={{fontSize: '14px', fontWeight: '600', lineHeight: '1.4', wordWrap: 'break-word'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
-                            {article.title}
-                          </h3>
+                      <div className="relative bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group" style={{ height: '200px' }}>
+                        <img
+                          src={youtubeThumbnail || article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
+                          alt={article.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+                          }}
+                        />
+                        
+                        {/* Title Overlay with Black Transparent Banner and Play Icon */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-3">
+                          <div className="flex items-start space-x-2">
+                            <svg className="w-4 h-4 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            <h3 className="text-white font-semibold text-sm leading-tight line-clamp-2">
+                              {article.title}
+                            </h3>
+                          </div>
                         </div>
                       </div>
                     </div>
