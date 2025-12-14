@@ -481,6 +481,15 @@ const TadkaShorts = () => {
         </div>
       </div>
       </div>
+      
+      {/* Video Modal for playing YouTube shorts */}
+      {videoModalOpen && selectedVideo && (
+        <VideoModal
+          isOpen={videoModalOpen}
+          onClose={handleVideoModalClose}
+          video={selectedVideo}
+        />
+      )}
     </>
   );
 };
