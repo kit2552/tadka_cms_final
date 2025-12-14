@@ -209,6 +209,8 @@ const OTTReleases = () => {
   const handleFilterChange = (filterValue) => {
     setSelectedFilter(filterValue);
     setIsFilterOpen(false);
+    // Scroll to top when filter changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Close dropdown when clicking outside
