@@ -47,7 +47,7 @@ const FashionTravelTopics = () => {
           setFashionArticles(fashionData);
         }
 
-        const travelResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/travel?limit=50`);
+        const travelResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/travel?limit=20`);
         if (travelResponse.ok) {
           const travelData = await travelResponse.json();
           setTravelArticles(travelData);
