@@ -184,6 +184,7 @@ const BoxOffice = () => {
   }, [activeTab, boxOfficeArticles, bollywoodArticles, selectedFilter]);
 
   const filterOptions = [
+    { value: 'latest', label: 'Latest' },
     { value: 'thisWeek', label: 'This Week' },
     { value: 'today', label: 'Today' },
     { value: 'yesterday', label: 'Yesterday' },
@@ -196,7 +197,7 @@ const BoxOffice = () => {
 
   const getCurrentFilterLabel = () => {
     const option = filterOptions.find(opt => opt.value === selectedFilter);
-    return option ? option.label : 'This Week';
+    return option ? option.label : 'Latest';
   };
 
   const handleFilterChange = (filterValue) => {
