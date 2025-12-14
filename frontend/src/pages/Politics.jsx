@@ -476,6 +476,7 @@ const Politics = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
