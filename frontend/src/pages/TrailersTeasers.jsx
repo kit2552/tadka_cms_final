@@ -13,7 +13,7 @@ const TrailersTeasers = () => {
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(false); // Start with false to show sample data immediately
   const [error, setError] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState('thisWeek');
+  const [selectedFilter, setSelectedFilter] = useState('latest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredArticles, setFilteredArticles] = useState([]);
 
