@@ -356,32 +356,26 @@ const BoxOffice = () => {
             {/* Articles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {filteredArticles.map((article) => (
-                <div
-                  key={article.id}
+                <div 
+                  key={article.id} 
+                  className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
+                  style={{ padding: '0.5rem' }}
                   onClick={() => handleArticleClick(article)}
-                  className={`group cursor-pointer ${themeClasses.cardBackground} rounded-lg border ${themeClasses.border} overflow-hidden hover:shadow-lg transition-all duration-300`}
                 >
-                  <div className="p-4">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-20 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex-shrink-0 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 5.5a.5.5 0 11-1 0 .5.5 0 011 0zm4 0a.5.5 0 11-1 0 .5.5 0 011 0zM6.5 9.5A.5.5 0 017 9h.5C8.328 9 9 9.672 9 10.5v1C9 12.328 8.328 13 7.5 13H7a.5.5 0 01-.5-.5v-3zM11 9h.5c.828 0 1.5.672 1.5 1.5v1c0 .828-.672 1.5-1.5 1.5H11a.5.5 0 01-.5-.5v-3a.5.5 0 01.5-.5z" clipRule="evenodd"/>
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className={`font-semibold ${themeClasses.textPrimary} group-hover:text-blue-600 transition-colors duration-200 leading-tight mb-2 text-left line-clamp-2`}>
-                          {article.title}
-                        </h3>
-                        {article.summary && (
-                          <p className={`text-sm ${themeClasses.textSecondary} line-clamp-2 mb-2 text-left`}>
-                            {article.summary}
-                          </p>
-                        )}
-                        <div className="flex items-center justify-between text-xs text-gray-500">
-                          <span>{article.author || 'Box Office Desk'}</span>
-                          <span>{formatDate(article.publishedAt)}</span>
-                        </div>
+                  <div className="flex items-start space-x-3 text-left pr-3">
+                    <img
+                      src={article.image_url || 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300&h=200&fit=crop'}
+                      alt={article.title}
+                      className="flex-shrink-0 w-32 h-24 object-cover rounded group-hover:scale-105 transition-transform duration-200"
+                    />
+                    <div className="flex-1 min-w-0 text-left">
+                      <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
+                        {article.title}
+                      </h3>
+                      <div className="text-xs text-gray-500 text-left">
+                        <p className="mb-1">
+                          {formatDate(article.published_at || article.publishedAt)}
+                        </p>
                       </div>
                     </div>
                   </div>
