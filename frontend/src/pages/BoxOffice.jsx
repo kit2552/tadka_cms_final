@@ -354,8 +354,8 @@ const BoxOffice = () => {
             </div>
 
             {/* Articles Grid */}
-            <div className="space-y-4">
-              {filteredArticles.map((article, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              {filteredArticles.map((article) => (
                 <div
                   key={article.id}
                   onClick={() => handleArticleClick(article)}
