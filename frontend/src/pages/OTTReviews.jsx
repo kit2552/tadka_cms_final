@@ -54,7 +54,7 @@ const OTTReviews = () => {
             setOttReviewsArticles(ottReviewsData);
           } else {
             // Further fallback to ott-movie-reviews category
-            const ottMovieReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ott-movie-reviews?limit=50`);
+            const ottMovieReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ott-movie-reviews?limit=20`);
             if (ottMovieReviewsResponse.ok) {
               const ottMovieReviewsData = await ottMovieReviewsResponse.json();
               setOttReviewsArticles(ottMovieReviewsData);
