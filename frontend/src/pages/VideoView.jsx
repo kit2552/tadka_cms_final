@@ -649,9 +649,8 @@ const VideoView = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-4 text-center">
-                    <p className="text-gray-600 text-sm">No related videos found</p>
-                    <p className="text-xs text-gray-400 mt-1">Debug: {relatedVideos.length} videos loaded</p>
+                  <div className="text-center py-8">
+                    <p className="text-sm text-gray-400">No related videos found</p>
                   </div>
                 )}
               </div>
