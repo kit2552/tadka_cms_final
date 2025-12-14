@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { STATE_CODE_MAPPING, parseStoredStates, DEFAULT_SELECTED_STATES } from '../utils/statesConfig';
 
 // Helper function to extract YouTube video ID and get thumbnail
 const getYouTubeThumbnail = (url) => {
@@ -89,11 +90,24 @@ const SponsoredAds = ({
     { title: 'Features', data: features }
   ];
 
-  // Fetch sponsored ads from API
+  // Fetch sponsored ads from API with state filtering
   useEffect(() => {
     const fetchSponsoredAds = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/articles/sections/sponsored-ads?limit=4`);
+        // Get user's state preferences from localStorage
+        const userStateString = localStorage.getItem('tadka_state') || JSON.stringify(DEFAULT_SELECTED_STATES);
+        const userStateNames = parseStoredStates(userStateString);
+        
+        // Convert state names to state codes
+        const stateCodes = userStateNames.map(stateName => STATE_CODE_MAPPING[stateName]).filter(Boolean);
+        
+        // Build API URL with state codes
+        let url = `${process.env.REACT_APP_BACKEND_URL}/api/articles/sections/sponsored-ads?limit=4`;
+        if (stateCodes.length > 0) {
+          url += `&states=${stateCodes.join(',')}`;
+        }
+        
+        const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
           setSponsoredAds(data);
@@ -106,6 +120,18 @@ const SponsoredAds = ({
     };
 
     fetchSponsoredAds();
+    
+    // Listen for state preference changes
+    const handleStateChange = () => {
+      setLoading(true);
+      fetchSponsoredAds();
+    };
+    
+    window.addEventListener('statePreferenceChanged', handleStateChange);
+    
+    return () => {
+      window.removeEventListener('statePreferenceChanged', handleStateChange);
+    };
   }, []);
 
   const ArticleList = ({ articles }) => (
