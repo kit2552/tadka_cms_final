@@ -836,29 +836,6 @@ const ArticlePage = () => {
                 <div className={`text-gray-900 leading-relaxed space-y-6 text-left`}>
                   {/* For video content type, don't show main content - only video embed */}
                   {/* Main Content is hidden for video types */}
-                    <div dangerouslySetInnerHTML={{ 
-                      __html: stripLinkStyles(
-                        article.content
-                          .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>\s*$/gi, '') // Remove trailing empty paragraphs
-                          .trim()
-                      )
-                    }} />
-                  ) : (
-                    <>
-                      <p>
-                        This is the main content of the article. In a real application, this would be 
-                        the full article content retrieved from your backend database.
-                      </p>
-                      <p>
-                        You can add rich text content here including multiple paragraphs, quotes, 
-                        and other formatted content that makes up the complete article.
-                      </p>
-                      <p>
-                        The article content would continue here with additional paragraphs, 
-                        analysis, and conclusions relevant to the topic.
-                      </p>
-                    </>
-                  )}
 
                   {/* Social Media Embed */}
                   {article.social_media_type && article.social_media_embed && (
