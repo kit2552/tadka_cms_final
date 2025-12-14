@@ -71,8 +71,8 @@ const TheaterReleases = () => {
         // Add timestamp to prevent caching
         const cacheBuster = `${statesParam ? '&' : '?'}t=${Date.now()}`;
         
-        // Fetch from theater-releases API endpoint with state filtering
-        const ottRegionalResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-releases${statesParam}${cacheBuster}`);
+        // Fetch from theater-bollywood API endpoint with state filtering
+        const ottRegionalResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood${statesParam}${cacheBuster}`);
         if (ottRegionalResponse.ok) {
           const ottRegionalData = await ottRegionalResponse.json();
           console.log('Theater Releases fetched:', ottRegionalData);
