@@ -295,7 +295,7 @@ const TVRealityShows = () => {
       <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
         <div className="text-center max-w-md mx-auto p-6">
           <div className="text-6xl mb-4">🎤</div>
-          <h2 className={`text-2xl font-bold ${themeClasses.textPrimary} mb-2`}>Unable to Load Events & Interviews</h2>
+          <h2 className={`text-2xl font-bold ${themeClasses.textPrimary} mb-2`}>Unable to Load Reality Shows</h2>
           <p className={`${themeClasses.textSecondary} mb-6`}>{error}</p>
           <button
             onClick={() => window.location.reload()}
