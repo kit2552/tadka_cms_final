@@ -48,7 +48,7 @@ const OTTReviews = () => {
           setBollywoodArticles(ottSectionData.web_series || []); // Use web_series as bollywood content
         } else {
           // Fallback: try individual category endpoints
-          const ottReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ott-reviews?limit=50`);
+          const ottReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ott-reviews?limit=20`);
           if (ottReviewsResponse.ok) {
             const ottReviewsData = await ottReviewsResponse.json();
             setOttReviewsArticles(ottReviewsData);
