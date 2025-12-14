@@ -280,16 +280,19 @@ const TadkaPics = () => {
         {/* Main Container */}
         <div className="max-w-5xl-plus mx-auto px-8 pb-6">
           
-          {/* Tadka Pics Section */}
-          <div className="-mt-1">
-            {/* Section Header - Sticky with filter */}
-            <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
-              <div className="pl-0 pr-4 py-4">
-                <div className="mb-2">
-                  <h2 className="text-base font-bold text-black text-left leading-tight">
-                    Tadka Pics
-                  </h2>
-                </div>
+          {/* Two Section Layout - 70%/30% split */}
+          <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
+            
+            {/* Tadka Pics Section - 70% width */}
+            <div className="lg:col-span-7 -mt-1">
+              {/* Section Header - Sticky with filter */}
+              <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+                <div className="pl-0 pr-4 py-4">
+                  <div className="mb-2">
+                    <h2 className="text-base font-bold text-black text-left leading-tight">
+                      Tadka Pics
+                    </h2>
+                  </div>
                 
                 {/* Gallery count and Filter */}
                 <div className="flex items-center justify-between">
@@ -383,12 +386,65 @@ const TadkaPics = () => {
               })}
             </div>
 
-            {filteredGalleries.length === 0 && !loading && (
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-400 mb-1">No galleries found</p>
-                <p className="text-xs text-gray-400">Try selecting a different time period</p>
+              {filteredGalleries.length === 0 && !loading && (
+                <div className="text-center py-8">
+                  <p className="text-sm text-gray-400 mb-1">No galleries found</p>
+                  <p className="text-xs text-gray-400">Try selecting a different time period</p>
+                </div>
+              )}
+            </div>
+
+            {/* Tadka Shorts Section - 30% width */}
+            <div className="lg:col-span-3 border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0">
+              {/* Tadka Shorts Header */}
+              <div className={`sticky top-16 z-30 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+                <div className="pl-0 pr-4 py-4">
+                  <div className="mb-2">
+                    <h2 className="text-base font-bold text-black text-left leading-tight">
+                      Tadka Shorts
+                    </h2>
+                  </div>
+                  <p className="text-xs text-gray-900 opacity-75 text-left">
+                    Trending videos you may like
+                  </p>
+                </div>
               </div>
-            )}
+
+              {/* Tadka Shorts List */}
+              <div className="space-y-0">
+                {tadkaShorts.length > 0 ? (
+                  tadkaShorts.map((short, index) => (
+                    <div
+                      key={short.id}
+                      onClick={() => handleShortClick(short)}
+                      className={`group cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-2 ${
+                        index < tadkaShorts.length - 1 ? 'border-b border-gray-200' : ''
+                      }`}
+                    >
+                      <div className="flex space-x-3">
+                        <img
+                          src={getYouTubeThumbnail(short.youtube_url) || short.image_url || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=60&h=45&fit=crop'}
+                          alt={short.title}
+                          className="w-20 h-16 object-cover rounded flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
+                        />
+                        <div className="flex-1 min-w-0 text-left">
+                          <h4 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200 leading-tight mb-2 text-left line-clamp-2" style={{ fontSize: '0.9rem' }}>
+                            {short.title}
+                          </h4>
+                          <p className="text-xs text-gray-600 text-left">
+                            {formatDate(short.published_at || short.publishedAt)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-sm text-gray-400">No shorts available</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
