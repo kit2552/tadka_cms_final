@@ -88,9 +88,9 @@ const TVRealityShows = () => {
           setBollywoodArticles(sampleBollywoodData);
         }
         
-        // Get related articles from configured categories for events interviews page
+        // Get related articles from configured categories for reality shows page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/events-interviews`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/reality-shows`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
