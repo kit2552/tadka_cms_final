@@ -414,8 +414,8 @@ const EventsInterviews = () => {
               </div>
             </div>
 
-            {/* Articles Grid - Horizontal Cards like Home Page */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
+            {/* Articles Grid - 2 Column Layout with Wider Posts */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {filteredArticles.length > 0 ? (
                 filteredArticles.map((article) => {
                   const youtubeThumbnail = getYouTubeThumbnail(article.video_url || article.youtube_url);
