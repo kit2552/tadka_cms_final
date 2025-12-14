@@ -454,15 +454,15 @@ async def get_usa_row_videos_sections(limit: int = 20, db = Depends(get_db)):
         "row": row_articles
     }
 
-@api_router.get("/articles/sections/viral-shorts")
-async def get_viral_shorts_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
+@api_router.get("/articles/sections/tadka-shorts")
+async def get_tadka_shorts_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
     """Get articles for Tadka Shorts section with Tadka Shorts and Bollywood tabs
     
     Args:
         limit: Number of articles to fetch (default 20)
-        states: Comma-separated list of states for viral shorts filtering (Bollywood tab ignores state filtering)
+        states: Comma-separated list of states for tadka shorts filtering (Bollywood tab ignores state filtering)
     """
-    # For viral shorts tab - apply state filtering if provided
+    # For tadka shorts tab - apply state filtering if provided
     if states:
         # Convert state names to state codes (map full names to codes)
         state_name_to_code = {
@@ -506,17 +506,17 @@ async def get_viral_shorts_articles(limit: int = 20, states: str = None, db = De
                 state_codes.append(state_name_to_code[state_name])
         
         if state_codes:
-            viral_shorts_articles = crud.get_articles_by_states(db, category_slug="viral-shorts", state_codes=state_codes, limit=limit)
+            tadka_shorts_articles = crud.get_articles_by_states(db, category_slug="tadka-shorts", state_codes=state_codes, limit=limit)
         else:
-            viral_shorts_articles = crud.get_articles_by_category_slug(db, category_slug="viral-shorts", limit=limit)
+            tadka_shorts_articles = crud.get_articles_by_category_slug(db, category_slug="tadka-shorts", limit=limit)
     else:
-        viral_shorts_articles = crud.get_articles_by_category_slug(db, category_slug="viral-shorts", limit=limit)
+        tadka_shorts_articles = crud.get_articles_by_category_slug(db, category_slug="tadka-shorts", limit=limit)
     
     # For Bollywood tab - no state filtering, show all Tadka Shorts Bollywood videos
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="viral-shorts-bollywood", limit=limit)
+    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="tadka-shorts-bollywood", limit=limit)
     
     return {
-        "viral_shorts": viral_shorts_articles,
+        "tadka_shorts": tadka_shorts_articles,
         "bollywood": bollywood_articles
     }
 

@@ -40,28 +40,23 @@ const TadkaShorts = () => {
       try {
         setLoading(true);
         
-        // Fetch articles from the backend API using tadka-shorts category
-        const shortsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tadka-shorts?limit=20`);
-        console.log('Tadka Shorts response status:', shortsResponse.status);
+        // Fetch articles from the backend API using sections endpoint
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/tadka-shorts?limit=20`);
+        console.log('Tadka Shorts sections response status:', response.status);
         
-        if (shortsResponse.ok) {
-          const shortsData = await shortsResponse.json();
-          console.log('Tadka Shorts data received:', shortsData.length);
-          setShortsArticles(shortsData);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Tadka Shorts sections data received:', data);
+          
+          // Extract tadka_shorts and bollywood arrays from response
+          setShortsArticles(data.tadka_shorts || []);
+          setBollywoodArticles(data.bollywood || []);
+          
+          console.log('Tadka Shorts count:', (data.tadka_shorts || []).length);
+          console.log('Bollywood count:', (data.bollywood || []).length);
         } else {
-          console.log('Tadka Shorts response not ok');
+          console.log('Tadka Shorts sections response not ok');
           setShortsArticles([]);
-        }
-
-        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tadka-shorts-bollywood?limit=20`);
-        console.log('Bollywood Tadka Shorts response status:', bollywoodResponse.status);
-        
-        if (bollywoodResponse.ok) {
-          const bollywoodData = await bollywoodResponse.json();
-          console.log('Bollywood Tadka Shorts data received:', bollywoodData.length);
-          setBollywoodArticles(bollywoodData);
-        } else {
-          console.log('Bollywood Tadka Shorts response not ok');
           setBollywoodArticles([]);
         }
         
