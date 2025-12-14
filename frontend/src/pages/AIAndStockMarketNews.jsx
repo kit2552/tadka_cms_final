@@ -474,6 +474,7 @@ const AIAndStockMarketNews = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
