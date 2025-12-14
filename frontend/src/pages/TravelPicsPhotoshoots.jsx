@@ -51,9 +51,10 @@ const TravelPicsPhotoshoots = () => {
         const photoshootsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/photoshoots?skip=0&limit=20`);
         if (photoshootsResponse.ok) {
           const photoshootsData = await photoshootsResponse.json();
-          console.log('Photoshoots data:', photoshootsData);
+          console.log('Photoshoots data with galleries:', photoshootsData);
           setPhotoshootsArticles(photoshootsData);
         } else {
+          console.log('Photoshoots response not ok, using fallback');
           // Fallback: use travel pics articles for photoshoots if not available
           setPhotoshootsArticles(travelPicsArticles);
         }
