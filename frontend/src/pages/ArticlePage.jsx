@@ -332,6 +332,9 @@ const ArticlePage = () => {
         case 'travel-pics-photoshoots':
           navigate('/travel-pics-photoshoots', { state: { fromDetail: true } });
           break;
+        case 'tv-spotlight':
+          navigate('/tv-spotlight', { state: { fromDetail: true } });
+          break;
         default:
           // For other cases, use browser back
           if (window.history.length > 1) {
