@@ -400,11 +400,29 @@ const TravelPicsPhotoshoots = () => {
                   onClick={() => handleArticleClick(article)}
                 >
                   <div className="flex items-start space-x-3 text-left pr-3">
-                    <img
-                      src={article.image_url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop'}
-                      alt={article.title}
-                      className="flex-shrink-0 w-32 h-24 object-cover rounded group-hover:scale-105 transition-transform duration-200"
-                    />
+                    {isVerticalGallery(article) ? (
+                      <img
+                        src={getRandomGalleryImage(article)}
+                        alt={article.title}
+                        className="flex-shrink-0 w-24 h-32 object-cover object-top rounded group-hover:scale-105 transition-transform duration-200"
+                        style={{ objectFit: 'cover', objectPosition: 'top' }}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop';
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={getRandomGalleryImage(article)}
+                        alt={article.title}
+                        className="flex-shrink-0 w-32 h-24 object-cover object-top rounded group-hover:scale-105 transition-transform duration-200"
+                        style={{ objectFit: 'cover', objectPosition: 'top' }}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop';
+                        }}
+                      />
+                    )}
                     <div className="flex-1 min-w-0 text-left">
                       <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
                         {article.title}
