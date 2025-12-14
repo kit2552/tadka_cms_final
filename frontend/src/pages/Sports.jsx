@@ -215,8 +215,16 @@ const Sports = () => {
   };
 
   const handleArticleClick = (article) => {
-    // Navigate to article page
-    navigate(`/article/${article.id}`);
+    // Save current scroll position before navigating
+    sessionStorage.setItem('sportsScrollPosition', window.scrollY.toString());
+    
+    // Route to video page for video content types, otherwise to article page
+    if (article.content_type === 'video' || article.content_type === 'video_post') {
+      navigate(`/video/${article.id}`, { state: { from: 'sports' } });
+    } else {
+      const slug = article.slug || article.title.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/article/${article.id}/${slug}`, { state: { from: 'sports' } });
+    }
   };
 
   const formatDate = (dateString) => {
@@ -240,17 +248,6 @@ const Sports = () => {
 
   const themeClasses = lightThemeClasses;
 
-  if (loading) {
-    return (
-      <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className={`text-lg font-medium ${themeClasses.textPrimary}`}>Loading Sports...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
@@ -270,7 +267,20 @@ const Sports = () => {
   }
 
   return (
-    <div className={`min-h-screen ${themeClasses.pageBackground}`}>
+    <>
+      {/* Loading Modal */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl px-4 py-3">
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+              <p className="text-sm font-medium text-gray-700">Loading...</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div className={`min-h-screen ${themeClasses.pageBackground}`}>
       {/* Main Container */}
       <div className="max-w-5xl-plus mx-auto px-8 pb-6">
         
@@ -391,6 +401,13 @@ const Sports = () => {
                 </div>
               ))}
             </div>
+
+            {filteredArticles.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-400 mb-1">No {activeTab === 'cricket' ? 'cricket' : 'sports'} articles found</p>
+                <p className="text-xs text-gray-400">Try selecting a different time period</p>
+              </div>
+            )}
           </div>
 
           {/* Related Articles Section - 30% width */}
@@ -449,6 +466,7 @@ const Sports = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
