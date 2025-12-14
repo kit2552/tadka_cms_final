@@ -37,6 +37,7 @@ import TopInstaPics from "./pages/TopInstaPics";
 import NewVideoSongs from "./pages/NewVideoSongs";
 import TVSpotlight from "./pages/TVSpotlight";
 import TVRealityShows from "./pages/TVRealityShows";
+import TadkaShorts from "./pages/TadkaShorts";
 import OTTReviews from "./pages/OTTReviews";
 import OTTReleases from "./pages/OTTReleases";
 import ArticlePage from "./pages/ArticlePage";
