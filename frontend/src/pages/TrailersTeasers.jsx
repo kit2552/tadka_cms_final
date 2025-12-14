@@ -467,9 +467,9 @@ const TrailersTeasers = () => {
             </div>
 
             {filteredArticles.length === 0 && (
-              <div className="text-center py-12">
-                <p className={`text-lg ${themeClasses.textPrimary} mb-2`}>No {activeTab === 'trailers' ? 'trailers' : 'bollywood trailers'} found</p>
-                <p className={`${themeClasses.textSecondary}`}>Try selecting a different time period</p>
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-400 mb-1">No {activeTab === 'trailers' ? 'trailers' : 'bollywood trailers'} found</p>
+                <p className="text-xs text-gray-400">Try selecting a different time period</p>
               </div>
             )}
           </div>
