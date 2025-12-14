@@ -51,11 +51,11 @@ const TravelPicsPhotoshoots = () => {
         const photoshootsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/photoshoots?limit=20`);
         if (photoshootsResponse.ok) {
           const photoshootsData = await photoshootsResponse.json();
+          console.log('Photoshoots data:', photoshootsData);
           setPhotoshootsArticles(photoshootsData);
         } else {
           // Fallback: use travel pics articles for photoshoots if not available
-          const travelPicsData = await travelPicsResponse.json();
-          setPhotoshootsArticles(travelPicsData);
+          setPhotoshootsArticles(travelPicsArticles);
         }
         
         // Get related articles from configured categories for travel-pics-photoshoots page
