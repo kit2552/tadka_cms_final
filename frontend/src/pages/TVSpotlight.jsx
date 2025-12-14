@@ -453,9 +453,9 @@ const TVSpotlight = () => {
                     </div>
                   ))
                 ) : (
-                  <p className={`text-gray-600 text-sm text-left`}>
-                    No related posts found
-                  </p>
+                  <div className="text-center py-8">
+                    <p className="text-sm text-gray-400">No related posts found</p>
+                  </div>
                 )}
               </div>
             </div>
@@ -463,7 +463,8 @@ const TVSpotlight = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
-export default TVShows;
+export default TVSpotlight;
