@@ -40,52 +40,29 @@ const TVRealityShows = () => {
       try {
         setLoading(true);
         
-        // Sample fallback data
-        const sampleRealityShowsData = [
-          {
-            id: 1,
-            title: "Bollywood Stars at Award Ceremony",
-            image_url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=200&fit=crop",
-            published_at: "2026-06-29T10:00:00Z"
-          },
-          {
-            id: 2,
-            title: "Exclusive Interview with Leading Actor",
-            image_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop",
-            published_at: "2026-06-28T15:30:00Z"
-          }
-        ];
-
-        const sampleBollywoodData = [
-          {
-            id: 3,
-            title: "Mumbai Film Festival Red Carpet",
-            image_url: "https://images.unsplash.com/photo-1494790108755-2616b612b1c8?w=300&h=200&fit=crop", 
-            published_at: "2026-06-30T18:00:00Z"
-          },
-          {
-            id: 4,
-            title: "Director's Candid Interview",
-            image_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=200&fit=crop",
-            published_at: "2026-06-27T12:00:00Z"
-          }
-        ];
+        // Fetch articles from the backend API using tv-reality-shows and tv-reality-shows-hindi categories
+        const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tv-reality-shows?limit=20`);
+        console.log('TV Reality Shows response status:', realityShowsResponse.status);
         
-        // Fetch articles from the backend API using reality-shows and bollywood categories
-        const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/reality-shows?limit=20`);
         if (realityShowsResponse.ok) {
           const realityShowsData = await realityShowsResponse.json();
-          setRealityShowsArticles(realityShowsData.length > 0 ? realityShowsData : sampleRealityShowsData);
+          console.log('TV Reality Shows data received:', realityShowsData.length);
+          setRealityShowsArticles(realityShowsData);
         } else {
-          setRealityShowsArticles(sampleRealityShowsData);
+          console.log('TV Reality Shows response not ok');
+          setRealityShowsArticles([]);
         }
 
-        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood?limit=20`);
-        if (bollywoodResponse.ok) {
-          const bollywoodData = await bollywoodResponse.json();
-          setBollywoodArticles(bollywoodData.length > 0 ? bollywoodData : sampleBollywoodData);
+        const hindiResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tv-reality-shows-hindi?limit=20`);
+        console.log('Hindi Reality Shows response status:', hindiResponse.status);
+        
+        if (hindiResponse.ok) {
+          const hindiData = await hindiResponse.json();
+          console.log('Hindi Reality Shows data received:', hindiData.length);
+          setBollywoodArticles(hindiData);
         } else {
-          setBollywoodArticles(sampleBollywoodData);
+          console.log('Hindi Reality Shows response not ok');
+          setBollywoodArticles([]);
         }
         
         // Get related articles from configured categories for reality shows page
