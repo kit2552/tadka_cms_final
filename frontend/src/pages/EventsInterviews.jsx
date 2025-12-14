@@ -511,7 +511,7 @@ const EventsInterviews = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
     </>
   );
 };
