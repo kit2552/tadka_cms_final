@@ -287,7 +287,7 @@ const ViralVideos = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Viral Shorts
+                      Tadka Shorts
                     </button>
                   </div>
                 </div>
