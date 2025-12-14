@@ -8,9 +8,9 @@ const TadkaShorts = () => {
   const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
-  const [activeTab, setActiveTab] = useState('shorts'); // 'shorts' or 'reels'
+  const [activeTab, setActiveTab] = useState('shorts'); // 'shorts' or 'bollywood'
   const [shortsArticles, setShortsArticles] = useState([]);
-  const [reelsArticles, setReelsArticles] = useState([]);
+  const [bollywoodArticles, setBollywoodArticles] = useState([]);
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
