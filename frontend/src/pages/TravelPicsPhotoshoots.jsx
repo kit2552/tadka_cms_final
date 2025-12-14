@@ -41,14 +41,14 @@ const TravelPicsPhotoshoots = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using Travel Pics and Photoshoots sections (includes gallery data)
-        const travelPicsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/travel-pics?limit=20`);
+        const travelPicsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/travel-pics?skip=0&limit=20`);
         if (travelPicsResponse.ok) {
           const travelPicsData = await travelPicsResponse.json();
-          console.log('Travel Pics data:', travelPicsData);
+          console.log('Travel Pics data with galleries:', travelPicsData);
           setTravelPicsArticles(travelPicsData);
         }
 
-        const photoshootsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/photoshoots?limit=20`);
+        const photoshootsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/photoshoots?skip=0&limit=20`);
         if (photoshootsResponse.ok) {
           const photoshootsData = await photoshootsResponse.json();
           console.log('Photoshoots data:', photoshootsData);
