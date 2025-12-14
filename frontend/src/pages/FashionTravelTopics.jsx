@@ -125,6 +125,7 @@ const FashionTravelTopics = () => {
 
   // Filter options for the dropdown
   const filterOptions = [
+    { value: 'latest', label: 'Latest' },
     { value: 'thisWeek', label: 'This Week' },
     { value: 'today', label: 'Today' },
     { value: 'yesterday', label: 'Yesterday' },
