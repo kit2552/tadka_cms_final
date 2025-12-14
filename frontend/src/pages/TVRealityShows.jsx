@@ -524,4 +524,4 @@ const TVRealityShows = () => {
   );
 };
 
-export default EventsInterviews;
+export default TVRealityShows;
