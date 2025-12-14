@@ -386,7 +386,15 @@ const CreateSponsoredAd = ({ onClose }) => {
           sponsored_label: article.sponsored_label || '',
           social_media_type: article.social_media_type || '',
           social_media_embed: article.social_media_embed || '',
-          social_media_embeds: article.social_media_embeds || []
+          social_media_embeds: (() => {
+            try {
+              return typeof article.social_media_embeds === 'string' 
+                ? JSON.parse(article.social_media_embeds) 
+                : (article.social_media_embeds || []);
+            } catch {
+              return [];
+            }
+          })()
         });
         
         // Set selected states (multiple selection)
