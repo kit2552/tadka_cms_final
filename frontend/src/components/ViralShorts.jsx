@@ -93,7 +93,7 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
           {t('sections.bollywood', 'Bollywood')}
         </button>
         <Link 
-          to={`/${activeTab === 'bollywood' ? 'bollywood' : 'tadka-shorts'}`} 
+          to="/tadka-shorts" 
           className={`absolute top-1/2 transform -translate-y-1/2 right-4 group flex items-center justify-center text-xs ${getSectionHeaderClasses().moreButtonClass} transition-colors duration-200`}
         >
           <svg 
