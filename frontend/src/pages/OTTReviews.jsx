@@ -117,6 +117,26 @@ const OTTReviews = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Get YouTube thumbnail from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    const videoId = youtubeUrl.includes('youtube.com/watch?v=') 
+      ? youtubeUrl.split('v=')[1]?.split('&')[0]
+      : youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    
+    return videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : null;
+  };
+
+  // Get rating from article or generate consistent rating
+  const getArticleRating = (article, index) => {
+    if (article.rating) return parseFloat(article.rating);
+    
+    // Consistent ratings based on index
+    const ratings = [4.2, 3.8, 4.5, 2.9, 3.6, 4.1, 3.3, 4.7, 2.5, 3.9, 4.0, 3.2, 4.4, 2.8, 3.7];
+    return ratings[index % ratings.length];
+  };
+
   // Sample thumbnail images for related topics
   const getThumbnail = (index) => {
     const thumbnails = [
