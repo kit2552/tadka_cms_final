@@ -69,7 +69,7 @@ const translations = {
       beauty: 'గాసిప్',
       sports_schedules: 'క్రీడల షెడ్యూల్',
       tadka_pics: 'తడకా ఫోటోలు',
-      viral_shorts: 'వైరల్ షార్ట్స్',
+      viral_shorts: 'తడ్క షార్ట్స్',
       usa: 'ఎన్ఆర్ఐ న్యూస్',
       row: 'ప్రపంచ వార్తలు'
     },
@@ -159,7 +159,7 @@ const translations = {
       beauty: 'गॉसिप',
       sports_schedules: 'खेल कार्यक्रम',
       tadka_pics: 'तड़का फोटोज',
-      viral_shorts: 'वायरल शॉर्ट्स',
+      viral_shorts: 'तड़का शॉर्ट्स',
       usa: 'एनआरआई न्यूज़',
       row: 'विश्व समाचार'
     },
@@ -249,7 +249,7 @@ const translations = {
       beauty: 'கோசிப்',
       sports_schedules: 'விளையாட்டு அட்டவணைகள்',
       tadka_pics: 'தட்கா படங்கள்',
-      viral_shorts: 'வைரல் ஷார்ட்ஸ்',
+      viral_shorts: 'தட்கா ஷார்ட்ஸ்',
       usa: 'என்ஆர்ஐ செய்திகள்',
       row: 'உலக செய்திகள்'
     },
@@ -340,7 +340,7 @@ const translations = {
       beauty: 'Gossip',
       sports_schedules: 'Sports Schedules',
       tadka_pics: 'Tadka Photos',
-      viral_shorts: 'Viral Shorts',
+      viral_shorts: 'Tadka Shorts',
       usa: 'NRI News',
       row: 'World News'
     },
@@ -430,7 +430,7 @@ const translations = {
     beauty: 'ಗಾಸಿಪ್',
     sports_schedules: 'ಕ್ರೀಡಾ ವೇಳಾಪಟ್ಟಿಗಳು',
     tadka_pics: 'ತಡ್ಕಾ ಫೋಟೋಗಳು',
-    viral_shorts: 'ವೈರಲ್ ಶಾರ್ಟ್ಸ್'
+    viral_shorts: 'ತಡ್ಕಾ ಶಾರ್ಟ್ಸ್'
   },
 
   // Footer texts
