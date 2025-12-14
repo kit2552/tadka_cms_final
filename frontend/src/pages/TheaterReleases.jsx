@@ -8,7 +8,7 @@ const TheaterReleases = () => {
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('ott'); // 'ott' or 'regional'
-  const [ottReleases, setOttReleases] = useState([]);
+  const [theaterReleases, setTheaterReleases] = useState([]);
   const [regionalReleases, setRegionalReleases] = useState([]);
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -180,7 +180,7 @@ const TheaterReleases = () => {
 
   // Update filtered releases when tab or filter changes
   useEffect(() => {
-    const currentReleases = activeTab === 'regional' ? regionalReleases : ottReleases;
+    const currentReleases = activeTab === 'regional' ? regionalReleases : theaterReleases;
     let filtered = filterReleasesByDate(currentReleases, selectedFilter);
     
     // Limit to 20 for 'latest' filter
@@ -189,7 +189,7 @@ const TheaterReleases = () => {
     }
     
     setFilteredReleases(filtered);
-  }, [ottReleases, regionalReleases, activeTab, selectedFilter]);
+  }, [theaterReleases, regionalReleases, activeTab, selectedFilter]);
 
   // Auto scroll to top when page loads
   useEffect(() => {
