@@ -298,25 +298,25 @@ export const dataService = {
     }
   },
 
-  // Fetch viral shorts data from backend - viral shorts and bollywood with state filtering for viral shorts
+  // Fetch tadka shorts data from backend - tadka shorts and bollywood with state filtering for tadka shorts
   async getViralShortsData(userStates = null) {
     try {
-      let url = `${API_BASE_URL}/articles/sections/viral-shorts?limit=20`;
+      let url = `${API_BASE_URL}/articles/sections/tadka-shorts?limit=20`;
       if (userStates && userStates.length > 0) {
         url += `&states=${userStates.join(',')}`;
       }
       
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Failed to fetch viral shorts data');
+        throw new Error('Failed to fetch tadka shorts data');
       }
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching viral shorts data:', error);
+      console.error('Error fetching tadka shorts data:', error);
       // Fallback to empty data structure
       return {
-        viral_shorts: [],
+        tadka_shorts: [],
         bollywood: []
       };
     }
