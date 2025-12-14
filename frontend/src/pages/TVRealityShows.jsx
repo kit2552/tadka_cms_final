@@ -388,36 +388,37 @@ const TVRealityShows = () => {
               </div>
             </div>
 
-            {/* Articles Grid - 2 Column Layout with Wider Posts */}
+            {/* Articles Grid - Horizontal Card Layout like Politics Page */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {filteredArticles.length > 0 ? (
                 filteredArticles.map((article) => {
                   const youtubeThumbnail = getYouTubeThumbnail(article.video_url || article.youtube_url);
                   
                   return (
-                    <div
-                      key={article.id}
-                      className="cursor-pointer"
+                    <div 
+                      key={article.id} 
+                      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
+                      style={{ padding: '0.5rem' }}
                       onClick={() => handleArticleClick(article)}
                     >
-                      <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                        {/* Full Thumbnail Image */}
-                        <div className="relative overflow-hidden bg-gray-100" style={{ aspectRatio: '16 / 9' }}>
-                          <img
-                            src={youtubeThumbnail || article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
-                            alt={article.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            onError={(e) => {
-                              e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
-                            }}
-                          />
-                        </div>
-                        
-                        {/* White Background Section with Title */}
-                        <div className="bg-white p-3">
-                          <h3 className="text-gray-900 font-semibold text-sm leading-tight line-clamp-2 text-left">
+                      <div className="flex items-start space-x-3 text-left pr-3">
+                        <img
+                          src={youtubeThumbnail || article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=200&fit=crop'}
+                          alt={article.title}
+                          className="flex-shrink-0 w-32 h-24 object-cover rounded group-hover:scale-105 transition-transform duration-200"
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=200&fit=crop';
+                          }}
+                        />
+                        <div className="flex-1 min-w-0 text-left">
+                          <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
                             {article.title}
                           </h3>
+                          <div className="text-xs text-gray-500 text-left">
+                            <p className="mb-1">
+                              {formatDate(article.published_at || article.publishedAt)}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
