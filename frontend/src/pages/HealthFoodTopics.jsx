@@ -41,7 +41,7 @@ const HealthFoodTopics = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using health and food categories
-        const healthResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/health?limit=50`);
+        const healthResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/health?limit=20`);
         if (healthResponse.ok) {
           const healthData = await healthResponse.json();
           setHealthArticles(healthData);
