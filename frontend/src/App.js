@@ -119,6 +119,7 @@ function App() {
               <Route path="/" element={<Home layoutEditMode={layoutEditMode} />} />
               <Route path="/politics" element={<Politics />} />
               <Route path="/movies" element={<Movies />} />
+              <Route path="/movie-news" element={<MovieNews />} />
               <Route path="/sports" element={<Sports />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/trending-videos" element={<TrendingVideos />} />
