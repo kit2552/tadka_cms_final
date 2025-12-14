@@ -102,24 +102,37 @@ const TadkaShorts = () => {
     setFilteredArticles(filtered);
   }, [shortsArticles, bollywoodArticles, activeTab, selectedFilter]);
 
-  // Get random image from gallery
-  const getRandomGalleryImage = (article) => {
-    if (article.gallery && article.gallery.images) {
-      try {
-        let images = article.gallery.images;
-        if (typeof images === 'string') {
-          images = JSON.parse(images);
-        }
-        if (Array.isArray(images) && images.length > 0) {
-          const randomIndex = Math.floor(Math.random() * images.length);
-          const randomImage = images[randomIndex];
-          return randomImage.url || randomImage.data || randomImage;
-        }
-      } catch (error) {
-        console.error('Error parsing gallery images:', error);
-      }
+  // Get YouTube thumbnail from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    // Extract video ID from various YouTube URL formats
+    let videoId = null;
+    
+    // Handle youtube.com/watch?v=VIDEO_ID
+    if (youtubeUrl.includes('youtube.com/watch')) {
+      const urlParams = new URLSearchParams(youtubeUrl.split('?')[1]);
+      videoId = urlParams.get('v');
     }
-    return article.image_url || article.image;
+    // Handle youtu.be/VIDEO_ID
+    else if (youtubeUrl.includes('youtu.be/')) {
+      videoId = youtubeUrl.split('youtu.be/')[1].split('?')[0];
+    }
+    // Handle youtube.com/embed/VIDEO_ID
+    else if (youtubeUrl.includes('youtube.com/embed/')) {
+      videoId = youtubeUrl.split('embed/')[1].split('?')[0];
+    }
+    // Handle youtube.com/shorts/VIDEO_ID
+    else if (youtubeUrl.includes('youtube.com/shorts/')) {
+      videoId = youtubeUrl.split('shorts/')[1].split('?')[0];
+    }
+    
+    if (videoId) {
+      // Use maxresdefault for highest quality, fallback to hqdefault
+      return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    }
+    
+    return null;
   };
 
   // Check if gallery is vertical
@@ -211,14 +224,14 @@ const TadkaShorts = () => {
   };
 
   const handleArticleClick = (article) => {
-    sessionStorage.setItem('tadkaShortsScrollPosition', window.scrollY.toString());
-    
-    if (article.content_type === 'video' || article.content_type === 'video_post') {
-      navigate(`/video/${article.id}`, { state: { from: 'tadka-shorts' } });
-    } else {
-      const slug = article.slug || article.title.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/article/${article.id}/${slug}`, { state: { from: 'tadka-shorts' } });
-    }
+    // Open video in modal instead of navigating to another page
+    setSelectedVideo(article);
+    setVideoModalOpen(true);
+  };
+  
+  const handleVideoModalClose = () => {
+    setVideoModalOpen(false);
+    setSelectedVideo(null);
   };
 
   const formatDate = (dateString) => {
