@@ -163,6 +163,8 @@ const BoxOffice = () => {
           return false;
       }
     });
+    
+    return filtered;
   };
 
   // Get current articles based on active tab
