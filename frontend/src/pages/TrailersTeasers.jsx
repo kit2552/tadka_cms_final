@@ -131,7 +131,7 @@ const TrailersTeasers = () => {
           setTrailersArticles(sampleTrailersArticles);
         }
 
-        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood-trailers-teasers?limit=50`);
+        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/trailers-teasers-bollywood?limit=50`);
         console.log('Bollywood response status:', bollywoodResponse.status);
         
         if (bollywoodResponse.ok) {
