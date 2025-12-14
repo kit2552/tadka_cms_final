@@ -36,6 +36,7 @@ import AIAndStockMarketNews from "./pages/AIAndStockMarketNews";
 import TopInstaPics from "./pages/TopInstaPics";
 import NewVideoSongs from "./pages/NewVideoSongs";
 import TVSpotlight from "./pages/TVSpotlight";
+import TVRealityShows from "./pages/TVRealityShows";
 import OTTReviews from "./pages/OTTReviews";
 import OTTReleases from "./pages/OTTReleases";
 import ArticlePage from "./pages/ArticlePage";
