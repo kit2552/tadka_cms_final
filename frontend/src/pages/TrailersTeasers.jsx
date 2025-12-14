@@ -191,9 +191,11 @@ const TrailersTeasers = () => {
     yesterday.setDate(yesterday.getDate() - 1);
 
     return articles.filter((article) => {
-      if (!article.publishedAt) return false;
+      // Support both publishedAt (camelCase) and published_at (snake_case)
+      const publishDate = article.publishedAt || article.published_at;
+      if (!publishDate) return false;
       
-      const articleDate = new Date(article.publishedAt);
+      const articleDate = new Date(publishDate);
       const timeDiff = now - articleDate;
       const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
