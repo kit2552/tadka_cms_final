@@ -33,8 +33,8 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
       }
       
       if (videoId) {
-        // Use high quality thumbnail (maxresdefault for best quality, mqdefault as fallback)
-        return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        // Use mqdefault (320x180, 16:9) which fits better in wide containers without black bars
+        return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
       }
     } catch (error) {
       console.error('Error extracting YouTube thumbnail:', error);
