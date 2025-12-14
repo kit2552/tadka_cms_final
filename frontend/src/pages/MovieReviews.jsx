@@ -234,6 +234,19 @@ const MovieReviews = () => {
     }
   };
 
+  // Get YouTube thumbnail from video URL
+  const getYouTubeThumbnail = (youtubeUrl) => {
+    if (!youtubeUrl) return null;
+    
+    const videoId = youtubeUrl.includes('youtube.com/watch?v=') 
+      ? youtubeUrl.split('v=')[1]?.split('&')[0]
+      : youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
+    
+    return videoId 
+      ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+      : null;
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return 'Recently published';
     return new Date(dateString).toLocaleString('en-IN', {
@@ -379,33 +392,40 @@ const MovieReviews = () => {
               </div>
             </div>
 
-            {/* Articles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              {filteredArticles.map((article) => (
-                <div 
-                  key={article.id} 
-                  className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
-                  style={{ padding: '0.5rem' }}
+            {/* Articles Grid - YouTube Thumbnail Style */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredArticles.map((article, index) => (
+                <div
+                  key={article.id}
                   onClick={() => handleArticleClick(article)}
+                  className="cursor-pointer"
                 >
-                  <div className="flex items-start space-x-3 text-left pr-3">
-                    <ArticleImage
-                      src={article.image_url}
-                      alt={article.title}
-                      contentType={activeTab === 'movie-reviews-bollywood' ? 'movie-reviews-bollywood' : 'movie-reviews'}
-                      width="flex-shrink-0 w-32"
-                      height="h-24"
-                      imgClassName="object-cover rounded group-hover:scale-105 transition-transform duration-200"
-                      placeholderClassName="group-hover:scale-105 transition-transform duration-200"
-                    />
-                    <div className="flex-1 min-w-0 text-left">
-                      <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
-                        {article.title}
-                      </h3>
-                      <div className="text-xs text-gray-500 text-left">
-                        <p className="mb-1">
-                          {formatDate(article.published_at || article.publishedAt)}
-                        </p>
+                  <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group">
+                    <div className="relative">
+                      <img
+                        src={article.youtube_url ? getYouTubeThumbnail(article.youtube_url) : (article.image_url || article.image || 'https://images.unsplash.com/photo-1489599112477-990c2cb2c508?w=400&h=300&fit=crop')}
+                        alt={article.title}
+                        className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                        style={{ aspectRatio: '16/9' }}
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1489599112477-990c2cb2c508?w=400&h=300&fit=crop';
+                        }}
+                      />
+                      
+                      {/* Title Overlay with Black Transparent Banner */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
+                        <div className="flex items-center justify-center gap-1">
+                          {/* Small play icon with white circle before title for videos */}
+                          {(article.youtube_url || article.content_type === 'video') && (
+                            <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="10" fill="none" stroke="white" strokeWidth="2"/>
+                              <path d="M10 8l6 4-6 4V8z" fill="white"/>
+                            </svg>
+                          )}
+                          <h3 className="text-white font-bold text-xs leading-tight line-clamp-2 text-center">
+                            {article.title}
+                          </h3>
+                        </div>
                       </div>
                     </div>
                   </div>
