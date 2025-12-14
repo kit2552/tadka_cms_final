@@ -98,6 +98,19 @@ class ArticleBase(BaseModel):
     # Social Media Embed fields
     social_media_type: Optional[str] = None
     social_media_embed: Optional[str] = None
+    social_media_embeds: Optional[str] = None  # JSON string for multiple social media embeds
+    # Ad-specific fields
+    ad_type: Optional[str] = None  # Type of ad (e.g., "Ad in Sponsored Section", "Landing Page - Home")
+    sponsored_link: Optional[str] = None  # External link for sponsored ads
+    sponsored_label: Optional[str] = None  # Label for sponsored ads
+    is_sponsored: Optional[bool] = False
+    # Comment fields
+    comments_enabled: Optional[bool] = True
+    review_comments_enabled: Optional[bool] = False
+    # Top Story fields
+    top_story_duration_hours: Optional[int] = 24
+    # Scheduling fields
+    scheduled_timezone: Optional[str] = "IST"
 
 class ArticleCreate(ArticleBase):
     pass
