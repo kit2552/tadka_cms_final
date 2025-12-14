@@ -364,14 +364,14 @@ const TheaterReleases = () => {
                   {/* Tabs only */}
                   <div className="flex space-x-4">
                     <button
-                      onClick={() => setActiveTab('ott')}
+                      onClick={() => setActiveTab('theater')}
                       className={`text-base font-bold transition-colors duration-200 ${
-                        activeTab === 'ott'
+                        activeTab === 'theater'
                           ? 'text-black'
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Theater Releases
+                      Hindi
                     </button>
                     <button
                       onClick={() => setActiveTab('regional')}
