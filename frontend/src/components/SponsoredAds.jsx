@@ -67,8 +67,12 @@ const SponsoredAds = ({
   const [loading, setLoading] = useState(true);
 
   const handleAdClick = (ad) => {
-    // Navigate to the article page
-    navigate(`/article/${ad.id}/${ad.slug || ad.title.toLowerCase().replace(/\s+/g, '-')}`);
+    // Navigate to appropriate page based on content type
+    if (ad.content_type === 'video' || ad.content_type === 'video_post') {
+      navigate(`/video/${ad.id}`);
+    } else {
+      navigate(`/article/${ad.id}/${ad.slug || ad.title.toLowerCase().replace(/\s+/g, '-')}`);
+    }
   };
 
   const leftSections = [
