@@ -15,7 +15,7 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   
   // Get data from API instead of mock data
-  const viralShortsVideos = viralShortsData.viral_shorts || [];
+  const viralShortsVideos = viralShortsData.tadka_shorts || viralShortsData.viral_shorts || [];
   const bollywoodVideos = viralShortsData.bollywood || [];
   
   // Debug logging in useEffect to avoid re-render loops
@@ -93,7 +93,7 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
           {t('sections.bollywood', 'Bollywood')}
         </button>
         <Link 
-          to={`/${activeTab === 'bollywood' ? 'bollywood' : 'viral-shorts'}`} 
+          to={`/${activeTab === 'bollywood' ? 'bollywood' : 'tadka-shorts'}`} 
           className={`absolute top-1/2 transform -translate-y-1/2 right-4 group flex items-center justify-center text-xs ${getSectionHeaderClasses().moreButtonClass} transition-colors duration-200`}
         >
           <svg 
