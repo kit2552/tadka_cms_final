@@ -428,11 +428,11 @@ const EventsInterviews = () => {
                     >
                       <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
                         {/* Full Thumbnail Image */}
-                        <div className="relative overflow-hidden">
+                        <div className="relative overflow-hidden bg-gray-100">
                           <img
                             src={youtubeThumbnail || article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
                             alt={article.title}
-                            className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full object-contain group-hover:scale-105 transition-transform duration-300"
                             style={{ height: '220px' }}
                             onError={(e) => {
                               e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
@@ -443,9 +443,13 @@ const EventsInterviews = () => {
                         {/* White Background Section with Play Icon and Title */}
                         <div className="bg-white p-3">
                           <div className="flex items-start space-x-2">
-                            <svg className="w-4 h-4 text-gray-700 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M8 5v14l11-7z"/>
-                            </svg>
+                            <div className="flex-shrink-0 mt-0.5">
+                              <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center">
+                                <svg className="w-3 h-3 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
+                                </svg>
+                              </div>
+                            </div>
                             <h3 className="text-gray-900 font-semibold text-sm leading-tight line-clamp-2">
                               {article.title}
                             </h3>
