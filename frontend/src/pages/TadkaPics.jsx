@@ -433,9 +433,9 @@ const TadkaPics = () => {
             </div>
 
             {/* Tadka Shorts Section - 20% width */}
-            <div className="lg:w-[20%] border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0 -mt-1">
-              {/* Tadka Shorts Header */}
-              <div className={`sticky top-[63px] z-30 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+            <div className="lg:w-[20%] border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0 -mt-1 flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
+              {/* Tadka Shorts Header - Static */}
+              <div className="flex-shrink-0 border-b-2 border-gray-300 mb-3" style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
                 <div className="pl-0 pr-4 py-4 relative">
                   <div className="mb-2">
                     <h2 className="text-base font-bold text-black text-left leading-tight">
@@ -463,8 +463,9 @@ const TadkaPics = () => {
                 </div>
               </div>
 
-              {/* Tadka Shorts 2-Column Grid */}
-              <div className="grid grid-cols-2 gap-3">
+              {/* Tadka Shorts 2-Column Grid - Scrollable */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="grid grid-cols-2 gap-3 pr-2">
                 {tadkaShorts.length > 0 ? (
                   tadkaShorts.slice(0, 10).map((short) => (
                     <div
@@ -511,6 +512,7 @@ const TadkaPics = () => {
                     <p className="text-sm text-gray-400">No shorts available</p>
                   </div>
                 )}
+                </div>
               </div>
             </div>
           </div>
