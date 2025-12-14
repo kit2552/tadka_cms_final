@@ -441,15 +441,15 @@ const EventsInterviews = () => {
                         
                         {/* White Background Section with Play Icon and Title */}
                         <div className="bg-white p-3">
-                          <div className="flex items-start space-x-2">
-                            <div className="flex-shrink-0 mt-0.5">
-                              <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center">
-                                <svg className="w-3 h-3 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                          <div className="flex items-center space-x-2">
+                            <div className="flex-shrink-0">
+                              <div className="w-5 h-5 border-2 border-black rounded-full flex items-center justify-center">
+                                <svg className="w-2 h-2 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                                   <path d="M8 5v14l11-7z"/>
                                 </svg>
                               </div>
                             </div>
-                            <h3 className="text-gray-900 font-semibold text-sm leading-tight line-clamp-2">
+                            <h3 className="text-gray-900 font-semibold text-sm leading-tight line-clamp-2 flex-1">
                               {article.title}
                             </h3>
                           </div>
