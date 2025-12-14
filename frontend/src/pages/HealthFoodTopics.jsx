@@ -269,7 +269,20 @@ const HealthFoodTopics = () => {
   }
 
   return (
-    <div className={`min-h-screen ${themeClasses.pageBackground}`}>
+    <>
+      {/* Loading Modal */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl px-4 py-3">
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+              <p className="text-sm font-medium text-gray-700">Loading...</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div className={`min-h-screen ${themeClasses.pageBackground}`}>
       {/* Main Container */}
       <div className="max-w-5xl-plus mx-auto px-8 pb-6">
         
