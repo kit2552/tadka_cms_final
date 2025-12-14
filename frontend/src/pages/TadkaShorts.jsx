@@ -299,14 +299,14 @@ const TadkaShorts = () => {
                       Tadka Shorts
                     </button>
                     <button
-                      onClick={() => setActiveTab('reels')}
+                      onClick={() => setActiveTab('bollywood')}
                       className={`text-base font-bold transition-colors duration-200 ${
-                        activeTab === 'reels'
+                        activeTab === 'bollywood'
                           ? 'text-black'
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Reels
+                      Bollywood
                     </button>
                   </div>
                 </div>
