@@ -137,11 +137,18 @@ const BoxOffice = () => {
           const dayOfWeek = today.getDay();
           const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
           currentWeekStart.setDate(today.getDate() - daysToMonday);
-          return articleDate >= currentWeekStart && articleDate <= now;
+          
+          // Calculate week end (Sunday)
+          const currentWeekEnd = new Date(currentWeekStart);
+          currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+          
+          return articleDateOnly >= currentWeekStart && articleDateOnly <= currentWeekEnd;
         case 'today':
-          return daysDiff === 0;
+          return articleDateOnly.getTime() === today.getTime();
         case 'yesterday':
-          return daysDiff === 1;
+          const yesterday = new Date(today);
+          yesterday.setDate(yesterday.getDate() - 1);
+          return articleDateOnly.getTime() === yesterday.getTime();
         case 'week':
           return daysDiff >= 0 && daysDiff <= 7;
         case 'month':
