@@ -124,6 +124,7 @@ function App() {
               <Route path="/sports" element={<Sports />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/trending-videos" element={<TrendingVideos />} />
+              <Route path="/nri-world-news" element={<NRIWorldNews />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/gallery-posts" element={<GalleryPosts />} />
               <Route path="/gallery-post/:id" element={<GalleryPost />} />
