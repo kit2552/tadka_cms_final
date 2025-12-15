@@ -101,20 +101,27 @@ const TrailersTeasers = ({ trailersData = {}, onImageClick }) => {
               <div
                 key={item.id}
                 className="flex-shrink-0 cursor-pointer"
-                style={{ minWidth: '200px' }}
+                style={{ minWidth: '266px' }}
                 onClick={() => handleVideoClick(item)}
               >
-                <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-400 transition-all duration-300 group">
                   <div className="relative">
                     <img
                       src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
                       alt={item.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      style={{ width: '200px', height: '120px' }}
+                      style={{ width: '266px', height: '160px' }}
                       onError={(e) => {
                         e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
                       }}
                     />
+                    
+                    {/* Title Overlay with Black Transparent Banner */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
+                      <h3 className="text-white font-bold text-xs text-center leading-tight">
+                        {item.title}
+                      </h3>
+                    </div>
                   </div>
                 </div>
               </div>
