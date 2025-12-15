@@ -199,11 +199,10 @@ const Navigation = ({ onLayoutModeChange }) => {
   // Check if we're on home page
   const isHomePage = location.pathname === '/' || location.pathname === '/home';
 
-  // Main navigation items - simplified to only show Home, Latest, Topics, Gallery, More
+  // Main navigation items - simplified to only show Home, Topics, Gallery, More
   const mainNavItems = [
     // Home nav item - only show when not on home page
     ...(!isHomePage ? [{ name: t('nav.home', 'Home'), path: '/' }] : []),
-    { name: t('nav.latest', 'Latest'), path: '/latest-news' },
     { name: t('nav.topics', 'Topics'), path: '/topics' },
     { name: t('nav.gallery', 'Gallery'), path: '/gallery' }
   ];
