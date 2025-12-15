@@ -258,7 +258,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
 
         {/* Watch Intent Popup - slides up from bottom */}
         <div 
-          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-b from-gray-900 to-black bg-opacity-95 transition-all duration-300 ease-in-out ${
+          className={`absolute bottom-0 left-0 right-0 bg-black bg-opacity-30 backdrop-blur-sm transition-all duration-300 ease-in-out ${
             showAddComment ? 'translate-y-0' : 'translate-y-full'
           }`}
           style={{ zIndex: 20 }}
