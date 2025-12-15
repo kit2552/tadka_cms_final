@@ -4,6 +4,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PlaceholderImage } from '../utils/imageUtils';
 import useTabState from '../hooks/useTabState';
+import { CirclePlay } from 'lucide-react';
 
 const TrailersTeasers = ({ trailersData = {}, onImageClick }) => {
   const { t } = useLanguage();
