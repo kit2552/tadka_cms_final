@@ -193,26 +193,6 @@ const VideoModal = ({ isOpen, onClose, video }) => {
           />
         </div>
 
-        {/* Black Footer with Comment Buttons */}
-        <div className="bg-black text-white px-4 pt-3 pb-6 flex justify-center items-center space-x-6">
-          <button
-            onClick={() => setShowAddComment(true)}
-            className="px-2.5 py-1 bg-black hover:bg-gray-800 text-white text-[10px] rounded-md transition-colors border border-gray-600"
-          >
-            Add Comment
-          </button>
-          
-          <div className="flex items-center space-x-1">
-            <button
-              onClick={() => setShowComments(!showComments)}
-              className="px-2.5 py-1 bg-black hover:bg-gray-800 text-white text-[10px] rounded-md transition-colors border border-gray-600"
-            >
-              View Comments
-            </button>
-            <span className="text-white text-[10px]">({comments.length})</span>
-          </div>
-        </div>
-
         {/* Comments Slider - slides up from bottom */}
         <div 
           className={`absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 transition-all duration-300 ease-in-out ${
