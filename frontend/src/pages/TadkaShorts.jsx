@@ -360,8 +360,8 @@ const TadkaShorts = () => {
               </div>
             </div>
 
-            {/* Articles Grid - 4 Column Vertical Layout (9:16 YouTube Shorts ratio) */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-8">
+            {/* Articles Grid - 5 Column Vertical Layout (9:16 YouTube Shorts ratio) */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mb-8">
               {filteredArticles.map((article) => {
                 const youtubeThumbnail = getYouTubeThumbnail(article.youtube_url);
                 
