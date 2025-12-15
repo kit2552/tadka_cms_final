@@ -325,9 +325,9 @@ const VideoModal = ({ isOpen, onClose, video }) => {
               <button
                 onClick={handleAddComment}
                 disabled={loading}
-                className="w-full px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white text-xs font-bold rounded-md transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                className="w-full px-4 py-2 bg-black hover:bg-gray-800 text-white text-xs font-bold rounded-md transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-gray-600"
               >
-                {loading ? 'Submitting...' : '🎯 Submit My Choice'}
+                {loading ? 'Submitting...' : 'Submit My Choice'}
               </button>
             </div>
           </div>
