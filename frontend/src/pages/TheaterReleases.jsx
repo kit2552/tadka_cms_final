@@ -634,6 +634,15 @@ const TheaterReleases = () => {
         </div>
       </div>
       </div>
+      
+      {/* Video Modal for playing trailers */}
+      {videoModalOpen && selectedVideo && (
+        <VideoModal
+          isOpen={videoModalOpen}
+          onClose={handleVideoModalClose}
+          video={selectedVideo}
+        />
+      )}
     </>
   );
 };
