@@ -55,6 +55,30 @@ const SystemSettings = () => {
   const [adsLoading, setAdsLoading] = useState(true);
   const [adsNotification, setAdsNotification] = useState({ show: false, type: '', message: '' });
 
+  // AI API Keys State
+  const [aiApiKeys, setAiApiKeys] = useState({
+    openai_api_key: '',
+    gemini_api_key: '',
+    anthropic_api_key: '',
+    openai_default_model: '',
+    gemini_default_model: '',
+    anthropic_default_model: ''
+  });
+  const [showOpenAIKey, setShowOpenAIKey] = useState(false);
+  const [showGeminiKey, setShowGeminiKey] = useState(false);
+  const [showAnthropicKey, setShowAnthropicKey] = useState(false);
+  const [aiModels, setAiModels] = useState({
+    openai: [],
+    gemini: [],
+    anthropic: []
+  });
+  const [loadingModels, setLoadingModels] = useState({
+    openai: false,
+    gemini: false,
+    anthropic: false
+  });
+  const [testingKey, setTestingKey] = useState(null);
+
   useEffect(() => {
     loadAWSConfig();
     loadUsers();
