@@ -145,7 +145,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-      <div className="relative mx-auto rounded-lg overflow-hidden" style={{ width: '95vw', maxWidth: '1400px', maxHeight: '90vh' }}>
+      <div className="relative mx-auto rounded-lg overflow-hidden" style={{ width: '95vw', maxWidth: '1200px', maxHeight: '90vh' }}>
         
         {/* Black Header with Comment Buttons and Close Button */}
         <div className="bg-black text-white px-4 py-2 flex justify-between items-center">
