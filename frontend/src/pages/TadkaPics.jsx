@@ -532,9 +532,9 @@ const TadkaPics = () => {
         />
       )}
       
-      {/* Video Modal for playing Tadka Shorts */}
+      {/* Vertical Video Modal for playing Tadka Shorts */}
       {videoModalOpen && selectedVideo && (
-        <VideoModal
+        <VerticalVideoModal
           isOpen={videoModalOpen}
           onClose={handleVideoModalClose}
           video={selectedVideo}
