@@ -145,29 +145,29 @@ const VideoModal = ({ isOpen, onClose, video }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-      <div className="relative w-full max-w-lg mx-auto rounded-lg overflow-hidden" style={{ height: '98vh' }}>
+      <div className="relative mx-auto rounded-lg overflow-hidden" style={{ width: '95vw', maxHeight: '90vh' }}>
         
         {/* Black Header with Close Button */}
-        <div className="bg-black text-white px-3 py-1.5 flex justify-end items-center">
+        <div className="bg-black text-white px-4 py-2 flex justify-end items-center">
           <button
             onClick={onClose}
             className="text-white hover:text-gray-300 transition-colors"
           >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
           </button>
         </div>
 
-        {/* Video Container - Takes remaining height, full width */}
-        <div className="relative bg-black flex-1" style={{ height: 'calc(98vh - 64px)' }}>
+        {/* Video Container - 16:9 aspect ratio for horizontal video */}
+        <div className="relative bg-black" style={{ width: '100%', paddingBottom: '56.25%' }}>
           <iframe
             src={getYouTubeEmbedUrl(video.youtube_url)}
             title={video.title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             allowFullScreen
-            className="w-full h-full viral-shorts-iframe"
+            className="absolute inset-0 w-full h-full"
             style={{ 
               backgroundColor: '#000000'
             }}
@@ -175,7 +175,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         </div>
 
         {/* Black Footer with Comment Buttons */}
-        <div className="bg-black text-white px-3 pt-1 pb-3 flex justify-center items-center space-x-4">
+        <div className="bg-black text-white px-4 py-3 flex justify-center items-center space-x-6">
           <button
             onClick={() => setShowAddComment(true)}
             className="px-2.5 py-1 bg-black hover:bg-gray-800 text-white text-[10px] rounded-md transition-colors border border-gray-600"
