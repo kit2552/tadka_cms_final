@@ -103,7 +103,7 @@ const VerticalVideoModal = ({ isOpen, onClose, video }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-      <div className="relative bg-black rounded-lg overflow-hidden" style={{ width: '380px', maxHeight: '90vh' }}>
+      <div className="relative bg-black rounded-lg overflow-hidden" style={{ width: '380px', maxHeight: '95vh' }}>
         
         {/* Black Header with Close Button */}
         <div className="bg-black text-white px-4 py-2 flex justify-end items-center">
