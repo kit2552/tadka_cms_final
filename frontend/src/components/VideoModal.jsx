@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 const VideoModal = ({ isOpen, onClose, video }) => {
-  const [showComments, setShowComments] = useState(false);
+  const [showResponses, setShowResponses] = useState(false);
   const [showAddComment, setShowAddComment] = useState(false);
   const [commentName, setCommentName] = useState('');
   const [commentText, setCommentText] = useState('');
-  const [comments, setComments] = useState([]);
+  const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [nameDisabled, setNameDisabled] = useState(false);
   const [planningToWatch, setPlanningToWatch] = useState(null); // 'yes' or 'no'
