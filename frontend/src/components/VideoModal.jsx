@@ -199,13 +199,12 @@ const VideoModal = ({ isOpen, onClose, video }) => {
             onClick={() => setShowAddComment(true)}
             className="px-3 py-1.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white text-[11px] font-semibold rounded-md transition-all shadow-lg"
           >
-            🎬 Will You Watch?
+            Will You Watch?
           </button>
           
           <div className="flex items-center space-x-2 bg-gray-900 px-3 py-1.5 rounded-md">
-            <span className="text-[11px] text-gray-300">👁️</span>
             <span className="text-white font-bold text-[11px]">{watchCount}</span>
-            <span className="text-gray-400 text-[10px]">excited to watch!</span>
+            <span className="text-gray-400 text-[11px]">Excited to Watch!</span>
           </div>
         </div>
 
