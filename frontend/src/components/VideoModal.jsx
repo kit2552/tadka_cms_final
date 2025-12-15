@@ -198,10 +198,13 @@ const VideoModal = ({ isOpen, onClose, video }) => {
             Will You Watch?
           </button>
           
-          <div className="flex items-center space-x-2 bg-gray-900 px-3 py-1.5 rounded-md">
+          <button
+            onClick={() => setShowResponses(!showResponses)}
+            className="flex items-center space-x-2 bg-gray-900 hover:bg-gray-800 px-3 py-1.5 rounded-md transition-colors cursor-pointer"
+          >
             <span className="text-white font-semibold text-[11px]">{watchCount}</span>
             <span className="text-gray-400 text-[11px] font-semibold">Excited to Watch!</span>
-          </div>
+          </button>
         </div>
 
         {/* Comments Slider - slides up from bottom */}
