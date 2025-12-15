@@ -12,6 +12,8 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
   const [activeTab, setActiveTab] = useTabState('movie-schedules', 'theater');
   const [releaseData, setReleaseData] = useState({ theater: {}, ott: {} });
   const [loading, setLoading] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
   
   useEffect(() => {
     fetchReleaseData();
