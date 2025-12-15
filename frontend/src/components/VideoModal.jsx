@@ -42,14 +42,14 @@ const VideoModal = ({ isOpen, onClose, video }) => {
     }
   };
 
-  const fetchComments = async () => {
+  const fetchResponses = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/comments`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/watch-responses`);
       const data = await response.json();
-      setComments(data.comments || []);
+      setResponses(data.responses || []);
     } catch (error) {
-      console.error('Error fetching comments:', error);
-      setComments([]);
+      console.error('Error fetching responses:', error);
+      setResponses([]);
     }
   };
 
