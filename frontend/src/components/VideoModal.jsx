@@ -61,10 +61,10 @@ const VideoModal = ({ isOpen, onClose, video }) => {
   };
 
   const handleAddComment = async () => {
-    if (commentName.trim() && commentText.trim()) {
+    if (commentName.trim() && planningToWatch) {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/comments`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/watch-intent`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -72,6 +72,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
           body: JSON.stringify({
             video_id: video.id,
             name: commentName.trim(),
+            planning_to_watch: planningToWatch === 'yes',
             comment: commentText.trim()
           })
         });
@@ -79,20 +80,24 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         const data = await response.json();
         
         if (data.success) {
-          // Add new comment to the list
-          setComments([data.comment, ...comments]);
+          // Refresh watch count
+          fetchWatchCount();
           setCommentName('');
           setCommentText('');
+          setPlanningToWatch(null);
           setShowAddComment(false);
+          alert('Thank you for your response!');
         } else {
-          alert('Failed to add comment. Please try again.');
+          alert('Failed to submit. Please try again.');
         }
       } catch (error) {
-        console.error('Error adding comment:', error);
-        alert('Failed to add comment. Please try again.');
+        console.error('Error submitting watch intent:', error);
+        alert('Failed to submit. Please try again.');
       } finally {
         setLoading(false);
       }
+    } else {
+      alert('Please enter your name and select Yes or No');
     }
   };
 
