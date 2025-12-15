@@ -8,6 +8,8 @@ const VideoModal = ({ isOpen, onClose, video }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [nameDisabled, setNameDisabled] = useState(false);
+  const [planningToWatch, setPlanningToWatch] = useState(null); // 'yes' or 'no'
+  const [watchCount, setWatchCount] = useState(0);
 
   // Fetch comments when modal opens
   useEffect(() => {
