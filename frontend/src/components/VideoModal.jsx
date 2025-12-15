@@ -84,13 +84,11 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         const data = await response.json();
         
         if (data.success) {
-          // Refresh watch count
+          // Refresh watch count and user info
           fetchWatchCount();
-          setCommentName('');
-          setCommentText('');
-          setPlanningToWatch(null);
+          fetchUserName();
           setShowAddComment(false);
-          alert('Thank you for your response!');
+          alert(data.message || 'Thank you for your response!');
         } else {
           alert('Failed to submit. Please try again.');
         }
