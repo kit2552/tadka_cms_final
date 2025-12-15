@@ -200,9 +200,17 @@ const SponsoredAds = ({
                     )}
                   </div>
                   <div className="px-3 pb-3 text-left" style={{ paddingTop: '10px' }}>
-                    <h2 className="text-sm font-semibold text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-200 mb-1">
-                      {ad.title}
-                    </h2>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      {(ad.content_type === 'video' || ad.content_type === 'video_post') && ad.youtube_url && (
+                        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="12" r="10" stroke="#374151" strokeWidth="2" fill="none"/>
+                          <path d="M10 8l6 4-6 4V8z" fill="#000000"/>
+                        </svg>
+                      )}
+                      <h2 className="text-sm font-semibold text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-200">
+                        {ad.title}
+                      </h2>
+                    </div>
                     {/* Don't show summary text for video content types */}
                     {ad.summary && ad.content_type !== 'video' && ad.content_type !== 'video_post' && (
                       <p className="text-xs text-gray-600 line-clamp-2">
