@@ -1,14 +1,16 @@
 """
 System Settings API Routes
-Handles AWS configuration and user management
+Handles AWS configuration, user management, and AI API keys
 """
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Dict
 from database import get_db
 import crud
 from s3_service import s3_service
 import hashlib
+import requests
+import os
 
 router = APIRouter()
 
