@@ -136,7 +136,6 @@ function App() {
               <Route path="/movie-reviews" element={<MovieReviews />} />
               <Route path="/movie/:id" element={<ViewMovieContent />} />
               <Route path="/education" element={<Education />} />
-              <Route path="/latest-news" element={<LatestNews />} />
               <Route path="/travel-pics" element={<TravelPics />} />
               <Route path="/tadka-pics" element={<TadkaPics />} />
               <Route path="/trailers-teasers" element={<TrailersTeasers />} />
