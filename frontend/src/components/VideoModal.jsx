@@ -147,27 +147,8 @@ const VideoModal = ({ isOpen, onClose, video }) => {
     <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
       <div className="relative mx-auto rounded-lg overflow-hidden" style={{ width: '95vw', maxWidth: '1100px', maxHeight: '90vh' }}>
         
-        {/* Black Header with Comment Buttons and Close Button */}
-        <div className="bg-black text-white px-4 py-2 flex justify-between items-center">
-          <div className="flex items-center space-x-6">
-            <button
-              onClick={() => setShowAddComment(true)}
-              className="px-2.5 py-1 bg-black hover:bg-gray-800 text-white text-[10px] rounded-md transition-colors border border-gray-600"
-            >
-              Add Comment
-            </button>
-            
-            <div className="flex items-center space-x-1">
-              <button
-                onClick={() => setShowComments(!showComments)}
-                className="px-2.5 py-1 bg-black hover:bg-gray-800 text-white text-[10px] rounded-md transition-colors border border-gray-600"
-              >
-                View Comments
-              </button>
-              <span className="text-white text-[10px]">({comments.length})</span>
-            </div>
-          </div>
-          
+        {/* Black Header with Close Button */}
+        <div className="bg-black text-white px-4 py-2 flex justify-end items-center">
           <button
             onClick={onClose}
             className="text-white hover:text-gray-300 transition-colors"
