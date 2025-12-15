@@ -49,6 +49,17 @@ const VideoModal = ({ isOpen, onClose, video }) => {
     }
   };
 
+  const fetchWatchCount = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/watch-count`);
+      const data = await response.json();
+      setWatchCount(data.count || 0);
+    } catch (error) {
+      console.error('Error fetching watch count:', error);
+      setWatchCount(0);
+    }
+  };
+
   const handleAddComment = async () => {
     if (commentName.trim() && commentText.trim()) {
       setLoading(true);
