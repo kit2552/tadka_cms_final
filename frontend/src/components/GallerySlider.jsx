@@ -158,6 +158,7 @@ const GallerySlider = ({ gallery, title }) => {
           currentIndex={currentSlide}
           title={title}
           galleryType={gallery.type}
+          galleryId={gallery.id || gallery.gallery_id}
           onClose={handleModalClose}
           onNext={handleModalNext}
           onPrev={handleModalPrev}
