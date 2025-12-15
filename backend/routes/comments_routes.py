@@ -423,3 +423,36 @@ def get_user_watch_intent(video_id: int, request: Request):
     else:
         return {"name": None, "planning_to_watch": None, "comment": "", "has_submitted": False}
 
+
+@router.get("/api/videos/{video_id}/watch-responses")
+def get_watch_responses(video_id: int):
+    """Get all user responses for this video"""
+    from server import db
+    from datetime import datetime, timezone
+    
+    # Fetch all watch intents for this video
+    intents_cursor = db.watch_intents.find(
+        {"video_id": video_id},
+        {"_id": 0, "id": 1, "name": 1, "planning_to_watch": 1, "comment": 1, "created_at": 1}
+    ).sort("created_at", -1)
+    
+    responses = []
+    for intent in intents_cursor:
+        # Format the time
+        created_at = intent.get("created_at", "")
+        try:
+            dt = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+            time_str = dt.strftime("%b %d, %Y")
+        except:
+            time_str = "Recently"
+        
+        responses.append({
+            "id": intent.get("id"),
+            "name": intent.get("name"),
+            "planning_to_watch": intent.get("planning_to_watch"),
+            "comment": intent.get("comment", ""),
+            "time": time_str
+        })
+    
+    return {"responses": responses}
+
