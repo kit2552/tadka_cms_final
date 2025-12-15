@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import ImageModal from '../components/ImageModal';
-import VideoModal from '../components/VideoModal';
+import VerticalVideoModal from '../components/VerticalVideoModal';
 
 const TadkaPics = () => {
   const navigate = useNavigate();
