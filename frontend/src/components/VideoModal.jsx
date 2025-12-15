@@ -253,16 +253,16 @@ const VideoModal = ({ isOpen, onClose, video }) => {
           </div>
         </div>
 
-        {/* Add Comment Popup - slides up from bottom */}
+        {/* Watch Intent Popup - slides up from bottom */}
         <div 
-          className={`absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 transition-all duration-300 ease-in-out ${
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-b from-gray-900 to-black bg-opacity-95 transition-all duration-300 ease-in-out ${
             showAddComment ? 'translate-y-0' : 'translate-y-full'
           }`}
           style={{ zIndex: 20 }}
         >
-          <div className="p-3">
+          <div className="p-4">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-white font-semibold text-xs">Add Comment</h3>
+              <h3 className="text-white font-bold text-sm">🎬 Planning to Watch?</h3>
               <button
                 onClick={() => {
                   setShowAddComment(false);
@@ -270,6 +270,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
                     setCommentName('');
                   }
                   setCommentText('');
+                  setPlanningToWatch(null);
                 }}
                 className="text-gray-400 hover:text-white"
               >
@@ -278,28 +279,56 @@ const VideoModal = ({ isOpen, onClose, video }) => {
                 </svg>
               </button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <input
                 type="text"
                 placeholder="Your Name"
                 value={commentName}
                 onChange={(e) => setCommentName(e.target.value)}
                 disabled={nameDisabled}
-                className="w-full px-2 py-1.5 bg-gray-800 bg-opacity-100 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full px-3 py-2 bg-gray-800 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-pink-500 placeholder:text-gray-500 disabled:opacity-70 disabled:cursor-not-allowed"
               />
+              
+              <div className="space-y-2">
+                <p className="text-gray-300 text-xs font-medium">Are you planning to watch this movie?</p>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => setPlanningToWatch('yes')}
+                    className={`flex-1 px-4 py-2 rounded-md text-xs font-semibold transition-all ${
+                      planningToWatch === 'yes'
+                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg scale-105'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    ✓ Yes, Can't Wait!
+                  </button>
+                  <button
+                    onClick={() => setPlanningToWatch('no')}
+                    className={`flex-1 px-4 py-2 rounded-md text-xs font-semibold transition-all ${
+                      planningToWatch === 'no'
+                        ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-lg scale-105'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    ✗ Maybe Later
+                  </button>
+                </div>
+              </div>
+
               <textarea
-                placeholder="Your Comment"
+                placeholder="Share your thoughts (optional)"
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 rows="2"
-                className="w-full px-2 py-1.5 bg-gray-800 bg-opacity-100 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-blue-500 placeholder:text-gray-500 placeholder:text-xs resize-none"
+                className="w-full px-3 py-2 bg-gray-800 text-white text-xs rounded-md border border-gray-600 focus:outline-none focus:border-pink-500 placeholder:text-gray-500 resize-none"
               />
+              
               <button
                 onClick={handleAddComment}
                 disabled={loading}
-                className="px-3 py-1 bg-black bg-opacity-100 hover:bg-gray-800 text-white text-xs rounded-md transition-colors border border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white text-xs font-bold rounded-md transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
               >
-                {loading ? 'Posting...' : 'Post Comment'}
+                {loading ? 'Submitting...' : '🎯 Submit My Choice'}
               </button>
             </div>
           </div>
