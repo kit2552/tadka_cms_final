@@ -566,7 +566,7 @@ const Navigation = ({ onLayoutModeChange }) => {
                   <span className="text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors duration-300 leading-tight">
                     {t('title', 'Tadka')}
                   </span>
-                  <span className="text-xs text-gray-500 leading-none -mt-1">
+                  <span className="text-xs text-gray-500 leading-none -mt-0.5">
                     {t('subtitle', 'Personalized News')}
                   </span>
                 </div>
