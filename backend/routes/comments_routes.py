@@ -325,3 +325,73 @@ def get_user_name_by_ip(video_id: int, request: Request):
         return {"name": None, "has_commented": False}
 
 
+
+# Watch Intent Models
+class WatchIntentCreate(BaseModel):
+    video_id: int
+    name: str
+    planning_to_watch: bool
+    comment: Optional[str] = ""
+
+# Watch Intent Endpoints
+@router.post("/api/videos/{video_id}/watch-intent")
+def add_watch_intent(video_id: int, intent: WatchIntentCreate, request: Request):
+    """Record if user is planning to watch the movie"""
+    from server import db
+    
+    # Get IP address
+    ip_address = request.client.host
+    if "x-forwarded-for" in request.headers:
+        ip_address = request.headers["x-forwarded-for"].split(",")[0].strip()
+    
+    # Get device info
+    user_agent = request.headers.get("user-agent", "Unknown")
+    
+    # Check if user already submitted watch intent
+    existing_intent = db.watch_intents.find_one({
+        "video_id": video_id,
+        "ip_address": ip_address
+    })
+    
+    if existing_intent:
+        # Update existing intent
+        db.watch_intents.update_one(
+            {"_id": existing_intent["_id"]},
+            {"$set": {
+                "name": intent.name,
+                "planning_to_watch": intent.planning_to_watch,
+                "comment": intent.comment,
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        return {"success": True, "message": "Your response has been updated!"}
+    else:
+        # Create new intent
+        intent_doc = {
+            "id": str(uuid.uuid4()),
+            "video_id": video_id,
+            "name": intent.name,
+            "planning_to_watch": intent.planning_to_watch,
+            "comment": intent.comment,
+            "ip_address": ip_address,
+            "device_info": user_agent,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        db.watch_intents.insert_one(intent_doc)
+        return {"success": True, "message": "Thank you for your response!"}
+
+
+@router.get("/api/videos/{video_id}/watch-count")
+def get_watch_count(video_id: int):
+    """Get count of people planning to watch the movie"""
+    from server import db
+    
+    count = db.watch_intents.count_documents({
+        "video_id": video_id,
+        "planning_to_watch": True
+    })
+    
+    return {"count": count}
+
