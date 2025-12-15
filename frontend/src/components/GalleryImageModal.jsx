@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, onNext, onPrev }) => {
+const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, onNext, onPrev, galleryId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
