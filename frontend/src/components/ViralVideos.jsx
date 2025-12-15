@@ -94,7 +94,7 @@ const ViralVideos = ({ viralVideosData = {}, onArticleClick }) => {
                     alt={review.title}
                     width="w-20"
                     height="h-16"
-                    className="object-cover border border-gray-300 rounded-lg group-hover:scale-105 transition-transform duration-300"
+                    className="object-cover border border-gray-300 rounded-sm group-hover:scale-105 transition-transform duration-300"
                     contentType={activeTab === 'usa' ? 'nri-news' : 'world-news'}
                   />
                 </div>
