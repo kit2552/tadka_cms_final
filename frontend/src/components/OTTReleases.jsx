@@ -82,10 +82,18 @@ const OTTReleases = ({ articles, onArticleClick }) => {
     }
   };
 
-  const handleArticleClick = (article) => {
-    if (onArticleClick) {
-      // Navigate to the movie content page instead of article page
-      navigate(`/movie/${encodeURIComponent(article.title || article.movie_name)}`);
+  const handleArticleClick = (release) => {
+    // If release has a YouTube URL, open video modal
+    if (release.youtube_url || release.trailer_url) {
+      setSelectedVideo({
+        id: release.id,
+        title: release.movie_name || release.title,
+        youtube_url: release.youtube_url || release.trailer_url
+      });
+      setIsVideoModalOpen(true);
+    } else {
+      // Otherwise navigate to the movie content page
+      navigate(`/movie/${encodeURIComponent(release.title || release.movie_name)}`);
     }
   };
 
