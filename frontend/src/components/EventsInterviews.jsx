@@ -116,9 +116,12 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
                     />
                   </div>
                   <div className="p-3 text-left" style={{ width: '240px' }}>
-                    <h3 style={{fontSize: '13px', fontWeight: '600', lineHeight: '1.4', wordWrap: 'break-word'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
-                      {item.title}
-                    </h3>
+                    <div className="flex items-start gap-1.5">
+                      <CirclePlay className="w-4 h-4 text-gray-700 flex-shrink-0 mt-0.5" />
+                      <h3 style={{fontSize: '13px', fontWeight: '600', lineHeight: '1.4', wordWrap: 'break-word'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
+                        {item.title}
+                      </h3>
+                    </div>
                   </div>
                 </div>
               </div>
