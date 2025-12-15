@@ -15,6 +15,17 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   
+  const handleReleaseClick = (release) => {
+    // Open video modal with trailer
+    setSelectedVideo(release);
+    setVideoModalOpen(true);
+  };
+  
+  const handleVideoModalClose = () => {
+    setVideoModalOpen(false);
+    setSelectedVideo(null);
+  };
+  
   useEffect(() => {
     fetchReleaseData();
   }, []);
@@ -128,7 +139,7 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                   <li
                     key={release.id}
                     className={`group cursor-pointer py-1 px-1 ${getSectionBodyClasses().hoverClass} transition-colors duration-200 border-b ${getSectionBodyClasses().dividerClass} last:border-b-0`}
-                    onClick={() => handleArticleClick({ id: release.id, title: release.movie_name })}
+                    onClick={() => handleReleaseClick(release)}
                   >
                     <div className="flex items-start justify-between text-left">
                       <div className="flex items-start space-x-2 flex-1">
