@@ -190,17 +190,6 @@ const SponsoredAds = ({
                       </div>
                     )}
                     
-                    {/* Video indicator for YouTube content */}
-                    {(ad.content_type === 'video' || ad.content_type === 'video_post') && ad.youtube_url && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="bg-black bg-opacity-60 rounded-full p-3">
-                          <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z"/>
-                          </svg>
-                        </div>
-                      </div>
-                    )}
-                    
                     {/* Gallery indicator for photo gallery content */}
                     {ad.content_type === 'photo' && (
                       <div className="absolute top-2 right-2 bg-black bg-opacity-60 rounded px-2 py-1">
