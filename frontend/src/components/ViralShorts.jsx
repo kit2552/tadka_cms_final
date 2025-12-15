@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PlaceholderImage } from '../utils/imageUtils';
-import VideoModal from './VideoModal';
+import VerticalVideoModal from './VerticalVideoModal';
 import useTabState from '../hooks/useTabState';
 
 const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
