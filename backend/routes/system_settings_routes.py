@@ -43,6 +43,16 @@ class UserUpdate(BaseModel):
     role: Optional[str] = None
     is_active: Optional[bool] = None
 
+# ==================== AI API Keys Models ====================
+
+class AIAPIKeysConfig(BaseModel):
+    openai_api_key: Optional[str] = None
+    gemini_api_key: Optional[str] = None
+    anthropic_api_key: Optional[str] = None
+    openai_default_model: Optional[str] = None
+    gemini_default_model: Optional[str] = None
+    anthropic_default_model: Optional[str] = None
+
 # ==================== AWS Configuration Endpoints ====================
 
 @router.get("/system-settings/aws-config")
