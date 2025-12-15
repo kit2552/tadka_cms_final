@@ -251,11 +251,6 @@ const TheaterReleases = () => {
     navigate(`/article/${article.id}`);
   };
 
-  const handleReleaseClick = (release) => {
-    // Navigate to the movie content page
-    navigate(`/movie/${encodeURIComponent(release.movie_name || release.title)}`);
-  };
-
   const formatDate = (dateString) => {
     if (!dateString) return 'Release date TBA';
     return new Date(dateString).toLocaleDateString('en-IN', {
