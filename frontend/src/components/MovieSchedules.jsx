@@ -83,6 +83,7 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
   };
 
   return (
+    <>
     <div className={`${getSectionContainerClasses()} relative`} style={{ height: '352px' }}>
       {/* Header with Tabs */}
       <div className={`${getSectionHeaderClasses().containerClass} border-b flex`}>
