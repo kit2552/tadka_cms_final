@@ -119,9 +119,12 @@ const TrailersTeasers = ({ trailersData = {}, onImageClick }) => {
                     
                     {/* Title Overlay with Black Transparent Banner */}
                     <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
-                      <h3 className="text-white font-bold text-xs text-center leading-tight">
-                        {item.title}
-                      </h3>
+                      <div className="flex items-center justify-center gap-1.5">
+                        <CirclePlay className="w-4 h-4 text-white flex-shrink-0" />
+                        <h3 className="text-white font-bold text-xs text-center leading-tight">
+                          {item.title}
+                        </h3>
+                      </div>
                     </div>
                   </div>
                 </div>
