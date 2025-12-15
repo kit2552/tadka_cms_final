@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GalleryImageModal from './GalleryImageModal';
 
 const GallerySlider = ({ gallery, title }) => {
