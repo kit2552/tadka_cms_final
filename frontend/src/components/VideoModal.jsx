@@ -84,9 +84,10 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         const data = await response.json();
         
         if (data.success) {
-          // Refresh watch count and user info
+          // Refresh watch count, user info, and responses list
           fetchWatchCount();
           fetchUserName();
+          fetchResponses();
           setShowAddComment(false);
         }
       } catch (error) {
