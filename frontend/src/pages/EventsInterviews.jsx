@@ -330,9 +330,9 @@ const EventsInterviews = () => {
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 lg:h-[calc(100vh-120px)]">
           
           {/* Events Interviews Section - 70% width */}
-          <div className="lg:col-span-7 -mt-1 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingRight: '18px' }}>
+          <div className="lg:col-span-7 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingRight: '18px' }}>
             {/* Events Interviews Section Header - Sticky with filter and bottom border */}
-            <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
+            <div className={`sticky top-0 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
                 <div className="mb-2">
                   {/* Tabs only */}
