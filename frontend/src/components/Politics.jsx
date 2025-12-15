@@ -94,13 +94,13 @@ const Politics = ({ politicsData = {}, onArticleClick, isLoading = false }) => {
                 onClick={() => handlePoliticsArticleClick(article)}
               >
                 <div className="flex items-start space-x-2 text-left">
-                  <div className="relative flex-shrink-0">
+                  <div className="relative flex-shrink-0 overflow-hidden rounded-sm border border-gray-300">
                     <ArticleImage
                       src={article.image_url || article.image}
                       alt={article.title}
                       width="w-20"
                       height="h-16"
-                      className="object-cover border border-gray-300 rounded-sm group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                       contentType={activeTab === 'state' ? 'state-politics' : 'national-politics'}
                     />
                   </div>
