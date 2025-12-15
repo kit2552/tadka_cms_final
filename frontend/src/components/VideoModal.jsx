@@ -88,18 +88,12 @@ const VideoModal = ({ isOpen, onClose, video }) => {
           fetchWatchCount();
           fetchUserName();
           setShowAddComment(false);
-          alert(data.message || 'Thank you for your response!');
-        } else {
-          alert('Failed to submit. Please try again.');
         }
       } catch (error) {
         console.error('Error submitting watch intent:', error);
-        alert('Failed to submit. Please try again.');
       } finally {
         setLoading(false);
       }
-    } else {
-      alert('Please enter your name and select Yes or No');
     }
   };
 
