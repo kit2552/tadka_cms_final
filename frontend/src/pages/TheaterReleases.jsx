@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import VideoModal from '../components/VideoModal';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const TheaterReleases = () => {
@@ -17,6 +18,8 @@ const TheaterReleases = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredReleases, setFilteredReleases] = useState([]);
   const filterDropdownRef = useRef(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchOTTReleaseData = async () => {
