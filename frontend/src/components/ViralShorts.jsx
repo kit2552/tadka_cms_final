@@ -171,8 +171,8 @@ const ViralShorts = ({ viralShortsData = {}, onImageClick }) => {
       </div>
       </div>
 
-      {/* Video Modal */}
-      <VideoModal
+      {/* Vertical Video Modal for Shorts */}
+      <VerticalVideoModal
         isOpen={isVideoModalOpen}
         onClose={closeVideoModal}
         video={selectedVideo}
