@@ -621,6 +621,13 @@ const OTTReleases = () => {
         </div>
       </div>
       </div>
+
+      {/* Video Modal */}
+      <VideoModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        video={selectedVideo}
+      />
     </>
   );
 };
