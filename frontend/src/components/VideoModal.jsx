@@ -207,20 +207,20 @@ const VideoModal = ({ isOpen, onClose, video }) => {
           </button>
         </div>
 
-        {/* Comments Slider - slides up from bottom */}
+        {/* Responses Slider - slides up from bottom */}
         <div 
-          className={`absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 transition-all duration-300 ease-in-out ${
-            showComments ? 'h-1/2' : 'h-0'
+          className={`absolute bottom-0 left-0 right-0 bg-black bg-opacity-30 backdrop-blur-sm transition-all duration-300 ease-in-out ${
+            showResponses ? 'h-1/2' : 'h-0'
           }`}
-          style={{ zIndex: 10, overflow: 'hidden', pointerEvents: showComments ? 'auto' : 'none' }}
+          style={{ zIndex: 10, overflow: 'hidden', pointerEvents: showResponses ? 'auto' : 'none' }}
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
         >
           <div className="h-full flex flex-col">
             <div className="flex justify-between items-center px-3 py-2 border-b border-gray-600 flex-shrink-0">
-              <h3 className="text-white font-semibold text-xs">Comments ({comments.length})</h3>
+              <h3 className="text-white font-semibold text-xs">User Responses ({responses.length})</h3>
               <button
-                onClick={() => setShowComments(false)}
+                onClick={() => setShowResponses(false)}
                 className="text-gray-400 hover:text-white"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -238,13 +238,18 @@ const VideoModal = ({ isOpen, onClose, video }) => {
               onWheel={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
             >
-              {comments.map(comment => (
-                <div key={comment.id} className="bg-gray-900 bg-opacity-50 rounded-lg p-2 text-left">
+              {responses.map(response => (
+                <div key={response.id} className="bg-gray-900 bg-opacity-50 rounded-lg p-2 text-left">
                   <div className="flex justify-between items-start mb-1">
-                    <span className="text-white font-semibold text-xs">{comment.name}</span>
-                    <span className="text-gray-400 text-[10px]">{comment.time}</span>
+                    <span className="text-white font-semibold text-xs">{response.name}</span>
+                    <span className={`text-xs font-semibold ${response.planning_to_watch ? 'text-green-400' : 'text-red-400'}`}>
+                      {response.planning_to_watch ? '✓ Yes' : '✗ No'}
+                    </span>
                   </div>
-                  <p className="text-gray-300 text-xs text-left">{comment.text}</p>
+                  {response.comment && (
+                    <p className="text-gray-300 text-xs text-left mt-1">{response.comment}</p>
+                  )}
+                  <span className="text-gray-500 text-[10px]">{response.time}</span>
                 </div>
               ))}
             </div>
