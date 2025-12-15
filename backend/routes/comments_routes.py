@@ -395,3 +395,31 @@ def get_watch_count(video_id: int):
     
     return {"count": count}
 
+
+@router.get("/api/videos/{video_id}/watch-intent-user")
+def get_user_watch_intent(video_id: int, request: Request):
+    """Get user's existing watch intent if they already submitted"""
+    from server import db
+    
+    # Get IP address
+    ip_address = request.client.host
+    if "x-forwarded-for" in request.headers:
+        ip_address = request.headers["x-forwarded-for"].split(",")[0].strip()
+    
+    # Find existing intent from this IP for this video
+    existing_intent = db.watch_intents.find_one(
+        {"video_id": video_id, "ip_address": ip_address},
+        {"name": 1, "planning_to_watch": 1, "comment": 1, "_id": 0},
+        sort=[("created_at", -1)]
+    )
+    
+    if existing_intent:
+        return {
+            "name": existing_intent.get("name"),
+            "planning_to_watch": existing_intent.get("planning_to_watch"),
+            "comment": existing_intent.get("comment", ""),
+            "has_submitted": True
+        }
+    else:
+        return {"name": None, "planning_to_watch": None, "comment": "", "has_submitted": False}
+
