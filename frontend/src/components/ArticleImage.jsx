@@ -60,6 +60,7 @@ const ArticleImage = ({
         src={src}
         alt={alt}
         className={`${width} ${adjustedHeight} ${imageObjectFit} ${imageLoading ? 'hidden' : 'block'}`}
+        style={{ borderRadius: '0.2rem' }}
         onLoad={handleImageLoad}
         onError={() => {
           setImageError(true);
