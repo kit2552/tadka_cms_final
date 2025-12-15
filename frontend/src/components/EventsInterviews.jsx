@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import dataService from '../services/dataService';
+import { CirclePlay } from 'lucide-react';
 
 const EventsInterviews = ({ eventsInterviewsData = {} }) => {
   const { t } = useLanguage();
