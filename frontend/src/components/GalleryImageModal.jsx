@@ -16,6 +16,57 @@ const GalleryImageModal = ({ images, currentIndex, title, galleryType, onClose, 
     ? images[currentIndex] 
     : images[currentIndex].url;
 
+  // Track image view changes in modal
+  const trackModalImageView = async (imageIndex, action) => {
+    try {
+      const imageUrl = typeof images[imageIndex] === 'string' 
+        ? images[imageIndex] 
+        : images[imageIndex].url;
+      
+      const trackingData = {
+        event_type: 'gallery_image_view',
+        gallery_id: galleryId,
+        gallery_title: title,
+        image_index: imageIndex + 1,
+        total_images: images.length,
+        image_url: imageUrl,
+        action: action,
+        view_mode: isFullscreen ? 'fullscreen' : 'modal',
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+        referrer: document.referrer,
+        source: 'article_gallery_modal'
+      };
+
+      // Send to backend API
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+      await fetch(`${backendUrl}/api/analytics/track`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(trackingData)
+      });
+
+      // Update browser history for SEO/analytics tracking
+      const newUrl = `${window.location.pathname}?image=${imageIndex + 1}&gallery=${encodeURIComponent(title)}&view=modal&source=slider`;
+      window.history.pushState(
+        { imageIndex, galleryTitle: title, action, viewMode: isFullscreen ? 'fullscreen' : 'modal' }, 
+        `${title} - Image ${imageIndex + 1}`, 
+        newUrl
+      );
+
+    } catch (error) {
+      console.error('Analytics tracking failed:', error);
+    }
+  };
+
+  // Track whenever image changes in modal
+  useEffect(() => {
+    if (images.length > 0) {
+      trackModalImageView(currentIndex, 'modal_slide_change');
+    }
+  }, [currentIndex]);
+
   // Toggle fullscreen
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
