@@ -267,3 +267,239 @@ async def delete_existing_user(user_id: str, db = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Failed to delete user")
     
     return {"message": "User deleted successfully"}
+
+# ==================== AI API Keys Endpoints ====================
+
+@router.get("/system-settings/ai-api-keys")
+async def get_ai_api_keys(db = Depends(get_db)):
+    """Get AI API keys configuration (masked for security)"""
+    config = crud.get_ai_api_keys(db)
+    
+    # Mask sensitive data
+    if config:
+        if config.get('openai_api_key'):
+            config['openai_api_key'] = 'sk-****' + config['openai_api_key'][-4:]
+        if config.get('gemini_api_key'):
+            config['gemini_api_key'] = '****' + config['gemini_api_key'][-4:]
+        if config.get('anthropic_api_key'):
+            config['anthropic_api_key'] = 'sk-****' + config['anthropic_api_key'][-4:]
+    
+    return config or {
+        "openai_api_key": None,
+        "gemini_api_key": None,
+        "anthropic_api_key": None,
+        "openai_default_model": None,
+        "gemini_default_model": None,
+        "anthropic_default_model": None
+    }
+
+@router.put("/system-settings/ai-api-keys")
+async def update_ai_api_keys(config: AIAPIKeysConfig, db = Depends(get_db)):
+    """Update AI API keys configuration"""
+    
+    # Get existing config
+    existing_config = crud.get_ai_api_keys(db)
+    
+    # Prepare update data
+    update_data = config.dict(exclude_unset=True)
+    
+    # Don't update keys if they're masked (haven't been changed)
+    if update_data.get('openai_api_key') and update_data['openai_api_key'].startswith('sk-****'):
+        del update_data['openai_api_key']
+    if update_data.get('gemini_api_key') and update_data['gemini_api_key'].startswith('****'):
+        del update_data['gemini_api_key']
+    if update_data.get('anthropic_api_key') and update_data['anthropic_api_key'].startswith('sk-****'):
+        del update_data['anthropic_api_key']
+    
+    # Update in database
+    updated_config = crud.update_ai_api_keys(db, update_data)
+    
+    # Return masked credentials
+    if updated_config.get('openai_api_key'):
+        updated_config['openai_api_key'] = 'sk-****' + updated_config['openai_api_key'][-4:]
+    if updated_config.get('gemini_api_key'):
+        updated_config['gemini_api_key'] = '****' + updated_config['gemini_api_key'][-4:]
+    if updated_config.get('anthropic_api_key'):
+        updated_config['anthropic_api_key'] = 'sk-****' + updated_config['anthropic_api_key'][-4:]
+    
+    return updated_config
+
+@router.get("/system-settings/ai-models/openai")
+async def get_openai_models(db = Depends(get_db)):
+    """Fetch available OpenAI models"""
+    try:
+        config = crud.get_ai_api_keys(db)
+        api_key = config.get('openai_api_key') if config else None
+        
+        if not api_key:
+            raise HTTPException(status_code=400, detail="OpenAI API key not configured")
+        
+        # Fetch models from OpenAI API
+        headers = {
+            "Authorization": f"Bearer {api_key}"
+        }
+        response = requests.get("https://api.openai.com/v1/models", headers=headers, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            # Filter for GPT models only
+            models = [
+                {
+                    "id": model["id"],
+                    "name": model["id"],
+                    "created": model.get("created", 0)
+                }
+                for model in data.get("data", [])
+                if "gpt" in model["id"].lower()
+            ]
+            # Sort by name
+            models.sort(key=lambda x: x["name"])
+            return {"models": models}
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Failed to fetch OpenAI models")
+            
+    except requests.exceptions.Timeout:
+        raise HTTPException(status_code=504, detail="Request timeout while fetching models")
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching models: {str(e)}")
+
+@router.get("/system-settings/ai-models/gemini")
+async def get_gemini_models(db = Depends(get_db)):
+    """Fetch available Gemini models"""
+    try:
+        config = crud.get_ai_api_keys(db)
+        api_key = config.get('gemini_api_key') if config else None
+        
+        if not api_key:
+            raise HTTPException(status_code=400, detail="Gemini API key not configured")
+        
+        # Fetch models from Gemini API
+        response = requests.get(
+            f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}",
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            models = [
+                {
+                    "id": model["name"].split("/")[-1],
+                    "name": model.get("displayName", model["name"].split("/")[-1]),
+                    "description": model.get("description", "")
+                }
+                for model in data.get("models", [])
+                if "generateContent" in model.get("supportedGenerationMethods", [])
+            ]
+            return {"models": models}
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Failed to fetch Gemini models")
+            
+    except requests.exceptions.Timeout:
+        raise HTTPException(status_code=504, detail="Request timeout while fetching models")
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching models: {str(e)}")
+
+@router.get("/system-settings/ai-models/anthropic")
+async def get_anthropic_models():
+    """Return available Anthropic Claude models (static list as API doesn't provide model listing)"""
+    # Anthropic doesn't provide a models API endpoint, so we return a curated list
+    models = [
+        {
+            "id": "claude-3-5-sonnet-20241022",
+            "name": "Claude 3.5 Sonnet (Latest)",
+            "description": "Most intelligent model, best for complex tasks"
+        },
+        {
+            "id": "claude-3-5-haiku-20241022",
+            "name": "Claude 3.5 Haiku (Latest)",
+            "description": "Fastest model, best for quick responses"
+        },
+        {
+            "id": "claude-3-opus-20240229",
+            "name": "Claude 3 Opus",
+            "description": "Powerful model for highly complex tasks"
+        },
+        {
+            "id": "claude-3-sonnet-20240229",
+            "name": "Claude 3 Sonnet",
+            "description": "Balanced intelligence and speed"
+        },
+        {
+            "id": "claude-3-haiku-20240307",
+            "name": "Claude 3 Haiku",
+            "description": "Fast and compact model"
+        }
+    ]
+    return {"models": models}
+
+@router.post("/system-settings/ai-api-keys/test/{provider}")
+async def test_ai_api_key(provider: str, db = Depends(get_db)):
+    """Test AI API key by making a simple API call"""
+    config = crud.get_ai_api_keys(db)
+    
+    if not config:
+        raise HTTPException(status_code=400, detail="AI API keys not configured")
+    
+    try:
+        if provider == "openai":
+            api_key = config.get('openai_api_key')
+            if not api_key:
+                raise HTTPException(status_code=400, detail="OpenAI API key not configured")
+            
+            headers = {"Authorization": f"Bearer {api_key}"}
+            response = requests.get("https://api.openai.com/v1/models", headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                return {"success": True, "message": "OpenAI API key is valid"}
+            else:
+                return {"success": False, "message": "Invalid OpenAI API key"}
+                
+        elif provider == "gemini":
+            api_key = config.get('gemini_api_key')
+            if not api_key:
+                raise HTTPException(status_code=400, detail="Gemini API key not configured")
+            
+            response = requests.get(
+                f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}",
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                return {"success": True, "message": "Gemini API key is valid"}
+            else:
+                return {"success": False, "message": "Invalid Gemini API key"}
+                
+        elif provider == "anthropic":
+            api_key = config.get('anthropic_api_key')
+            if not api_key:
+                raise HTTPException(status_code=400, detail="Anthropic API key not configured")
+            
+            # Test with a minimal API call
+            headers = {
+                "x-api-key": api_key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json"
+            }
+            test_data = {
+                "model": "claude-3-haiku-20240307",
+                "max_tokens": 10,
+                "messages": [{"role": "user", "content": "Hi"}]
+            }
+            response = requests.post(
+                "https://api.anthropic.com/v1/messages",
+                headers=headers,
+                json=test_data,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                return {"success": True, "message": "Anthropic API key is valid"}
+            else:
+                return {"success": False, "message": "Invalid Anthropic API key"}
+        else:
+            raise HTTPException(status_code=400, detail="Invalid provider")
+            
+    except requests.exceptions.Timeout:
+        raise HTTPException(status_code=504, detail="Request timeout while testing API key")
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Error testing API key: {str(e)}")
