@@ -874,16 +874,274 @@ const SystemSettings = () => {
 
             {/* API Keys Tab */}
             {activeTab === 'apikeys' && (
-              <div className="py-16">
-                <div className="flex items-start gap-4">
-                  <svg className="w-12 h-12 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                  </svg>
-                  <div className="text-left">
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">API Keys Management</h3>
-                    <p className="text-gray-600">Manage third-party API keys and integrations</p>
-                  </div>
+              <div className="space-y-8">
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">AI API Keys Management</h3>
+                  <p className="text-sm text-gray-600 text-left">Configure API keys for AI content generation. These keys will be used for generating articles and content.</p>
                 </div>
+
+                <form onSubmit={saveAIAPIKeys} className="space-y-8">
+                  {/* OpenAI Section */}
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none">
+                        <path d="M22.2819 9.8211C23.0545 10.4494 23.5 11.3992 23.5 12.4081C23.5 13.417 23.0545 14.3668 22.2819 14.9951L13.5 21.5581C12.6875 22.2186 11.625 22.5 10.5625 22.3719C9.5 22.2437 8.5625 21.7186 7.9375 20.9074L2.25 13.0951C1.625 12.284 1.25 11.2751 1.25 10.2251C1.25 9.17516 1.625 8.16626 2.25 7.35516L7.9375 -0.456838C8.5625 -1.26794 9.5 -1.79304 10.5625 -1.92119C11.625 -2.04934 12.6875 -1.76794 13.5 -1.10743L22.2819 5.45566C23.0545 6.08396 23.5 7.03376 23.5 8.04266C23.5 9.05156 23.0545 10.0014 22.2819 10.6297V9.8211Z" fill="#10A37F"/>
+                        <path d="M10.5625 8.21094C11.6875 8.21094 12.625 9.14844 12.625 10.2734C12.625 11.3984 11.6875 12.3359 10.5625 12.3359C9.4375 12.3359 8.5 11.3984 8.5 10.2734C8.5 9.14844 9.4375 8.21094 10.5625 8.21094Z" fill="white"/>
+                      </svg>
+                      <div className="text-left">
+                        <h4 className="text-base font-semibold text-gray-900">OpenAI</h4>
+                        <p className="text-sm text-gray-600">GPT models for text generation</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="text-left">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">OpenAI API Key</label>
+                        <div className="relative">
+                          <input
+                            type={showOpenAIKey ? "text" : "password"}
+                            name="openai_api_key"
+                            value={aiApiKeys.openai_api_key || ''}
+                            onChange={handleAIKeyChange}
+                            className="w-full px-4 py-2.5 pr-24 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono"
+                            placeholder="sk-proj-..."
+                          />
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setShowOpenAIKey(!showOpenAIKey)}
+                              className="text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                              {showOpenAIKey ? (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                              ) : (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                </svg>
+                              )}
+                            </button>
+                            {aiApiKeys.openai_api_key && !aiApiKeys.openai_api_key.startsWith('sk-****') && (
+                              <button
+                                type="button"
+                                onClick={() => testAPIKey('openai')}
+                                disabled={testingKey === 'openai'}
+                                className="text-blue-600 hover:text-blue-700 text-xs font-medium disabled:opacity-50"
+                              >
+                                {testingKey === 'openai' ? 'Testing...' : 'Test'}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {aiModels.openai.length > 0 && (
+                        <div className="text-left">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Default Model</label>
+                          <select
+                            name="openai_default_model"
+                            value={aiApiKeys.openai_default_model || ''}
+                            onChange={handleAIKeyChange}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          >
+                            <option value="">Select a model</option>
+                            {aiModels.openai.map(model => (
+                              <option key={model.id} value={model.id}>{model.name}</option>
+                            ))}
+                          </select>
+                          <p className="text-xs text-gray-500 mt-1">This model will be used by default for content generation</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Google Gemini Section */}
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <svg className="w-8 h-8" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M12 2L2 7v10l10 5 10-5V7L12 2z"/>
+                        <path fill="#34A853" d="M12 2v20l10-5V7L12 2z" opacity="0.7"/>
+                      </svg>
+                      <div className="text-left">
+                        <h4 className="text-base font-semibold text-gray-900">Google Gemini</h4>
+                        <p className="text-sm text-gray-600">Gemini models for multimodal AI</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="text-left">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Gemini API Key</label>
+                        <div className="relative">
+                          <input
+                            type={showGeminiKey ? "text" : "password"}
+                            name="gemini_api_key"
+                            value={aiApiKeys.gemini_api_key || ''}
+                            onChange={handleAIKeyChange}
+                            className="w-full px-4 py-2.5 pr-24 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono"
+                            placeholder="AIza..."
+                          />
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setShowGeminiKey(!showGeminiKey)}
+                              className="text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                              {showGeminiKey ? (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                              ) : (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                </svg>
+                              )}
+                            </button>
+                            {aiApiKeys.gemini_api_key && !aiApiKeys.gemini_api_key.startsWith('****') && (
+                              <button
+                                type="button"
+                                onClick={() => testAPIKey('gemini')}
+                                disabled={testingKey === 'gemini'}
+                                className="text-blue-600 hover:text-blue-700 text-xs font-medium disabled:opacity-50"
+                              >
+                                {testingKey === 'gemini' ? 'Testing...' : 'Test'}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {aiModels.gemini.length > 0 && (
+                        <div className="text-left">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Default Model</label>
+                          <select
+                            name="gemini_default_model"
+                            value={aiApiKeys.gemini_default_model || ''}
+                            onChange={handleAIKeyChange}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          >
+                            <option value="">Select a model</option>
+                            {aiModels.gemini.map(model => (
+                              <option key={model.id} value={model.id}>{model.name}</option>
+                            ))}
+                          </select>
+                          <p className="text-xs text-gray-500 mt-1">This model will be used by default for content generation</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Anthropic Claude Section */}
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <svg className="w-8 h-8" viewBox="0 0 24 24">
+                        <rect width="24" height="24" rx="4" fill="#181818"/>
+                        <path d="M8 16L12 8L16 16" stroke="#D97757" strokeWidth="2" fill="none"/>
+                      </svg>
+                      <div className="text-left">
+                        <h4 className="text-base font-semibold text-gray-900">Anthropic Claude</h4>
+                        <p className="text-sm text-gray-600">Claude models for advanced reasoning</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="text-left">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Anthropic API Key</label>
+                        <div className="relative">
+                          <input
+                            type={showAnthropicKey ? "text" : "password"}
+                            name="anthropic_api_key"
+                            value={aiApiKeys.anthropic_api_key || ''}
+                            onChange={handleAIKeyChange}
+                            className="w-full px-4 py-2.5 pr-24 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono"
+                            placeholder="sk-ant-..."
+                          />
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setShowAnthropicKey(!showAnthropicKey)}
+                              className="text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                              {showAnthropicKey ? (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                              ) : (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                </svg>
+                              )}
+                            </button>
+                            {aiApiKeys.anthropic_api_key && !aiApiKeys.anthropic_api_key.startsWith('sk-****') && (
+                              <button
+                                type="button"
+                                onClick={() => testAPIKey('anthropic')}
+                                disabled={testingKey === 'anthropic'}
+                                className="text-blue-600 hover:text-blue-700 text-xs font-medium disabled:opacity-50"
+                              >
+                                {testingKey === 'anthropic' ? 'Testing...' : 'Test'}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {aiModels.anthropic.length > 0 && (
+                        <div className="text-left">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Default Model</label>
+                          <select
+                            name="anthropic_default_model"
+                            value={aiApiKeys.anthropic_default_model || ''}
+                            onChange={handleAIKeyChange}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          >
+                            <option value="">Select a model</option>
+                            {aiModels.anthropic.map(model => (
+                              <option key={model.id} value={model.id}>
+                                {model.name}
+                                {model.description && ` - ${model.description}`}
+                              </option>
+                            ))}
+                          </select>
+                          <p className="text-xs text-gray-500 mt-1">This model will be used by default for content generation</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Info Box */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex gap-3">
+                      <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                      </svg>
+                      <div className="text-left">
+                        <h4 className="text-sm font-semibold text-blue-900 mb-1">About AI API Keys</h4>
+                        <ul className="text-xs text-blue-800 space-y-1">
+                          <li>• These API keys will be used for AI-powered content generation</li>
+                          <li>• Click "Test" to validate your API key and fetch available models</li>
+                          <li>• Select a default model for each provider to use when generating content</li>
+                          <li>• Keys are stored securely and masked after saving</li>
+                          <li>• You can get API keys from: OpenAI Platform, Google AI Studio, and Anthropic Console</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <div className="flex justify-end pt-6 border-t border-gray-200">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-medium text-sm transition-colors"
+                    >
+                      {loading ? 'Saving...' : 'Save AI API Keys'}
+                    </button>
+                  </div>
+                </form>
               </div>
             )}
 
