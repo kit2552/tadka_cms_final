@@ -18,6 +18,8 @@ const OTTReleases = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredReleases, setFilteredReleases] = useState([]);
   const filterDropdownRef = useRef(null);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
   useEffect(() => {
     const fetchOTTReleaseData = async () => {
