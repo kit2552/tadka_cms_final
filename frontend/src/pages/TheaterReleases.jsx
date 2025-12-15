@@ -491,7 +491,23 @@ const TheaterReleases = () => {
                         {release.languages && (
                           <div className="text-xs text-blue-600 mt-1">
                             {(() => {
-                              const langs = Array.isArray(release.languages) ? release.languages : [release.languages];
+                              // Parse languages - handle string, JSON string, or array
+                              let langs = [];
+                              if (typeof release.languages === 'string') {
+                                try {
+                                  langs = JSON.parse(release.languages);
+                                } catch {
+                                  langs = [release.languages];
+                                }
+                              } else if (Array.isArray(release.languages)) {
+                                langs = release.languages;
+                              } else {
+                                langs = [release.languages];
+                              }
+                              
+                              // Capitalize first letter of each language
+                              langs = langs.map(lang => lang ? lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase() : '');
+                              
                               const originalLang = release.original_language;
                               
                               // In Regional tab, only show "Hindi" in single line
