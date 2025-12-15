@@ -99,11 +99,11 @@ const SportsSchedules = ({ sportsData, onArticleClick }) => {
                 onClick={() => handleArticleClick(article)}
               >
                 <div className="flex items-start space-x-2 text-left">
-                  <div className="flex-shrink-0 overflow-hidden rounded-sm border border-gray-300">
+                  <div className="flex-shrink-0 w-20 h-16 overflow-hidden rounded-sm border border-gray-300">
                     <img
                       src={article.image_url || article.image || getThumbnail(index)}
                       alt={article.title}
-                      className="w-20 h-16 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
                         e.target.src = getThumbnail(index);
                       }}
