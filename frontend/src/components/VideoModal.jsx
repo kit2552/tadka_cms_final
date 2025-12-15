@@ -22,18 +22,22 @@ const VideoModal = ({ isOpen, onClose, video }) => {
 
   const fetchUserName = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/user-name`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/watch-intent-user`);
       const data = await response.json();
       
-      if (data.has_commented && data.name) {
+      if (data.has_submitted && data.name) {
         setCommentName(data.name);
         setNameDisabled(true);
+        setPlanningToWatch(data.planning_to_watch ? 'yes' : 'no');
+        setCommentText(data.comment || '');
       } else {
         setCommentName('');
         setNameDisabled(false);
+        setPlanningToWatch(null);
+        setCommentText('');
       }
     } catch (error) {
-      console.error('Error fetching user name:', error);
+      console.error('Error fetching user watch intent:', error);
       setNameDisabled(false);
     }
   };
