@@ -12,6 +12,8 @@ const OTTReleases = ({ articles, onArticleClick }) => {
   const [activeTab, setActiveTab] = useTabState('ott-releases', 'ott');
   const [releaseData, setReleaseData] = useState({ ott: {}, bollywood: {} });
   const [loading, setLoading] = useState(true);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
   
   useEffect(() => {
     fetchReleaseData();
