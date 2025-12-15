@@ -20,6 +20,17 @@ const TheaterReleases = () => {
   const filterDropdownRef = useRef(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
+  
+  const handleReleaseClick = (release) => {
+    // Open video modal with trailer
+    setSelectedVideo(release);
+    setVideoModalOpen(true);
+  };
+  
+  const handleVideoModalClose = () => {
+    setVideoModalOpen(false);
+    setSelectedVideo(null);
+  };
 
   useEffect(() => {
     const fetchOTTReleaseData = async () => {
