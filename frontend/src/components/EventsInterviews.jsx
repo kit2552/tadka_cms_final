@@ -117,7 +117,10 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
                   </div>
                   <div className="p-3 text-left" style={{ width: '240px' }}>
                     <div className="flex items-center gap-1.5">
-                      <CirclePlay className="w-4 h-4 text-gray-700 flex-shrink-0" />
+                      <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="#374151" strokeWidth="2" fill="none"/>
+                        <path d="M10 8l6 4-6 4V8z" fill="#000000"/>
+                      </svg>
                       <h3 style={{fontSize: '13px', fontWeight: '600', lineHeight: '1.4', wordWrap: 'break-word'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
                         {item.title}
                       </h3>
