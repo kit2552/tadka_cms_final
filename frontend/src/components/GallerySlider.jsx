@@ -21,6 +21,58 @@ const GallerySlider = ({ gallery, title }) => {
     ? images[currentSlide] 
     : images[currentSlide].url;
   
+  // Track image view changes
+  const trackImageView = async (imageIndex, action) => {
+    try {
+      const imageUrl = typeof images[imageIndex] === 'string' 
+        ? images[imageIndex] 
+        : images[imageIndex].url;
+      
+      const trackingData = {
+        event_type: 'gallery_image_view',
+        gallery_id: gallery.id || gallery.gallery_id,
+        gallery_title: title,
+        image_index: imageIndex + 1,
+        total_images: images.length,
+        image_url: imageUrl,
+        action: action,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+        referrer: document.referrer,
+        source: 'article_gallery_slider'
+      };
+
+      // Send to backend API
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+      await fetch(`${backendUrl}/api/analytics/track`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(trackingData)
+      });
+
+      // Update browser history for SEO/analytics tracking
+      const pathParts = window.location.pathname.split('/');
+      const articleId = pathParts[2]; // Extract article ID from URL
+      const newUrl = `${window.location.pathname}?image=${imageIndex + 1}&gallery=${encodeURIComponent(title)}&source=slider`;
+      window.history.pushState(
+        { imageIndex, galleryTitle: title, action }, 
+        `${title} - Image ${imageIndex + 1}`, 
+        newUrl
+      );
+
+    } catch (error) {
+      console.error('Analytics tracking failed:', error);
+    }
+  };
+
+  // Track whenever slide changes
+  useEffect(() => {
+    if (images.length > 0) {
+      trackImageView(currentSlide, 'slide_change');
+    }
+  }, [currentSlide]);
+
   const handleImageClick = () => {
     setShowModal(true);
   };
