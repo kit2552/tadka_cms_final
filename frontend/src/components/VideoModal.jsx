@@ -175,7 +175,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         </div>
 
         {/* Black Footer with Comment Buttons */}
-        <div className="bg-black text-white px-4 py-3 flex justify-center items-center space-x-6">
+        <div className="bg-black text-white px-4 pt-3 pb-1 flex justify-center items-center space-x-6">
           <button
             onClick={() => setShowAddComment(true)}
             className="px-2.5 py-1 bg-black hover:bg-gray-800 text-white text-[10px] rounded-md transition-colors border border-gray-600"
