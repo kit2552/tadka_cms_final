@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import VideoModal from './VideoModal';
 
 const OTTReleases = ({ articles, onArticleClick }) => {
   const { t } = useLanguage();
