@@ -103,7 +103,7 @@ const BoxOffice = ({ articles, boxOfficeData, onArticleClick }) => {
                   <img
                     src={article.image_url || article.image || getThumbnail(index)}
                     alt={article.title}
-                    className="flex-shrink-0 w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
+                    className="flex-shrink-0 w-20 h-16 object-cover border border-gray-300 rounded-lg group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       e.target.src = getThumbnail(index);
                     }}
