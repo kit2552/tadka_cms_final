@@ -17,7 +17,11 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
   
   const handleReleaseClick = (release) => {
     // Open video modal with trailer
-    setSelectedVideo(release);
+    setSelectedVideo({
+      id: release.id,
+      title: release.movie_name || release.title,
+      youtube_url: release.youtube_url || release.trailer_url
+    });
     setVideoModalOpen(true);
   };
   
