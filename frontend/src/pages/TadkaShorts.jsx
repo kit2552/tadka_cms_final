@@ -472,9 +472,9 @@ const TadkaShorts = () => {
       </div>
       </div>
       
-      {/* Video Modal for playing YouTube shorts */}
+      {/* Vertical Video Modal for playing YouTube shorts */}
       {videoModalOpen && selectedVideo && (
-        <VideoModal
+        <VerticalVideoModal
           isOpen={videoModalOpen}
           onClose={handleVideoModalClose}
           video={selectedVideo}
