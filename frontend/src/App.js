@@ -22,7 +22,6 @@ import MovieReviews from "./pages/MovieReviews";
 import ViewMovieContent from "./pages/ViewMovieContent";
 import Gallery from "./pages/Gallery";
 import Education from "./pages/Education";
-import LatestNews from "./pages/LatestNews";
 import TravelPics from "./pages/TravelPics";
 import TadkaPics from "./pages/TadkaPics";
 import TrailersTeasers from "./pages/TrailersTeasers";
