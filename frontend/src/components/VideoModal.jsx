@@ -265,7 +265,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
         >
           <div className="p-4">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-white font-bold text-sm">🎬 Planning to Watch?</h3>
+              <h3 className="text-white font-bold text-sm">Planning to Watch?</h3>
               <button
                 onClick={() => {
                   setShowAddComment(false);
