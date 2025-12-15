@@ -1286,6 +1286,46 @@ def update_aws_config(db, config: dict):
     
     return get_aws_config(db)
 
+# ==================== AI API KEYS ====================
+
+def get_ai_api_keys(db):
+    """Get AI API keys configuration (returns full unmasked values)"""
+    doc = db['system_settings'].find_one({"type": "ai_api_keys"})
+    return serialize_doc(doc) if doc else None
+
+def update_ai_api_keys(db, config: dict):
+    """Update AI API keys configuration - only updates provided fields"""
+    from datetime import datetime
+    
+    # Build update document with only provided fields
+    update_fields = {"type": "ai_api_keys", "updated_at": datetime.utcnow()}
+    
+    if "openai_api_key" in config and config["openai_api_key"]:
+        update_fields["openai_api_key"] = config["openai_api_key"]
+    
+    if "gemini_api_key" in config and config["gemini_api_key"]:
+        update_fields["gemini_api_key"] = config["gemini_api_key"]
+    
+    if "anthropic_api_key" in config and config["anthropic_api_key"]:
+        update_fields["anthropic_api_key"] = config["anthropic_api_key"]
+    
+    if "openai_default_model" in config:
+        update_fields["openai_default_model"] = config.get("openai_default_model")
+    
+    if "gemini_default_model" in config:
+        update_fields["gemini_default_model"] = config.get("gemini_default_model")
+    
+    if "anthropic_default_model" in config:
+        update_fields["anthropic_default_model"] = config.get("anthropic_default_model")
+    
+    db['system_settings'].update_one(
+        {"type": "ai_api_keys"},
+        {"$set": update_fields},
+        upsert=True
+    )
+    
+    return get_ai_api_keys(db)
+
 # ==================== USER MANAGEMENT ====================
 
 def get_users(db, skip: int = 0, limit: int = 100):
