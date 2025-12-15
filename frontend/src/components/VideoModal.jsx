@@ -11,11 +11,12 @@ const VideoModal = ({ isOpen, onClose, video }) => {
   const [planningToWatch, setPlanningToWatch] = useState(null); // 'yes' or 'no'
   const [watchCount, setWatchCount] = useState(0);
 
-  // Fetch comments when modal opens
+  // Fetch comments and watch count when modal opens
   useEffect(() => {
     if (isOpen && video && video.id) {
       fetchComments();
       fetchUserName();
+      fetchWatchCount();
     }
   }, [isOpen, video]);
 
