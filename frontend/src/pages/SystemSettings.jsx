@@ -395,6 +395,102 @@ const SystemSettings = () => {
     }
   };
 
+  // AI API Keys Functions
+  const loadAIAPIKeys = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ai-api-keys`);
+      const data = await response.json();
+      setAiApiKeys(data);
+    } catch (error) {
+      console.error('Failed to load AI API keys:', error);
+    }
+  };
+
+  const handleAIKeyChange = (e) => {
+    const { name, value } = e.target;
+    setAiApiKeys(prev => ({ ...prev, [name]: value }));
+  };
+
+  const saveAIAPIKeys = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage({ type: '', text: '' });
+
+    try {
+      const keysToSend = { ...aiApiKeys };
+      
+      // Don't send masked keys
+      if (keysToSend.openai_api_key && keysToSend.openai_api_key.startsWith('sk-****')) {
+        delete keysToSend.openai_api_key;
+      }
+      if (keysToSend.gemini_api_key && keysToSend.gemini_api_key.startsWith('****')) {
+        delete keysToSend.gemini_api_key;
+      }
+      if (keysToSend.anthropic_api_key && keysToSend.anthropic_api_key.startsWith('sk-****')) {
+        delete keysToSend.anthropic_api_key;
+      }
+
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ai-api-keys`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(keysToSend)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setAiApiKeys(data);
+        setMessage({ type: 'success', text: 'AI API keys saved successfully!' });
+      } else {
+        const error = await response.json();
+        setMessage({ type: 'error', text: error.detail || 'Failed to save AI API keys' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to save AI API keys' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchModels = async (provider) => {
+    setLoadingModels(prev => ({ ...prev, [provider]: true }));
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ai-models/${provider}`);
+      if (response.ok) {
+        const data = await response.json();
+        setAiModels(prev => ({ ...prev, [provider]: data.models }));
+      } else {
+        const error = await response.json();
+        setMessage({ type: 'error', text: error.detail || `Failed to fetch ${provider} models` });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: `Failed to fetch ${provider} models` });
+    } finally {
+      setLoadingModels(prev => ({ ...prev, [provider]: false }));
+    }
+  };
+
+  const testAPIKey = async (provider) => {
+    setTestingKey(provider);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ai-api-keys/test/${provider}`, {
+        method: 'POST'
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setMessage({ type: 'success', text: data.message });
+        // Fetch models after successful validation
+        await fetchModels(provider);
+      } else {
+        setMessage({ type: 'error', text: data.message });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: `Failed to test ${provider} API key` });
+    } finally {
+      setTestingKey(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-8">
