@@ -17,6 +17,7 @@ import schemas, crud
 from models.mongodb_collections import create_indexes, GALLERIES
 from routes.auth_routes import router as auth_router
 from routes.system_settings_routes import router as system_settings_router
+from routes.ai_agents_routes import router as ai_agents_router
 from routes.topics_routes_mongodb import router as topics_router
 from routes.gallery_routes_mongodb import router as gallery_router
 from routes.comments_routes import router as comments_router
