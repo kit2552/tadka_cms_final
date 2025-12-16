@@ -77,7 +77,9 @@ const SystemSettings = () => {
   const [aiModels, setAiModels] = useState({
     openai: [],
     gemini: [],
-    anthropic: []
+    anthropic: [],
+    allText: [],
+    allImage: []
   });
   const [loadingModels, setLoadingModels] = useState({
     openai: false,
