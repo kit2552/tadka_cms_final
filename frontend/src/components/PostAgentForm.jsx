@@ -728,20 +728,20 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
         </form>
       </div>
 
-      {/* Topic-Category Mapping Modal */}
+      {/* Category-Prompt Mapping Modal */}
       {showMappingModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] flex flex-col">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between z-10">
+            <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
               <div className="text-left">
-                <h2 className="text-lg font-semibold text-gray-900">Topic-Category Mapping</h2>
-                <p className="text-xs text-gray-600 mt-0.5">Map topics to categories for automatic selection</p>
+                <h2 className="text-lg font-semibold text-gray-900">Category-Prompt Mapping</h2>
+                <p className="text-xs text-gray-600 mt-0.5">Configure AI prompts for each category</p>
               </div>
               <button
                 onClick={() => {
                   setShowMappingModal(false);
-                  setEditingMappings(topicCategoryMappings);
+                  setEditingMappings(categoryPromptMappings);
                 }}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
               >
@@ -752,48 +752,49 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 space-y-3">
+            <div className="flex-1 overflow-y-auto p-6">
               <div className="bg-blue-50 border border-blue-200 rounded p-3 mb-4">
                 <p className="text-xs text-blue-800">
-                  Map each topic to a category. When a topic is selected in the form, the mapped category will be automatically selected.
+                  Each category has a custom AI prompt. When a category is selected, its prompt will be used for content generation. The prompt includes placeholders for Target State and Word Count which will be replaced dynamically.
                 </p>
               </div>
 
-              {topics.map(topic => (
-                <div key={topic.value} className="flex items-center gap-3 bg-gray-50 rounded p-3">
-                  <div className="flex-1 text-left">
-                    <label className="text-xs font-medium text-gray-700">
-                      {topic.label}
-                    </label>
-                  </div>
-                  <div className="flex-1">
-                    <select
-                      value={editingMappings[topic.value] || ''}
-                      onChange={(e) => handleMappingChange(topic.value, e.target.value)}
-                      className="w-full px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="">No mapping</option>
-                      {categories
-                        .filter(cat => cat.slug !== 'latest-news')
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map(cat => (
-                          <option key={cat.slug} value={cat.slug}>
-                            {cat.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                </div>
-              ))}
+              <div className="space-y-3">
+                {categories
+                  .filter(cat => cat.slug !== 'latest-news')
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map(cat => (
+                    <div key={cat.slug} className="flex items-start gap-3 bg-gray-50 rounded p-3 border border-gray-200">
+                      <div className="w-32 flex-shrink-0 text-left">
+                        <label className="text-xs font-semibold text-gray-900 block mb-1">
+                          {cat.name}
+                        </label>
+                        <span className="text-xs text-gray-500">({cat.slug})</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs text-gray-700 font-mono bg-white rounded p-2 border border-gray-300 truncate">
+                          {editingMappings[cat.slug]?.substring(0, 120)}...
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => openPromptEditor(cat.slug)}
+                        className="flex-shrink-0 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition-colors"
+                      >
+                        Edit Prompt
+                      </button>
+                    </div>
+                  ))}
+              </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-3 flex items-center justify-end gap-2">
+            <div className="bg-gray-50 border-t border-gray-200 px-6 py-3 flex items-center justify-end gap-2">
               <button
                 type="button"
                 onClick={() => {
                   setShowMappingModal(false);
-                  setEditingMappings(topicCategoryMappings);
+                  setEditingMappings(categoryPromptMappings);
                 }}
                 className="px-4 py-1.5 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
               >
@@ -804,7 +805,76 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                 onClick={saveMappings}
                 className="px-4 py-1.5 bg-black text-white rounded text-sm font-medium hover:bg-gray-800 transition-colors"
               >
-                Save Mappings
+                Save All Prompts
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Prompt Editor Modal */}
+      {showPromptEditor && editingCategory && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+            {/* Editor Header */}
+            <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
+              <div className="text-left">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Edit Prompt: {categories.find(c => c.slug === editingCategory)?.name}
+                </h2>
+                <p className="text-xs text-gray-600 mt-0.5">
+                  Use {'{'}target_state_context{'}'}, {'{'}target_audience{'}'}, and {'{'}word_count{'}'} as placeholders
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowPromptEditor(false);
+                  setEditingCategory(null);
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Editor Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              <textarea
+                value={editingMappings[editingCategory] || ''}
+                onChange={(e) => handlePromptChange(editingCategory, e.target.value)}
+                className="w-full h-96 px-3 py-2 border border-gray-300 rounded text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                placeholder="Enter the AI prompt for this category..."
+              />
+              <div className="mt-3 bg-yellow-50 border border-yellow-200 rounded p-3">
+                <p className="text-xs font-semibold text-yellow-900 mb-2">Available Placeholders:</p>
+                <ul className="text-xs text-yellow-800 space-y-1">
+                  <li>• <code className="bg-yellow-100 px-1 rounded">{'{'}target_state_context{'}'}</code> - Replaced with state-specific context (e.g., "in Telangana" or "in India")</li>
+                  <li>• <code className="bg-yellow-100 px-1 rounded">{'{'}target_audience{'}'}</code> - Replaced with target audience (e.g., "for Telangana readers")</li>
+                  <li>• <code className="bg-yellow-100 px-1 rounded">{'{'}word_count{'}'}</code> - Replaced with configured word count</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Editor Footer */}
+            <div className="bg-gray-50 border-t border-gray-200 px-6 py-3 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPromptEditor(false);
+                  setEditingCategory(null);
+                }}
+                className="px-4 py-1.5 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                onClick={savePromptEdit}
+                className="px-4 py-1.5 bg-black text-white rounded text-sm font-medium hover:bg-gray-800 transition-colors"
+              >
+                Done
               </button>
             </div>
           </div>
