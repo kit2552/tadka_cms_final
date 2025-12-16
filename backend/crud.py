@@ -1318,6 +1318,12 @@ def update_ai_api_keys(db, config: dict):
     if "anthropic_default_model" in config:
         update_fields["anthropic_default_model"] = config.get("anthropic_default_model")
     
+    if "default_text_model" in config:
+        update_fields["default_text_model"] = config.get("default_text_model")
+    
+    if "default_image_model" in config:
+        update_fields["default_image_model"] = config.get("default_image_model")
+    
     db['system_settings'].update_one(
         {"type": "ai_api_keys"},
         {"$set": update_fields},
