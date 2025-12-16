@@ -373,8 +373,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             )}
 
             {/* Common Fields - Content Settings */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-gray-900 text-left">Content Settings</h3>
+            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Content Settings</h3>
               
               {/* Category Selection */}
               <div className="text-left">
