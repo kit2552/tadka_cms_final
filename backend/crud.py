@@ -1379,23 +1379,236 @@ def toggle_ai_agent_status(db, agent_id: str):
     )
     return get_ai_agent(db, agent_id)
 
-# ==================== TOPIC-CATEGORY MAPPINGS ====================
+# ==================== CATEGORY-PROMPT MAPPINGS ====================
 
-def get_topic_category_mappings(db):
-    """Get topic-category mappings"""
-    doc = db['system_settings'].find_one({"type": "topic_category_mappings"})
+DEFAULT_CATEGORY_PROMPTS = {
+    "politics": """Search the web for the latest trending political news and developments {target_state_context}. Your task is to:
+
+1. Find the most recent and significant political stories from the last 24-48 hours
+2. Identify 3-5 key political events or developments that are currently trending
+3. For each event, gather information from multiple credible sources
+4. Compile and synthesize the information into a comprehensive article
+
+Write a {word_count} word article that:
+- Has an engaging headline that captures the main political development
+- Provides context and background for readers unfamiliar with the situation
+- Includes quotes from key political figures when available
+- Explains the implications and potential impact of these developments
+- Maintains objectivity and presents multiple perspectives where relevant
+- Uses clear, accessible language while maintaining journalistic standards
+
+Focus on accuracy, timeliness, and relevance to {target_audience}.""",
+
+    "movies": """Search the web for the latest trending movie news, releases, and entertainment updates {target_state_context}. Your task is to:
+
+1. Identify the most trending movie-related stories from the last 24-48 hours
+2. Cover topics like: new releases, box office collections, celebrity news, upcoming films, reviews, controversies
+3. Find information from entertainment news sites, box office tracking, and social media trends
+4. Include both Bollywood and Hollywood news when relevant
+
+Write a {word_count} word article that:
+- Has a catchy, entertainment-focused headline
+- Covers the most exciting and newsworthy movie developments
+- Includes box office numbers, release dates, or other specific details
+- Mentions key actors, directors, and production houses
+- Captures the excitement and buzz around the topic
+- Is engaging and appeals to movie enthusiasts
+- Uses entertaining yet informative language
+
+Make it exciting for movie lovers {target_audience}!""",
+
+    "sports": """Search the web for the latest trending sports news and updates {target_state_context}. Your task is to:
+
+1. Find the most recent significant sports stories from the last 24-48 hours
+2. Cover various sports: cricket, football, tennis, Olympics, local sports, etc.
+3. Include match results, player performances, team news, upcoming events
+4. Check trending sports hashtags and discussions
+
+Write a {word_count} word article that:
+- Has an energetic, sports-focused headline
+- Provides match scores, statistics, and key moments
+- Highlights star player performances and achievements
+- Includes tournament standings or rankings when relevant
+- Captures the excitement and competitive spirit
+- Appeals to sports fans with dynamic language
+- Mentions upcoming matches or events when applicable
+
+Focus on what's trending and exciting in the sports world {target_audience}!""",
+
+    "fashion": """Search the web for the latest fashion trends, style news, and fashion industry updates {target_state_context}. Your task is to:
+
+1. Identify trending fashion stories from the last 24-48 hours
+2. Cover: runway shows, celebrity fashion, street style, fashion weeks, designer news, trends
+3. Look for what's trending on fashion blogs, social media, and fashion news sites
+4. Include both international and local fashion scenes
+
+Write a {word_count} word article that:
+- Has a stylish, trend-focused headline
+- Describes the latest fashion trends and styles
+- Mentions key designers, brands, and fashion influencers
+- Includes details about colors, fabrics, patterns, and styling tips
+- Features celebrity or influencer fashion when relevant
+- Uses vivid, descriptive language about styles and looks
+- Appeals to fashion-conscious readers
+
+Make it inspiring and aspirational for fashion enthusiasts {target_audience}!""",
+
+    "health": """Search the web for the latest health news, medical breakthroughs, and wellness trends {target_state_context}. Your task is to:
+
+1. Find the most recent significant health stories from the last 24-48 hours
+2. Cover: medical research, health advisories, wellness trends, disease outbreaks, health policies
+3. Prioritize credible medical sources and peer-reviewed information
+4. Include expert opinions and official health organization statements
+
+Write a {word_count} word article that:
+- Has a clear, informative headline about the health topic
+- Explains medical or health information in accessible language
+- Includes relevant statistics, research findings, or expert quotes
+- Provides practical advice or actionable information for readers
+- Addresses common concerns or questions about the topic
+- Maintains accuracy and avoids sensationalism
+- Cites credible sources and medical authorities
+
+Focus on reliable, helpful health information for {target_audience}.""",
+
+    "food": """Search the web for the latest food trends, culinary news, and restaurant updates {target_state_context}. Your task is to:
+
+1. Identify trending food stories from the last 24-48 hours
+2. Cover: new restaurants, food trends, recipes, celebrity chefs, food festivals, culinary innovations
+3. Look for viral food content, new dining concepts, and food culture stories
+4. Include both local and international culinary news
+
+Write a {word_count} word article that:
+- Has a mouth-watering, appetizing headline
+- Describes food and flavors in vivid, sensory language
+- Includes specific details about dishes, ingredients, and preparation
+- Mentions chefs, restaurants, or food personalities
+- Captures current food trends and cultural movements
+- Appeals to food lovers and culinary enthusiasts
+- Provides useful information like locations, prices, or recipes when relevant
+
+Make readers hungry for more {target_audience}!""",
+
+    "ai": """Search the web comprehensively for the absolute latest AI and technology news from the last 24 hours {target_state_context}. Your task is to:
+
+1. Scan major tech news sites, AI research labs, company announcements, and tech forums
+2. Identify the most trending AI stories: new models, breakthroughs, products, controversies, regulations
+3. Find similar trending articles across the web to understand the full scope
+4. Compile information from multiple authoritative tech sources
+
+Write a {word_count} word article that:
+- Has a tech-forward, cutting-edge headline
+- Explains complex AI concepts in accessible terms for general readers
+- Includes specific technical details like model names, capabilities, performance metrics
+- Mentions key companies, researchers, or institutions involved
+- Discusses implications and potential impact of the development
+- Addresses both opportunities and concerns
+- Uses current tech terminology appropriately
+- Provides context on how this fits into broader AI trends
+
+Focus on what's genuinely new and significant in AI {target_audience}.""",
+
+    "stock-market": """Search the web for the latest stock market news, financial trends, and economic developments {target_state_context}. Your task is to:
+
+1. Find the most recent market movements and financial news from the last 24-48 hours
+2. Cover: major indices, significant stock movements, IPOs, economic indicators, policy changes
+3. Include data from stock exchanges, financial news sites, and market analysis
+4. Focus on news affecting {target_audience} markets and investors
+
+Write a {word_count} word article that:
+- Has a finance-focused, informative headline
+- Includes specific numbers: index points, percentages, valuations
+- Explains market movements and the factors driving them
+- Mentions key stocks, sectors, or companies making news
+- Provides context on economic indicators or policy impacts
+- Uses financial terminology appropriately
+- Maintains objectivity and avoids giving direct investment advice
+- Appeals to investors and business readers
+
+Focus on actionable market intelligence for {target_audience}.""",
+
+    "top-stories": """Search the web for the most important and trending news stories {target_state_context} from the last 24 hours. Your task is to:
+
+1. Identify the TOP 3-5 most significant news stories currently making headlines
+2. Prioritize stories with the highest impact, reach, and public interest
+3. Cover a diverse range of topics: politics, society, accidents, achievements, policies, local issues
+4. For {target_state_context}, focus specifically on major developments affecting that region
+5. Check multiple news sources to verify importance and trending status
+
+Write a {word_count} word article that:
+- Has a compelling headline highlighting the most significant story
+- Covers multiple top stories in order of importance
+- Provides essential details for each story: who, what, when, where, why
+- Explains the impact and significance of each development
+- Includes relevant quotes from officials or witnesses when available
+- Maintains journalistic standards and objectivity
+- Uses clear, urgent language appropriate for breaking news
+- Connects stories to broader context when relevant
+
+This is for readers wanting to know the most important news in {target_audience} right now!""",
+
+    "trailers": """Search the web for the latest movie trailers, teasers, and promotional content released {target_state_context}. Your task is to:
+
+1. Find the newest trailers released in the last 24-48 hours
+2. Cover: official trailers, teasers, motion posters, first looks
+3. Include both Bollywood and Hollywood releases when relevant
+4. Check YouTube trending, social media buzz, and entertainment sites
+
+Write a {word_count} word article that:
+- Has an exciting headline about the trailer release
+- Describes key moments and highlights from the trailer
+- Mentions the cast, director, and production details
+- Includes release dates and platform information
+- Captures the tone and genre of the film
+- Notes any viral moments or social media reactions
+- Builds anticipation for the movie
+- Appeals to movie enthusiasts eager for new content
+
+Make readers excited to watch the trailer {target_audience}!""",
+
+    "box-office": """Search the web for the latest box office collections, earnings reports, and movie performance data {target_state_context}. Your task is to:
+
+1. Find the most recent box office numbers from the last 24-48 hours
+2. Cover: weekend collections, milestone achievements, comparative performance
+3. Include both domestic and international numbers when relevant
+4. Compare with previous releases and expectations
+
+Write a {word_count} word article that:
+- Has a numbers-focused headline about box office performance
+- Includes specific collection figures with currency symbols
+- Compares opening weekend, week-wise, or total collections
+- Mentions screen count and occupancy rates when available
+- Discusses whether the film is a hit, flop, or blockbuster
+- Includes producer/distributor quotes or trade analyst opinions
+- Provides context on budget and break-even points
+- Uses industry terminology appropriately
+
+Focus on the business performance of films {target_audience}!"""
+}
+
+def get_category_prompt_mappings(db):
+    """Get category-prompt mappings with defaults"""
+    doc = db['system_settings'].find_one({"type": "category_prompt_mappings"})
     if doc:
-        return serialize_doc(doc).get("mappings", {})
-    return {}
+        mappings = serialize_doc(doc).get("mappings", {})
+    else:
+        mappings = {}
+    
+    # Merge with defaults for any missing categories
+    for category, default_prompt in DEFAULT_CATEGORY_PROMPTS.items():
+        if category not in mappings:
+            mappings[category] = default_prompt
+    
+    return mappings
 
-def update_topic_category_mappings(db, mappings: dict):
-    """Update topic-category mappings"""
+def update_category_prompt_mappings(db, mappings: dict):
+    """Update category-prompt mappings"""
     from datetime import datetime
     
     db['system_settings'].update_one(
-        {"type": "topic_category_mappings"},
+        {"type": "category_prompt_mappings"},
         {"$set": {
-            "type": "topic_category_mappings",
+            "type": "category_prompt_mappings",
             "mappings": mappings,
             "updated_at": datetime.utcnow()
         }},
