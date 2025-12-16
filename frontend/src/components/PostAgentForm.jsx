@@ -455,39 +455,49 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Word Count */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Word Count
-                  </label>
-                  <select
-                    name="word_count"
-                    value={formData.word_count}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {wordCounts.map(count => (
-                      <option key={count} value={count}>{count} words</option>
-                    ))}
-                  </select>
-                </div>
+              {/* Word Count */}
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Word Count
+                </label>
+                <select
+                  name="word_count"
+                  value={formData.word_count}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  {wordCounts.map(count => (
+                    <option key={count} value={count}>{count} words</option>
+                  ))}
+                </select>
+              </div>
 
-                {/* Image Options */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Image Options
-                  </label>
-                  <select
-                    name="image_option"
-                    value={formData.image_option}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {imageOptions.map(option => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+              {/* Image Options as Tabs */}
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-2">
+                  Image Options
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {imageOptions.map(option => (
+                    <label
+                      key={option.value}
+                      className={`flex items-center gap-2 px-3 py-2 border-2 rounded cursor-pointer transition-all text-xs ${
+                        formData.image_option === option.value
+                          ? 'border-blue-600 bg-blue-50 text-blue-700'
+                          : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="image_option"
+                        value={option.value}
+                        checked={formData.image_option === option.value}
+                        onChange={handleInputChange}
+                        className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      />
+                      <span className="font-medium">{option.label}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>
