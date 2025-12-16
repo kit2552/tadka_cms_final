@@ -62,7 +62,9 @@ const SystemSettings = () => {
     anthropic_api_key: '',
     openai_default_model: '',
     gemini_default_model: '',
-    anthropic_default_model: ''
+    anthropic_default_model: '',
+    default_text_model: '',
+    default_image_model: ''
   });
   const [showOpenAIKey, setShowOpenAIKey] = useState(false);
   const [showGeminiKey, setShowGeminiKey] = useState(false);
