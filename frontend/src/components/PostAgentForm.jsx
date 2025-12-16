@@ -141,21 +141,31 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     }));
   };
 
-  const handleMappingChange = (topic, categorySlug) => {
+  const handlePromptChange = (categorySlug, prompt) => {
     setEditingMappings(prev => ({
       ...prev,
-      [topic]: categorySlug
+      [categorySlug]: prompt
     }));
+  };
+
+  const openPromptEditor = (categorySlug) => {
+    setEditingCategory(categorySlug);
+    setShowPromptEditor(true);
+  };
+
+  const savePromptEdit = () => {
+    setShowPromptEditor(false);
+    setEditingCategory(null);
   };
 
   const saveMappings = async () => {
     try {
-      const mappingsArray = Object.entries(editingMappings).map(([topic, category]) => ({
-        topic,
-        category
+      const mappingsArray = Object.entries(editingMappings).map(([category, prompt]) => ({
+        category,
+        prompt
       }));
 
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-agents/topic-category-mappings`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/category-prompt-mappings`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(mappingsArray)
@@ -163,9 +173,9 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
       if (response.ok) {
         const data = await response.json();
-        setTopicCategoryMappings(data.mappings);
+        setCategoryPromptMappings(data.mappings);
         setShowMappingModal(false);
-        setMessage({ type: 'success', text: 'Topic-category mappings saved successfully!' });
+        setMessage({ type: 'success', text: 'Category-prompt mappings saved successfully!' });
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to save mappings' });
