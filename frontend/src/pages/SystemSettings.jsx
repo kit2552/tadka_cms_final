@@ -955,8 +955,9 @@ const SystemSettings = () => {
                           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
                             <button
                               type="button"
-                              onClick={() => setShowOpenAIKey(!showOpenAIKey)}
+                              onClick={() => toggleKeyVisibility('openai')}
                               className="text-gray-400 hover:text-gray-600 transition-colors"
+                              title={showOpenAIKey ? "Hide key" : "Show full key"}
                             >
                               {showOpenAIKey ? (
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -969,7 +970,7 @@ const SystemSettings = () => {
                                 </svg>
                               )}
                             </button>
-                            {aiApiKeys.openai_api_key && !aiApiKeys.openai_api_key.startsWith('sk-****') && (
+                            {aiApiKeys.openai_api_key && (
                               <button
                                 type="button"
                                 onClick={() => testAPIKey('openai')}
