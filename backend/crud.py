@@ -1583,7 +1583,95 @@ Write a {word_count} word article that:
 - Provides context on budget and break-even points
 - Uses industry terminology appropriately
 
-Focus on the business performance of films {target_audience}!"""
+Focus on the business performance of films {target_audience}!""",
+
+    "movie-news": """Search the web comprehensively for the latest movie news {target_state_context} in the regional language cinema. Your task is to:
+
+CRITICAL: Based on the target state selected, identify the primary regional language:
+- Telangana/Andhra Pradesh → Telugu cinema (Tollywood)
+- Tamil Nadu → Tamil cinema (Kollywood)
+- Karnataka → Kannada cinema (Sandalwood)
+- Kerala → Malayalam cinema (Mollywood)
+- Gujarat → Gujarati cinema
+- Maharashtra → Marathi cinema
+- Punjab → Punjabi cinema
+- West Bengal → Bengali cinema
+- Odisha → Odia cinema
+- Assam → Assamese cinema
+- If "All" or India-wide → Cover all major regional cinemas
+
+1. Search specifically for "{state_language} movie news" or "{state_language} cinema latest updates"
+2. Find the most trending movie stories from the last 24-48 hours in that regional film industry
+3. Cover topics including:
+   - New movie announcements and launches
+   - Shooting updates and schedules
+   - Cast and crew announcements
+   - First look posters and updates
+   - Audio/music launches
+   - Pre-release events and promotions
+   - Celebrity interviews and statements
+   - Film industry controversies or discussions
+   - Award nominations and wins
+   - OTT release announcements
+   - Regional box office updates
+
+4. Check regional entertainment news websites, film industry portals, and social media
+5. Focus on stars, directors, and movies popular in that specific regional cinema
+
+Write a {word_count} word article that:
+- Has an engaging headline highlighting the biggest {state_language} cinema news
+- Clearly mentions it's about {state_language} cinema/movies
+- Covers 2-3 major news items from that regional film industry
+- Names specific actors, directors, producers relevant to that industry
+- Includes movie titles in the regional language (with English translation if needed)
+- Mentions production houses and banners popular in that region
+- Captures the unique flavor and style of that regional cinema
+- Uses terminology and references familiar to fans of that industry
+- Includes release dates, shooting locations, or other specific details
+- Appeals to fans of {state_language} cinema {target_audience}
+
+Make it exciting and relevant for regional cinema enthusiasts! Ensure the content is specifically about the regional language film industry identified from the target state.""",
+
+    "movie-news-bollywood": """Search the web comprehensively for the latest Hindi Bollywood movie news from the last 24-48 hours. Your task is to:
+
+FOCUS: This is specifically about HINDI BOLLYWOOD cinema - the mainstream Hindi film industry based in Mumbai.
+
+1. Search for "Bollywood latest news", "Hindi film industry updates", "Bollywood breaking news"
+2. Find the most trending Bollywood stories including:
+   - New Hindi movie announcements and muhurat launches
+   - Bollywood star casting news and collaborations
+   - Shooting schedules and film progress updates
+   - First look reveals and character posters
+   - Movie trailer launches and music releases
+   - Bollywood celebrity news and personal updates
+   - Film controversies, debates, and discussions
+   - Box office predictions and trade buzz
+   - Bollywood fashion and style statements
+   - Award show news and nominations
+   - OTT platform deals and digital releases
+   - Producer-director-actor combinations
+   - Bollywood party circuits and events
+
+3. Check major Bollywood news portals: Bollywood Hungama, Pinkvilla, ETimes Bollywood, etc.
+4. Look for trending Bollywood hashtags on social media
+5. Focus on A-list stars: Khans, Kapoors, Bachchans, and current generation stars
+
+Write a {word_count} word article that:
+- Has a catchy, Bollywood-style headline that captures the glamour
+- Clearly identifies this as Bollywood/Hindi cinema news
+- Covers 2-3 major Bollywood news stories
+- Names specific Bollywood actors, directors, producers
+- Mentions production houses like Yash Raj, Dharma, T-Series, etc.
+- Includes movie titles and working titles
+- Captures the glitz, glamour, and drama of Bollywood
+- Uses Bollywood-specific terminology (muhurat, mahurat, item number, etc.)
+- Includes specific details like shooting locations (Film City, Switzerland, etc.)
+- Mentions relevant box office numbers if discussing releases
+- References Bollywood awards (Filmfare, IIFA, etc.) when relevant
+- Appeals to Hindi cinema and Bollywood fans across India
+- Uses an entertaining, gossip-friendly but factual tone
+
+Make it glamorous and exciting for Bollywood enthusiasts! This should feel distinctly different from regional cinema news - focus on the pan-India appeal and Hindi language film industry."""
 }
 
 def get_category_prompt_mappings(db):
