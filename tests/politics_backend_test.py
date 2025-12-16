@@ -11,7 +11,7 @@ import sys
 import os
 
 # Get backend URL from environment
-BACKEND_URL = "https://tadka-deploy.preview.emergentagent.com"
+BACKEND_URL = "https://smart-cms-ai.preview.emergentagent.com"
 API_BASE = f"{BACKEND_URL}/api"
 
 def test_politics_section_api():

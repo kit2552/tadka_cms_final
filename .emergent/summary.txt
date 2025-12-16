@@ -1,171 +1,157 @@
 <analysis>**original_problem_statement:**
-The initial user request was to load the application from a repository and connect it to a remote MongoDB database.
-
-Subsequently, the user made numerous requests via chat to add features, fix bugs, and adjust styling across the web application. The core requirements implemented in this session include:
-1.  ** Page Fixes:** The user requested a complete overhaul of the  page, which was previously non-functional. This involved renaming backend API endpoints from  to , updating the database, fixing data loading, and implementing a YouTube video modal to play shorts directly on the page instead of navigating away.
-2.  ** Page Creation:** The user requested a new page to display image galleries. This required creating a new backend API endpoint, building the frontend page with a 4-column grid, and adding a right-hand sidebar that displays Tadka Shorts. Multiple iterative styling and layout adjustments were made.
-3.  ** &  Pages:** The user requested numerous fixes and features for the  page, including fixing YouTube thumbnails, adding language/platform details, implementing advanced time-based filtering, and replacing the loader with a compact modal. A new  page was then created by cloning the logic from the  page.
-4.  **Video Modal Implementation:** A key feature request was to implement a video modal for playing trailers. This modal was integrated into the  page and the homepage's movie section. The user then requested the modal be changed to a wide, horizontal layout for a better trailer-viewing experience.
+The initial request was to load the Tadka application, connect it to a remote production MongoDB, and ensure no test data is seeded.
+This evolved through a series of feature requests:
+1.  In the System Settings page, add a new API Keys tab.
+2.  Add placeholders and forms to save API keys for Google Gemini, OpenAI, and Anthropic Claude.
+3.  When saving keys, allow the user to see all available models from each provider and select a default model for content generation.
+4.  Implement a feature to show the full, unmasked API key by clicking an icon.
+5.  Add two new fields for global default model selection: Text Generation Models and Image Generation Models, populated with models from all three providers.
+6.  Add a Refresh button next to these dropdowns to fetch the latest models from the providers.
+7.  Update the model lists to include the latest versions (e.g., Claude 4.5, Gemini 3).
+8.  Create a new page AI Agents accessible to admin users.
+9.  This page should have a Create AI Agent button that opens a modal to select an agent type (e.g., Post Agent).
+10. Implement the Post Agent form with Recurring and Adhoc modes, including fields for scheduling, topics, target state, word count, image options, and content workflow. The UI/UX should match existing dashboards.
+11. Implement a Category-Prompt Mapping feature, allowing admins to create and manage custom AI prompts for each content category. The agent was asked to generate robust, dynamic default prompts for each category.
+12. Add a Reference Content section to the agent form, allowing users to add multiple URLs to be used as source material for content generation.
+13. Reorganize the form sections for better usability.
+14. Refine the prompts for Movie News to incorporate state-to-language mapping.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The application is a full-stack news/media portal with a React frontend, FastAPI backend, and MongoDB database. In this session, the agent has successfully implemented several major features and fixes. Key accomplishments include the creation of a new  page with a Tadka Shorts sidebar, a complete functional overhaul of the  page, the creation of a new  page, and significant feature enhancements to the  page, including advanced filters and a compact loading modal. A reusable  component has been implemented and styled for both vertical shorts and horizontal trailers.
+The Tadka application, a full-stack News CMS (React/FastAPI/MongoDB), is fully operational and connected to the remote production database.
+
+Significant feature development has occurred on two main fronts:
+1.  **System Settings:** A comprehensive AI provider management section has been built. It allows users to store API keys for OpenAI, Gemini, and Anthropic, select default text and image generation models from a consolidated list, and refresh this list on-demand.
+2.  **AI Agents:** A new page for managing AI Agents has been created. The UI for creating a Post Agent is complete, featuring a detailed form with two modes (Recurring/Adhoc) and advanced configuration options like scheduling, target state, word count, and content workflow. The core innovation is the Category-Prompt Mapping system, which allows admins to define specific, dynamic AI prompts for each content category. These prompts are pre-filled with intelligent defaults created by the agent. The form has been reorganized and styled according to user specifications.
 
 **Last working item**:
-    - Last item agent was working: The agent was adjusting the styling of the wide video modal used for movie trailers. The user requested to move the Add Comment and View Comments buttons slightly higher by adding bottom padding () to the modal's footer.
-    - Status: IN PROGRESS
-    - Agent Testing Done: N
-    - Which testing method agent to use? screenshot tool. The agent needs to restart the frontend, then take a screenshot of the homepage, click on a theater release post to open the video modal, and verify that the buttons in the footer have moved up due to the added padding.
-    - User Testing Done: N
+-   Last item agent was working: The user requested a modification to the default AI prompt for the Movie News category. The requirement is that when the target state is set to All, the prompt should default to generating content in Hindi, rather than covering all regional cinemas. The agent acknowledged this and summarized the work before the user provided the final confirmation.
+-   Status: **NOT STARTED**
+-   Agent Testing Done: N
+-   Which testing method agent to use? **Backend testing agent**. The change is a string modification in a Python file. The agent should instruct the testing agent to verify the change by calling the  endpoint and asserting the new prompt text for the  key.
+-   User Testing Done: N
 
 **All Pending/In progress Issue list**:
-  - Issue 1: Image thumbnails are not loading on the  page (P0)
-  - Issue 2: Verify the bottom padding adjustment on the wide video modal (P1)
-  
-  Issues Detail:
-  - Issue 1: 
-     - Attempted fixes: (From previous session) The agent tried adding the  class and  statements. The issue was not addressed in the current session.
-     - Next debug checklist: 
-        1.  Do not attempt another blind fix. First, inspect the browser's developer tools.
-        2.  Check the console for any logs related to the  helper function in .
-        3.  Examine the Network tab to see the API response for the page's data.
-        4.  Compare the structure of the  object in the API response with how it's being accessed in the code (e.g.,  vs. ). The issue is very likely a mismatch in object property names.
-     - Why fix this issue and what will be achieved with the fix? This is a gallery page; its primary function is to display images. Fixing it is critical to the page's purpose.
-     - Status:  NOT STARTED
-     - Is recurring issue? Y
-     - Should Test frontend/backend/both after fix? Frontend
-     - Blocked on other issue: None
+-   **Issue 1: (P0)** Update Movie News AI Prompt Logic.
 
-  - Issue 2: 
-     - Attempted fixes: The agent successfully executed a  command to add  to the footer of the  component.
-     - Next debug checklist: 
-        1.  Restart the frontend service: frontend: ERROR (not running)
-frontend: started.
-        2.  Use the screenshot tool to open the video modal and visually confirm the padding has been applied.
-     - Why fix this issue and what will be achieved with the fix? To complete the user's final styling request for the video modal.
-     - Status:  IN PROGRESS
-     - Is recurring issue? N
-     - Should Test frontend/backend/both after fix? Frontend
-     - Blocked on other issue: None
+    -   **Attempted fixes:** None. The agent was about to start this task.
+    -   **Next debug checklist:**
+        1.  Edit .
+        2.  Locate the  dictionary.
+        3.  Modify the prompt for the  key. Change the logic for the All states case from covering all regional cinemas to explicitly using Hindi as the default language for Bollywood news.
+        4.  Restart the backend service: backend: stopped
+backend: started.
+        5.  Test the change by calling  and inspecting the  prompt.
+    -   **Why fix this issue and what will be achieved with the fix?** This will align the AI content generation behavior with the user's specific requirements for handling national-level movie news.
+    -   **Status:** NOT STARTED
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** Backend
+    -   **Blocked on other issue:** None
 
 **In progress Task List**:
-None other than the issues listed above.
+-   None
 
 **Upcoming and Future Tasks**
-There are no explicitly defined upcoming tasks. The user provides new requirements incrementally after the current task is completed. The next logical step after fixing the pending issues would be to ask the user for the next set of requirements.
+-   **Upcoming Tasks:**
+    -   **(P1) Implement Core AI Content Generation Logic:** The UI and configuration are ready, but the backend service that executes the AI agents (runs the prompt against the selected model, uses reference URLs, and creates a draft post) is not yet implemented.
+        -   **Files:**  (or a new dedicated service file), .
+    -   **(P1) Implement Other Agent Types:** The agent selection modal includes Photo Gallery Agent and Review Agent as options, but their corresponding forms and backend logic have not been created.
+        -   **Files:** Create  and ; update  to render them; create corresponding backend routes and CRUD functions.
 
 **Completed work in this session**
-- ** Page Overhaul**:
-  - Renamed backend API and DB categories from  to  in .
-  - Implemented  to play shorts on click without navigating away.
-  - Fixed all data loading and linking issues.
-- ** Page Creation**:
-  - Created new API endpoint  in .
-  - Built the new page  with a gallery grid and a Tadka Shorts sidebar.
-  - Implemented independent scrolling for the main content and sidebar.
-  - Fixed an image slider navigation bug by passing / props to .
-- ** Page Enhancements**:
-  - Fixed YouTube thumbnails and added language/platform details in .
-  - Implemented advanced time-based filtering (Latest, This Month, etc.).
-  - Replaced the full-page loader with a compact loading modal.
-  - Added click-outside-to-close functionality for the filter dropdown.
-- ** Page Creation**:
-  - Created new page  by cloning .
-  - Added the route in  and updated the homepage link.
-  - Fixed data loading by correcting API endpoints and response keys.
-- **Video Modal for Trailers**:
-  - Integrated  into  and .
-  - Refactored  to support a wide, horizontal layout () for trailers.
+-   **Tadka App Setup:** Successfully loaded the app and connected it to the remote production MongoDB.
+-   **AI API Key Management:** Implemented a full-featured section in System Settings for managing keys and default models for OpenAI, Gemini, and Anthropic (, ).
+-   **AI Agents Page:** Created the AI Agents page with a dashboard view ().
+-   **Post Agent Form:** Built a detailed, multi-tabbed form for creating and configuring a Post Agent, including advanced UI controls like searchable dropdowns ().
+-   **Category-Prompt Mapping:** Created a system to manage and assign dynamic, intelligent AI prompts to content categories, complete with default prompts (, ).
+-   **Reference Content Section:** Added functionality to the agent form to accept multiple reference URLs for content generation ().
 
 **Earlier issues found/mentioned but not fixed**
-   - Issue 1: Image thumbnails do not load on the  page. This was a known issue from the previous fork and remains unfixed.
-     - Debug checklist: Inspect network response for the page and compare the  object structure with the frontend code in .
-     - Why to solve this issue and what will be achieved with this? The page is a gallery, so displaying images is its core function.
-     - Should Test frontend/backend/both after fix: Frontend
-     - Is recurring issue? Y
+-   None.
 
 **Known issue recurrence from previous fork**
-  - Issue recurrence in previous fork: The  thumbnail issue was reported in the previous fork's summary.
-  - Recurrence count: 1
-  - Status: NOT STARTED
+-   None.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
-- **Stack**: React, FastAPI, MongoDB.
-- **Frontend**: React with Hooks (, , ), Tailwind CSS for styling,  for routing.
-- **Backend**: A multi-file FastAPI application (, ) handling API logic and database interactions with .
-- **Modals**: A reusable  and  are used for displaying media in popups.
-- **Frontend Filtering**: Complex, client-side filtering logic was implemented for the  page to filter content by various time periods.
+-   **Frontend:** React, Tailwind CSS
+-   **Backend:** FastAPI (Python)
+-   **Database:** MongoDB
+-   **Architecture:** Full-stack monolith with a clear separation between the React client and the FastAPI backend.
+-   **AI Integration:** The application is built to manage and utilize user-provided API keys for content generation, with a sophisticated system for dynamic prompt engineering based on category and other agent settings.
 
 **key DB schema**
-  - **articles**: 
-  - **galleries**:  (Note: The  field is stored as a JSON string and needs to be parsed on the frontend).
+-   **system_settings (collection):**
+    -   A document with  stores .
+    -   A document with  stores .
+-   **ai_agents (collection):**
+    -   Documents storing agent configurations including , ,  (recurring/adhoc), , , , , , , and .
 
 **changes in tech stack**
-  - None.
+-   None
 
 **All files of reference**
-- **Created**:
-  - : A new page for showing theatrical movie releases, cloned from the OTT releases page.
-- **Heavily Modified**:
-  - : Renamed  endpoint to  and added a new  endpoint.
-  - : Initially a mock page, it was completely overwritten to fetch live gallery data and include a Tadka Shorts sidebar.
-  - : Overhauled to fix data loading and implement a video modal.
-  - : Received major feature upgrades, including advanced filters, a compact loading modal, and numerous bug fixes.
-  - : Refactored to support a wide, horizontal layout for movie trailers in addition to the vertical layout for shorts.
+-   **Created:**
+    -   : API endpoints for AI agent CRUD.
+    -   : Main dashboard for AI agents.
+    -   : Modal for selecting agent type.
+    -   : The comprehensive form for configuring a Post Agent.
+-   **Updated:**
+    -   : Registered the new AI agents router.
+    -   : Added extensive logic for AI agents, API keys, and prompt mappings.
+    -   : Added Pydantic models for AI agents.
+    -   : Overhauled to include AI key and model management UI.
+    -   : Added the route for the AI Agents page.
+    -   : Added a link to the AI Agents page.
 
 **Areas that need refactoring**:
-- **Duplicated Page Logic**: The logic for fetching data, filtering, handling loading states, and displaying content is heavily duplicated across , , , and . This should be extracted into a reusable custom hook (e.g., ) to reduce code redundancy and simplify maintenance.
-- **Component Naming**: The component  is still named as such but is used to display Tadka Shorts content on the homepage. It should be renamed to something more appropriate like .
+-    has grown to over 800 lines. It handles state, API calls, and UI for the main form and two large modals. This component should be broken down into smaller, reusable components (e.g., , , ) to improve maintainability.
 
 **key api endpoints**
-- 
-- 
-- 
-- 
-- 
+-   : (GET, POST) List and create AI agents.
+-   : (GET, PUT, DELETE) Manage a specific agent.
+-   : (GET, POST) Manage mappings between categories and AI prompts.
+-   : (GET, POST) Manage AI provider API keys.
+-   : (GET) Retrieve unmasked keys.
+-   : (GET) Fetch available text generation models.
+-   : (GET) Fetch available image generation models.
 
 **Critical Info for New Agent**
-- **API Verification is Key**: The agent frequently encountered data loading issues caused by using incorrect API endpoint names or trying to access incorrect keys from the JSON response. Before debugging the frontend, always use  to test the API endpoint directly, and inspect the response structure to ensure you are using the correct keys (e.g.,  vs. ).
-- **Iterative Styling**: The user provides very specific, iterative feedback on UI/UX. Expect to make multiple small styling adjustments to components using Tailwind CSS classes. Use the screenshot tool frequently to verify these changes.
-- **Component Cloning Pattern**: Creating new pages by cloning existing, similar pages (e.g.,  -> ) has proven to be an effective and fast development pattern in this project.
-- **The  Bug**: This is a persistent bug from a previous session. Do not attempt another blind fix. Follow the debug checklist provided in the All Pending/In progress Issue list to inspect network responses and object keys first, as it's almost certainly a data structure mismatch.
+-   The user is highly detail-oriented about UI/UX. Ensure any new UI elements are compact, well-aligned, and consistent with the existing Manage Content dashboard styling.
+-   The immediate next task is a small but specific change to an AI prompt in .
+-   The main un-implemented feature is the actual execution of the AI agents. The entire configuration framework is built, but the service that runs the agents, generates content, and creates posts does not exist yet.
 
 **documents created in this job**
-  - None.
+-   None.
 
 **Last 10 User Messages and any pending user messages**
-1.  **Request:** Implement a wide video modal for theater release trailers. **Status:** Completed.
-2.  **Report:** Build failed due to duplicate  function. **Status:** Completed (agent fixed the duplicate declaration).
-3.  **Request:** Make the video modal horizontal and  wide. **Status:** Completed.
-4.  **Request:** Move the comment buttons up in the modal by adding . **Status:** In Progress (agent applied the fix, pending verification).
-5.  **User error report:**  in image slider. **Status:** Completed.
-6.  **Request:** Reduce space between Tadka Shorts header and top nav. **Status:** Completed.
-7.  **Request:** Rename sidebar title and add a More button. **Status:** Completed.
-8.  **Request:** Make the left content section scrollable with a static header. **Status:** Completed.
-9.  **User error report:** No YouTube thumbnails on  page. **Status:** Completed.
-10. **Request:** Add language/platform details to  posts. **Status:** Completed.
+1.  **Request:** Create a topic-category mapping feature. (Superseded)
+2.  **Request:** Change to Category-Prompt mapping and generate robust default prompts. (Completed)
+3.  **Request:** Remove the AI Prompt text area from the form UI. (Completed)
+4.  **Request:** Add a Reference Content section for URLs and reorganize the form layout. (Completed)
+5.  **Request:** Write new prompts for Movie News and Movie News Bollywood with state-language logic. (Completed)
+6.  **Request:** Clarification on the Movie News prompt: if All is selected, default to Hindi. **(PENDING)**
 
 **Project Health Check:**
-- **Broken**:
-  - : Image thumbnails are not loading. This is a recurring, high-priority bug that needs to be addressed.
-- **Mocked**: None.
+-   **Broken:** The core functionality of the AI Agents feature (content generation) is not yet implemented.
+-   **Mocked:** None. The application is using live production data.
 
 **3rd Party Integrations**
-- None.
+-   **OpenAI:** Configured for API key management (requires User API Key).
+-   **Google Gemini:** Configured for API key management (requires User API Key).
+-   **Anthropic Claude:** Configured for API key management (requires User API Key).
 
 **Testing status**
-  - Testing agent used after significant changes: NO
-  - Troubleshoot agent used after agent stuck in loop: NO
-  - Test files created: []
-  - Known regressions: 
-    - The  thumbnail issue is a known regression from a previous session that remains unfixed.
+-   **Testing agent used after significant changes:** NO
+-   **Troubleshoot agent used after agent stuck in loop:** NO
+-   **Test files created:** None
+-   **Known regressions:** None
 
 **Credentials to test flow:**
-- N/A. The application is publicly accessible.
+-   No user credentials were provided or are necessary for the development tasks. Admin access is implied for CMS features, but not required for building the UI components.
 
 **What agent forgot to execute**
-- The agent did not address the long-standing bug on the  page where image thumbnails are not loading, despite it being carried over from the previous fork's summary as a pending issue. The focus remained entirely on new user requests.</analysis>
+-   The agent did not implement the user's final request to modify the Movie News prompt to default to Hindi when the target state is All. This is the most immediate pending task.</analysis>
