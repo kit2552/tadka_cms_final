@@ -292,7 +292,9 @@ async def get_ai_api_keys(unmask: bool = False, db = Depends(get_db)):
         "anthropic_api_key": None,
         "openai_default_model": None,
         "gemini_default_model": None,
-        "anthropic_default_model": None
+        "anthropic_default_model": None,
+        "default_text_model": None,
+        "default_image_model": None
     }
 
 @router.put("/system-settings/ai-api-keys")
