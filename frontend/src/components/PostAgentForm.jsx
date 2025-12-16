@@ -633,6 +633,51 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               </div>
             </div>
 
+            {/* Split Content Section */}
+            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-left">
+                  <h3 className="text-sm font-semibold text-gray-900">Split Content</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">Generate content in multiple paragraphs for Main & Secondary sections</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="split_content"
+                    checked={formData.split_content}
+                    onChange={(e) => setFormData(prev => ({ ...prev, split_content: e.target.checked }))}
+                    className="sr-only peer"
+                  />
+                  <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+              
+              {formData.split_content && (
+                <div className="flex items-center gap-4 pt-2 border-t border-gray-200">
+                  <label className="text-xs font-medium text-gray-700">Number of Paragraphs:</label>
+                  <div className="flex items-center gap-2">
+                    {[2, 3, 4].map(num => (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, split_paragraphs: num }))}
+                        className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                          formData.split_paragraphs === num
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-white border border-gray-300 text-gray-700 hover:border-blue-400'
+                        }`}
+                      >
+                        {num}
+                      </button>
+                    ))}
+                  </div>
+                  <span className="text-xs text-gray-500">
+                    (First half → Main Content, Rest → Secondary Content)
+                  </span>
+                </div>
+              )}
+            </div>
+
             {/* Reference Content Section */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
