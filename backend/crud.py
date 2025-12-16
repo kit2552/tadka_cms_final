@@ -1412,6 +1412,60 @@ SPLIT_CONTENT_DISABLED = """
 Write as a single cohesive article with natural paragraph flow.
 """
 
+# Web search image instruction templates
+WEB_SEARCH_IMAGE_INSTRUCTIONS = """
+**IMAGE SEARCH INSTRUCTIONS (Web Search Mode):**
+After generating the article content, search the web for a relevant HORIZONTAL image based on these priority rules:
+
+FOR MOVIE/ENTERTAINMENT NEWS:
+1. FIRST PRIORITY: Search for official movie poster (horizontal/landscape orientation) of the specific movie mentioned
+2. SECOND PRIORITY: Search for lead actor's image from that movie
+   - If it's a female-oriented film, prioritize lead actress image
+   - Search: "[Movie Name] [Actor/Actress Name] movie still" or "[Movie Name] official photo"
+3. THIRD PRIORITY: Search for a recent photo of the main actor/actress (not movie-specific)
+   - Search: "[Actor/Actress Name] latest photo" or "[Actor/Actress Name] 2024/2025"
+4. FALLBACK: Generic movie-related promotional image
+
+FOR POLITICAL/STATE NEWS:
+1. FIRST PRIORITY: Search for image of the main politician/person mentioned in the article
+   - Search: "[Politician Name] official photo" or "[Politician Name] recent"
+2. SECOND PRIORITY: Search for image of the political event/meeting/rally described
+   - Search: "[Event Name] [Location] photo" or "[Political Party] [Event Type]"
+3. FALLBACK: Official government/political imagery related to the topic
+
+FOR EVENT NEWS (Accidents, Disasters, Ceremonies, etc.):
+1. FIRST PRIORITY: Search for actual image of the specific event mentioned
+   - Search: "[Event Type] [Location] [Date]" (e.g., "fire accident Mumbai December 2024")
+2. SECOND PRIORITY: Search for related event imagery from news sources
+   - Search: "[Event Type] [Location] news photo"
+3. FALLBACK: Representative/stock image of similar event type
+
+FOR SPORTS NEWS:
+1. FIRST PRIORITY: Search for image of the main player/team mentioned
+   - Search: "[Player Name] [Sport] action shot" or "[Team Name] match photo"
+2. SECOND PRIORITY: Search for match/tournament imagery
+3. FALLBACK: Sports-related generic imagery
+
+FOR OTHER CATEGORIES:
+1. Identify the main subject/person/event in the article
+2. Search for the most relevant and recent image of that subject
+3. Prefer horizontal/landscape orientation images
+4. Prefer high-quality, news-worthy images from reputable sources
+
+IMAGE REQUIREMENTS:
+- Must be HORIZONTAL/LANDSCAPE orientation (wider than tall)
+- High resolution preferred (minimum 800px width)
+- Recent/current images preferred over dated ones
+- Avoid watermarked or low-quality images
+- Prefer images from news agencies or official sources
+
+Return the image search query and selected image URL in this format:
+[IMAGE_SEARCH_QUERY]: Your search query here
+[IMAGE_URL]: The URL of the selected image
+"""
+
+NO_WEB_SEARCH_IMAGE = """"""
+
 def get_reference_content_section(reference_urls: list = None) -> str:
     """Generate the reference content section based on provided URLs"""
     if reference_urls and len(reference_urls) > 0:
