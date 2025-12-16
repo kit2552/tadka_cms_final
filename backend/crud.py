@@ -1580,6 +1580,7 @@ Make it inspiring and aspirational for fashion enthusiasts {target_audience}!"""
     "health": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
 {split_content_section}
+{image_search_section}
 
 Search the web for the latest health news, medical breakthroughs, and wellness trends {target_state_context}. Your task is to:
 
