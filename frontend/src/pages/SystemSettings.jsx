@@ -93,6 +93,8 @@ const SystemSettings = () => {
     loadUsers();
     fetchAdSettings();
     loadAIAPIKeys();
+    fetchAllTextModels();
+    fetchAllImageModels();
   }, []);
 
   const loadAWSConfig = async () => {
