@@ -1598,7 +1598,7 @@ CRITICAL: Based on the target state selected, identify the primary regional lang
 - West Bengal → Bengali cinema
 - Odisha → Odia cinema
 - Assam → Assamese cinema
-- If "All" or India-wide → Cover all major regional cinemas
+- If "All" or India-wide → Hindi cinema (use Hindi as default language)
 
 1. Search specifically for "{state_language} movie news" or "{state_language} cinema latest updates"
 2. Find the most trending movie stories from the last 24-48 hours in that regional film industry
