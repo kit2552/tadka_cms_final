@@ -98,13 +98,36 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+  const fetchTopicCategoryMappings = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-agents/topic-category-mappings`);
+      const data = await response.json();
+      setTopicCategoryMappings(data.mappings || {});
+      setEditingMappings(data.mappings || {});
+    } catch (error) {
+      console.error('Failed to fetch mappings:', error);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-      mode: activeTab
-    }));
+    
+    // If topic is changed, auto-select mapped category
+    if (name === 'topic' && value) {
+      const mappedCategory = topicCategoryMappings[value];
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+        category: mappedCategory || prev.category,
+        mode: activeTab
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+        mode: activeTab
+      }));
+    }
   };
 
   const handleDayToggle = (day) => {
