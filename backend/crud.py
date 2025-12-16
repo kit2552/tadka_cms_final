@@ -1747,6 +1747,7 @@ Focus on the business performance of films {target_audience}!""",
     "movie-news": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
 {split_content_section}
+{image_search_section}
 
 Search the web comprehensively for the latest movie news {target_state_context} in the regional language cinema. Your task is to:
 
