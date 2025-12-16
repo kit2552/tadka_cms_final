@@ -1605,6 +1605,7 @@ Focus on actionable market intelligence for {target_audience}.""",
 
     "top-stories": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
+{split_content_section}
 
 Search the web for the most important and trending news stories {target_state_context} from the last 24 hours. Your task is to:
 
