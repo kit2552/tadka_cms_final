@@ -1332,6 +1332,53 @@ def update_ai_api_keys(db, config: dict):
     
     return get_ai_api_keys(db)
 
+# ==================== AI AGENTS ====================
+
+def get_all_ai_agents(db):
+    """Get all AI agents"""
+    agents = list(db['ai_agents'].find({}))
+    return [serialize_doc(agent) for agent in agents]
+
+def get_ai_agent(db, agent_id: str):
+    """Get a specific AI agent"""
+    agent = db['ai_agents'].find_one({"id": agent_id})
+    return serialize_doc(agent) if agent else None
+
+def create_ai_agent(db, agent_data: dict):
+    """Create a new AI agent"""
+    import uuid
+    agent_data["id"] = str(uuid.uuid4())
+    db['ai_agents'].insert_one(agent_data)
+    return serialize_doc(agent_data)
+
+def update_ai_agent(db, agent_id: str, agent_data: dict):
+    """Update an AI agent"""
+    result = db['ai_agents'].update_one(
+        {"id": agent_id},
+        {"$set": agent_data}
+    )
+    if result.modified_count > 0 or result.matched_count > 0:
+        return get_ai_agent(db, agent_id)
+    return None
+
+def delete_ai_agent(db, agent_id: str):
+    """Delete an AI agent"""
+    result = db['ai_agents'].delete_one({"id": agent_id})
+    return result.deleted_count > 0
+
+def toggle_ai_agent_status(db, agent_id: str):
+    """Toggle agent active status"""
+    agent = get_ai_agent(db, agent_id)
+    if not agent:
+        return None
+    
+    new_status = not agent.get("is_active", True)
+    db['ai_agents'].update_one(
+        {"id": agent_id},
+        {"$set": {"is_active": new_status}}
+    )
+    return get_ai_agent(db, agent_id)
+
 # ==================== USER MANAGEMENT ====================
 
 def get_users(db, skip: int = 0, limit: int = 100):
