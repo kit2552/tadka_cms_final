@@ -376,6 +376,97 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 text-left">Content Settings</h3>
               
+              {/* Category Selection */}
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Category <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  {/* Selected Category Tag */}
+                  {formData.category && (
+                    <div className="mb-2">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                        {categories.find(cat => cat.slug === formData.category)?.name || formData.category}
+                        <button
+                          type="button"
+                          onClick={() => setFormData(prev => ({ ...prev, category: '' }))}
+                          className="text-blue-600 hover:text-blue-800 font-bold"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Search Input */}
+                  <input
+                    type="text"
+                    value={showCategoryDropdown ? categorySearch : (formData.category ? categories.find(cat => cat.slug === formData.category)?.name : '')}
+                    onChange={(e) => {
+                      setCategorySearch(e.target.value);
+                      setShowCategoryDropdown(true);
+                    }}
+                    onFocus={() => {
+                      setCategorySearch('');
+                      setShowCategoryDropdown(true);
+                    }}
+                    onBlur={() => {
+                      setTimeout(() => {
+                        setCategorySearch('');
+                        setShowCategoryDropdown(false);
+                      }, 200);
+                    }}
+                    placeholder="Search and select category..."
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
+                  />
+                  
+                  {/* Dropdown appears only when typing */}
+                  {showCategoryDropdown && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-10" 
+                        onClick={() => {
+                          setShowCategoryDropdown(false);
+                          setCategorySearch('');
+                        }}
+                      />
+                      <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-48 overflow-y-auto">
+                        {categories
+                          .filter(cat => 
+                            cat.slug !== 'latest-news' && 
+                            cat.name.toLowerCase() !== 'latest news' &&
+                            cat.name.toLowerCase().includes(categorySearch.toLowerCase())
+                          )
+                          .sort((a, b) => a.name.localeCompare(b.name))
+                          .map(cat => (
+                            <div
+                              key={cat.slug}
+                              onClick={() => {
+                                setFormData(prev => ({ ...prev, category: cat.slug }));
+                                setCategorySearch('');
+                                setShowCategoryDropdown(false);
+                              }}
+                              className={`px-3 py-1.5 cursor-pointer hover:bg-blue-50 text-xs ${
+                                formData.category === cat.slug ? 'bg-blue-100 text-blue-800' : 'text-gray-900'
+                              }`}
+                            >
+                              {cat.name}
+                            </div>
+                          ))}
+                        {categories.filter(cat => 
+                          cat.slug !== 'latest-news' && 
+                          cat.name.toLowerCase() !== 'latest news' &&
+                          cat.name.toLowerCase().includes(categorySearch.toLowerCase())
+                        ).length === 0 && (
+                          <div className="px-3 py-1.5 text-xs text-gray-500">No categories found</div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+              
               {/* Select Topic */}
               <div className="text-left">
                 <label className="block text-xs font-medium text-gray-700 mb-1">
