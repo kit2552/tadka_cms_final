@@ -1449,6 +1449,7 @@ Focus on accuracy, timeliness, and relevance to {target_audience}.""",
 
     "movies": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
+{split_content_section}
 
 Search the web for the latest trending movie news, releases, and entertainment updates {target_state_context}. Your task is to:
 
