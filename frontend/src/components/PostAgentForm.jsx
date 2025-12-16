@@ -538,6 +538,30 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                     </>
                   )}
                 </div>
+                {formData.category && categoryPromptMappings[formData.category] && (
+                  <p className="text-xs text-green-600 mt-1">
+                    ✓ AI Prompt auto-loaded for this category
+                  </p>
+                )}
+              </div>
+
+              {/* AI Prompt */}
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  AI Prompt (Auto-filled from category)
+                </label>
+                <textarea
+                  name="ai_prompt"
+                  value={formData.ai_prompt}
+                  onChange={handleInputChange}
+                  rows="4"
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono bg-gray-50"
+                  placeholder="Select a category to auto-fill the AI prompt..."
+                  readOnly
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  This prompt will be used to generate content. Manage prompts using "Category-Prompt Mapping" above.
+                </p>
               </div>
               
               {/* Target State */}
