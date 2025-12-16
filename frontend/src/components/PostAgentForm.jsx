@@ -16,7 +16,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     split_content: false,
     split_paragraphs: 2,
     reference_urls: [],
-    image_option: 'ai_generate',
+    image_option: 'web_search',
     content_workflow: 'in_review',
     schedule_post: false,
     post_date: '',
