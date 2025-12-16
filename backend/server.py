@@ -2178,6 +2178,7 @@ app.include_router(gallery_entities_router)  # Add gallery entities routes
 app.include_router(gallery_image_router)  # Add gallery image routes
 app.include_router(ad_settings_router, prefix="/api")  # Add ad settings routes
 app.include_router(artists_router, prefix="/api")  # Add artists routes
+app.include_router(ai_agents_router, prefix="/api")  # Add AI agents routes
 
 app.add_middleware(
     CORSMiddleware,
