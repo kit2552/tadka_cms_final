@@ -1723,6 +1723,7 @@ Make readers excited to watch the trailer {target_audience}!""",
     "box-office": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
 {split_content_section}
+{image_search_section}
 
 Search the web for the latest box office collections, earnings reports, and movie performance data {target_state_context}. Your task is to:
 
