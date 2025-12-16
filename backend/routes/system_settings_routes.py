@@ -409,15 +409,27 @@ async def get_anthropic_models():
     # Anthropic doesn't provide a models API endpoint, so we return a curated list
     models = [
         {
+            "id": "claude-opus-4.5-20250514",
+            "name": "Claude Opus 4.5 (Latest)",
+            "description": "Most powerful Claude model for extremely complex tasks",
+            "provider": "anthropic"
+        },
+        {
+            "id": "claude-sonnet-4.5-20250514",
+            "name": "Claude Sonnet 4.5 (Latest)",
+            "description": "Advanced intelligence with excellent performance",
+            "provider": "anthropic"
+        },
+        {
             "id": "claude-3-5-sonnet-20241022",
-            "name": "Claude 3.5 Sonnet (Latest)",
-            "description": "Most intelligent model, best for complex tasks",
+            "name": "Claude 3.5 Sonnet",
+            "description": "Most intelligent 3.5 model, best for complex tasks",
             "provider": "anthropic"
         },
         {
             "id": "claude-3-5-haiku-20241022",
-            "name": "Claude 3.5 Haiku (Latest)",
-            "description": "Fastest model, best for quick responses",
+            "name": "Claude 3.5 Haiku",
+            "description": "Fastest 3.5 model, best for quick responses",
             "provider": "anthropic"
         },
         {
