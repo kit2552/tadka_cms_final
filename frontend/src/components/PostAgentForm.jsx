@@ -106,23 +106,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
-    // If category is changed, auto-fill mapped prompt
-    if (name === 'category' && value) {
-      const mappedPrompt = categoryPromptMappings[value];
-      setFormData(prev => ({
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value,
-        ai_prompt: mappedPrompt || prev.ai_prompt,
-        mode: activeTab
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value,
-        mode: activeTab
-      }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+      mode: activeTab
+    }));
   };
 
   const handleDayToggle = (day) => {
