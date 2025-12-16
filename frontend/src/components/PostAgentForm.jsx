@@ -90,7 +90,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
   const workflowOptions = [
     { value: 'in_review', label: 'In Review First' },
-    { value: 'ready_to_publish', label: 'Ready to Publish' },
+    { value: 'ready_to_publish', label: 'Approved' },
     { value: 'auto_post', label: 'Auto Post' }
   ];
 
