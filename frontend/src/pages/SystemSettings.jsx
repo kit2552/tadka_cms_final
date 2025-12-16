@@ -519,6 +519,36 @@ const SystemSettings = () => {
     }
   };
 
+  const fetchAllTextModels = async () => {
+    setLoadingModels(prev => ({ ...prev, allText: true }));
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ai-models/all-text`);
+      if (response.ok) {
+        const data = await response.json();
+        setAiModels(prev => ({ ...prev, allText: data.models }));
+      }
+    } catch (error) {
+      console.error('Failed to fetch all text models:', error);
+    } finally {
+      setLoadingModels(prev => ({ ...prev, allText: false }));
+    }
+  };
+
+  const fetchAllImageModels = async () => {
+    setLoadingModels(prev => ({ ...prev, allImage: true }));
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ai-models/all-image`);
+      if (response.ok) {
+        const data = await response.json();
+        setAiModels(prev => ({ ...prev, allImage: data.models }));
+      }
+    } catch (error) {
+      console.error('Failed to fetch all image models:', error);
+    } finally {
+      setLoadingModels(prev => ({ ...prev, allImage: false }));
+    }
+  };
+
   const testAPIKey = async (provider) => {
     setTestingKey(provider);
     try {
