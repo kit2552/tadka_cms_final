@@ -1223,10 +1223,27 @@ const SystemSettings = () => {
                       <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
-                      <div className="text-left">
+                      <div className="text-left flex-1">
                         <h4 className="text-base font-semibold text-gray-900">Default Text Generation Model</h4>
                         <p className="text-sm text-gray-600">Select the default model for AI text content generation</p>
                       </div>
+                      <button
+                        type="button"
+                        onClick={fetchAllTextModels}
+                        disabled={loadingModels.allText}
+                        className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                        title="Refresh text models from all providers"
+                      >
+                        <svg 
+                          className={`w-4 h-4 ${loadingModels.allText ? 'animate-spin' : ''}`} 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        {loadingModels.allText ? 'Refreshing...' : 'Refresh'}
+                      </button>
                     </div>
 
                     <div className="text-left">
@@ -1249,6 +1266,9 @@ const SystemSettings = () => {
                         {aiApiKeys.default_text_model 
                           ? `Selected: ${aiModels.allText.find(m => m.id === aiApiKeys.default_text_model)?.name || aiApiKeys.default_text_model}`
                           : 'This model will be used by default when generating articles and text content'}
+                      </p>
+                      <p className="text-xs text-purple-600 mt-1">
+                        💡 Click "Refresh" to fetch the latest models from OpenAI, Gemini, and Anthropic
                       </p>
                     </div>
                   </div>
