@@ -1582,6 +1582,7 @@ Focus on what's genuinely new and significant in AI {target_audience}.""",
 
     "stock-market": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
+{split_content_section}
 
 Search the web for the latest stock market news, financial trends, and economic developments {target_state_context}. Your task is to:
 
