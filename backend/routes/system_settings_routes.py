@@ -52,6 +52,8 @@ class AIAPIKeysConfig(BaseModel):
     openai_default_model: Optional[str] = None
     gemini_default_model: Optional[str] = None
     anthropic_default_model: Optional[str] = None
+    default_text_model: Optional[str] = None
+    default_image_model: Optional[str] = None
 
 # ==================== AWS Configuration Endpoints ====================
 
