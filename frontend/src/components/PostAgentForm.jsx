@@ -629,57 +629,105 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                   ))}
                 </select>
               </div>
+            </div>
 
-              {/* Image Options as Tabs */}
-              <div className="text-left">
-                <label className="block text-xs font-medium text-gray-700 mb-2">
-                  Image Options
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {imageOptions.map(option => (
-                    <label
-                      key={option.value}
-                      className={`flex items-center gap-2 px-3 py-2 border-2 rounded cursor-pointer transition-all text-xs ${
-                        formData.image_option === option.value
-                          ? 'border-blue-600 bg-blue-50 text-blue-700'
-                          : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="image_option"
-                        value={option.value}
-                        checked={formData.image_option === option.value}
-                        onChange={handleInputChange}
-                        className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
-                      />
-                      <span className="font-medium">{option.label}</span>
-                    </label>
-                  ))}
-                </div>
+            {/* Reference Content Section */}
+            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-gray-900 text-left">Reference Content</h3>
+                <button
+                  type="button"
+                  onClick={addReferenceUrl}
+                  className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition-colors"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add Ref Content
+                </button>
               </div>
-
-              {/* Content Workflow */}
-              <div className="text-left">
-                <label className="block text-xs font-medium text-gray-700 mb-2">
-                  Content Workflow
-                </label>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  {workflowOptions.map(option => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, content_workflow: option.value }))}
-                      className={`p-2 rounded border-2 font-medium text-xs transition-all ${
-                        formData.content_workflow === option.value
-                          ? 'border-blue-600 bg-blue-50 text-blue-700'
-                          : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                      }`}
-                    >
-                      {option.label}
-                    </button>
+              
+              {formData.reference_urls.length === 0 ? (
+                <div className="text-left bg-white rounded border border-gray-300 p-3">
+                  <p className="text-xs text-gray-500">
+                    No reference URLs added. Click "Add Ref Content" to add reference websites that the AI will check for latest news related to your selected category.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {formData.reference_urls.map((url, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <input
+                        type="url"
+                        value={url}
+                        onChange={(e) => updateReferenceUrl(index, e.target.value)}
+                        placeholder="https://example.com/news"
+                        className="flex-1 px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeReferenceUrl(index)}
+                        className="flex-shrink-0 p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                        title="Remove URL"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   ))}
                 </div>
+              )}
+              <p className="text-xs text-gray-500 text-left">
+                Add reference URLs that the AI should check for the latest news. The agent will analyze these sources and use them as references when generating content.
+              </p>
+            </div>
+
+            {/* Image Options Section */}
+            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Image Options</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {imageOptions.map(option => (
+                  <label
+                    key={option.value}
+                    className={`flex items-center gap-2 px-3 py-2 border-2 rounded cursor-pointer transition-all text-xs ${
+                      formData.image_option === option.value
+                        ? 'border-blue-600 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="image_option"
+                      value={option.value}
+                      checked={formData.image_option === option.value}
+                      onChange={handleInputChange}
+                      className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="font-medium">{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Content Workflow Section */}
+            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Content Workflow</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                {workflowOptions.map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, content_workflow: option.value }))}
+                    className={`p-2 rounded border-2 font-medium text-xs transition-all ${
+                      formData.content_workflow === option.value
+                        ? 'border-blue-600 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
               </div>
             </div>
 
