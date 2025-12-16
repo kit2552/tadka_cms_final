@@ -1395,12 +1395,35 @@ REFERENCE URLs:
 
 REFERENCE_CONTENT_NO_URLS = """No reference URLs provided. Proceed with standard web search to find the latest content for this category."""
 
+# Split content instruction templates
+SPLIT_CONTENT_ENABLED = """
+**CONTENT STRUCTURE - SPLIT MODE:**
+IMPORTANT: Structure your article into exactly {split_paragraphs} distinct paragraphs, clearly separated by blank lines.
+- Each paragraph should be self-contained but flow logically to the next
+- Paragraph 1 (Main Content): Lead with the most important/breaking news - this will be displayed prominently
+- Remaining paragraphs (Secondary Content): Supporting details, context, quotes, and additional information
+- Ensure roughly equal word distribution across paragraphs
+- Use clear paragraph breaks (double newlines) between sections
+- Format: [Paragraph 1]\\n\\n[Paragraph 2]\\n\\n[Paragraph 3]... (up to {split_paragraphs} paragraphs)
+"""
+
+SPLIT_CONTENT_DISABLED = """
+**CONTENT STRUCTURE:**
+Write as a single cohesive article with natural paragraph flow.
+"""
+
 def get_reference_content_section(reference_urls: list = None) -> str:
     """Generate the reference content section based on provided URLs"""
     if reference_urls and len(reference_urls) > 0:
         urls_list = "\n".join([f"- {url}" for url in reference_urls])
         return REFERENCE_CONTENT_WITH_URLS.format(reference_urls=urls_list)
     return REFERENCE_CONTENT_NO_URLS
+
+def get_split_content_section(split_content: bool = False, split_paragraphs: int = 2) -> str:
+    """Generate the split content instruction section"""
+    if split_content:
+        return SPLIT_CONTENT_ENABLED.format(split_paragraphs=split_paragraphs)
+    return SPLIT_CONTENT_DISABLED
 
 DEFAULT_CATEGORY_PROMPTS = {
     "politics": """**REFERENCE CONTENT INSTRUCTIONS:**
