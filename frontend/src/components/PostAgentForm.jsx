@@ -100,11 +100,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  const fetchTopicCategoryMappings = async () => {
+  const fetchCategoryPromptMappings = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-agents/topic-category-mappings`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/category-prompt-mappings`);
       const data = await response.json();
-      setTopicCategoryMappings(data.mappings || {});
+      setCategoryPromptMappings(data.mappings || {});
       setEditingMappings(data.mappings || {});
     } catch (error) {
       console.error('Failed to fetch mappings:', error);
