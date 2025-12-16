@@ -89,9 +89,9 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   ];
 
   const workflowOptions = [
-    { value: 'in_review', label: 'In Review First' },
+    { value: 'in_review', label: 'In Review' },
     { value: 'ready_to_publish', label: 'Approved' },
-    { value: 'auto_post', label: 'Auto Post' }
+    { value: 'auto_post', label: 'Auto Publish' }
   ];
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

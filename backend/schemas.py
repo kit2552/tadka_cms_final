@@ -139,6 +139,7 @@ class ArticleUpdate(BaseModel):
     is_published: Optional[bool] = None
     is_scheduled: Optional[bool] = None
     scheduled_publish_at: Optional[datetime] = None
+    status: Optional[str] = None  # draft, in_review, approved, published, scheduled
     # Movie Review specific fields
     review_quick_verdict: Optional[str] = None
     review_plot_summary: Optional[str] = None
