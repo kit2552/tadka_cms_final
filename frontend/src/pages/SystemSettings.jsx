@@ -1268,7 +1268,7 @@ const SystemSettings = () => {
                           : 'This model will be used by default when generating articles and text content'}
                       </p>
                       <p className="text-xs text-purple-600 mt-1">
-                        💡 Click "Refresh" to fetch the latest models from OpenAI, Gemini, and Anthropic
+                        Click "Refresh" to fetch the latest models from OpenAI, Gemini, and Anthropic
                       </p>
                     </div>
                   </div>
