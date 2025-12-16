@@ -1402,7 +1402,10 @@ Write a {word_count} word article that:
 
 Focus on accuracy, timeliness, and relevance to {target_audience}.""",
 
-    "movies": """Search the web for the latest trending movie news, releases, and entertainment updates {target_state_context}. Your task is to:
+    "movies": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web for the latest trending movie news, releases, and entertainment updates {target_state_context}. Your task is to:
 
 1. Identify the most trending movie-related stories from the last 24-48 hours
 2. Cover topics like: new releases, box office collections, celebrity news, upcoming films, reviews, controversies
