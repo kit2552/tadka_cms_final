@@ -1381,6 +1381,27 @@ def toggle_ai_agent_status(db, agent_id: str):
 
 # ==================== CATEGORY-PROMPT MAPPINGS ====================
 
+# Reference content instruction templates
+REFERENCE_CONTENT_WITH_URLS = """If reference URLs are provided below, PRIORITIZE them as your primary source:
+1. Visit and thoroughly analyze each reference URL
+2. Extract key information, facts, data points, and insights from these sources
+3. Use the reference content as the foundation for your article
+4. Supplement with web search only for additional context or latest updates
+5. Summarize and synthesize information from all reference sources
+6. Always cite or reference the source material appropriately
+
+REFERENCE URLs:
+{reference_urls}"""
+
+REFERENCE_CONTENT_NO_URLS = """No reference URLs provided. Proceed with standard web search to find the latest content for this category."""
+
+def get_reference_content_section(reference_urls: list = None) -> str:
+    """Generate the reference content section based on provided URLs"""
+    if reference_urls and len(reference_urls) > 0:
+        urls_list = "\n".join([f"- {url}" for url in reference_urls])
+        return REFERENCE_CONTENT_WITH_URLS.format(reference_urls=urls_list)
+    return REFERENCE_CONTENT_NO_URLS
+
 DEFAULT_CATEGORY_PROMPTS = {
     "politics": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
