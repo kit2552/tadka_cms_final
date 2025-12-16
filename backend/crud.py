@@ -1382,7 +1382,10 @@ def toggle_ai_agent_status(db, agent_id: str):
 # ==================== CATEGORY-PROMPT MAPPINGS ====================
 
 DEFAULT_CATEGORY_PROMPTS = {
-    "politics": """Search the web for the latest trending political news and developments {target_state_context}. Your task is to:
+    "politics": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web for the latest trending political news and developments {target_state_context}. Your task is to:
 
 1. Find the most recent and significant political stories from the last 24-48 hours
 2. Identify 3-5 key political events or developments that are currently trending
