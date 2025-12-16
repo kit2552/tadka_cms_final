@@ -1507,7 +1507,10 @@ Write a {word_count} word article that:
 
 Make readers hungry for more {target_audience}!""",
 
-    "ai": """Search the web comprehensively for the absolute latest AI and technology news from the last 24 hours {target_state_context}. Your task is to:
+    "ai": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web comprehensively for the absolute latest AI and technology news from the last 24 hours {target_state_context}. Your task is to:
 
 1. Scan major tech news sites, AI research labs, company announcements, and tech forums
 2. Identify the most trending AI stories: new models, breakthroughs, products, controversies, regulations
