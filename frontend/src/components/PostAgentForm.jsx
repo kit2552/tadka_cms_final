@@ -720,6 +720,89 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
           </div>
         </form>
       </div>
+
+      {/* Topic-Category Mapping Modal */}
+      {showMappingModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between z-10">
+              <div className="text-left">
+                <h2 className="text-lg font-semibold text-gray-900">Topic-Category Mapping</h2>
+                <p className="text-xs text-gray-600 mt-0.5">Map topics to categories for automatic selection</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowMappingModal(false);
+                  setEditingMappings(topicCategoryMappings);
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-3">
+              <div className="bg-blue-50 border border-blue-200 rounded p-3 mb-4">
+                <p className="text-xs text-blue-800">
+                  Map each topic to a category. When a topic is selected in the form, the mapped category will be automatically selected.
+                </p>
+              </div>
+
+              {topics.map(topic => (
+                <div key={topic.value} className="flex items-center gap-3 bg-gray-50 rounded p-3">
+                  <div className="flex-1 text-left">
+                    <label className="text-xs font-medium text-gray-700">
+                      {topic.label}
+                    </label>
+                  </div>
+                  <div className="flex-1">
+                    <select
+                      value={editingMappings[topic.value] || ''}
+                      onChange={(e) => handleMappingChange(topic.value, e.target.value)}
+                      className="w-full px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="">No mapping</option>
+                      {categories
+                        .filter(cat => cat.slug !== 'latest-news')
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map(cat => (
+                          <option key={cat.slug} value={cat.slug}>
+                            {cat.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-3 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowMappingModal(false);
+                  setEditingMappings(topicCategoryMappings);
+                }}
+                className="px-4 py-1.5 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={saveMappings}
+                className="px-4 py-1.5 bg-black text-white rounded text-sm font-medium hover:bg-gray-800 transition-colors"
+              >
+                Save Mappings
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
