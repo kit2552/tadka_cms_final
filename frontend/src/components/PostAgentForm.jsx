@@ -114,13 +114,13 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     
-    // If topic is changed, auto-select mapped category
-    if (name === 'topic' && value) {
-      const mappedCategory = topicCategoryMappings[value];
+    // If category is changed, auto-fill mapped prompt
+    if (name === 'category' && value) {
+      const mappedPrompt = categoryPromptMappings[value];
       setFormData(prev => ({
         ...prev,
         [name]: type === 'checkbox' ? checked : value,
-        category: mappedCategory || prev.category,
+        ai_prompt: mappedPrompt || prev.ai_prompt,
         mode: activeTab
       }));
     } else {
