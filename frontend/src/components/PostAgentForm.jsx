@@ -78,12 +78,6 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     }
   }
 
-  const topics = categories.map(cat => ({
-    value: `Trending Breaking Latest ${cat.name} News`,
-    label: `Trending Breaking Latest ${cat.name} News`
-  }));
-  topics.unshift({ value: 'Trending Breaking Latest Top Stories', label: 'Trending Breaking Latest Top Stories' });
-
   const wordCounts = ['<100', '<150', '<200', '<250', '<300', '<350', '<400', '<450', '<500'];
   const imageOptions = [
     { value: 'ai_generate', label: 'AI Generate' },
