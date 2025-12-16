@@ -1486,7 +1486,10 @@ Write a {word_count} word article that:
 
 Focus on reliable, helpful health information for {target_audience}.""",
 
-    "food": """Search the web for the latest food trends, culinary news, and restaurant updates {target_state_context}. Your task is to:
+    "food": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web for the latest food trends, culinary news, and restaurant updates {target_state_context}. Your task is to:
 
 1. Identify trending food stories from the last 24-48 hours
 2. Cover: new restaurants, food trends, recipes, celebrity chefs, food festivals, culinary innovations
