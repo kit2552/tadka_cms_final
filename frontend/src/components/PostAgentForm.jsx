@@ -43,6 +43,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     }
     fetchCategories();
     fetchStates();
+    fetchTopicCategoryMappings();
   }, [editingAgent]);
 
   const fetchCategories = async () => {
