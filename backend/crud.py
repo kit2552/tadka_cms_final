@@ -1489,6 +1489,7 @@ DEFAULT_CATEGORY_PROMPTS = {
     "politics": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
 {split_content_section}
+{image_search_section}
 
 Search the web for the latest trending political news and developments {target_state_context}. Your task is to:
 
