@@ -13,6 +13,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     category: '',
     target_state: '',
     word_count: '<100',
+    reference_urls: [],
     image_option: 'ai_generate',
     content_workflow: 'in_review',
     schedule_post: false,
