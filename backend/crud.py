@@ -1596,7 +1596,10 @@ Write a {word_count} word article that:
 
 Make readers excited to watch the trailer {target_audience}!""",
 
-    "box-office": """Search the web for the latest box office collections, earnings reports, and movie performance data {target_state_context}. Your task is to:
+    "box-office": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web for the latest box office collections, earnings reports, and movie performance data {target_state_context}. Your task is to:
 
 1. Find the most recent box office numbers from the last 24-48 hours
 2. Cover: weekend collections, milestone achievements, comparative performance
