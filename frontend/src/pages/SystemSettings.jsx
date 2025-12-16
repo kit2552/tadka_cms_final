@@ -1329,7 +1329,7 @@ const SystemSettings = () => {
                         </div>
                       )}
                       <p className="text-xs text-pink-600 mt-1">
-                        💡 Click "Refresh" to fetch the latest image generation models
+                        Click "Refresh" to fetch the latest image generation models
                       </p>
                     </div>
                   </div>
