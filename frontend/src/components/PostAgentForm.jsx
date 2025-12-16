@@ -594,28 +594,28 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                   ))}
                 </div>
               </div>
-            </div>
 
-            {/* Content Workflow */}
-            <div className="text-left">
-              <label className="block text-xs font-medium text-gray-700 mb-2">
-                Content Workflow
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                {workflowOptions.map(option => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, content_workflow: option.value }))}
-                    className={`p-2 rounded border-2 font-medium text-xs transition-all ${
-                      formData.content_workflow === option.value
-                        ? 'border-blue-600 bg-blue-50 text-blue-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
+              {/* Content Workflow */}
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-2">
+                  Content Workflow
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                  {workflowOptions.map(option => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, content_workflow: option.value }))}
+                      className={`p-2 rounded border-2 font-medium text-xs transition-all ${
+                        formData.content_workflow === option.value
+                          ? 'border-blue-600 bg-blue-50 text-blue-700'
+                          : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
