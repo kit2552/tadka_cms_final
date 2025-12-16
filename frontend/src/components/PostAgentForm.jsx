@@ -503,17 +503,17 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             </div>
 
             {/* Content Workflow */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+            <div className="text-left">
+              <label className="block text-xs font-medium text-gray-700 mb-2">
                 Content Workflow
               </label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 {workflowOptions.map(option => (
                   <button
                     key={option.value}
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, content_workflow: option.value }))}
-                    className={`p-4 rounded-lg border-2 font-medium text-sm transition-all ${
+                    className={`p-2 rounded border-2 font-medium text-xs transition-all ${
                       formData.content_workflow === option.value
                         ? 'border-blue-600 bg-blue-50 text-blue-700'
                         : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
@@ -527,7 +527,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
             {/* Message */}
             {message.text && (
-              <div className={`p-4 rounded-lg ${
+              <div className={`p-3 rounded text-xs ${
                 message.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
               }`}>
                 {message.text}
@@ -536,18 +536,18 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
           </div>
 
           {/* Footer */}
-          <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex items-center justify-end gap-3">
+          <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-3 flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium transition-colors"
+              className="px-4 py-1.5 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-medium transition-colors"
+              className="px-4 py-1.5 bg-black text-white rounded text-sm font-medium hover:bg-gray-800 disabled:bg-gray-400 transition-colors"
             >
               {loading ? 'Saving...' : 'Save Agent'}
             </button>
