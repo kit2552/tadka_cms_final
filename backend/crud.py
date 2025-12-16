@@ -1537,6 +1537,7 @@ Focus on reliable, helpful health information for {target_audience}.""",
 
     "food": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
+{split_content_section}
 
 Search the web for the latest food trends, culinary news, and restaurant updates {target_state_context}. Your task is to:
 
