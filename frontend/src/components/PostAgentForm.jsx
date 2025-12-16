@@ -434,6 +434,38 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Content Settings</h3>
               
+              {/* Select Topic - Moved Above Category */}
+              <div className="text-left">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-gray-700">
+                    Select Topic
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowMappingModal(true)}
+                    className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
+                  >
+                    Manage Topic-Category Mapping
+                  </button>
+                </div>
+                <select
+                  name="topic"
+                  value={formData.topic}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Select a topic</option>
+                  {topics.map(topic => (
+                    <option key={topic.value} value={topic.value}>{topic.label}</option>
+                  ))}
+                </select>
+                {formData.topic && topicCategoryMappings[formData.topic] && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Auto-selected category: {categories.find(c => c.slug === topicCategoryMappings[formData.topic])?.name}
+                  </p>
+                )}
+              </div>
+              
               {/* Category Selection */}
               <div className="text-left">
                 <label className="block text-xs font-medium text-gray-700 mb-1">
