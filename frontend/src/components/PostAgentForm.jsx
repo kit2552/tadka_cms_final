@@ -123,6 +123,27 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     }));
   };
 
+  const addReferenceUrl = () => {
+    setFormData(prev => ({
+      ...prev,
+      reference_urls: [...prev.reference_urls, '']
+    }));
+  };
+
+  const updateReferenceUrl = (index, value) => {
+    setFormData(prev => ({
+      ...prev,
+      reference_urls: prev.reference_urls.map((url, i) => i === index ? value : url)
+    }));
+  };
+
+  const removeReferenceUrl = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      reference_urls: prev.reference_urls.filter((_, i) => i !== index)
+    }));
+  };
+
   const handlePromptChange = (categorySlug, prompt) => {
     setEditingMappings(prev => ({
       ...prev,
