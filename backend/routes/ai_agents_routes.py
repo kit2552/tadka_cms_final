@@ -108,22 +108,3 @@ async def toggle_ai_agent(agent_id: str, db = Depends(get_db)):
     if not result:
         raise HTTPException(status_code=404, detail="Agent not found")
     return result
-
-# ==================== Topic-Category Mappings ====================
-
-class TopicCategoryMapping(BaseModel):
-    topic: str
-    category: str
-
-@router.get("/topic-category-mappings")
-async def get_topic_category_mappings(db = Depends(get_db)):
-    """Get all topic-category mappings"""
-    mappings = crud.get_topic_category_mappings(db)
-    return {"mappings": mappings}
-
-@router.put("/topic-category-mappings")
-async def update_topic_category_mappings(mappings: List[TopicCategoryMapping], db = Depends(get_db)):
-    """Update topic-category mappings"""
-    mappings_dict = {m.topic: m.category for m in mappings}
-    result = crud.update_topic_category_mappings(db, mappings_dict)
-    return {"mappings": result}
