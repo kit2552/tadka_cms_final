@@ -23,9 +23,10 @@ class AIAgent(BaseModel):
     timezone: Optional[str] = None  # "IST", "EST"
     
     # Common fields
-    topic: Optional[str] = None
+    category: Optional[str] = None
     target_state: Optional[str] = None
     word_count: Optional[str] = None  # "<100", "<150", etc.
+    reference_urls: Optional[List[str]] = None  # Reference content URLs
     image_option: Optional[str] = None  # "ai_generate", "upload", "existing", "web_search"
     content_workflow: Optional[str] = None  # "in_review", "ready_to_publish", "auto_post"
     
