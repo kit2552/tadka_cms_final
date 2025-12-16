@@ -67,6 +67,11 @@ const SystemSettings = () => {
   const [showOpenAIKey, setShowOpenAIKey] = useState(false);
   const [showGeminiKey, setShowGeminiKey] = useState(false);
   const [showAnthropicKey, setShowAnthropicKey] = useState(false);
+  const [unmaskedKeys, setUnmaskedKeys] = useState({
+    openai: null,
+    gemini: null,
+    anthropic: null
+  });
   const [aiModels, setAiModels] = useState({
     openai: [],
     gemini: [],
