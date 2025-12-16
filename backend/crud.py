@@ -1534,6 +1534,7 @@ Make it exciting for movie lovers {target_audience}!""",
     "sports": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
 {split_content_section}
+{image_search_section}
 
 Search the web for the latest trending sports news and updates {target_state_context}. Your task is to:
 
