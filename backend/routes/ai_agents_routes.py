@@ -93,13 +93,13 @@ class TopicCategoryMapping(BaseModel):
     topic: str
     category: str
 
-@router.get("/ai-agents/topic-category-mappings")
+@router.get("/topic-category-mappings")
 async def get_topic_category_mappings(db = Depends(get_db)):
     """Get all topic-category mappings"""
     mappings = crud.get_topic_category_mappings(db)
     return {"mappings": mappings}
 
-@router.put("/ai-agents/topic-category-mappings")
+@router.put("/topic-category-mappings")
 async def update_topic_category_mappings(mappings: List[TopicCategoryMapping], db = Depends(get_db)):
     """Update topic-category mappings"""
     mappings_dict = {m.topic: m.category for m in mappings}
