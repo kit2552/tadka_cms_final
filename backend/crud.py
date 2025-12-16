@@ -1423,7 +1423,10 @@ Write a {word_count} word article that:
 
 Make it exciting for movie lovers {target_audience}!""",
 
-    "sports": """Search the web for the latest trending sports news and updates {target_state_context}. Your task is to:
+    "sports": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web for the latest trending sports news and updates {target_state_context}. Your task is to:
 
 1. Find the most recent significant sports stories from the last 24-48 hours
 2. Cover various sports: cricket, football, tennis, Olympics, local sports, etc.
