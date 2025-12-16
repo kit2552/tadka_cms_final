@@ -1629,6 +1629,7 @@ This is for readers wanting to know the most important news in {target_audience}
 
     "trailers": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
+{split_content_section}
 
 Search the web for the latest movie trailers, teasers, and promotional content released {target_state_context}. Your task is to:
 
