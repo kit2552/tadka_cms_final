@@ -1379,6 +1379,30 @@ def toggle_ai_agent_status(db, agent_id: str):
     )
     return get_ai_agent(db, agent_id)
 
+# ==================== TOPIC-CATEGORY MAPPINGS ====================
+
+def get_topic_category_mappings(db):
+    """Get topic-category mappings"""
+    doc = db['system_settings'].find_one({"type": "topic_category_mappings"})
+    if doc:
+        return serialize_doc(doc).get("mappings", {})
+    return {}
+
+def update_topic_category_mappings(db, mappings: dict):
+    """Update topic-category mappings"""
+    from datetime import datetime
+    
+    db['system_settings'].update_one(
+        {"type": "topic_category_mappings"},
+        {"$set": {
+            "type": "topic_category_mappings",
+            "mappings": mappings,
+            "updated_at": datetime.utcnow()
+        }},
+        upsert=True
+    )
+    return mappings
+
 # ==================== USER MANAGEMENT ====================
 
 def get_users(db, skip: int = 0, limit: int = 100):
