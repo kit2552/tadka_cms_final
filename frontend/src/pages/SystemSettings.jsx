@@ -1109,8 +1109,9 @@ const SystemSettings = () => {
                           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
                             <button
                               type="button"
-                              onClick={() => setShowAnthropicKey(!showAnthropicKey)}
+                              onClick={() => toggleKeyVisibility('anthropic')}
                               className="text-gray-400 hover:text-gray-600 transition-colors"
+                              title={showAnthropicKey ? "Hide key" : "Show full key"}
                             >
                               {showAnthropicKey ? (
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1123,7 +1124,7 @@ const SystemSettings = () => {
                                 </svg>
                               )}
                             </button>
-                            {aiApiKeys.anthropic_api_key && !aiApiKeys.anthropic_api_key.startsWith('sk-****') && (
+                            {aiApiKeys.anthropic_api_key && (
                               <button
                                 type="button"
                                 onClick={() => testAPIKey('anthropic')}
