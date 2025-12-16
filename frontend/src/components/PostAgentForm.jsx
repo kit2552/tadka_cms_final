@@ -370,19 +370,19 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             )}
 
             {/* Common Fields - Content Settings */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Content Settings</h3>
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-gray-900 text-left">Content Settings</h3>
               
               {/* Select Topic */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Select Topic
                 </label>
                 <select
                   name="topic"
                   value={formData.topic}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select a topic</option>
                   {topics.map(topic => (
@@ -392,30 +392,66 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               </div>
 
               {/* Target State */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Target State
                 </label>
                 <div className="relative">
+                  {/* Selected State Tag */}
+                  {formData.target_state && (
+                    <div className="mb-2">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                        {formData.target_state}
+                        <button
+                          type="button"
+                          onClick={() => setFormData(prev => ({ ...prev, target_state: '' }))}
+                          className="text-blue-600 hover:text-blue-800 font-bold"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Search Input */}
                   <input
                     type="text"
-                    placeholder="Search state..."
+                    placeholder="Search and select state..."
                     value={stateSearch}
                     onChange={(e) => setStateSearch(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2"
+                    onFocus={() => setStateSearch('')}
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
-                  <select
-                    name="target_state"
-                    value={formData.target_state}
-                    onChange={handleInputChange}
-                    size="5"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">All States</option>
-                    {filteredStates.map(state => (
-                      <option key={state.code} value={state.name}>{state.name}</option>
-                    ))}
-                  </select>
+                  
+                  {/* Dropdown appears only when typing */}
+                  {stateSearch && (
+                    <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-48 overflow-y-auto">
+                      <div
+                        onClick={() => {
+                          setFormData(prev => ({ ...prev, target_state: '' }));
+                          setStateSearch('');
+                        }}
+                        className="px-3 py-1.5 cursor-pointer hover:bg-blue-50 text-xs text-gray-900 border-b"
+                      >
+                        All States
+                      </div>
+                      {filteredStates.map(state => (
+                        <div
+                          key={state.code}
+                          onClick={() => {
+                            setFormData(prev => ({ ...prev, target_state: state.name }));
+                            setStateSearch('');
+                          }}
+                          className="px-3 py-1.5 cursor-pointer hover:bg-blue-50 text-xs text-gray-900"
+                        >
+                          {state.name}
+                        </div>
+                      ))}
+                      {filteredStates.length === 0 && (
+                        <div className="px-3 py-1.5 text-xs text-gray-500">No states found</div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
