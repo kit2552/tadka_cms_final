@@ -57,6 +57,7 @@ import Dashboard from "./components/CMS/Dashboard";
 import CreateArticle from "./components/CMS/CreateArticle";
 import CreateSponsoredAd from "./components/CMS/CreateSponsoredAd";
 import SystemSettings from "./pages/SystemSettings";
+import AIAgents from "./pages/AIAgents";
 import CreateTopic from "./components/CMS/CreateTopic";
 import AdminControls from "./components/CMS/AdminControls";
 import ArticlePreview from "./components/CMS/ArticlePreview";
