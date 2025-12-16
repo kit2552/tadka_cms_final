@@ -11,7 +11,6 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     post_time: '09:00 AM',
     timezone: 'IST',
     category: '',
-    ai_prompt: '',
     target_state: '',
     word_count: '<100',
     image_option: 'ai_generate',
