@@ -1559,6 +1559,7 @@ Make readers hungry for more {target_audience}!""",
 
     "ai": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
+{split_content_section}
 
 Search the web comprehensively for the absolute latest AI and technology news from the last 24 hours {target_state_context}. Your task is to:
 
