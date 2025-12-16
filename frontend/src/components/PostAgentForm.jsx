@@ -10,6 +10,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     selected_days: [],
     post_time: '09:00 AM',
     timezone: 'IST',
+    category: '',
     topic: '',
     target_state: '',
     word_count: '<100',
