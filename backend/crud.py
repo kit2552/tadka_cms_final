@@ -1618,7 +1618,10 @@ Write a {word_count} word article that:
 
 Focus on the business performance of films {target_audience}!""",
 
-    "movie-news": """Search the web comprehensively for the latest movie news {target_state_context} in the regional language cinema. Your task is to:
+    "movie-news": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web comprehensively for the latest movie news {target_state_context} in the regional language cinema. Your task is to:
 
 CRITICAL: Based on the target state selected, identify the primary regional language:
 - Telangana/Andhra Pradesh → Telugu cinema (Tollywood)
