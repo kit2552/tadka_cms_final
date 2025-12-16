@@ -1479,6 +1479,12 @@ def get_split_content_section(split_content: bool = False, split_paragraphs: int
         return SPLIT_CONTENT_ENABLED.format(split_paragraphs=split_paragraphs)
     return SPLIT_CONTENT_DISABLED
 
+def get_image_search_section(image_option: str = None) -> str:
+    """Generate the image search instruction section based on image option"""
+    if image_option == 'web_search':
+        return WEB_SEARCH_IMAGE_INSTRUCTIONS
+    return NO_WEB_SEARCH_IMAGE
+
 DEFAULT_CATEGORY_PROMPTS = {
     "politics": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
