@@ -370,38 +370,89 @@ async def get_openai_models(db = Depends(get_db)):
 @router.get("/system-settings/ai-models/gemini")
 async def get_gemini_models(db = Depends(get_db)):
     """Fetch available Gemini models"""
+    # Return static list of Gemini models (API may not always be accessible)
+    models = [
+        {
+            "id": "gemini-2.0-flash-exp",
+            "name": "Gemini 2.0 Flash (Experimental)",
+            "description": "Latest experimental Gemini model with advanced capabilities",
+            "provider": "gemini"
+        },
+        {
+            "id": "gemini-2.0-flash-thinking-exp-1219",
+            "name": "Gemini 2.0 Flash Thinking",
+            "description": "Gemini 2.0 with enhanced reasoning capabilities",
+            "provider": "gemini"
+        },
+        {
+            "id": "gemini-1.5-pro",
+            "name": "Gemini 1.5 Pro",
+            "description": "Most capable Gemini model for complex tasks",
+            "provider": "gemini"
+        },
+        {
+            "id": "gemini-1.5-pro-002",
+            "name": "Gemini 1.5 Pro (002)",
+            "description": "Updated version of Gemini 1.5 Pro",
+            "provider": "gemini"
+        },
+        {
+            "id": "gemini-1.5-flash",
+            "name": "Gemini 1.5 Flash",
+            "description": "Fast and efficient for everyday tasks",
+            "provider": "gemini"
+        },
+        {
+            "id": "gemini-1.5-flash-002",
+            "name": "Gemini 1.5 Flash (002)",
+            "description": "Updated version of Gemini 1.5 Flash",
+            "provider": "gemini"
+        },
+        {
+            "id": "gemini-1.5-flash-8b",
+            "name": "Gemini 1.5 Flash 8B",
+            "description": "Smaller, faster version for high-volume tasks",
+            "provider": "gemini"
+        },
+        {
+            "id": "gemini-pro",
+            "name": "Gemini Pro",
+            "description": "General purpose Gemini model",
+            "provider": "gemini"
+        }
+    ]
+    
+    # Try to fetch from API if key is configured
     try:
         config = crud.get_ai_api_keys(db)
         api_key = config.get('gemini_api_key') if config else None
         
-        if not api_key:
-            raise HTTPException(status_code=400, detail="Gemini API key not configured")
-        
-        # Fetch models from Gemini API
-        response = requests.get(
-            f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}",
-            timeout=10
-        )
-        
-        if response.status_code == 200:
-            data = response.json()
-            models = [
-                {
-                    "id": model["name"].split("/")[-1],
-                    "name": model.get("displayName", model["name"].split("/")[-1]),
-                    "description": model.get("description", "")
-                }
-                for model in data.get("models", [])
-                if "generateContent" in model.get("supportedGenerationMethods", [])
-            ]
-            return {"models": models}
-        else:
-            raise HTTPException(status_code=response.status_code, detail="Failed to fetch Gemini models")
+        if api_key:
+            response = requests.get(
+                f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}",
+                timeout=10
+            )
             
-    except requests.exceptions.Timeout:
-        raise HTTPException(status_code=504, detail="Request timeout while fetching models")
-    except requests.exceptions.RequestException as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching models: {str(e)}")
+            if response.status_code == 200:
+                data = response.json()
+                api_models = [
+                    {
+                        "id": model["name"].split("/")[-1],
+                        "name": model.get("displayName", model["name"].split("/")[-1]),
+                        "description": model.get("description", ""),
+                        "provider": "gemini"
+                    }
+                    for model in data.get("models", [])
+                    if "generateContent" in model.get("supportedGenerationMethods", [])
+                ]
+                # Merge with static list, preferring API results
+                api_ids = [m["id"] for m in api_models]
+                models = api_models + [m for m in models if m["id"] not in api_ids]
+    except Exception as e:
+        print(f"Failed to fetch Gemini models from API: {e}")
+        # Return static list as fallback
+    
+    return {"models": models}
 
 @router.get("/system-settings/ai-models/anthropic")
 async def get_anthropic_models():
