@@ -271,12 +271,12 @@ async def delete_existing_user(user_id: str, db = Depends(get_db)):
 # ==================== AI API Keys Endpoints ====================
 
 @router.get("/system-settings/ai-api-keys")
-async def get_ai_api_keys(db = Depends(get_db)):
-    """Get AI API keys configuration (masked for security)"""
+async def get_ai_api_keys(unmask: bool = False, db = Depends(get_db)):
+    """Get AI API keys configuration (masked by default, unmask with query param)"""
     config = crud.get_ai_api_keys(db)
     
-    # Mask sensitive data
-    if config:
+    # Mask sensitive data unless unmask=true
+    if config and not unmask:
         if config.get('openai_api_key'):
             config['openai_api_key'] = 'sk-****' + config['openai_api_key'][-4:]
         if config.get('gemini_api_key'):
