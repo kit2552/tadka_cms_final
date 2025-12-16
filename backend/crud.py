@@ -1574,7 +1574,10 @@ Write a {word_count} word article that:
 
 This is for readers wanting to know the most important news in {target_audience} right now!""",
 
-    "trailers": """Search the web for the latest movie trailers, teasers, and promotional content released {target_state_context}. Your task is to:
+    "trailers": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web for the latest movie trailers, teasers, and promotional content released {target_state_context}. Your task is to:
 
 1. Find the newest trailers released in the last 24-48 hours
 2. Cover: official trailers, teasers, motion posters, first looks
