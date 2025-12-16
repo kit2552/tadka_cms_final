@@ -1032,8 +1032,9 @@ const SystemSettings = () => {
                           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
                             <button
                               type="button"
-                              onClick={() => setShowGeminiKey(!showGeminiKey)}
+                              onClick={() => toggleKeyVisibility('gemini')}
                               className="text-gray-400 hover:text-gray-600 transition-colors"
+                              title={showGeminiKey ? "Hide key" : "Show full key"}
                             >
                               {showGeminiKey ? (
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1046,7 +1047,7 @@ const SystemSettings = () => {
                                 </svg>
                               )}
                             </button>
-                            {aiApiKeys.gemini_api_key && !aiApiKeys.gemini_api_key.startsWith('****') && (
+                            {aiApiKeys.gemini_api_key && (
                               <button
                                 type="button"
                                 onClick={() => testAPIKey('gemini')}
