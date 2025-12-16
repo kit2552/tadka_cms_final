@@ -657,6 +657,13 @@ const Navigation = ({ onLayoutModeChange }) => {
                                     >
                                       System Settings
                                     </Link>
+                                    <Link
+                                      to="/cms/ai-agents"
+                                      onClick={() => setIsMoreDropdownOpen(false)}
+                                      className="block w-full text-left px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-50 hover:text-indigo-900 transition-colors duration-200"
+                                    >
+                                      AI Agents
+                                    </Link>
                                   </>
                                 )}
                                 <button
