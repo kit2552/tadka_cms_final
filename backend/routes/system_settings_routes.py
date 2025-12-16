@@ -531,7 +531,19 @@ async def get_all_text_models(db = Depends(get_db)):
         except Exception as e:
             print(f"Failed to fetch OpenAI models: {e}")
     
-    # Get Gemini models if API key is configured
+    # Add Gemini models (static list with optional API fetch)
+    gemini_models = [
+        {"id": "gemini-2.0-flash-exp", "name": "Gemini - 2.0 Flash (Experimental)", "provider": "gemini"},
+        {"id": "gemini-2.0-flash-thinking-exp-1219", "name": "Gemini - 2.0 Flash Thinking", "provider": "gemini"},
+        {"id": "gemini-1.5-pro", "name": "Gemini - 1.5 Pro", "provider": "gemini"},
+        {"id": "gemini-1.5-pro-002", "name": "Gemini - 1.5 Pro (002)", "provider": "gemini"},
+        {"id": "gemini-1.5-flash", "name": "Gemini - 1.5 Flash", "provider": "gemini"},
+        {"id": "gemini-1.5-flash-002", "name": "Gemini - 1.5 Flash (002)", "provider": "gemini"},
+        {"id": "gemini-1.5-flash-8b", "name": "Gemini - 1.5 Flash 8B", "provider": "gemini"},
+        {"id": "gemini-pro", "name": "Gemini - Pro", "provider": "gemini"}
+    ]
+    
+    # Try to fetch from API if key is configured
     if config and config.get('gemini_api_key'):
         try:
             response = requests.get(
@@ -541,7 +553,7 @@ async def get_all_text_models(db = Depends(get_db)):
             
             if response.status_code == 200:
                 data = response.json()
-                gemini_models = [
+                api_gemini_models = [
                     {
                         "id": model["name"].split("/")[-1],
                         "name": f"Gemini - {model.get('displayName', model['name'].split('/')[-1])}",
@@ -550,9 +562,13 @@ async def get_all_text_models(db = Depends(get_db)):
                     for model in data.get("models", [])
                     if "generateContent" in model.get("supportedGenerationMethods", [])
                 ]
-                all_models.extend(gemini_models)
+                # Merge with static list
+                api_ids = [m["id"] for m in api_gemini_models]
+                gemini_models = api_gemini_models + [m for m in gemini_models if m["id"] not in api_ids]
         except Exception as e:
             print(f"Failed to fetch Gemini models: {e}")
+    
+    all_models.extend(gemini_models)
     
     # Add Claude models (static list)
     claude_models = [
