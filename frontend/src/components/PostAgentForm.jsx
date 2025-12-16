@@ -26,6 +26,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   const [categories, setCategories] = useState([]);
   const [states, setStates] = useState([]);
   const [stateSearch, setStateSearch] = useState('');
+  const [categorySearch, setCategorySearch] = useState('');
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
   useEffect(() => {
     if (editingAgent) {
