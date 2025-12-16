@@ -505,8 +505,10 @@ async def get_all_text_models(db = Depends(get_db)):
     
     # Add Claude models (static list)
     claude_models = [
-        {"id": "claude-3-5-sonnet-20241022", "name": "Claude - 3.5 Sonnet (Latest)", "provider": "anthropic"},
-        {"id": "claude-3-5-haiku-20241022", "name": "Claude - 3.5 Haiku (Latest)", "provider": "anthropic"},
+        {"id": "claude-opus-4.5-20250514", "name": "Claude - Opus 4.5 (Latest)", "provider": "anthropic"},
+        {"id": "claude-sonnet-4.5-20250514", "name": "Claude - Sonnet 4.5 (Latest)", "provider": "anthropic"},
+        {"id": "claude-3-5-sonnet-20241022", "name": "Claude - 3.5 Sonnet", "provider": "anthropic"},
+        {"id": "claude-3-5-haiku-20241022", "name": "Claude - 3.5 Haiku", "provider": "anthropic"},
         {"id": "claude-3-opus-20240229", "name": "Claude - 3 Opus", "provider": "anthropic"},
         {"id": "claude-3-sonnet-20240229", "name": "Claude - 3 Sonnet", "provider": "anthropic"},
         {"id": "claude-3-haiku-20240307", "name": "Claude - 3 Haiku", "provider": "anthropic"}
