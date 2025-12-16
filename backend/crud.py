@@ -1428,6 +1428,7 @@ def get_split_content_section(split_content: bool = False, split_paragraphs: int
 DEFAULT_CATEGORY_PROMPTS = {
     "politics": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
+{split_content_section}
 
 Search the web for the latest trending political news and developments {target_state_context}. Your task is to:
 
