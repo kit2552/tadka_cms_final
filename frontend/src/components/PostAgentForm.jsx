@@ -221,17 +221,17 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {/* Schedule Selection */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="text-left">
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
                         Schedule Selection
                       </label>
                       <select
                         name="schedule_selection"
                         value={formData.schedule_selection}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >
                         <option value="all_days">All Days</option>
                         <option value="scheduled_days">Scheduled Days</option>
@@ -239,15 +239,15 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                     </div>
 
                     {/* Post Time */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="text-left">
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
                         Post Time
                       </label>
                       <select
                         name="post_time"
                         value={formData.post_time}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >
                         {timeSlots.map(time => (
                           <option key={time} value={time}>{time}</option>
