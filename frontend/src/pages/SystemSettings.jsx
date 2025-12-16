@@ -528,9 +528,13 @@ const SystemSettings = () => {
       if (response.ok) {
         const data = await response.json();
         setAiModels(prev => ({ ...prev, allText: data.models }));
+        setMessage({ type: 'success', text: 'Text models refreshed successfully!' });
+      } else {
+        setMessage({ type: 'error', text: 'Failed to refresh text models' });
       }
     } catch (error) {
       console.error('Failed to fetch all text models:', error);
+      setMessage({ type: 'error', text: 'Failed to refresh text models' });
     } finally {
       setLoadingModels(prev => ({ ...prev, allText: false }));
     }
@@ -543,12 +547,28 @@ const SystemSettings = () => {
       if (response.ok) {
         const data = await response.json();
         setAiModels(prev => ({ ...prev, allImage: data.models }));
+        setMessage({ type: 'success', text: 'Image models refreshed successfully!' });
+      } else {
+        setMessage({ type: 'error', text: 'Failed to refresh image models' });
       }
     } catch (error) {
       console.error('Failed to fetch all image models:', error);
+      setMessage({ type: 'error', text: 'Failed to refresh image models' });
     } finally {
       setLoadingModels(prev => ({ ...prev, allImage: false }));
     }
+  };
+
+  const refreshAllModels = async () => {
+    setMessage({ type: '', text: '' });
+    await Promise.all([
+      fetchAllTextModels(),
+      fetchAllImageModels(),
+      fetchModels('openai'),
+      fetchModels('gemini'),
+      fetchModels('anthropic')
+    ]);
+    setMessage({ type: 'success', text: 'All models refreshed successfully!' });
   };
 
   const testAPIKey = async (provider) => {
