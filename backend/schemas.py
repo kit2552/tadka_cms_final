@@ -61,6 +61,7 @@ class ArticleBase(BaseModel):
     is_published: Optional[bool] = True
     is_scheduled: Optional[bool] = False
     scheduled_publish_at: Optional[datetime] = None
+    status: Optional[str] = "draft"  # draft, in_review, approved, published, scheduled
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
