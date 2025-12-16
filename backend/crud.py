@@ -1444,7 +1444,10 @@ Write a {word_count} word article that:
 
 Focus on what's trending and exciting in the sports world {target_audience}!""",
 
-    "fashion": """Search the web for the latest fashion trends, style news, and fashion industry updates {target_state_context}. Your task is to:
+    "fashion": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web for the latest fashion trends, style news, and fashion industry updates {target_state_context}. Your task is to:
 
 1. Identify trending fashion stories from the last 24-48 hours
 2. Cover: runway shows, celebrity fashion, street style, fashion weeks, designer news, trends
