@@ -557,24 +557,6 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                 </div>
               </div>
               
-              {/* Select Topic */}
-              <div className="text-left">
-                <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Select Topic
-                </label>
-                <select
-                  name="topic"
-                  value={formData.topic}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">Select a topic</option>
-                  {topics.map(topic => (
-                    <option key={topic.value} value={topic.value}>{topic.label}</option>
-                  ))}
-                </select>
-              </div>
-
               {/* Target State */}
               <div className="text-left">
                 <label className="block text-xs font-medium text-gray-700 mb-1">
