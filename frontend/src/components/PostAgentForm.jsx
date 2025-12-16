@@ -258,8 +258,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
                   {/* Select Days */}
                   {formData.schedule_selection === 'scheduled_days' && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="text-left">
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
                         Select Days
                       </label>
                       <div className="flex flex-wrap gap-2">
@@ -268,7 +268,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                             key={day}
                             type="button"
                             onClick={() => handleDayToggle(day)}
-                            className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                            className={`px-3 py-1 rounded font-medium text-xs transition-colors ${
                               formData.selected_days.includes(day)
                                 ? 'bg-blue-600 text-white'
                                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -282,15 +282,15 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                   )}
 
                   {/* Time Zone */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="text-left">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
                       Time Zone
                     </label>
                     <select
                       name="timezone"
                       value={formData.timezone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="IST">IST (Indian Standard Time)</option>
                       <option value="EST">EST (Eastern Standard Time)</option>
