@@ -411,6 +411,47 @@ const SystemSettings = () => {
     }
   };
 
+  const toggleKeyVisibility = async (provider) => {
+    const stateMap = {
+      openai: { show: showOpenAIKey, setShow: setShowOpenAIKey, key: 'openai_api_key' },
+      gemini: { show: showGeminiKey, setShow: setShowGeminiKey, key: 'gemini_api_key' },
+      anthropic: { show: showAnthropicKey, setShow: setShowAnthropicKey, key: 'anthropic_api_key' }
+    };
+
+    const { show, setShow, key } = stateMap[provider];
+
+    // If showing (about to hide), just toggle
+    if (show) {
+      setShow(false);
+      return;
+    }
+
+    // If key is masked and we haven't fetched unmasked version yet
+    const currentKey = aiApiKeys[key];
+    if (currentKey && (currentKey.includes('****')) && !unmaskedKeys[provider]) {
+      try {
+        // Fetch unmasked key
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ai-api-keys?unmask=true`);
+        if (response.ok) {
+          const data = await response.json();
+          setUnmaskedKeys(prev => ({
+            ...prev,
+            [provider]: data[key]
+          }));
+          // Update the displayed key with unmasked version
+          setAiApiKeys(prev => ({
+            ...prev,
+            [key]: data[key]
+          }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch unmasked key:', error);
+      }
+    }
+
+    setShow(true);
+  };
+
   const handleAIKeyChange = (e) => {
     const { name, value } = e.target;
     setAiApiKeys(prev => ({ ...prev, [name]: value }));
