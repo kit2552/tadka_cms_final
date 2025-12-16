@@ -1281,13 +1281,14 @@ const SystemSettings = () => {
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                       </svg>
                       <div className="text-left">
-                        <h4 className="text-sm font-semibold text-blue-900 mb-1">About AI API Keys</h4>
+                        <h4 className="text-sm font-semibold text-blue-900 mb-1">About AI API Keys & Models</h4>
                         <ul className="text-xs text-blue-800 space-y-1">
-                          <li>• These API keys will be used for AI-powered content generation</li>
-                          <li>• Click "Test" to validate your API key and fetch available models</li>
-                          <li>• Select a default model for each provider to use when generating content</li>
-                          <li>• Keys are stored securely and masked after saving</li>
-                          <li>• You can get API keys from: OpenAI Platform, Google AI Studio, and Anthropic Console</li>
+                          <li>• <strong>API Keys:</strong> Configure your API keys for OpenAI, Gemini, and Anthropic to enable AI content generation</li>
+                          <li>• <strong>Test Keys:</strong> Click "Test" to validate your API key and fetch available models from each provider</li>
+                          <li>• <strong>Text Generation Model:</strong> Choose a default model for generating article content from all available providers</li>
+                          <li>• <strong>Image Generation Model:</strong> Choose a default model for generating article images (DALL-E, Imagen/Nano Banana)</li>
+                          <li>• <strong>Security:</strong> All keys are stored securely and masked after saving. Click the eye icon to view full keys</li>
+                          <li>• <strong>Get API Keys:</strong> OpenAI Platform, Google AI Studio, and Anthropic Console</li>
                         </ul>
                       </div>
                     </div>
