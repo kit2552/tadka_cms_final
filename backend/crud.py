@@ -1726,6 +1726,7 @@ Make it exciting and relevant for regional cinema enthusiasts! Ensure the conten
 
     "movie-news-bollywood": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
+{split_content_section}
 
 Search the web comprehensively for the latest Hindi Bollywood movie news from the last 24-48 hours. Your task is to:
 
