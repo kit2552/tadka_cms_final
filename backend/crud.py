@@ -1529,7 +1529,10 @@ Write a {word_count} word article that:
 
 Focus on what's genuinely new and significant in AI {target_audience}.""",
 
-    "stock-market": """Search the web for the latest stock market news, financial trends, and economic developments {target_state_context}. Your task is to:
+    "stock-market": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web for the latest stock market news, financial trends, and economic developments {target_state_context}. Your task is to:
 
 1. Find the most recent market movements and financial news from the last 24-48 hours
 2. Cover: major indices, significant stock movements, IPOs, economic indicators, policy changes
