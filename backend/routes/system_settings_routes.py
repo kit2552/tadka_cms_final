@@ -411,30 +411,137 @@ async def get_anthropic_models():
         {
             "id": "claude-3-5-sonnet-20241022",
             "name": "Claude 3.5 Sonnet (Latest)",
-            "description": "Most intelligent model, best for complex tasks"
+            "description": "Most intelligent model, best for complex tasks",
+            "provider": "anthropic"
         },
         {
             "id": "claude-3-5-haiku-20241022",
             "name": "Claude 3.5 Haiku (Latest)",
-            "description": "Fastest model, best for quick responses"
+            "description": "Fastest model, best for quick responses",
+            "provider": "anthropic"
         },
         {
             "id": "claude-3-opus-20240229",
             "name": "Claude 3 Opus",
-            "description": "Powerful model for highly complex tasks"
+            "description": "Powerful model for highly complex tasks",
+            "provider": "anthropic"
         },
         {
             "id": "claude-3-sonnet-20240229",
             "name": "Claude 3 Sonnet",
-            "description": "Balanced intelligence and speed"
+            "description": "Balanced intelligence and speed",
+            "provider": "anthropic"
         },
         {
             "id": "claude-3-haiku-20240307",
             "name": "Claude 3 Haiku",
-            "description": "Fast and compact model"
+            "description": "Fast and compact model",
+            "provider": "anthropic"
         }
     ]
     return {"models": models}
+
+@router.get("/system-settings/ai-models/all-text")
+async def get_all_text_models(db = Depends(get_db)):
+    """Get all available text generation models from all providers"""
+    all_models = []
+    config = crud.get_ai_api_keys(db)
+    
+    # Get OpenAI models if API key is configured
+    if config and config.get('openai_api_key'):
+        try:
+            headers = {"Authorization": f"Bearer {config['openai_api_key']}"}
+            response = requests.get("https://api.openai.com/v1/models", headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                openai_models = [
+                    {
+                        "id": model["id"],
+                        "name": f"OpenAI - {model['id']}",
+                        "provider": "openai"
+                    }
+                    for model in data.get("data", [])
+                    if "gpt" in model["id"].lower()
+                ]
+                all_models.extend(openai_models)
+        except Exception as e:
+            print(f"Failed to fetch OpenAI models: {e}")
+    
+    # Get Gemini models if API key is configured
+    if config and config.get('gemini_api_key'):
+        try:
+            response = requests.get(
+                f"https://generativelanguage.googleapis.com/v1beta/models?key={config['gemini_api_key']}",
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                gemini_models = [
+                    {
+                        "id": model["name"].split("/")[-1],
+                        "name": f"Gemini - {model.get('displayName', model['name'].split('/')[-1])}",
+                        "provider": "gemini"
+                    }
+                    for model in data.get("models", [])
+                    if "generateContent" in model.get("supportedGenerationMethods", [])
+                ]
+                all_models.extend(gemini_models)
+        except Exception as e:
+            print(f"Failed to fetch Gemini models: {e}")
+    
+    # Add Claude models (static list)
+    claude_models = [
+        {"id": "claude-3-5-sonnet-20241022", "name": "Claude - 3.5 Sonnet (Latest)", "provider": "anthropic"},
+        {"id": "claude-3-5-haiku-20241022", "name": "Claude - 3.5 Haiku (Latest)", "provider": "anthropic"},
+        {"id": "claude-3-opus-20240229", "name": "Claude - 3 Opus", "provider": "anthropic"},
+        {"id": "claude-3-sonnet-20240229", "name": "Claude - 3 Sonnet", "provider": "anthropic"},
+        {"id": "claude-3-haiku-20240307", "name": "Claude - 3 Haiku", "provider": "anthropic"}
+    ]
+    all_models.extend(claude_models)
+    
+    return {"models": all_models}
+
+@router.get("/system-settings/ai-models/all-image")
+async def get_all_image_models():
+    """Get all available image generation models"""
+    image_models = [
+        # OpenAI DALL-E models
+        {
+            "id": "dall-e-3",
+            "name": "DALL-E 3 (OpenAI)",
+            "description": "Latest DALL-E model with enhanced quality and accuracy",
+            "provider": "openai"
+        },
+        {
+            "id": "dall-e-2",
+            "name": "DALL-E 2 (OpenAI)",
+            "description": "Previous generation DALL-E model",
+            "provider": "openai"
+        },
+        # Google Imagen models (Nano Banana)
+        {
+            "id": "imagen-3.0-generate-001",
+            "name": "Imagen 3 (Google Nano Banana)",
+            "description": "Latest Google image generation model",
+            "provider": "gemini"
+        },
+        {
+            "id": "imagen-3.0-fast-generate-001",
+            "name": "Imagen 3 Fast (Google Nano Banana Pro)",
+            "description": "Faster version of Imagen 3",
+            "provider": "gemini"
+        },
+        {
+            "id": "imagen-2.0-generate-001",
+            "name": "Imagen 2 (Google)",
+            "description": "Previous generation Google image model",
+            "provider": "gemini"
+        }
+    ]
+    
+    return {"models": image_models}
 
 @router.post("/system-settings/ai-api-keys/test/{provider}")
 async def test_ai_api_key(provider: str, db = Depends(get_db)):
