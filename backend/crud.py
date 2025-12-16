@@ -1493,6 +1493,7 @@ Focus on what's trending and exciting in the sports world {target_audience}!""",
 
     "fashion": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
+{split_content_section}
 
 Search the web for the latest fashion trends, style news, and fashion industry updates {target_state_context}. Your task is to:
 
