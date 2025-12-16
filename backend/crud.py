@@ -1668,7 +1668,10 @@ Write a {word_count} word article that:
 
 Make it exciting and relevant for regional cinema enthusiasts! Ensure the content is specifically about the regional language film industry identified from the target state.""",
 
-    "movie-news-bollywood": """Search the web comprehensively for the latest Hindi Bollywood movie news from the last 24-48 hours. Your task is to:
+    "movie-news-bollywood": """**REFERENCE CONTENT INSTRUCTIONS:**
+{reference_content_section}
+
+Search the web comprehensively for the latest Hindi Bollywood movie news from the last 24-48 hours. Your task is to:
 
 FOCUS: This is specifically about HINDI BOLLYWOOD cinema - the mainstream Hindi film industry based in Mumbai.
 
