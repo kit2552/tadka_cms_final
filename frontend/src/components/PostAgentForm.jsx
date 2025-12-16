@@ -197,17 +197,17 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             </div>
           </div>
 
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-4">
             {/* Recurring Mode */}
             {activeTab === 'recurring' && (
               <>
                 {/* Schedule Settings Section */}
-                <div className="bg-gray-50 rounded-lg p-6 space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Schedule Settings</h3>
+                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Schedule Settings</h3>
                   
                   {/* Agent Name */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="text-left">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
                       Agent Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -216,7 +216,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                       value={formData.agent_name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Enter agent name"
                     />
                   </div>
