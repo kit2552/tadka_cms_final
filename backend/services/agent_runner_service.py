@@ -511,15 +511,11 @@ Article:
         
         try:
             # Generate image prompt
-            prompt_response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "Create a detailed image generation prompt."},
-                    {"role": "user", "content": f"Create an image prompt for a news article image. Title: {title}. Make it professional, news-worthy, horizontal orientation. Return ONLY the prompt, max 100 words."}
-                ],
-                max_completion_tokens=200
+            image_prompt = self._chat_completion(
+                "Create a detailed image generation prompt.",
+                f"Create an image prompt for a news article image. Title: {title}. Make it professional, news-worthy, horizontal orientation. Return ONLY the prompt, max 100 words.",
+                200
             )
-            image_prompt = prompt_response.choices[0].message.content.strip()
             
             # Check which image model to use
             image_model = self.image_model or 'dall-e-3'
