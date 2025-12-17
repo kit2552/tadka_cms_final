@@ -255,7 +255,7 @@ Return ONLY the optimized prompt, nothing else."""
             return None
 
     async def _generate_ai_image(self, content: str, title: str) -> Optional[str]:
-        """Generate an image using OpenAI DALL-E"""
+        """Generate an image using the configured image generation model"""
         if not self.client:
             self._initialize_openai()
         
@@ -264,31 +264,83 @@ Return ONLY the optimized prompt, nothing else."""
             prompt_response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "Create a detailed image generation prompt for DALL-E."},
-                    {"role": "user", "content": f"Create a DALL-E image prompt for a news article image. Title: {title}. Make it professional, news-worthy, horizontal orientation. Return ONLY the prompt."}
+                    {"role": "system", "content": "Create a detailed image generation prompt."},
+                    {"role": "user", "content": f"Create an image prompt for a news article image. Title: {title}. Make it professional, news-worthy, horizontal orientation. Return ONLY the prompt, max 100 words."}
                 ],
                 max_tokens=100,
                 temperature=0.7
             )
             image_prompt = prompt_response.choices[0].message.content.strip()
             
-            # Generate image
-            image_response = self.client.images.generate(
-                model="dall-e-3",
-                prompt=image_prompt,
-                size="1792x1024",
-                quality="standard",
-                n=1
-            )
+            # Check which image model to use
+            image_model = self.image_model or 'dall-e-3'
             
-            image_url = image_response.data[0].url
+            if image_model.startswith('imagen') or image_model.startswith('gemini'):
+                # Use Google Imagen via Gemini API
+                image_url = await self._generate_google_image(image_prompt)
+            else:
+                # Use OpenAI DALL-E
+                image_url = await self._generate_dalle_image(image_prompt, image_model)
             
-            # Download and upload to S3
-            uploaded_url = await self._download_and_upload_image(image_url)
-            return uploaded_url
+            if image_url:
+                # Download and upload to S3
+                uploaded_url = await self._download_and_upload_image(image_url)
+                return uploaded_url
+            return None
             
         except Exception as e:
             print(f"AI image generation failed: {e}")
+            return None
+
+    async def _generate_dalle_image(self, prompt: str, model: str = "dall-e-3") -> Optional[str]:
+        """Generate image using OpenAI DALL-E"""
+        try:
+            image_response = self.client.images.generate(
+                model=model,
+                prompt=prompt,
+                size="1792x1024" if model == "dall-e-3" else "1024x1024",
+                quality="standard",
+                n=1
+            )
+            return image_response.data[0].url
+        except Exception as e:
+            print(f"DALL-E image generation failed: {e}")
+            return None
+
+    async def _generate_google_image(self, prompt: str) -> Optional[str]:
+        """Generate image using Google Imagen API"""
+        try:
+            import google.generativeai as genai
+            
+            gemini_api_key = self.ai_config.get('gemini_api_key')
+            if not gemini_api_key:
+                print("Gemini API key not configured for image generation")
+                return None
+            
+            genai.configure(api_key=gemini_api_key)
+            
+            # Use Imagen model
+            imagen = genai.ImageGenerationModel(self.image_model)
+            result = imagen.generate_images(
+                prompt=prompt,
+                number_of_images=1,
+                aspect_ratio="16:9"
+            )
+            
+            if result.images:
+                # Save image temporarily and return path
+                import base64
+                timestamp = int(datetime.now().timestamp() * 1000)
+                temp_path = f"/tmp/imagen_{timestamp}.png"
+                result.images[0].save(temp_path)
+                return temp_path
+            return None
+            
+        except Exception as e:
+            print(f"Google Imagen generation failed: {e}")
+            # Fallback to DALL-E if available
+            if self.client:
+                return await self._generate_dalle_image(prompt)
             return None
 
     async def _download_and_upload_image(self, image_url: str) -> Optional[str]:
