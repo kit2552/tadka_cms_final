@@ -422,15 +422,11 @@ Write ONLY the headline, nothing else."""
             words = title.split()
             if len(words) > 14:
                 print(f"Title too long ({len(words)} words), asking AI to shorten...")
-                shorten_response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[
-                        {"role": "system", "content": "You shorten headlines while keeping the complete meaning."},
-                        {"role": "user", "content": f"Shorten this headline to 10-12 words while keeping the full meaning:\n\n{title}\n\nWrite only the shortened headline."}
-                    ],
-                    max_completion_tokens=100
-                )
-                title = shorten_response.choices[0].message.content.strip().strip('"\'')
+                title = self._chat_completion(
+                    "You shorten headlines while keeping the complete meaning.",
+                    f"Shorten this headline to 10-12 words while keeping the full meaning:\n\n{title}\n\nWrite only the shortened headline.",
+                    100
+                ).strip('"\'')
                 print(f"Shortened title ({len(title.split())} words): {title}")
             
             # If title generation failed or empty, create from content
