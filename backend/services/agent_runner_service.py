@@ -208,14 +208,17 @@ class AgentRunnerService:
         """Find the latest/first article URL from a listing page"""
         try:
             import re
-            from urllib.parse import urljoin
+            from urllib.parse import urljoin, urlparse
             
-            # Common patterns for article links
-            # Look for links that appear to be articles (contain date patterns, news, article, story, etc.)
+            # Extract domain from base URL
+            parsed_base = urlparse(base_url)
+            base_domain = parsed_base.netloc
+            
+            # Patterns for article links - look for news article URL patterns
             article_patterns = [
-                r'href=["\']([^"\']*(?:/\d{4}/\d{2}/\d{2}/|/\d{4}/[a-z]+/\d+/|/news/|/article/|/story/)[^"\']*)["\']',
-                r'href=["\']([^"\']*(?:\.html|\.htm)[^"\']*)["\']',
-                r'href=["\'](/[^"\']+/[^"\']+/[^"\']+)["\']'  # Paths with multiple segments
+                r'href=["\']([^"\']*(?:/political-news/|/movie-news/|/news/|/article/|/story/)\d+/[^"\']*)["\']',
+                r'href=["\']([^"\']*(?:/\d{4}/\d{2}/\d{2}/|/\d{4}/[a-z]+/\d+/)[^"\']*)["\']',
+                r'href=["\']([^"\']*(?:/[a-z-]+/\d+/)[^"\']*)["\']',  # Pattern like /category/12345/slug
             ]
             
             found_urls = []
@@ -223,14 +226,25 @@ class AgentRunnerService:
                 matches = re.findall(pattern, html_content, re.IGNORECASE)
                 for match in matches:
                     full_url = urljoin(base_url, match)
-                    # Filter out non-article URLs
-                    if not any(x in full_url.lower() for x in ['#', 'javascript:', 'mailto:', '.css', '.js', '.png', '.jpg', 'login', 'signup', 'subscribe']):
-                        if full_url != base_url and full_url not in found_urls:
-                            found_urls.append(full_url)
+                    parsed_url = urlparse(full_url)
+                    
+                    # Filter criteria
+                    is_same_domain = base_domain in parsed_url.netloc
+                    is_not_asset = not any(x in full_url.lower() for x in [
+                        '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.woff', '.woff2', 
+                        '.svg', '.ico', '/feed/', '/category/', '/tag/', '/author/',
+                        'cdn.', 'assets', 'static', '#', 'javascript:', 'mailto:',
+                        'login', 'signup', 'subscribe', 'search'
+                    ])
+                    is_different_from_base = full_url.rstrip('/') != base_url.rstrip('/')
+                    is_not_duplicate = full_url not in found_urls
+                    
+                    if is_same_domain and is_not_asset and is_different_from_base and is_not_duplicate:
+                        found_urls.append(full_url)
             
             # Return the first article URL found (usually the latest)
             if found_urls:
-                print(f"Found {len(found_urls)} potential article URLs")
+                print(f"Found {len(found_urls)} article URLs, using: {found_urls[0]}")
                 return found_urls[0]
             
             return None
