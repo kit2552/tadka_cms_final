@@ -332,77 +332,85 @@ Original Article:
         try:
             # Build prompt based on whether we have original title
             if original_title:
-                prompt = f"""Create a COMPLETELY NEW and DIFFERENT headline for this news story.
+                prompt = f"""Rewrite this headline in a COMPLETELY DIFFERENT way.
 
-Original Headline (DO NOT COPY THIS): {original_title}
+Original: {original_title}
 
-Article Content:
+STRICT RULES:
+- Write ONLY 8-10 words maximum
+- Must be DIFFERENT from original - rephrase completely  
+- Must be a COMPLETE thought that makes sense
+- NO partial sentences or cut-off words
+- Make it catchy and engaging
+- NO quotes, colons, or special characters
+
+Example good headlines:
+- "Pawan Kalyan's OG Sequel Targets 2028 Release"
+- "Director Sujeeth Plans OG Part 2 for Next Year"
+- "Tollywood Star Announces Exciting New Project"
+
+Write ONE short, complete headline only."""
+            else:
+                prompt = f"""Create a news headline for this article.
+
+STRICT RULES:
+- Write ONLY 8-10 words maximum
+- Must be a COMPLETE thought that makes sense
+- NO partial sentences or cut-off words
+- Make it catchy and engaging
+- NO quotes, colons, or special characters
+
+Article excerpt:
 {content[:1500]}
 
-**CRITICAL REQUIREMENTS:**
-1. MUST be different from the original headline - use different words and structure
-2. MUST be a COMPLETE sentence or phrase that makes sense on its own
-3. Maximum 10-12 words ONLY
-4. DO NOT cut off mid-word or mid-sentence
-5. The headline must convey the full meaning - no incomplete thoughts
-6. Make it catchy and click-worthy
-7. No quotes, colons, or special characters
-
-IMPORTANT: 
-- Your headline must NOT be the same as the original
-- The headline MUST be complete and meaningful
-- DO NOT end with partial words or incomplete phrases
-
-Return ONLY the complete headline text, nothing else."""
-            else:
-                prompt = f"""Create a compelling news headline for this article.
-
-**CRITICAL REQUIREMENTS:**
-1. Maximum 10-12 words ONLY
-2. MUST be a COMPLETE sentence or phrase that makes sense
-3. DO NOT cut off mid-word or mid-sentence
-4. Clear and easy to understand
-5. Captures the main news point
-6. No quotes, colons, or special characters
-
-Return ONLY the complete headline text, nothing else.
-
-Article:
-{content[:2000]}"""
+Write ONE short, complete headline only."""
 
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are an expert headline writer. You create SHORT, COMPLETE headlines that are 10-12 words maximum. Your headlines NEVER get cut off - they are always complete, meaningful sentences or phrases. You NEVER end a headline with an incomplete word or thought."},
+                    {"role": "system", "content": "You write VERY SHORT headlines of 8-10 words only. Every headline you write is COMPLETE - never cut off. You always create unique, catchy headlines."},
                     {"role": "user", "content": prompt}
                 ],
                 max_completion_tokens=400
             )
             title = response.choices[0].message.content.strip()
-            # Remove quotes, prefixes and clean up
+            
+            # Clean up the title
             title = title.strip('"\'')
             title = title.replace("Headline:", "").replace("Title:", "").strip()
             
-            # Ensure title doesn't end with incomplete words (check for common cut-off patterns)
-            if title and (title.endswith(',') or title.endswith(' -') or title.endswith('...')):
-                # Try to find a complete sentence
-                if '.' in title:
-                    title = title.rsplit('.', 1)[0] + '.'
-                elif '!' in title:
-                    title = title.rsplit('!', 1)[0] + '!'
-                else:
-                    # Remove trailing incomplete part
-                    title = title.rstrip(',-. ')
+            # Remove any line breaks - take only first line
+            if '\n' in title:
+                title = title.split('\n')[0].strip()
             
-            # If title generation failed or empty, generate from content
+            # If title is too long (more than 15 words), truncate at last complete word before limit
+            words = title.split()
+            if len(words) > 15:
+                title = ' '.join(words[:12])
+                # Make sure we don't end with articles or prepositions
+                while title.split()[-1].lower() in ['a', 'an', 'the', 'to', 'for', 'of', 'in', 'on', 'at', 'with', 'and', 'or']:
+                    title = ' '.join(title.split()[:-1])
+            
+            # Ensure title doesn't end with incomplete patterns
+            if title and (title.endswith(',') or title.endswith(' -') or title.endswith('...') or title.endswith(':')):
+                title = title.rstrip(',-.:… ')
+            
+            # If title generation failed or empty, create from content
             if not title:
-                title = content[:100].split('.')[0] if content else "News Article"
+                # Extract first sentence as fallback
+                first_sentence = content.split('.')[0] if content else "News Article"
+                words = first_sentence.split()[:10]
+                title = ' '.join(words)
             
+            print(f"Generated title ({len(title.split())} words): {title}")
             return title
+            
         except Exception as e:
             print(f"Title generation failed: {e}")
-            # Fallback to content excerpt (not original title)
-            return content[:100].split('.')[0] if content else "News Article"
+            # Fallback to content excerpt
+            first_sentence = content.split('.')[0] if content else "News Article"
+            words = first_sentence.split()[:10]
+            return ' '.join(words)
 
     async def _generate_summary(self, content: str) -> str:
         """Generate an engaging summary for the content"""
