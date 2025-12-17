@@ -338,47 +338,43 @@ Original Article:
         try:
             # Build prompt based on whether we have original title
             if original_title:
-                prompt = f"""Rewrite this headline in a COMPLETELY DIFFERENT way.
+                prompt = f"""Write a SHORT news headline (8-10 words ONLY).
 
-Original: {original_title}
+Topic: {original_title[:200]}
 
-STRICT RULES:
-- MAXIMUM 12 words - absolutely no more
-- Must be DIFFERENT from original - rephrase completely  
-- Must be a COMPLETE thought that makes sense
-- NO partial sentences or cut-off words
-- Make it catchy and engaging
-- NO quotes, colons, em-dashes, or special characters
+RULES:
+- 8 to 10 words MAXIMUM
+- One simple sentence
+- Catchy and clear
+- No quotes, colons, or dashes
 
-Example good headlines (notice they are short and complete):
-- "Pawan Kalyan's OG Sequel Targets 2028 Release"
-- "Director Sujeeth Plans OG Part 2 for Next Year"
-- "Tollywood Star Announces Exciting New Project"
-- "James Cameron Praises Rajamouli's Filmmaking Vision"
+Good examples:
+- "Cameron Wants to Visit Rajamouli's Film Sets"
+- "Pawan Kalyan's OG Sequel Coming in 2028"
+- "Director Plans Exciting New Telugu Project"
 
-Write ONE short, complete headline only. Keep it under 12 words."""
+Write ONLY the headline, nothing else."""
             else:
-                prompt = f"""Create a news headline for this article.
+                prompt = f"""Write a SHORT news headline (8-10 words ONLY).
 
-STRICT RULES:
-- MAXIMUM 12 words - absolutely no more
-- Must be a COMPLETE thought that makes sense
-- NO partial sentences or cut-off words
-- Make it catchy and engaging
-- NO quotes, colons, em-dashes, or special characters
+Article summary:
+{content[:800]}
 
-Article excerpt:
-{content[:1500]}
+RULES:
+- 8 to 10 words MAXIMUM
+- One simple sentence
+- Catchy and clear
+- No quotes, colons, or dashes
 
-Write ONE short, complete headline only. Keep it under 12 words."""
+Write ONLY the headline, nothing else."""
 
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You write SHORT headlines of maximum 12 words. Every headline you write is COMPLETE and makes sense. You never use em-dashes (—) or colons in headlines."},
+                    {"role": "system", "content": "You are a headline writer. You write ONLY 8-10 word headlines. Never more than 10 words. Keep it simple and punchy."},
                     {"role": "user", "content": prompt}
                 ],
-                max_completion_tokens=400
+                max_completion_tokens=100
             )
             title = response.choices[0].message.content.strip()
             
