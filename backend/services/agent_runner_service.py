@@ -75,12 +75,16 @@ class AgentRunnerService:
         }
         return state_language_map.get(target_state, 'Hindi')
 
-    async def _fetch_reference_content(self, urls: list) -> str:
-        """Fetch and extract main article content from reference URLs using trafilatura"""
+    async def _fetch_reference_content(self, urls: list) -> tuple:
+        """Fetch and extract main article content from reference URLs using trafilatura
+        Returns: (content_text, original_title)
+        """
         if not urls:
-            return ""
+            return "", ""
         
         fetched_content = []
+        original_title = ""
+        
         for url in urls:
             if not url:
                 continue
@@ -104,9 +108,11 @@ class AgentRunnerService:
                     if extracted:
                         # Also try to get metadata for the title
                         metadata = trafilatura.extract_metadata(downloaded)
-                        title = metadata.title if metadata and metadata.title else "Article"
+                        if metadata and metadata.title:
+                            original_title = metadata.title
+                            print(f"Extracted original title: {original_title}")
                         
-                        fetched_content.append(f"**Article Title:** {title}\n\n**Article Content:**\n{extracted}")
+                        fetched_content.append(f"**Article Title:** {original_title or 'Unknown'}\n\n**Article Content:**\n{extracted}")
                         print(f"Successfully extracted article from {url}: {len(extracted)} chars")
                     else:
                         fetched_content.append(f"**Could not extract article content from {url}**")
@@ -119,7 +125,7 @@ class AgentRunnerService:
                 print(f"Failed to fetch {url}: {e}")
                 fetched_content.append(f"**Error fetching {url}: {str(e)}**")
         
-        return "\n\n---\n\n".join(fetched_content)
+        return "\n\n---\n\n".join(fetched_content), original_title
 
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
