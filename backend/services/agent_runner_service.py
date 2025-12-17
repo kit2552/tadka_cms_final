@@ -152,7 +152,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are a prompt optimization expert."},
                     {"role": "user", "content": optimization_prompt}
                 ],
-                max_tokens=2000,
+                max_completion_tokens=20000,
                 temperature=0.7
             )
             return response.choices[0].message.content.strip()
