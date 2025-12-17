@@ -382,23 +382,25 @@ Write ONLY the headline, nothing else."""
             title = title.strip('"\'')
             title = title.replace("Headline:", "").replace("Title:", "").strip()
             
-            # ENFORCE 10-14 word limit
+            # If title is too long, ask AI to shorten it properly
             words = title.split()
             if len(words) > 14:
-                # Take first 12 words and ensure we end at a meaningful point
-                title = ' '.join(words[:12])
-                # Remove trailing words that don't make sense at the end
-                while title and title.split()[-1].lower() in ['the', 'a', 'an', 'to', 'of', 'in', 'on', 'at', 'for', 'and', 'or', 'with', 'by', 'is', 'are', 'was', 'were', 'has', 'have', 'had', 'that', 'which', 'who']:
-                    title = ' '.join(title.split()[:-1])
-            
-            # Ensure title doesn't end with incomplete patterns
-            if title:
-                title = title.rstrip(',-.:;…— ')
+                print(f"Title too long ({len(words)} words), asking AI to shorten...")
+                shorten_response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[
+                        {"role": "system", "content": "You shorten headlines while keeping the complete meaning."},
+                        {"role": "user", "content": f"Shorten this headline to 10-12 words while keeping the full meaning:\n\n{title}\n\nWrite only the shortened headline."}
+                    ],
+                    max_completion_tokens=100
+                )
+                title = shorten_response.choices[0].message.content.strip().strip('"\'')
+                print(f"Shortened title ({len(title.split())} words): {title}")
             
             # If title generation failed or empty, create from content
             if not title:
                 first_sentence = content.split('.')[0] if content else "News Article"
-                title = ' '.join(first_sentence.split()[:12])
+                title = first_sentence.strip()
             
             print(f"Final title ({len(title.split())} words): {title}")
             return title
