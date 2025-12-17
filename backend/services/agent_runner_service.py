@@ -376,7 +376,7 @@ Article:
                     {"role": "system", "content": "You are an expert headline writer. You create SHORT, COMPLETE headlines that are 10-12 words maximum. Your headlines NEVER get cut off - they are always complete, meaningful sentences or phrases. You NEVER end a headline with an incomplete word or thought."},
                     {"role": "user", "content": prompt}
                 ],
-                max_completion_tokens=150
+                max_completion_tokens=400
             )
             title = response.choices[0].message.content.strip()
             # Remove quotes, prefixes and clean up
