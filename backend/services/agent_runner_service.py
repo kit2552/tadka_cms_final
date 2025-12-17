@@ -56,7 +56,59 @@ class AgentRunnerService:
 - Is well-structured and informative
 - Uses clear, accessible language"""
 
-    def _build_final_prompt(self, agent: Dict[str, Any]) -> str:
+    def _get_state_language(self, target_state: str) -> str:
+        """Get the regional language based on target state"""
+        state_language_map = {
+            'Telangana': 'Telugu',
+            'Andhra Pradesh': 'Telugu',
+            'Tamil Nadu': 'Tamil',
+            'Karnataka': 'Kannada',
+            'Kerala': 'Malayalam',
+            'Gujarat': 'Gujarati',
+            'Maharashtra': 'Marathi',
+            'Punjab': 'Punjabi',
+            'West Bengal': 'Bengali',
+            'Odisha': 'Odia',
+            'Assam': 'Assamese',
+            'All States': 'Hindi',
+            'All': 'Hindi'
+        }
+        return state_language_map.get(target_state, 'Hindi')
+
+    async def _fetch_reference_content(self, urls: list) -> str:
+        """Fetch content from reference URLs"""
+        if not urls:
+            return ""
+        
+        fetched_content = []
+        for url in urls:
+            if not url:
+                continue
+            try:
+                async with httpx.AsyncClient() as client:
+                    response = await client.get(url, timeout=30.0, follow_redirects=True)
+                    if response.status_code == 200:
+                        html_content = response.text
+                        # Extract text content from HTML (basic extraction)
+                        import re
+                        # Remove script and style elements
+                        html_content = re.sub(r'<script[^>]*>.*?</script>', '', html_content, flags=re.DOTALL | re.IGNORECASE)
+                        html_content = re.sub(r'<style[^>]*>.*?</style>', '', html_content, flags=re.DOTALL | re.IGNORECASE)
+                        # Remove HTML tags
+                        text = re.sub(r'<[^>]+>', ' ', html_content)
+                        # Clean up whitespace
+                        text = re.sub(r'\s+', ' ', text).strip()
+                        # Limit content length
+                        if len(text) > 5000:
+                            text = text[:5000] + "..."
+                        fetched_content.append(f"**Content from {url}:**\n{text}")
+            except Exception as e:
+                print(f"Failed to fetch {url}: {e}")
+                fetched_content.append(f"**Could not fetch content from {url}**")
+        
+        return "\n\n".join(fetched_content)
+
+    def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
         category = agent.get('category', '')
         base_prompt = self._get_category_prompt(category)
@@ -75,8 +127,11 @@ class AgentRunnerService:
         }
         language_name = language_names.get(article_language, 'English')
         
+        # Get state language for regional cinema
+        state_language = self._get_state_language(target_state)
+        
         # Extract numeric word count
-        word_count_num = word_count.replace('<', '').replace('>', '').strip()
+        word_count_num = word_count.replace('<', '').replace('>', '').strip() if word_count else '200'
         
         # Build context for target state
         target_state_context = ""
@@ -93,21 +148,30 @@ class AgentRunnerService:
         final_prompt = final_prompt.replace('{target_state_context}', target_state_context)
         final_prompt = final_prompt.replace('{word_count}', word_count_num)
         final_prompt = final_prompt.replace('{target_audience}', target_audience)
+        final_prompt = final_prompt.replace('{state_language}', state_language)
+        final_prompt = final_prompt.replace('{target_state}', target_state or 'All States')
         
-        # Handle reference content section
+        # Handle reference content section - include actual fetched content
         reference_urls = agent.get('reference_urls', [])
-        if reference_urls and len(reference_urls) > 0:
-            urls_list = "\n".join([f"- {url}" for url in reference_urls if url])
-            reference_section = f"""If reference URLs are provided below, PRIORITIZE them as your primary source:
-1. Analyze each reference URL
-2. Extract key information from these sources
-3. Use the reference content as the foundation for your article
+        if reference_content:
+            reference_section = f"""**REFERENCE CONTENT (FETCHED FROM PROVIDED URLs):**
+The following content has been fetched from the reference URLs. Use this as your PRIMARY source to generate the article:
 
-REFERENCE URLs:
-{urls_list}"""
+{reference_content}
+
+**INSTRUCTIONS:**
+1. Read and analyze the above reference content carefully
+2. Identify the main news stories, facts, and key information
+3. Write a NEW, original article based on this content
+4. Do NOT copy text directly - rewrite in your own words"""
+            final_prompt = final_prompt.replace('{reference_content_section}', reference_section)
+        elif reference_urls and len(reference_urls) > 0:
+            urls_list = "\n".join([f"- {url}" for url in reference_urls if url])
+            reference_section = f"""Reference URLs provided: {urls_list}
+Note: Could not fetch content from these URLs. Generate content based on general knowledge."""
             final_prompt = final_prompt.replace('{reference_content_section}', reference_section)
         else:
-            final_prompt = final_prompt.replace('{reference_content_section}', 'No reference URLs provided. Use your knowledge to generate content.')
+            final_prompt = final_prompt.replace('{reference_content_section}', 'No reference URLs provided. Generate content based on general knowledge.')
         
         # Handle split content section
         split_content = agent.get('split_content', False)
