@@ -606,13 +606,19 @@ Article:
             # Step 4: Optimize the prompt using OpenAI
             optimized_prompt = await self._optimize_prompt(base_prompt)
             
-            # Step 4: Generate content using the optimized prompt
-            content = await self._generate_content(optimized_prompt)
+            # Step 5: Generate content using the optimized prompt
+            raw_content = await self._generate_content(optimized_prompt)
             
-            # Step 5: Generate title for the content
+            # Step 6: Polish the content to make it professional and elegant
+            print("Polishing content for professional quality...")
+            content = await self._polish_content(raw_content)
+            
+            # Step 7: Generate a compelling, simplified title
+            print("Generating article title...")
             title = await self._generate_title(content)
             
-            # Step 6: Generate summary
+            # Step 8: Generate an engaging summary
+            print("Generating article summary...")
             summary = await self._generate_summary(content)
             
             # Step 7: Get image based on image option
