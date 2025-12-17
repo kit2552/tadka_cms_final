@@ -337,38 +337,39 @@ Original Article:
 Original: {original_title}
 
 STRICT RULES:
-- Write ONLY 8-10 words maximum
+- MAXIMUM 12 words - absolutely no more
 - Must be DIFFERENT from original - rephrase completely  
 - Must be a COMPLETE thought that makes sense
 - NO partial sentences or cut-off words
 - Make it catchy and engaging
-- NO quotes, colons, or special characters
+- NO quotes, colons, em-dashes, or special characters
 
-Example good headlines:
+Example good headlines (notice they are short and complete):
 - "Pawan Kalyan's OG Sequel Targets 2028 Release"
 - "Director Sujeeth Plans OG Part 2 for Next Year"
 - "Tollywood Star Announces Exciting New Project"
+- "James Cameron Praises Rajamouli's Filmmaking Vision"
 
-Write ONE short, complete headline only."""
+Write ONE short, complete headline only. Keep it under 12 words."""
             else:
                 prompt = f"""Create a news headline for this article.
 
 STRICT RULES:
-- Write ONLY 8-10 words maximum
+- MAXIMUM 12 words - absolutely no more
 - Must be a COMPLETE thought that makes sense
 - NO partial sentences or cut-off words
 - Make it catchy and engaging
-- NO quotes, colons, or special characters
+- NO quotes, colons, em-dashes, or special characters
 
 Article excerpt:
 {content[:1500]}
 
-Write ONE short, complete headline only."""
+Write ONE short, complete headline only. Keep it under 12 words."""
 
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You write VERY SHORT headlines of 8-10 words only. Every headline you write is COMPLETE - never cut off. You always create unique, catchy headlines."},
+                    {"role": "system", "content": "You write SHORT headlines of maximum 12 words. Every headline you write is COMPLETE and makes sense. You never use em-dashes (—) or colons in headlines."},
                     {"role": "user", "content": prompt}
                 ],
                 max_completion_tokens=400
