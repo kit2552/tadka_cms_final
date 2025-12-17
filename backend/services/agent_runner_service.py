@@ -510,10 +510,18 @@ Return ONLY the optimized prompt, nothing else."""
             # Step 1: Initialize OpenAI
             self._initialize_openai()
             
-            # Step 2: Build the final prompt with all dynamic placeholders
-            base_prompt = self._build_final_prompt(agent)
+            # Step 2: Fetch content from reference URLs
+            reference_urls = agent.get('reference_urls', [])
+            reference_content = ""
+            if reference_urls:
+                print(f"Fetching content from {len(reference_urls)} reference URLs...")
+                reference_content = await self._fetch_reference_content(reference_urls)
+                print(f"Fetched {len(reference_content)} characters of reference content")
             
-            # Step 3: Optimize the prompt using OpenAI
+            # Step 3: Build the final prompt with all dynamic placeholders and reference content
+            base_prompt = self._build_final_prompt(agent, reference_content)
+            
+            # Step 4: Optimize the prompt using OpenAI
             optimized_prompt = await self._optimize_prompt(base_prompt)
             
             # Step 4: Generate content using the optimized prompt
