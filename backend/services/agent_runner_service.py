@@ -239,8 +239,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are an image search expert. Generate a specific search query to find a relevant news image."},
                     {"role": "user", "content": f"Generate a Google image search query to find a relevant, high-quality image for this article. Category: {category}. Title: {title}. Return ONLY the search query, nothing else."}
                 ],
-                max_completion_tokens=100,
-                temperature=0.5
+                max_completion_tokens=100
             )
             search_query = response.choices[0].message.content.strip()
             
@@ -266,8 +265,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "Create a detailed image generation prompt."},
                     {"role": "user", "content": f"Create an image prompt for a news article image. Title: {title}. Make it professional, news-worthy, horizontal orientation. Return ONLY the prompt, max 100 words."}
                 ],
-                max_completion_tokens=200,
-                temperature=0.7
+                max_completion_tokens=200
             )
             image_prompt = prompt_response.choices[0].message.content.strip()
             
