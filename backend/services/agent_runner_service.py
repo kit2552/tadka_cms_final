@@ -378,21 +378,29 @@ Write ONLY the headline, nothing else."""
             )
             title = response.choices[0].message.content.strip()
             
-            # Clean up the title - keep multiple lines if present
+            # Clean up the title
             title = title.strip('"\'')
             title = title.replace("Headline:", "").replace("Title:", "").strip()
             
-            # Ensure title doesn't end with incomplete patterns (commas, dashes, etc.)
-            if title and (title.endswith(',') or title.endswith(' -') or title.endswith('...') or title.endswith(':')):
-                title = title.rstrip(',-.:… ')
+            # ENFORCE 10-14 word limit
+            words = title.split()
+            if len(words) > 14:
+                # Take first 12 words and ensure we end at a meaningful point
+                title = ' '.join(words[:12])
+                # Remove trailing words that don't make sense at the end
+                while title and title.split()[-1].lower() in ['the', 'a', 'an', 'to', 'of', 'in', 'on', 'at', 'for', 'and', 'or', 'with', 'by', 'is', 'are', 'was', 'were', 'has', 'have', 'had', 'that', 'which', 'who']:
+                    title = ' '.join(title.split()[:-1])
+            
+            # Ensure title doesn't end with incomplete patterns
+            if title:
+                title = title.rstrip(',-.:;…— ')
             
             # If title generation failed or empty, create from content
             if not title:
-                # Extract first sentence as fallback
                 first_sentence = content.split('.')[0] if content else "News Article"
-                title = first_sentence.strip()
+                title = ' '.join(first_sentence.split()[:12])
             
-            print(f"Generated title ({len(title)} chars, {len(title.split())} words): {title}")
+            print(f"Final title ({len(title.split())} words): {title}")
             return title
             
         except Exception as e:
