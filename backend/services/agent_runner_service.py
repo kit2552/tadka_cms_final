@@ -267,7 +267,7 @@ Return ONLY the optimized prompt, nothing else."""
             raise Exception(f"Content generation failed: {str(e)}")
 
     async def _polish_content(self, raw_content: str) -> str:
-        """Post-process content to make it more professional and elegant"""
+        """Post-process content to make it professional, elegant, and well-formatted"""
         if not self.client:
             self._initialize_openai()
         
@@ -275,15 +275,30 @@ Return ONLY the optimized prompt, nothing else."""
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are an expert news editor. Your job is to polish and refine articles to make them professional, engaging, and reader-friendly."},
-                    {"role": "user", "content": f"""Rewrite the following article to make it:
-1. More professional and elegantly written
-2. Compact and concise - remove any filler words
-3. Engaging and easy to read
-4. Written in a proper journalistic style
-5. Remove any labels like "Headline:", "Title:", "Article:", etc.
+                    {"role": "system", "content": "You are an expert news editor and content formatter. Your job is to polish articles and format them beautifully for web display."},
+                    {"role": "user", "content": f"""Rewrite and FORMAT the following article for excellent readability.
 
-Keep all the facts and key information intact. Return ONLY the polished article content, nothing else.
+**FORMATTING REQUIREMENTS:**
+1. Break content into clear paragraphs (separate with blank lines)
+2. Each paragraph should be 2-4 sentences max
+3. Use SHORT paragraphs for easy reading
+4. Add section breaks where topic changes
+5. If there are multiple points, use line breaks between them
+
+**WRITING REQUIREMENTS:**
+1. Professional, elegant journalistic style
+2. Concise - remove filler words
+3. Engaging and easy to read
+4. Keep all facts and key information
+5. Remove any labels like "Headline:", "Title:", "Article:"
+
+**OUTPUT FORMAT:**
+- First paragraph: Lead with the most important news (2-3 sentences)
+- Middle paragraphs: Supporting details and context (2-3 sentences each)
+- Final paragraph: Conclusion or future outlook (1-2 sentences)
+- Separate each paragraph with a blank line
+
+Return ONLY the formatted article content, nothing else.
 
 Original Article:
 {raw_content}"""}
@@ -295,6 +310,14 @@ Original Article:
             # Clean up any remaining unwanted prefixes
             polished = polished.replace("Headline:", "").replace("**Headline:**", "")
             polished = polished.replace("Title:", "").replace("**Title:**", "")
+            polished = polished.replace("Article:", "").replace("**Article:**", "")
+            
+            # Ensure proper paragraph separation
+            # Replace single newlines with double newlines for better display
+            import re
+            polished = re.sub(r'\n(?!\n)', '\n\n', polished)
+            # Clean up any triple+ newlines
+            polished = re.sub(r'\n{3,}', '\n\n', polished)
             
             return polished
         except Exception as e:
