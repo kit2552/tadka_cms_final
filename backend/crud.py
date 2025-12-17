@@ -1557,6 +1557,58 @@ DEFAULT_CATEGORY_PROMPTS = {
 
 **IMPORTANT:** Your article must be based ONLY on the reference content provided. Do not add information that is not in the reference article.""",
 
+    "state-politics": """**REFERENCE ARTICLE CONTENT:**
+{reference_content_section}
+{split_content_section}
+{image_search_section}
+
+**YOUR TASK:** Generate a NEW, original state political news article based ENTIRELY on the reference article content provided above.
+
+**INSTRUCTIONS:**
+1. Read the reference article content carefully
+2. Extract key facts: politician names, party names (TDP, YSRCP, Congress, BJP, BRS, etc.), events, dates, locations, quotes
+3. Write a COMPLETELY NEW article in your own words based on this information
+4. DO NOT copy sentences directly - rewrite everything originally
+5. Focus on {target_state} state political news (Andhra Pradesh / Telangana)
+
+**ARTICLE REQUIREMENTS:**
+- Write a {word_count} word article
+- Create an engaging, SEO-friendly headline that captures the main political development
+- Include all key politician names, parties, and facts from the reference
+- Mention relevant state leaders (CM, Ministers, MLAs, MPs) as referenced
+- Provide context and background for readers
+- Maintain objectivity and present facts accurately
+- Write for {target_audience}
+- Use clear, accessible language while maintaining journalistic standards
+
+**IMPORTANT:** Your article must be based ONLY on the reference content provided. Do not add information that is not in the reference article.""",
+
+    "national-politics": """**REFERENCE ARTICLE CONTENT:**
+{reference_content_section}
+{split_content_section}
+{image_search_section}
+
+**YOUR TASK:** Generate a NEW, original national political news article based ENTIRELY on the reference article content provided above.
+
+**INSTRUCTIONS:**
+1. Read the reference article content carefully
+2. Extract key facts: politician names, party names (BJP, Congress, AAP, etc.), events, dates, locations, quotes
+3. Write a COMPLETELY NEW article in your own words based on this information
+4. DO NOT copy sentences directly - rewrite everything originally
+5. Focus on Indian national political news
+
+**ARTICLE REQUIREMENTS:**
+- Write a {word_count} word article
+- Create an engaging, SEO-friendly headline that captures the main political development
+- Include all key politician names, parties, and facts from the reference
+- Mention relevant national leaders (PM, Ministers, MPs) as referenced
+- Provide context and background for readers
+- Maintain objectivity and present facts accurately
+- Write for {target_audience}
+- Use clear, accessible language while maintaining journalistic standards
+
+**IMPORTANT:** Your article must be based ONLY on the reference content provided. Do not add information that is not in the reference article.""",
+
     "movies": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
 {split_content_section}
