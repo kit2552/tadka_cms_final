@@ -296,15 +296,11 @@ Return ONLY the optimized prompt, nothing else."""
             self._initialize_ai_client()
         
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are a professional news writer and journalist. Write engaging, factual, and well-structured articles."},
-                    {"role": "user", "content": optimized_prompt}
-                ],
-                max_completion_tokens=20000
+            content = self._chat_completion(
+                "You are a professional news writer and journalist. Write engaging, factual, and well-structured articles.",
+                optimized_prompt,
+                20000
             )
-            content = response.choices[0].message.content.strip()
             
             # Clean up any unwanted prefixes
             content = content.replace("Headline:", "").replace("**Headline:**", "")
