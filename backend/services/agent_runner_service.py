@@ -281,15 +281,11 @@ Original Prompt:
 Return ONLY the optimized prompt, nothing else."""
 
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are a prompt optimization expert."},
-                    {"role": "user", "content": optimization_prompt}
-                ],
-                max_completion_tokens=20000
+            return self._chat_completion(
+                "You are a prompt optimization expert.",
+                optimization_prompt,
+                20000
             )
-            return response.choices[0].message.content.strip()
         except Exception as e:
             print(f"Prompt optimization failed: {e}, using original prompt")
             return base_prompt
