@@ -243,47 +243,49 @@ def get_articles_count_for_cms(
     status: str = None
 ):
     """Count articles for CMS with filters - EXCLUDES ads"""
-    query = {
-        "article_language": language,
-        # Exclude ads from posts count - ads have ad_type field with a non-null value
-        "$or": [
-            {"ad_type": {"$exists": False}},
-            {"ad_type": None}
-        ]
-    }
+    # Build base conditions
+    conditions = [
+        {"article_language": language},
+        # Exclude ads from posts count - ads have ad_type field with a truthy value
+        {"$or": [{"ad_type": {"$exists": False}}, {"ad_type": None}]}
+    ]
     
     if category:
-        query["category"] = category
+        conditions.append({"category": category})
     
     if state and state != "all":
-        query["states"] = {"$regex": state, "$options": "i"}
+        conditions.append({"states": {"$regex": state, "$options": "i"}})
     
     if content_type:
-        query["content_type"] = content_type
+        conditions.append({"content_type": content_type})
     
     # Filter by status field - supports: draft, in_review, approved, published, scheduled
     # Handle both new status field and legacy boolean fields for backward compatibility
     if status:
         if status == "published":
             # Published articles: is_published=True and not scheduled
-            query["is_published"] = True
-            query["is_scheduled"] = {"$ne": True}
+            conditions.append({"is_published": True})
+            conditions.append({"is_scheduled": {"$ne": True}})
         elif status == "scheduled":
             # Scheduled articles: is_scheduled=True
-            query["is_scheduled"] = True
+            conditions.append({"is_scheduled": True})
         elif status == "draft":
             # Draft articles: either status=draft OR (is_published=False and is_scheduled=False and no status field)
-            query["$or"] = [
-                {"status": "draft"},
-                {"$and": [
-                    {"is_published": False},
-                    {"is_scheduled": {"$ne": True}},
-                    {"status": {"$exists": False}}
-                ]}
-            ]
+            conditions.append({
+                "$or": [
+                    {"status": "draft"},
+                    {"$and": [
+                        {"is_published": False},
+                        {"is_scheduled": {"$ne": True}},
+                        {"status": {"$exists": False}}
+                    ]}
+                ]
+            })
         else:
             # For other statuses (in_review, approved), filter by status field only
-            query["status"] = status
+            conditions.append({"status": status})
+    
+    query = {"$and": conditions}
     
     return db[ARTICLES].count_documents(query)
 
