@@ -375,13 +375,9 @@ Write ONE short, complete headline only."""
             )
             title = response.choices[0].message.content.strip()
             
-            # Clean up the title
+            # Clean up the title - keep multiple lines if present
             title = title.strip('"\'')
             title = title.replace("Headline:", "").replace("Title:", "").strip()
-            
-            # Remove any line breaks - take only first line
-            if '\n' in title:
-                title = title.split('\n')[0].strip()
             
             # Ensure title doesn't end with incomplete patterns (commas, dashes, etc.)
             if title and (title.endswith(',') or title.endswith(' -') or title.endswith('...') or title.endswith(':')):
@@ -393,7 +389,7 @@ Write ONE short, complete headline only."""
                 first_sentence = content.split('.')[0] if content else "News Article"
                 title = first_sentence.strip()
             
-            print(f"Generated title ({len(title.split())} words): {title}")
+            print(f"Generated title ({len(title)} chars, {len(title.split())} words): {title}")
             return title
             
         except Exception as e:
