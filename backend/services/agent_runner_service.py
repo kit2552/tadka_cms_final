@@ -756,11 +756,12 @@ Article:
             
             # Step 2: Fetch content from reference URLs
             reference_urls = agent.get('reference_urls', [])
+            category = agent.get('category', '')
             reference_content = ""
             original_title = ""
             if reference_urls:
-                print(f"Fetching content from {len(reference_urls)} reference URLs...")
-                reference_content, original_title = await self._fetch_reference_content(reference_urls)
+                print(f"Fetching content from {len(reference_urls)} reference URLs for category: {category}...")
+                reference_content, original_title = await self._fetch_reference_content(reference_urls, category)
                 print(f"Fetched {len(reference_content)} characters of reference content")
                 if original_title:
                     print(f"Original article title: {original_title}")
