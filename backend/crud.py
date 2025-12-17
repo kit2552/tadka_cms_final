@@ -1532,27 +1532,30 @@ def get_image_search_section(image_option: str = None) -> str:
     return NO_WEB_SEARCH_IMAGE
 
 DEFAULT_CATEGORY_PROMPTS = {
-    "politics": """**REFERENCE CONTENT INSTRUCTIONS:**
+    "politics": """**REFERENCE ARTICLE CONTENT:**
 {reference_content_section}
 {split_content_section}
 {image_search_section}
 
-Search the web for the latest trending political news and developments {target_state_context}. Your task is to:
+**YOUR TASK:** Generate a NEW, original political news article based ENTIRELY on the reference article content provided above.
 
-1. Find the most recent and significant political stories from the last 24-48 hours
-2. Identify 3-5 key political events or developments that are currently trending
-3. For each event, gather information from multiple credible sources
-4. Compile and synthesize the information into a comprehensive article
+**INSTRUCTIONS:**
+1. Read the reference article content carefully
+2. Extract key facts: politician names, party names, events, dates, locations, quotes
+3. Write a COMPLETELY NEW article in your own words based on this information
+4. DO NOT copy sentences directly - rewrite everything originally
+5. Focus on {target_state} political news
 
-Write a {word_count} word article that:
-- Has an engaging headline that captures the main political development
-- Provides context and background for readers unfamiliar with the situation
-- Includes quotes from key political figures when available
-- Explains the implications and potential impact of these developments
-- Maintains objectivity and presents multiple perspectives where relevant
-- Uses clear, accessible language while maintaining journalistic standards
+**ARTICLE REQUIREMENTS:**
+- Write a {word_count} word article
+- Create an engaging, SEO-friendly headline that captures the main political development
+- Include all key names, parties, and facts from the reference
+- Provide context and background for readers
+- Maintain objectivity and present facts accurately
+- Write for {target_audience}
+- Use clear, accessible language while maintaining journalistic standards
 
-Focus on accuracy, timeliness, and relevance to {target_audience}.""",
+**IMPORTANT:** Your article must be based ONLY on the reference content provided. Do not add information that is not in the reference article.""",
 
     "movies": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
