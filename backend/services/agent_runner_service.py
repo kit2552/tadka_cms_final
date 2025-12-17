@@ -270,7 +270,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "Create a detailed image generation prompt."},
                     {"role": "user", "content": f"Create an image prompt for a news article image. Title: {title}. Make it professional, news-worthy, horizontal orientation. Return ONLY the prompt, max 100 words."}
                 ],
-                max_tokens=100,
+                max_completion_tokens=200,
                 temperature=0.7
             )
             image_prompt = prompt_response.choices[0].message.content.strip()
