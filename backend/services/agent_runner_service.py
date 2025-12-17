@@ -302,24 +302,29 @@ Original Article:
             return raw_content
 
     async def _generate_title(self, content: str, original_title: str = "") -> str:
-        """Generate a compelling, simplified title for the content using OpenAI"""
+        """Generate a compelling, DIFFERENT title for the content using OpenAI"""
         if not self.client:
             self._initialize_openai()
         
         try:
             # Build prompt based on whether we have original title
             if original_title:
-                prompt = f"""Rewrite this news headline to make it more engaging and reader-friendly.
+                prompt = f"""Create a COMPLETELY NEW and DIFFERENT headline for this news story.
 
-Original Headline: {original_title}
+Original Headline (DO NOT COPY THIS): {original_title}
+
+Article Content:
+{content[:1500]}
 
 Requirements:
-1. Keep the core news message
+1. MUST be different from the original headline - use different words and structure
 2. Maximum 12-15 words
-3. Clear, simple language
-4. Catchy and click-worthy
-5. SEO-friendly
+3. Capture the same news but phrase it differently
+4. Make it catchy and click-worthy
+5. Use fresh, engaging language
 6. No quotes or special characters
+
+IMPORTANT: Your headline must NOT be the same as the original. Rephrase it completely.
 
 Return ONLY the new headline text, nothing else."""
             else:
@@ -341,7 +346,7 @@ Article:
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are an expert headline writer for a major news publication. Create headlines that are catchy, clear, and make readers want to click."},
+                    {"role": "system", "content": "You are an expert headline writer. You ALWAYS create unique, original headlines - never copy existing ones. Your headlines are creative, engaging, and different from the source."},
                     {"role": "user", "content": prompt}
                 ],
                 max_completion_tokens=100
@@ -351,19 +356,14 @@ Article:
             title = title.strip('"\'')
             title = title.replace("Headline:", "").replace("Title:", "").strip()
             
-            # If title generation failed or empty, use original or fallback
+            # If title generation failed or empty, generate from content
             if not title:
-                if original_title:
-                    title = original_title
-                else:
-                    title = content[:100].split('.')[0] if content else "News Article"
+                title = content[:100].split('.')[0] if content else "News Article"
             
             return title
         except Exception as e:
             print(f"Title generation failed: {e}")
-            # Fallback to original title or content excerpt
-            if original_title:
-                return original_title
+            # Fallback to content excerpt (not original title)
             return content[:100].split('.')[0] if content else "News Article"
 
     async def _generate_summary(self, content: str) -> str:
