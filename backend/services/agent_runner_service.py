@@ -152,8 +152,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are a prompt optimization expert."},
                     {"role": "user", "content": optimization_prompt}
                 ],
-                max_completion_tokens=20000,
-                temperature=0.7
+                max_completion_tokens=20000
             )
             return response.choices[0].message.content.strip()
         except Exception as e:
@@ -172,8 +171,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are a professional news writer and journalist. Write engaging, factual, and well-structured articles."},
                     {"role": "user", "content": optimized_prompt}
                 ],
-                max_completion_tokens=20000,
-                temperature=0.8
+                max_completion_tokens=20000
             )
             return response.choices[0].message.content.strip()
         except Exception as e:
