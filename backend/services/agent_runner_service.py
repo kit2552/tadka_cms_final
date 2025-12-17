@@ -189,8 +189,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are a headline writer. Create catchy, engaging, SEO-friendly headlines."},
                     {"role": "user", "content": f"Create a compelling headline/title for the following article. Return ONLY the headline, nothing else:\n\n{content[:1500]}"}
                 ],
-                max_completion_tokens=200,
-                temperature=0.7
+                max_completion_tokens=200
             )
             title = response.choices[0].message.content.strip()
             # Remove quotes if present
@@ -211,8 +210,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are a content summarizer. Create concise, informative summaries."},
                     {"role": "user", "content": f"Create a 2-3 sentence summary for the following article. Return ONLY the summary:\n\n{content[:2000]}"}
                 ],
-                max_completion_tokens=500,
-                temperature=0.5
+                max_completion_tokens=500
             )
             return response.choices[0].message.content.strip()
         except Exception as e:
