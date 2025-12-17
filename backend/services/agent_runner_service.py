@@ -339,29 +339,33 @@ Original Headline (DO NOT COPY THIS): {original_title}
 Article Content:
 {content[:1500]}
 
-Requirements:
+**CRITICAL REQUIREMENTS:**
 1. MUST be different from the original headline - use different words and structure
-2. Maximum 12-15 words
-3. Capture the same news but phrase it differently
-4. Make it catchy and click-worthy
-5. Use fresh, engaging language
-6. No quotes or special characters
+2. MUST be a COMPLETE sentence or phrase that makes sense on its own
+3. Maximum 10-12 words ONLY
+4. DO NOT cut off mid-word or mid-sentence
+5. The headline must convey the full meaning - no incomplete thoughts
+6. Make it catchy and click-worthy
+7. No quotes, colons, or special characters
 
-IMPORTANT: Your headline must NOT be the same as the original. Rephrase it completely.
+IMPORTANT: 
+- Your headline must NOT be the same as the original
+- The headline MUST be complete and meaningful
+- DO NOT end with partial words or incomplete phrases
 
-Return ONLY the new headline text, nothing else."""
+Return ONLY the complete headline text, nothing else."""
             else:
                 prompt = f"""Create a compelling news headline for this article.
 
-Requirements:
-1. Maximum 12-15 words
-2. Clear and easy to understand
-3. Captures the main news point
-4. No quotes or special characters
-5. Written in simple, engaging language
-6. SEO-friendly
+**CRITICAL REQUIREMENTS:**
+1. Maximum 10-12 words ONLY
+2. MUST be a COMPLETE sentence or phrase that makes sense
+3. DO NOT cut off mid-word or mid-sentence
+4. Clear and easy to understand
+5. Captures the main news point
+6. No quotes, colons, or special characters
 
-Return ONLY the headline text, nothing else.
+Return ONLY the complete headline text, nothing else.
 
 Article:
 {content[:2000]}"""
@@ -369,15 +373,26 @@ Article:
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are an expert headline writer. You ALWAYS create unique, original headlines - never copy existing ones. Your headlines are creative, engaging, and different from the source."},
+                    {"role": "system", "content": "You are an expert headline writer. You create SHORT, COMPLETE headlines that are 10-12 words maximum. Your headlines NEVER get cut off - they are always complete, meaningful sentences or phrases. You NEVER end a headline with an incomplete word or thought."},
                     {"role": "user", "content": prompt}
                 ],
-                max_completion_tokens=100
+                max_completion_tokens=150
             )
             title = response.choices[0].message.content.strip()
             # Remove quotes, prefixes and clean up
             title = title.strip('"\'')
             title = title.replace("Headline:", "").replace("Title:", "").strip()
+            
+            # Ensure title doesn't end with incomplete words (check for common cut-off patterns)
+            if title and (title.endswith(',') or title.endswith(' -') or title.endswith('...')):
+                # Try to find a complete sentence
+                if '.' in title:
+                    title = title.rsplit('.', 1)[0] + '.'
+                elif '!' in title:
+                    title = title.rsplit('!', 1)[0] + '!'
+                else:
+                    # Remove trailing incomplete part
+                    title = title.rstrip(',-. ')
             
             # If title generation failed or empty, generate from content
             if not title:
