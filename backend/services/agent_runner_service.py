@@ -312,9 +312,15 @@ Original Article:
             polished = polished.replace("Title:", "").replace("**Title:**", "")
             polished = polished.replace("Article:", "").replace("**Article:**", "")
             
+            # Remove em-dashes, horizontal rules, and separator lines between paragraphs
+            import re
+            polished = re.sub(r'\n\s*[—–-]+\s*\n', '\n\n', polished)  # Remove em-dash/en-dash/dash separators
+            polished = re.sub(r'\n\s*\*\*\*\s*\n', '\n\n', polished)  # Remove *** separators
+            polished = re.sub(r'\n\s*---+\s*\n', '\n\n', polished)  # Remove --- separators
+            polished = re.sub(r'^\s*[—–-]+\s*$', '', polished, flags=re.MULTILINE)  # Remove standalone dashes
+            
             # Ensure proper paragraph separation
             # Replace single newlines with double newlines for better display
-            import re
             polished = re.sub(r'\n(?!\n)', '\n\n', polished)
             # Clean up any triple+ newlines
             polished = re.sub(r'\n{3,}', '\n\n', polished)
