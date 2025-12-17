@@ -657,6 +657,76 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                   ))}
                 </select>
               </div>
+
+              {/* Article Language & Content Type Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* Article Language */}
+                <div className="text-left">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Article Language
+                  </label>
+                  <select
+                    name="article_language"
+                    value={formData.article_language}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {languageOptions.map(lang => (
+                      <option key={lang.code} value={lang.code}>{lang.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Content Type */}
+                <div className="text-left">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Content Type
+                  </label>
+                  <select
+                    name="content_type"
+                    value={formData.content_type}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {contentTypeOptions.map(type => (
+                      <option key={type.value} value={type.value}>{type.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Top Story & Comments Checkboxes */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                {/* Mark as Top Story */}
+                <div className="flex items-center gap-2 text-left">
+                  <input
+                    type="checkbox"
+                    name="is_top_story"
+                    id="is_top_story"
+                    checked={formData.is_top_story}
+                    onChange={handleInputChange}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  />
+                  <label htmlFor="is_top_story" className="text-xs font-medium text-gray-700">
+                    Mark as Top Story
+                  </label>
+                </div>
+
+                {/* Enable Comments */}
+                <div className="flex items-center gap-2 text-left">
+                  <input
+                    type="checkbox"
+                    name="comments_enabled"
+                    id="comments_enabled"
+                    checked={formData.comments_enabled}
+                    onChange={handleInputChange}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  />
+                  <label htmlFor="comments_enabled" className="text-xs font-medium text-gray-700">
+                    Enable Comments
+                  </label>
+                </div>
+              </div>
             </div>
 
             {/* Split Content Section */}
