@@ -250,9 +250,50 @@ Return ONLY the optimized prompt, nothing else."""
                 ],
                 max_completion_tokens=20000
             )
-            return response.choices[0].message.content.strip()
+            content = response.choices[0].message.content.strip()
+            
+            # Clean up any unwanted prefixes
+            content = content.replace("Headline:", "").replace("**Headline:**", "")
+            content = content.replace("Title:", "").replace("**Title:**", "")
+            
+            return content
         except Exception as e:
             raise Exception(f"Content generation failed: {str(e)}")
+
+    async def _polish_content(self, raw_content: str) -> str:
+        """Post-process content to make it more professional and elegant"""
+        if not self.client:
+            self._initialize_openai()
+        
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": "You are an expert news editor. Your job is to polish and refine articles to make them professional, engaging, and reader-friendly."},
+                    {"role": "user", "content": f"""Rewrite the following article to make it:
+1. More professional and elegantly written
+2. Compact and concise - remove any filler words
+3. Engaging and easy to read
+4. Written in a proper journalistic style
+5. Remove any labels like "Headline:", "Title:", "Article:", etc.
+
+Keep all the facts and key information intact. Return ONLY the polished article content, nothing else.
+
+Original Article:
+{raw_content}"""}
+                ],
+                max_completion_tokens=20000
+            )
+            polished = response.choices[0].message.content.strip()
+            
+            # Clean up any remaining unwanted prefixes
+            polished = polished.replace("Headline:", "").replace("**Headline:**", "")
+            polished = polished.replace("Title:", "").replace("**Title:**", "")
+            
+            return polished
+        except Exception as e:
+            print(f"Content polishing failed: {e}, using original content")
+            return raw_content
 
     async def _generate_title(self, content: str) -> str:
         """Generate a title for the content using OpenAI"""
