@@ -76,7 +76,7 @@ class AgentRunnerService:
         return state_language_map.get(target_state, 'Hindi')
 
     async def _fetch_reference_content(self, urls: list) -> str:
-        """Fetch content from reference URLs"""
+        """Fetch and extract main article content from reference URLs using trafilatura"""
         if not urls:
             return ""
         
@@ -85,28 +85,41 @@ class AgentRunnerService:
             if not url:
                 continue
             try:
-                async with httpx.AsyncClient() as client:
-                    response = await client.get(url, timeout=30.0, follow_redirects=True)
-                    if response.status_code == 200:
-                        html_content = response.text
-                        # Extract text content from HTML (basic extraction)
-                        import re
-                        # Remove script and style elements
-                        html_content = re.sub(r'<script[^>]*>.*?</script>', '', html_content, flags=re.DOTALL | re.IGNORECASE)
-                        html_content = re.sub(r'<style[^>]*>.*?</style>', '', html_content, flags=re.DOTALL | re.IGNORECASE)
-                        # Remove HTML tags
-                        text = re.sub(r'<[^>]+>', ' ', html_content)
-                        # Clean up whitespace
-                        text = re.sub(r'\s+', ' ', text).strip()
-                        # Limit content length
-                        if len(text) > 5000:
-                            text = text[:5000] + "..."
-                        fetched_content.append(f"**Content from {url}:**\n{text}")
+                import trafilatura
+                
+                # Download the webpage
+                downloaded = trafilatura.fetch_url(url)
+                
+                if downloaded:
+                    # Extract the main article content (title + body)
+                    # trafilatura automatically filters out ads, sidebars, related stories
+                    extracted = trafilatura.extract(
+                        downloaded,
+                        include_comments=False,
+                        include_tables=True,
+                        no_fallback=False,
+                        favor_precision=True
+                    )
+                    
+                    if extracted:
+                        # Also try to get metadata for the title
+                        metadata = trafilatura.extract_metadata(downloaded)
+                        title = metadata.title if metadata and metadata.title else "Article"
+                        
+                        fetched_content.append(f"**Article Title:** {title}\n\n**Article Content:**\n{extracted}")
+                        print(f"Successfully extracted article from {url}: {len(extracted)} chars")
+                    else:
+                        fetched_content.append(f"**Could not extract article content from {url}**")
+                        print(f"trafilatura could not extract content from {url}")
+                else:
+                    fetched_content.append(f"**Could not download page from {url}**")
+                    print(f"Failed to download {url}")
+                    
             except Exception as e:
                 print(f"Failed to fetch {url}: {e}")
-                fetched_content.append(f"**Could not fetch content from {url}**")
+                fetched_content.append(f"**Error fetching {url}: {str(e)}**")
         
-        return "\n\n".join(fetched_content)
+        return "\n\n---\n\n".join(fetched_content)
 
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
