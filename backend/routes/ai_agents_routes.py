@@ -112,3 +112,48 @@ async def toggle_ai_agent(agent_id: str, db = Depends(get_db)):
     if not result:
         raise HTTPException(status_code=404, detail="Agent not found")
     return result
+
+
+@router.post("/ai-agents/{agent_id}/run")
+async def run_ai_agent(agent_id: str, db = Depends(get_db)):
+    """Run an AI agent to generate content"""
+    from services.agent_runner_service import agent_runner
+    
+    # Check if agent exists
+    agent = crud.get_ai_agent(db, agent_id)
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    
+    # Check if agent is already running
+    if agent_id in running_agents:
+        raise HTTPException(status_code=409, detail="Agent is already running")
+    
+    try:
+        # Mark agent as running
+        running_agents.add(agent_id)
+        
+        # Run the agent
+        result = await agent_runner.run_agent(agent_id)
+        
+        return result
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Agent execution failed: {str(e)}")
+    finally:
+        # Remove from running set
+        running_agents.discard(agent_id)
+
+
+@router.get("/ai-agents/{agent_id}/status")
+async def get_agent_run_status(agent_id: str, db = Depends(get_db)):
+    """Check if an agent is currently running"""
+    agent = crud.get_ai_agent(db, agent_id)
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    
+    return {
+        "agent_id": agent_id,
+        "is_running": agent_id in running_agents
+    }
