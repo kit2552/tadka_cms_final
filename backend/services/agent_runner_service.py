@@ -243,7 +243,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are an image search expert. Generate a specific search query to find a relevant news image."},
                     {"role": "user", "content": f"Generate a Google image search query to find a relevant, high-quality image for this article. Category: {category}. Title: {title}. Return ONLY the search query, nothing else."}
                 ],
-                max_tokens=50,
+                max_completion_tokens=100,
                 temperature=0.5
             )
             search_query = response.choices[0].message.content.strip()
