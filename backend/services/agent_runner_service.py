@@ -383,15 +383,7 @@ Write ONE short, complete headline only."""
             if '\n' in title:
                 title = title.split('\n')[0].strip()
             
-            # If title is too long (more than 15 words), truncate at last complete word before limit
-            words = title.split()
-            if len(words) > 15:
-                title = ' '.join(words[:12])
-                # Make sure we don't end with articles or prepositions
-                while title.split()[-1].lower() in ['a', 'an', 'the', 'to', 'for', 'of', 'in', 'on', 'at', 'with', 'and', 'or']:
-                    title = ' '.join(title.split()[:-1])
-            
-            # Ensure title doesn't end with incomplete patterns
+            # Ensure title doesn't end with incomplete patterns (commas, dashes, etc.)
             if title and (title.endswith(',') or title.endswith(' -') or title.endswith('...') or title.endswith(':')):
                 title = title.rstrip(',-.:… ')
             
@@ -399,8 +391,7 @@ Write ONE short, complete headline only."""
             if not title:
                 # Extract first sentence as fallback
                 first_sentence = content.split('.')[0] if content else "News Article"
-                words = first_sentence.split()[:10]
-                title = ' '.join(words)
+                title = first_sentence.strip()
             
             print(f"Generated title ({len(title.split())} words): {title}")
             return title
