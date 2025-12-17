@@ -127,8 +127,9 @@ class AgentRunnerService:
         }
         return state_language_map.get(target_state, 'Hindi')
 
-    async def _fetch_reference_content(self, urls: list) -> tuple:
+    async def _fetch_reference_content(self, urls: list, category: str = "") -> tuple:
         """Fetch and extract main article content from reference URLs using trafilatura
+        For listing pages (like politics), finds the latest article first.
         Returns: (content_text, original_title)
         """
         if not urls:
@@ -142,13 +143,13 @@ class AgentRunnerService:
                 continue
             try:
                 import trafilatura
+                from urllib.parse import urljoin
                 
                 # Download the webpage
                 downloaded = trafilatura.fetch_url(url)
                 
                 if downloaded:
-                    # Extract the main article content (title + body)
-                    # trafilatura automatically filters out ads, sidebars, related stories
+                    # First, try to extract as a direct article
                     extracted = trafilatura.extract(
                         downloaded,
                         include_comments=False,
@@ -157,15 +158,39 @@ class AgentRunnerService:
                         favor_precision=True
                     )
                     
+                    metadata = trafilatura.extract_metadata(downloaded)
+                    
+                    # Check if this is a listing page (short content or category page)
+                    # Listing pages typically have less direct content
+                    is_listing_page = (not extracted or len(extracted) < 500) or \
+                                      (category in ['politics', 'sports', 'business', 'technology', 'state-news'])
+                    
+                    if is_listing_page:
+                        print(f"Detected listing page, searching for latest article links...")
+                        # Try to find article links on the page
+                        article_url = await self._find_latest_article_url(downloaded, url)
+                        
+                        if article_url:
+                            print(f"Found latest article: {article_url}")
+                            # Fetch the actual article
+                            article_downloaded = trafilatura.fetch_url(article_url)
+                            if article_downloaded:
+                                extracted = trafilatura.extract(
+                                    article_downloaded,
+                                    include_comments=False,
+                                    include_tables=True,
+                                    no_fallback=False,
+                                    favor_precision=True
+                                )
+                                metadata = trafilatura.extract_metadata(article_downloaded)
+                    
                     if extracted:
-                        # Also try to get metadata for the title
-                        metadata = trafilatura.extract_metadata(downloaded)
                         if metadata and metadata.title:
                             original_title = metadata.title
                             print(f"Extracted original title: {original_title}")
                         
                         fetched_content.append(f"**Article Title:** {original_title or 'Unknown'}\n\n**Article Content:**\n{extracted}")
-                        print(f"Successfully extracted article from {url}: {len(extracted)} chars")
+                        print(f"Successfully extracted article: {len(extracted)} chars")
                     else:
                         fetched_content.append(f"**Could not extract article content from {url}**")
                         print(f"trafilatura could not extract content from {url}")
@@ -178,6 +203,41 @@ class AgentRunnerService:
                 fetched_content.append(f"**Error fetching {url}: {str(e)}**")
         
         return "\n\n---\n\n".join(fetched_content), original_title
+
+    async def _find_latest_article_url(self, html_content: str, base_url: str) -> Optional[str]:
+        """Find the latest/first article URL from a listing page"""
+        try:
+            import re
+            from urllib.parse import urljoin
+            
+            # Common patterns for article links
+            # Look for links that appear to be articles (contain date patterns, news, article, story, etc.)
+            article_patterns = [
+                r'href=["\']([^"\']*(?:/\d{4}/\d{2}/\d{2}/|/\d{4}/[a-z]+/\d+/|/news/|/article/|/story/)[^"\']*)["\']',
+                r'href=["\']([^"\']*(?:\.html|\.htm)[^"\']*)["\']',
+                r'href=["\'](/[^"\']+/[^"\']+/[^"\']+)["\']'  # Paths with multiple segments
+            ]
+            
+            found_urls = []
+            for pattern in article_patterns:
+                matches = re.findall(pattern, html_content, re.IGNORECASE)
+                for match in matches:
+                    full_url = urljoin(base_url, match)
+                    # Filter out non-article URLs
+                    if not any(x in full_url.lower() for x in ['#', 'javascript:', 'mailto:', '.css', '.js', '.png', '.jpg', 'login', 'signup', 'subscribe']):
+                        if full_url != base_url and full_url not in found_urls:
+                            found_urls.append(full_url)
+            
+            # Return the first article URL found (usually the latest)
+            if found_urls:
+                print(f"Found {len(found_urls)} potential article URLs")
+                return found_urls[0]
+            
+            return None
+            
+        except Exception as e:
+            print(f"Error finding article URL: {e}")
+            return None
 
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
