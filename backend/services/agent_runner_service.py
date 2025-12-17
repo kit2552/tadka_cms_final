@@ -408,15 +408,11 @@ RULES:
 
 Write ONLY the headline, nothing else."""
 
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are a headline writer. You write ONLY 8-10 word headlines. Never more than 10 words. Keep it simple and punchy."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_completion_tokens=100
+            title = self._chat_completion(
+                "You are a headline writer. You write ONLY 8-10 word headlines. Never more than 10 words. Keep it simple and punchy.",
+                prompt,
+                100
             )
-            title = response.choices[0].message.content.strip()
             
             # Clean up the title
             title = title.strip('"\'')
