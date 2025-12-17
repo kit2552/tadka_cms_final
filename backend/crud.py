@@ -245,8 +245,11 @@ def get_articles_count_for_cms(
     """Count articles for CMS with filters - EXCLUDES ads"""
     query = {
         "article_language": language,
-        # Exclude ads from posts count
-        "ad_type": {"$exists": False}
+        # Exclude ads from posts count - ads have ad_type field with a non-null value
+        "$or": [
+            {"ad_type": {"$exists": False}},
+            {"ad_type": None}
+        ]
     }
     
     if category:
