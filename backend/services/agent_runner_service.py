@@ -316,11 +316,9 @@ Return ONLY the optimized prompt, nothing else."""
             self._initialize_ai_client()
         
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are an expert news editor and content formatter. Your job is to polish articles and format them beautifully for web display."},
-                    {"role": "user", "content": f"""Rewrite and FORMAT the following article for excellent readability.
+            polished = self._chat_completion(
+                "You are an expert news editor and content formatter. Your job is to polish articles and format them beautifully for web display.",
+                f"""Rewrite and FORMAT the following article for excellent readability.
 
 **FORMATTING REQUIREMENTS:**
 1. Break content into clear paragraphs (separate with blank lines)
@@ -345,11 +343,9 @@ Return ONLY the optimized prompt, nothing else."""
 Return ONLY the formatted article content, nothing else.
 
 Original Article:
-{raw_content}"""}
-                ],
-                max_completion_tokens=20000
+{raw_content}""",
+                20000
             )
-            polished = response.choices[0].message.content.strip()
             
             # Clean up any remaining unwanted prefixes
             polished = polished.replace("Headline:", "").replace("**Headline:**", "")
