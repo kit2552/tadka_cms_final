@@ -2,7 +2,7 @@
 AI Agents API Routes
 Handles AI agent creation and management
 """
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
@@ -10,6 +10,9 @@ from database import get_db
 import crud
 
 router = APIRouter()
+
+# Track running agents to prevent duplicate runs
+running_agents = set()
 
 class AIAgent(BaseModel):
     agent_name: str
