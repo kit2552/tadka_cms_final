@@ -1047,9 +1047,18 @@ const ArticlePage = () => {
                   {/* Secondary Content */}
                   {article.content_secondary && (
                     <div dangerouslySetInnerHTML={{ 
-                      __html: article.content_secondary
-                        .replace(/^\s*<p[^>]*>\s*<br\s*\/?>\s*<\/p>/gi, '') // Remove leading empty paragraphs
-                        .trim()
+                      __html: 
+                        // Check if content already has HTML tags
+                        article.content_secondary.includes('<p>') || article.content_secondary.includes('<div>') || article.content_secondary.includes('<br')
+                          ? article.content_secondary
+                              .replace(/^\s*<p[^>]*>\s*<br\s*\/?>\s*<\/p>/gi, '') // Remove leading empty paragraphs
+                              .trim()
+                          : // Convert plain text with newlines to HTML paragraphs
+                            article.content_secondary
+                              .split(/\n\n+/) // Split by double newlines (paragraphs)
+                              .filter(p => p.trim()) // Remove empty paragraphs
+                              .map(p => `<p class="mb-4">${p.replace(/\n/g, '<br/>')}</p>`) // Wrap in <p> tags
+                              .join('')
                     }} />
                   )}
                 </div>
