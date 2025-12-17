@@ -28,10 +28,16 @@ class AIAgent(BaseModel):
     # Common fields
     category: Optional[str] = None
     target_state: Optional[str] = None
+    article_language: Optional[str] = "en"  # Article language code
+    content_type: Optional[str] = "post"  # Content type
     word_count: Optional[str] = None  # "<100", "<150", etc.
+    split_content: Optional[bool] = False  # Whether to split content
+    split_paragraphs: Optional[int] = 2  # Number of paragraphs for split
     reference_urls: Optional[List[str]] = None  # Reference content URLs
     image_option: Optional[str] = None  # "ai_generate", "upload", "existing", "web_search"
     content_workflow: Optional[str] = None  # "in_review", "ready_to_publish", "auto_post"
+    is_top_story: Optional[bool] = False  # Mark as top story
+    comments_enabled: Optional[bool] = True  # Enable comments
     
     # Adhoc mode fields
     schedule_post: Optional[bool] = False
