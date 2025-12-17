@@ -1557,16 +1557,18 @@ DEFAULT_CATEGORY_PROMPTS = {
 
 **IMPORTANT:** Your article must be based ONLY on the reference content provided. Do not add information that is not in the reference article.""",
 
-    "state-politics": """**REFERENCE ARTICLE CONTENT:**
+    "state-politics": """**LATEST ARTICLE FROM REFERENCE SOURCE:**
 {reference_content_section}
 {split_content_section}
 {image_search_section}
 
-**YOUR TASK:** Generate a NEW, original state political news article based ENTIRELY on the reference article content provided above.
+**YOUR TASK:** Generate a NEW, original state political news article based ENTIRELY on the latest article content provided above.
+
+The content above was automatically extracted from the latest published article on the reference news page.
 
 **INSTRUCTIONS:**
-1. Read the reference article content carefully
-2. Extract key facts: politician names, party names (TDP, YSRCP, Congress, BJP, BRS, etc.), events, dates, locations, quotes
+1. Read the article content carefully
+2. Extract key facts: politician names, party names (TDP, YSRCP, Congress, BJP, BRS, TRS, etc.), events, dates, locations, quotes
 3. Write a COMPLETELY NEW article in your own words based on this information
 4. DO NOT copy sentences directly - rewrite everything originally
 5. Focus on {target_state} state political news (Andhra Pradesh / Telangana)
