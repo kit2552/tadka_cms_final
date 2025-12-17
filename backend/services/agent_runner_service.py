@@ -631,10 +631,13 @@ Article:
             # Step 2: Fetch content from reference URLs
             reference_urls = agent.get('reference_urls', [])
             reference_content = ""
+            original_title = ""
             if reference_urls:
                 print(f"Fetching content from {len(reference_urls)} reference URLs...")
-                reference_content = await self._fetch_reference_content(reference_urls)
+                reference_content, original_title = await self._fetch_reference_content(reference_urls)
                 print(f"Fetched {len(reference_content)} characters of reference content")
+                if original_title:
+                    print(f"Original article title: {original_title}")
             
             # Step 3: Build the final prompt with all dynamic placeholders and reference content
             base_prompt = self._build_final_prompt(agent, reference_content)
@@ -649,9 +652,10 @@ Article:
             print("Polishing content for professional quality...")
             content = await self._polish_content(raw_content)
             
-            # Step 7: Generate a compelling, simplified title
+            # Step 7: Generate a compelling, simplified title (using original title if available)
             print("Generating article title...")
-            title = await self._generate_title(content)
+            title = await self._generate_title(content, original_title)
+            print(f"Generated title: {title}")
             
             # Step 8: Generate an engaging summary
             print("Generating article summary...")
