@@ -3445,14 +3445,14 @@ const Dashboard = () => {
                               Preview
                             </Link>
                             <button
-                              onClick={() => handleUnpublishArticle(article.id, article.is_published)}
+                              onClick={() => handleWorkflowAction(article.id)}
                               className={`text-xs px-2 py-1 rounded border ${
-                                article.is_published 
+                                (article.status === 'published' || article.is_published)
                                   ? 'text-orange-600 hover:text-orange-800 border-orange-200 hover:bg-orange-50' 
                                   : 'text-green-600 hover:text-green-800 border-green-200 hover:bg-green-50'
                               }`}
                             >
-                              {article.is_published ? 'Unpublish' : 'Publish'}
+                              {getNextWorkflowStatus(article).label}
                             </button>
                             <button
                               onClick={() => handleDeleteArticle(article.id, article.title)}
