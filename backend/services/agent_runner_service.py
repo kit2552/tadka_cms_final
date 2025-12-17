@@ -489,15 +489,11 @@ Article:
         
         try:
             # Generate search query
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are an image search expert. Generate a specific search query to find a relevant news image."},
-                    {"role": "user", "content": f"Generate a Google image search query to find a relevant, high-quality image for this article. Category: {category}. Title: {title}. Return ONLY the search query, nothing else."}
-                ],
-                max_completion_tokens=100
+            search_query = self._chat_completion(
+                "You are an image search expert. Generate a specific search query to find a relevant news image.",
+                f"Generate a Google image search query to find a relevant, high-quality image for this article. Category: {category}. Title: {title}. Return ONLY the search query, nothing else.",
+                100
             )
-            search_query = response.choices[0].message.content.strip()
             
             # For now, return None - actual web search would require additional API
             # This can be extended with Google Custom Search API or similar
