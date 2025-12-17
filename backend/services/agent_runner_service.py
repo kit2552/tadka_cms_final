@@ -343,41 +343,57 @@ Return ONLY the optimized prompt, nothing else."""
                 return await self._generate_dalle_image(prompt)
             return None
 
-    async def _download_and_upload_image(self, image_url: str) -> Optional[str]:
-        """Download image from URL and upload to S3"""
+    async def _download_and_upload_image(self, image_source: str) -> Optional[str]:
+        """Download image from URL or local path and upload to S3"""
         try:
             from s3_service import s3_service
-            
-            # Download image
-            async with httpx.AsyncClient() as client:
-                response = await client.get(image_url, timeout=30.0)
-                if response.status_code != 200:
-                    return None
-                image_data = response.content
             
             # Generate filename
             timestamp = int(datetime.now().timestamp() * 1000)
             filename = f"ai_generated_{timestamp}.png"
+            temp_path = f"/tmp/{filename}"
+            
+            # Check if it's a local file path or URL
+            if image_source.startswith('/tmp/') or image_source.startswith('/'):
+                # Local file - just use it directly
+                temp_path = image_source
+                with open(temp_path, 'rb') as f:
+                    image_data = f.read()
+            else:
+                # Download from URL
+                async with httpx.AsyncClient() as client:
+                    response = await client.get(image_source, timeout=30.0)
+                    if response.status_code != 200:
+                        return None
+                    image_data = response.content
+                
+                # Save temporarily
+                with open(temp_path, 'wb') as f:
+                    f.write(image_data)
             
             # Upload to S3 if enabled
             if s3_service.is_enabled():
-                # Save temporarily
-                temp_path = f"/tmp/{filename}"
-                with open(temp_path, 'wb') as f:
-                    f.write(image_data)
-                
                 # Upload to S3
                 s3_url = s3_service.upload_file(temp_path, f"articles/{filename}")
                 
                 # Clean up temp file
-                os.remove(temp_path)
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
                 return s3_url
             else:
                 # Save locally
                 local_path = f"/app/backend/uploads/articles/{filename}"
                 os.makedirs(os.path.dirname(local_path), exist_ok=True)
-                with open(local_path, 'wb') as f:
-                    f.write(image_data)
+                
+                # Move or copy file
+                if temp_path != local_path:
+                    with open(temp_path, 'rb') as f:
+                        image_data = f.read()
+                    with open(local_path, 'wb') as f:
+                        f.write(image_data)
+                    if os.path.exists(temp_path) and temp_path.startswith('/tmp/'):
+                        os.remove(temp_path)
+                
                 return f"/uploads/articles/{filename}"
                 
         except Exception as e:
