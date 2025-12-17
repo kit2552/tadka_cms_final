@@ -20,28 +20,80 @@ class AgentRunnerService:
     def __init__(self):
         self.client = None
         self.model = None
+        self.provider = None  # 'openai', 'gemini', or 'anthropic'
     
-    def _initialize_openai(self):
-        """Initialize OpenAI client with API key from system settings"""
+    def _initialize_ai_client(self):
+        """Initialize the appropriate AI client based on selected model"""
         ai_config = crud.get_ai_api_keys(db)
-        if not ai_config or not ai_config.get('openai_api_key'):
-            raise ValueError("OpenAI API key not configured. Please add it in System Settings > API Keys.")
+        if not ai_config:
+            raise ValueError("AI API keys not configured. Please add them in System Settings > API Keys.")
         
-        self.client = OpenAI(api_key=ai_config['openai_api_key'])
-        
-        # Use default_text_model from system settings, fallback to gpt-4o
-        configured_model = ai_config.get('default_text_model') or ai_config.get('openai_default_model') or 'gpt-4o'
-        
-        # Use the configured model directly - GPT-5 is now available
-        self.model = configured_model
-        
-        # Store the image model for later use
+        # Get the selected model
+        self.model = ai_config.get('default_text_model') or 'gpt-4o'
         self.image_model = ai_config.get('default_image_model') or 'dall-e-3'
-        
-        # Store full config for provider-specific operations
         self.ai_config = ai_config
         
+        # Determine provider based on model name
+        model_lower = self.model.lower()
+        
+        if 'gemini' in model_lower or 'imagen' in model_lower:
+            self.provider = 'gemini'
+            if not ai_config.get('gemini_api_key'):
+                raise ValueError("Gemini API key not configured. Please add it in System Settings > API Keys.")
+            import google.generativeai as genai
+            genai.configure(api_key=ai_config['gemini_api_key'])
+            self.client = genai.GenerativeModel(self.model)
+            
+        elif 'claude' in model_lower or 'sonnet' in model_lower or 'opus' in model_lower or 'haiku' in model_lower:
+            self.provider = 'anthropic'
+            if not ai_config.get('anthropic_api_key'):
+                raise ValueError("Anthropic API key not configured. Please add it in System Settings > API Keys.")
+            import anthropic
+            self.client = anthropic.Anthropic(api_key=ai_config['anthropic_api_key'])
+            
+        else:
+            # Default to OpenAI
+            self.provider = 'openai'
+            if not ai_config.get('openai_api_key'):
+                raise ValueError("OpenAI API key not configured. Please add it in System Settings > API Keys.")
+            self.client = OpenAI(api_key=ai_config['openai_api_key'])
+        
+        print(f"Initialized {self.provider} client with model: {self.model}")
         return self.client
+
+    def _chat_completion(self, system_prompt: str, user_prompt: str, max_tokens: int = 20000) -> str:
+        """Universal chat completion that works with OpenAI, Gemini, and Anthropic"""
+        try:
+            if self.provider == 'openai':
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    max_completion_tokens=max_tokens
+                )
+                return response.choices[0].message.content.strip()
+                
+            elif self.provider == 'gemini':
+                # Gemini combines system and user prompts
+                full_prompt = f"{system_prompt}\n\n{user_prompt}"
+                response = self.client.generate_content(full_prompt)
+                return response.text.strip()
+                
+            elif self.provider == 'anthropic':
+                response = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=max_tokens,
+                    system=system_prompt,
+                    messages=[
+                        {"role": "user", "content": user_prompt}
+                    ]
+                )
+                return response.content[0].text.strip()
+                
+        except Exception as e:
+            raise Exception(f"Chat completion failed ({self.provider}): {str(e)}")
     
     def _get_category_prompt(self, category_slug: str) -> str:
         """Get the prompt template for a category"""
