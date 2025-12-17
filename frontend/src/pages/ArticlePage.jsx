@@ -934,9 +934,17 @@ const ArticlePage = () => {
                   {article.content ? (
                     <div dangerouslySetInnerHTML={{ 
                       __html: stripLinkStyles(
-                        article.content
-                          .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>\s*$/gi, '') // Remove trailing empty paragraphs
-                          .trim()
+                        // Check if content already has HTML tags
+                        article.content.includes('<p>') || article.content.includes('<div>') || article.content.includes('<br')
+                          ? article.content
+                              .replace(/<p[^>]*>\s*<br\s*\/?>\s*<\/p>\s*$/gi, '') // Remove trailing empty paragraphs
+                              .trim()
+                          : // Convert plain text with newlines to HTML paragraphs
+                            article.content
+                              .split(/\n\n+/) // Split by double newlines (paragraphs)
+                              .filter(p => p.trim()) // Remove empty paragraphs
+                              .map(p => `<p class="mb-4">${p.replace(/\n/g, '<br/>')}</p>`) // Wrap in <p> tags, convert single newlines to <br>
+                              .join('')
                       )
                     }} />
                   ) : (
