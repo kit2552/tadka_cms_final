@@ -1,6 +1,6 @@
 """
 AI Agent Runner Service
-Handles execution of AI agents to generate content using OpenAI
+Handles execution of AI agents to generate content using OpenAI, Gemini, or Anthropic
 """
 import os
 import re
