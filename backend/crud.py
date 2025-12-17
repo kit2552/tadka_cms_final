@@ -1790,63 +1790,28 @@ Write a {word_count} word article that:
 
 Focus on the business performance of films {target_audience}!""",
 
-    "movie-news": """**REFERENCE CONTENT INSTRUCTIONS:**
+    "movie-news": """**REFERENCE ARTICLE CONTENT:**
 {reference_content_section}
 {split_content_section}
 {image_search_section}
 
-**IMPORTANT: You MUST use the reference URLs provided above as your primary source.**
+**YOUR TASK:** Generate a NEW, original article based ENTIRELY on the reference article content provided above.
 
-Your task is to:
-1. Visit and read the latest article from the referenced website(s)
-2. Extract the key information, facts, and story from that article
-3. Generate a NEW, original article based on that content
+**INSTRUCTIONS:**
+1. Read the reference article content carefully
+2. Extract key facts: movie names, actor names, director names, dates, events, quotes
+3. Write a COMPLETELY NEW article in your own words based on this information
+4. DO NOT copy sentences directly - rewrite everything originally
 
-CRITICAL: Based on the target state selected, identify the primary regional language:
-- Telangana/Andhra Pradesh → Telugu cinema (Tollywood)
-- Tamil Nadu → Tamil cinema (Kollywood)
-- Karnataka → Kannada cinema (Sandalwood)
-- Kerala → Malayalam cinema (Mollywood)
-- Gujarat → Gujarati cinema
-- Maharashtra → Marathi cinema
-- Punjab → Punjabi cinema
-- West Bengal → Bengali cinema
-- Odisha → Odia cinema
-- Assam → Assamese cinema
-- If "All" or India-wide → Hindi cinema (use Hindi as default language)
+**ARTICLE REQUIREMENTS:**
+- Write a {word_count} word article
+- Create an engaging, SEO-friendly headline that captures the main news
+- Focus on {state_language} cinema ({target_state} region)
+- Include all key names, titles, and facts from the reference
+- Write for {target_audience}
+- Make it newsworthy and exciting
 
-When processing the reference content:
-1. Identify the main news story or topic from the reference article
-2. Extract key facts: names, dates, movie titles, events, quotes
-3. Understand the context and significance of the news
-4. Rewrite the content in your own words - DO NOT copy directly
-
-Topics typically covered in movie news:
-   - New movie announcements and launches
-   - Shooting updates and schedules
-   - Cast and crew announcements
-   - First look posters and updates
-   - Audio/music launches
-   - Pre-release events and promotions
-   - Celebrity interviews and statements
-   - Film industry controversies or discussions
-   - Award nominations and wins
-   - OTT release announcements
-   - Box office updates
-
-Write a {word_count} word article that:
-- Has an engaging headline based on the reference article's main story
-- Clearly mentions it's about {state_language} cinema/movies
-- Presents the news in a fresh, original way
-- Names specific actors, directors, producers mentioned in the reference
-- Includes movie titles in the regional language (with English translation if needed)
-- Mentions production houses and banners if referenced
-- Captures the unique flavor and style of that regional cinema
-- Uses terminology and references familiar to fans of that industry
-- Includes release dates, shooting locations, or other specific details from the reference
-- Appeals to fans of {state_language} cinema {target_audience}
-
-Make it exciting and relevant for regional cinema enthusiasts! Base your article entirely on the reference content provided.""",
+**IMPORTANT:** Your article must be based ONLY on the reference content provided. Do not add information that is not in the reference article.""",
 
     "movie-news-bollywood": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
