@@ -322,8 +322,11 @@ def get_articles_for_cms(
     """Get paginated articles for CMS with filters - EXCLUDES ads"""
     query = {
         "article_language": language,
-        # Exclude ads from posts - ads are articles with ad_type field
-        "ad_type": {"$exists": False}
+        # Exclude ads from posts - ads have ad_type field with a non-null value
+        "$or": [
+            {"ad_type": {"$exists": False}},
+            {"ad_type": None}
+        ]
     }
     
     if category:
