@@ -270,7 +270,7 @@ Structure your article into exactly {split_paragraphs} distinct paragraphs, clea
     async def _optimize_prompt(self, base_prompt: str) -> str:
         """Use OpenAI to optimize the prompt for better content generation"""
         if not self.client:
-            self._initialize_openai()
+            self._initialize_ai_client()
         
         optimization_prompt = f"""You are a prompt optimization expert. Optimize the following prompt to generate better, more engaging news content. 
 Keep the core requirements but make the instructions clearer and more specific.
@@ -297,7 +297,7 @@ Return ONLY the optimized prompt, nothing else."""
     async def _generate_content(self, optimized_prompt: str) -> str:
         """Generate article content using OpenAI"""
         if not self.client:
-            self._initialize_openai()
+            self._initialize_ai_client()
         
         try:
             response = self.client.chat.completions.create(
@@ -321,7 +321,7 @@ Return ONLY the optimized prompt, nothing else."""
     async def _polish_content(self, raw_content: str) -> str:
         """Post-process content to make it professional, elegant, and well-formatted"""
         if not self.client:
-            self._initialize_openai()
+            self._initialize_ai_client()
         
         try:
             response = self.client.chat.completions.create(
@@ -385,7 +385,7 @@ Original Article:
     async def _generate_title(self, content: str, original_title: str = "") -> str:
         """Generate a compelling, DIFFERENT title for the content using OpenAI"""
         if not self.client:
-            self._initialize_openai()
+            self._initialize_ai_client()
         
         try:
             # Build prompt based on whether we have original title
@@ -467,7 +467,7 @@ Write ONLY the headline, nothing else."""
     async def _generate_summary(self, content: str) -> str:
         """Generate an engaging summary for the content"""
         if not self.client:
-            self._initialize_openai()
+            self._initialize_ai_client()
         
         try:
             response = self.client.chat.completions.create(
@@ -509,7 +509,7 @@ Article:
     async def _search_web_image(self, content: str, title: str, category: str) -> Optional[str]:
         """Search for an image using OpenAI to generate search query"""
         if not self.client:
-            self._initialize_openai()
+            self._initialize_ai_client()
         
         try:
             # Generate search query
@@ -535,7 +535,7 @@ Article:
     async def _generate_ai_image(self, content: str, title: str) -> Optional[str]:
         """Generate an image using the configured image generation model"""
         if not self.client:
-            self._initialize_openai()
+            self._initialize_ai_client()
         
         try:
             # Generate image prompt
@@ -724,7 +724,7 @@ Article:
         
         try:
             # Step 1: Initialize OpenAI
-            self._initialize_openai()
+            self._initialize_ai_client()
             
             # Step 2: Fetch content from reference URLs
             reference_urls = agent.get('reference_urls', [])
