@@ -191,7 +191,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are a headline writer. Create catchy, engaging, SEO-friendly headlines."},
                     {"role": "user", "content": f"Create a compelling headline/title for the following article. Return ONLY the headline, nothing else:\n\n{content[:1500]}"}
                 ],
-                max_tokens=100,
+                max_completion_tokens=200,
                 temperature=0.7
             )
             title = response.choices[0].message.content.strip()
