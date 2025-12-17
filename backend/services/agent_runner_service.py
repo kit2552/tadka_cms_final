@@ -172,7 +172,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are a professional news writer and journalist. Write engaging, factual, and well-structured articles."},
                     {"role": "user", "content": optimized_prompt}
                 ],
-                max_tokens=3000,
+                max_completion_tokens=20000,
                 temperature=0.8
             )
             return response.choices[0].message.content.strip()
