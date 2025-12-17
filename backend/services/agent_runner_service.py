@@ -450,11 +450,9 @@ Write ONLY the headline, nothing else."""
             self._initialize_ai_client()
         
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are an expert news editor. Write summaries that hook readers and make them want to read the full article."},
-                    {"role": "user", "content": f"""Write a short, engaging summary for this news article.
+            summary = self._chat_completion(
+                "You are an expert news editor. Write summaries that hook readers and make them want to read the full article.",
+                f"""Write a short, engaging summary for this news article.
 
 Requirements:
 1. 2-3 sentences maximum
@@ -466,11 +464,9 @@ Requirements:
 Return ONLY the summary text, nothing else.
 
 Article:
-{content[:2500]}"""}
-                ],
-                max_completion_tokens=300
+{content[:2500]}""",
+                300
             )
-            summary = response.choices[0].message.content.strip()
             return summary
         except Exception as e:
             print(f"Summary generation failed: {e}")
