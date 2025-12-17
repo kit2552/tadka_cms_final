@@ -213,7 +213,7 @@ Return ONLY the optimized prompt, nothing else."""
                     {"role": "system", "content": "You are a content summarizer. Create concise, informative summaries."},
                     {"role": "user", "content": f"Create a 2-3 sentence summary for the following article. Return ONLY the summary:\n\n{content[:2000]}"}
                 ],
-                max_tokens=200,
+                max_completion_tokens=500,
                 temperature=0.5
             )
             return response.choices[0].message.content.strip()
