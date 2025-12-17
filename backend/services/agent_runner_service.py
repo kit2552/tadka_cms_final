@@ -296,18 +296,28 @@ Return ONLY the optimized prompt, nothing else."""
             return None
 
     async def _generate_dalle_image(self, prompt: str, model: str = "dall-e-3") -> Optional[str]:
-        """Generate image using OpenAI DALL-E"""
+        """Generate image using OpenAI DALL-E or gpt-image-1"""
         try:
-            image_response = self.client.images.generate(
-                model=model,
-                prompt=prompt,
-                size="1792x1024" if model == "dall-e-3" else "1024x1024",
-                quality="standard",
-                n=1
-            )
+            # Handle different image models
+            if model in ["gpt-image-1", "gpt-image"]:
+                image_response = self.client.images.generate(
+                    model="gpt-image-1",
+                    prompt=prompt,
+                    size="1536x1024",
+                    quality="medium",
+                    n=1
+                )
+            else:
+                image_response = self.client.images.generate(
+                    model=model,
+                    prompt=prompt,
+                    size="1792x1024" if model == "dall-e-3" else "1024x1024",
+                    quality="standard",
+                    n=1
+                )
             return image_response.data[0].url
         except Exception as e:
-            print(f"DALL-E image generation failed: {e}")
+            print(f"Image generation failed: {e}")
             return None
 
     async def _generate_google_image(self, prompt: str) -> Optional[str]:
