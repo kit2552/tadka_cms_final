@@ -324,12 +324,18 @@ def get_articles_for_cms(
     if content_type:
         query["content_type"] = content_type
     
-    if status == "published":
-        query["is_published"] = True
-    elif status == "draft":
-        query["is_published"] = False
-    elif status == "scheduled":
-        query["is_scheduled"] = True
+    # Filter by status field - supports: draft, in_review, approved, published, scheduled
+    if status:
+        if status == "published":
+            # Published articles: is_published=True and not scheduled
+            query["is_published"] = True
+            query["is_scheduled"] = {"$ne": True}
+        elif status == "scheduled":
+            # Scheduled articles: is_scheduled=True
+            query["is_scheduled"] = True
+        else:
+            # For other statuses (draft, in_review, approved), filter by status field
+            query["status"] = status
     
     docs = list(
         db[ARTICLES]
