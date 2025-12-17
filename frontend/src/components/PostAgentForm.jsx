@@ -85,6 +85,28 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   }
 
   const wordCounts = ['<100', '<150', '<200', '<250', '<300', '<350', '<400', '<450', '<500'];
+  
+  const languageOptions = [
+    { code: 'en', name: 'English' },
+    { code: 'te', name: 'Telugu' },
+    { code: 'hi', name: 'Hindi' },
+    { code: 'ta', name: 'Tamil' },
+    { code: 'kn', name: 'Kannada' },
+    { code: 'mr', name: 'Marathi' },
+    { code: 'gu', name: 'Gujarati' },
+    { code: 'bn', name: 'Bengali' },
+    { code: 'ml', name: 'Malayalam' },
+    { code: 'pa', name: 'Punjabi' }
+  ];
+
+  const contentTypeOptions = [
+    { value: 'post', label: 'Post' },
+    { value: 'video', label: 'Video' },
+    { value: 'photo-gallery', label: 'Photo Gallery' },
+    { value: 'movie-review', label: 'Movie Review' },
+    { value: 'ott-review', label: 'OTT Review' }
+  ];
+
   const imageOptions = [
     { value: 'ai_generate', label: 'AI Generate' },
     { value: 'upload', label: 'Upload Image' },
