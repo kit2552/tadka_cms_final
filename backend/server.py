@@ -1085,6 +1085,31 @@ async def update_cms_article(
     updated_article = crud.update_article_cms(db, article_id, article_update.dict(exclude_unset=True))
     return updated_article
 
+
+@api_router.patch("/cms/articles/{article_id}", response_model=schemas.ArticleResponse)
+async def patch_cms_article(
+    article_id: int, 
+    article_update: schemas.ArticleUpdate, 
+    db = Depends(get_db)
+):
+    """Partial update article via CMS (for publish/unpublish actions)"""
+    article = crud.get_article_by_id(db, article_id)
+    if not article:
+        raise HTTPException(status_code=404, detail="Article not found")
+    
+    # Convert Pydantic model to dict, excluding unset values
+    update_data = article_update.dict(exclude_unset=True)
+    
+    # If publishing, also update status
+    if update_data.get('is_published') == True:
+        update_data['status'] = 'published'
+    elif update_data.get('is_published') == False:
+        update_data['status'] = 'draft'
+    
+    updated_article = crud.update_article_cms(db, article_id, update_data)
+    return updated_article
+
+
 @api_router.delete("/cms/articles/{article_id}")
 async def delete_cms_article(article_id: int, db = Depends(get_db)):
     """Delete article via CMS and remove images from S3"""
