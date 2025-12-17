@@ -28,7 +28,16 @@ class AgentRunnerService:
             raise ValueError("OpenAI API key not configured. Please add it in System Settings > API Keys.")
         
         self.client = OpenAI(api_key=ai_config['openai_api_key'])
-        self.model = ai_config.get('openai_default_model', 'gpt-4o')
+        
+        # Use default_text_model from system settings, fallback to gpt-4o
+        self.model = ai_config.get('default_text_model') or ai_config.get('openai_default_model') or 'gpt-4o'
+        
+        # Store the image model for later use
+        self.image_model = ai_config.get('default_image_model') or 'dall-e-3'
+        
+        # Store full config for provider-specific operations
+        self.ai_config = ai_config
+        
         return self.client
     
     def _get_category_prompt(self, category_slug: str) -> str:
