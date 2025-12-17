@@ -296,7 +296,7 @@ Original Article:
             return raw_content
 
     async def _generate_title(self, content: str) -> str:
-        """Generate a title for the content using OpenAI"""
+        """Generate a compelling, simplified title for the content using OpenAI"""
         if not self.client:
             self._initialize_openai()
         
@@ -304,20 +304,34 @@ Original Article:
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are a headline writer. Create catchy, engaging, SEO-friendly headlines."},
-                    {"role": "user", "content": f"Create a compelling headline/title for the following article. Return ONLY the headline, nothing else:\n\n{content[:1500]}"}
+                    {"role": "system", "content": "You are an expert headline writer for a major news publication. Create headlines that are catchy, clear, and make readers want to click."},
+                    {"role": "user", "content": f"""Create a compelling news headline for this article.
+
+Requirements:
+1. Maximum 10-12 words
+2. Clear and easy to understand
+3. Captures the main news point
+4. No quotes or special characters
+5. Written in simple, engaging language
+6. SEO-friendly
+
+Return ONLY the headline text, nothing else. No prefixes like "Headline:" or "Title:".
+
+Article:
+{content[:2000]}"""}
                 ],
-                max_completion_tokens=200
+                max_completion_tokens=100
             )
             title = response.choices[0].message.content.strip()
-            # Remove quotes if present
+            # Remove quotes, prefixes and clean up
             title = title.strip('"\'')
+            title = title.replace("Headline:", "").replace("Title:", "").strip()
             return title
         except Exception as e:
             raise Exception(f"Title generation failed: {str(e)}")
 
     async def _generate_summary(self, content: str) -> str:
-        """Generate a summary for the content"""
+        """Generate an engaging summary for the content"""
         if not self.client:
             self._initialize_openai()
         
@@ -325,13 +339,27 @@ Original Article:
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are a content summarizer. Create concise, informative summaries."},
-                    {"role": "user", "content": f"Create a 2-3 sentence summary for the following article. Return ONLY the summary:\n\n{content[:2000]}"}
+                    {"role": "system", "content": "You are an expert news editor. Write summaries that hook readers and make them want to read the full article."},
+                    {"role": "user", "content": f"""Write a short, engaging summary for this news article.
+
+Requirements:
+1. 2-3 sentences maximum
+2. Capture the key news in a compelling way
+3. Make it sound exciting and newsworthy
+4. Simple language that's easy to read
+5. No filler words - be concise
+
+Return ONLY the summary text, nothing else.
+
+Article:
+{content[:2500]}"""}
                 ],
-                max_completion_tokens=500
+                max_completion_tokens=300
             )
-            return response.choices[0].message.content.strip()
+            summary = response.choices[0].message.content.strip()
+            return summary
         except Exception as e:
+            print(f"Summary generation failed: {e}")
             return content[:200] + "..."  # Fallback to truncated content
 
     async def _get_image_for_content(self, content: str, title: str, image_option: str, category: str) -> Optional[str]:
