@@ -32,21 +32,8 @@ class AgentRunnerService:
         # Use default_text_model from system settings, fallback to gpt-4o
         configured_model = ai_config.get('default_text_model') or ai_config.get('openai_default_model') or 'gpt-4o'
         
-        # Map display names to actual OpenAI API model names
-        model_mapping = {
-            'gpt-5': 'gpt-4o',  # gpt-5 is not yet available, use gpt-4o
-            'gpt-4': 'gpt-4',
-            'gpt-4o': 'gpt-4o',
-            'gpt-4o-mini': 'gpt-4o-mini',
-            'gpt-4-turbo': 'gpt-4-turbo',
-            'gpt-4-turbo-preview': 'gpt-4-turbo-preview',
-            'gpt-3.5-turbo': 'gpt-3.5-turbo',
-            'o1': 'o1',
-            'o1-mini': 'o1-mini',
-            'o1-preview': 'o1-preview',
-        }
-        
-        self.model = model_mapping.get(configured_model, configured_model)
+        # Use the configured model directly - GPT-5 is now available
+        self.model = configured_model
         
         # Store the image model for later use
         self.image_model = ai_config.get('default_image_model') or 'dall-e-3'
