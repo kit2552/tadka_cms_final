@@ -1795,7 +1795,12 @@ Focus on the business performance of films {target_audience}!""",
 {split_content_section}
 {image_search_section}
 
-Search the web comprehensively for the latest movie news {target_state_context} in the regional language cinema. Your task is to:
+**IMPORTANT: You MUST use the reference URLs provided above as your primary source.**
+
+Your task is to:
+1. Visit and read the latest article from the referenced website(s)
+2. Extract the key information, facts, and story from that article
+3. Generate a NEW, original article based on that content
 
 CRITICAL: Based on the target state selected, identify the primary regional language:
 - Telangana/Andhra Pradesh → Telugu cinema (Tollywood)
@@ -1810,9 +1815,13 @@ CRITICAL: Based on the target state selected, identify the primary regional lang
 - Assam → Assamese cinema
 - If "All" or India-wide → Hindi cinema (use Hindi as default language)
 
-1. Search specifically for "{state_language} movie news" or "{state_language} cinema latest updates"
-2. Find the most trending movie stories from the last 24-48 hours in that regional film industry
-3. Cover topics including:
+When processing the reference content:
+1. Identify the main news story or topic from the reference article
+2. Extract key facts: names, dates, movie titles, events, quotes
+3. Understand the context and significance of the news
+4. Rewrite the content in your own words - DO NOT copy directly
+
+Topics typically covered in movie news:
    - New movie announcements and launches
    - Shooting updates and schedules
    - Cast and crew announcements
@@ -1823,24 +1832,21 @@ CRITICAL: Based on the target state selected, identify the primary regional lang
    - Film industry controversies or discussions
    - Award nominations and wins
    - OTT release announcements
-   - Regional box office updates
-
-4. Check regional entertainment news websites, film industry portals, and social media
-5. Focus on stars, directors, and movies popular in that specific regional cinema
+   - Box office updates
 
 Write a {word_count} word article that:
-- Has an engaging headline highlighting the biggest {state_language} cinema news
+- Has an engaging headline based on the reference article's main story
 - Clearly mentions it's about {state_language} cinema/movies
-- Covers 2-3 major news items from that regional film industry
-- Names specific actors, directors, producers relevant to that industry
+- Presents the news in a fresh, original way
+- Names specific actors, directors, producers mentioned in the reference
 - Includes movie titles in the regional language (with English translation if needed)
-- Mentions production houses and banners popular in that region
+- Mentions production houses and banners if referenced
 - Captures the unique flavor and style of that regional cinema
 - Uses terminology and references familiar to fans of that industry
-- Includes release dates, shooting locations, or other specific details
+- Includes release dates, shooting locations, or other specific details from the reference
 - Appeals to fans of {state_language} cinema {target_audience}
 
-Make it exciting and relevant for regional cinema enthusiasts! Ensure the content is specifically about the regional language film industry identified from the target state.""",
+Make it exciting and relevant for regional cinema enthusiasts! Base your article entirely on the reference content provided.""",
 
     "movie-news-bollywood": """**REFERENCE CONTENT INSTRUCTIONS:**
 {reference_content_section}
