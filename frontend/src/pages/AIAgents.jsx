@@ -73,6 +73,65 @@ const AIAgents = () => {
     setShowAgentForm(true);
   };
 
+  const handleRunAgent = async (agentId) => {
+    // Check if agent is already running
+    if (runningAgents.has(agentId)) return;
+    
+    // Mark agent as running
+    setRunningAgents(prev => new Set([...prev, agentId]));
+    setRunResults(prev => ({ ...prev, [agentId]: null }));
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-agents/${agentId}/run`, {
+        method: 'POST'
+      });
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        setRunResults(prev => ({ 
+          ...prev, 
+          [agentId]: { 
+            success: true, 
+            message: `Article "${data.title}" created successfully!`,
+            articleId: data.article_id
+          }
+        }));
+      } else {
+        setRunResults(prev => ({ 
+          ...prev, 
+          [agentId]: { 
+            success: false, 
+            message: data.detail || data.message || 'Failed to run agent'
+          }
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to run agent:', error);
+      setRunResults(prev => ({ 
+        ...prev, 
+        [agentId]: { 
+          success: false, 
+          message: 'Network error. Please try again.'
+        }
+      }));
+    } finally {
+      setRunningAgents(prev => {
+        const next = new Set(prev);
+        next.delete(agentId);
+        return next;
+      });
+      
+      // Clear result after 5 seconds
+      setTimeout(() => {
+        setRunResults(prev => {
+          const next = { ...prev };
+          delete next[agentId];
+          return next;
+        });
+      }, 5000);
+    }
+  };
+
   const getAgentTypeIcon = (type) => {
     switch(type) {
       case 'post':
