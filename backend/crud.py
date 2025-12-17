@@ -417,6 +417,7 @@ def create_article(db, article: dict):
         "is_scheduled": article.get("is_scheduled", False),
         "scheduled_publish_at": article.get("scheduled_publish_at"),
         "scheduled_timezone": article.get("scheduled_timezone", "IST"),
+        "status": article.get("status", "draft"),  # Status field: draft, in_review, approved, published, scheduled
         "original_article_id": article.get("original_article_id"),
         "seo_title": article.get("seo_title"),
         "seo_description": article.get("seo_description"),
