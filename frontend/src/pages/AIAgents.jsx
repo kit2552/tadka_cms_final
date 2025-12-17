@@ -11,6 +11,8 @@ const AIAgents = () => {
   const [showAgentForm, setShowAgentForm] = useState(false);
   const [selectedAgentType, setSelectedAgentType] = useState(null);
   const [editingAgent, setEditingAgent] = useState(null);
+  const [runningAgents, setRunningAgents] = useState(new Set());
+  const [runResults, setRunResults] = useState({});
 
   useEffect(() => {
     fetchAgents();
