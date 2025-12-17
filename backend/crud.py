@@ -259,6 +259,7 @@ def get_articles_count_for_cms(
         query["content_type"] = content_type
     
     # Filter by status field - supports: draft, in_review, approved, published, scheduled
+    # Handle both new status field and legacy boolean fields for backward compatibility
     if status:
         if status == "published":
             # Published articles: is_published=True and not scheduled
@@ -267,8 +268,18 @@ def get_articles_count_for_cms(
         elif status == "scheduled":
             # Scheduled articles: is_scheduled=True
             query["is_scheduled"] = True
+        elif status == "draft":
+            # Draft articles: either status=draft OR (is_published=False and is_scheduled=False and no status field)
+            query["$or"] = [
+                {"status": "draft"},
+                {"$and": [
+                    {"is_published": False},
+                    {"is_scheduled": {"$ne": True}},
+                    {"status": {"$exists": False}}
+                ]}
+            ]
         else:
-            # For other statuses (draft, in_review, approved), filter by status field
+            # For other statuses (in_review, approved), filter by status field only
             query["status"] = status
     
     return db[ARTICLES].count_documents(query)
