@@ -1580,16 +1580,33 @@ const Dashboard = () => {
     });
   };
 
-  const handleUnpublishArticle = async (articleId, isPublished) => {
+  // Get next workflow status based on current status
+  const getNextWorkflowStatus = (article) => {
+    const currentStatus = article.status || (article.is_published ? 'published' : 'draft');
+    
+    switch (currentStatus) {
+      case 'draft':
+        return { nextStatus: 'in_review', label: 'Move to Review', is_published: false };
+      case 'in_review':
+        return { nextStatus: 'approved', label: 'Approve', is_published: false };
+      case 'approved':
+        return { nextStatus: 'published', label: 'Publish', is_published: true };
+      case 'published':
+        return { nextStatus: 'in_review', label: 'Unpublish', is_published: false };
+      default:
+        return { nextStatus: 'in_review', label: 'Move to Review', is_published: false };
+    }
+  };
+
+  const handleWorkflowAction = async (articleId) => {
     const article = articles.find(a => a.id === articleId);
     const articleTitle = article?.title || 'this article';
-    const action = isPublished ? 'unpublish' : 'publish';
-    const actionTitle = isPublished ? 'Unpublish' : 'Publish';
+    const { nextStatus, label, is_published } = getNextWorkflowStatus(article);
     
     showModal(
       'warning',
-      `${actionTitle} Article`,
-      `Are you sure you want to ${action} "${articleTitle}"?`,
+      `${label}`,
+      `Are you sure you want to ${label.toLowerCase()} "${articleTitle}"?`,
       true,
       async () => {
         try {
@@ -1599,19 +1616,20 @@ const Dashboard = () => {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              is_published: !isPublished
+              status: nextStatus,
+              is_published: is_published
             })
           });
           
           if (response.ok) {
-            showModal('success', 'Success', `Article ${action}ed successfully.`);
+            showModal('success', 'Success', `Article status updated to "${nextStatus.replace('_', ' ')}".`);
             fetchArticles(); // Refresh list
           } else {
-            throw new Error(`Failed to ${action} article`);
+            throw new Error(`Failed to update article status`);
           }
         } catch (error) {
-          console.error(`Error ${action}ing article:`, error);
-          showModal('error', `${actionTitle} Failed`, `Failed to ${action} article. Please try again.`);
+          console.error(`Error updating article status:`, error);
+          showModal('error', `Action Failed`, `Failed to update article status. Please try again.`);
         }
       }
     );
