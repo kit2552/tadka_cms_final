@@ -601,14 +601,33 @@ Output:"""
             # Step 1: Fetch the page
             html, page_title = await self._fetch_page_content(source_url)
             
-            # Step 2: If listing page, find the latest gallery
-            if url_type == 'listing':
+            # Step 2: Determine if this is a listing page
+            is_listing_page = url_type == 'listing'
+            
+            # Auto-detect listing page if url_type is 'auto'
+            if url_type == 'auto':
+                # Check if URL looks like a listing/category page
+                listing_indicators = ['/category/', '/photos', '/galleries', '/albums', '/photogallery']
+                # Check if URL has a specific gallery ID (5+ digit number)
+                import re
+                has_gallery_id = bool(re.search(r'/\d{5,}/', source_url) or re.search(r'-\d{5,}$', source_url))
+                
+                if any(ind in source_url.lower() for ind in listing_indicators) and not has_gallery_id:
+                    is_listing_page = True
+                    print(f"🔍 Auto-detected as LISTING PAGE (no gallery ID in URL)")
+            
+            # Step 3: If listing page, find the latest gallery and fetch it
+            if is_listing_page:
+                print(f"📋 Processing as LISTING PAGE - finding latest gallery...")
                 gallery_url = await self._find_latest_gallery_url(html, source_url)
                 if gallery_url:
+                    print(f"📥 Fetching actual gallery page: {gallery_url}")
                     html, page_title = await self._fetch_page_content(gallery_url)
                     source_url = gallery_url
                 else:
                     raise ValueError("Could not find any gallery links on the listing page")
+            else:
+                print(f"📄 Processing as DIRECT gallery URL")
             
             # Step 3: Extract artist name
             print("🔍 Extracting artist name...")
