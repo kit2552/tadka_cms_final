@@ -439,13 +439,14 @@ class TadkaPicsAgentService:
                 print(f"📸 Processing {len(url_list)} Instagram URLs...")
                 images = await self._extract_instagram_images(url_list, instagram_content_type)
                 
-                # Try to get artist name from first embed
+                # Try to get artist name from the direct page (has better metadata)
                 if url_list:
-                    embed_url = self._get_embed_url(url_list[0])
-                    if embed_url:
-                        async with httpx.AsyncClient(timeout=30.0) as client:
-                            response = await client.get(embed_url, headers={
-                                'User-Agent': 'Mozilla/5.0'
+                    direct_url = self._get_direct_url(url_list[0])
+                    if direct_url:
+                        async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+                            response = await client.get(direct_url, headers={
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                             })
                             if response.status_code == 200:
                                 artist_name = await self._extract_artist_name_from_instagram(response.text)
