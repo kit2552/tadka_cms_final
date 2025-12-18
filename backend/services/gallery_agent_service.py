@@ -594,7 +594,8 @@ Output:"""
             
             # Step 9: Generate content
             print("✍️ Generating gallery content...")
-            new_title, new_content = await self._generate_gallery_content(html, page_title, artist_name, word_count)
+            custom_prompt = agent.get('custom_prompt', '')
+            new_title, new_content = await self._generate_gallery_content(html, page_title, artist_name, word_count, custom_prompt)
             print(f"📰 Generated title: {new_title}")
             
             # Step 10: Create gallery in database
