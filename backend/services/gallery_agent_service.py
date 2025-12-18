@@ -291,19 +291,25 @@ class GalleryAgentService:
         return downloaded
 
     async def _upload_images_to_s3(self, images: List[Dict], folder_path: str) -> List[Dict]:
-        """Upload images to S3 and return their URLs"""
+        """Upload images to S3 using existing s3_service and return their URLs"""
         uploaded = []
-        bucket_name = self.aws_config.get('bucket_name')
-        cloudfront_url = self.aws_config.get('cloudfront_url', '')
+        
+        # Get galleries root folder from config
+        galleries_root = self.s3_service.config.get('galleries_root_folder', 'galleries')
         
         for i, img in enumerate(images):
             try:
                 local_path = img['local_path']
-                filename = img['filename']
-                s3_key = f"{folder_path}/{filename}"
+                
+                # Use sequential numbering like the manual upload: 1.jpg, 2.png, etc.
+                ext = os.path.splitext(img['filename'])[1].lower()
+                image_number = i + 1
+                new_filename = f"{image_number}{ext}"
+                
+                # Create S3 key with proper folder structure: {galleries_root}/{folder_path}/{number}.ext
+                s3_key = f"{galleries_root}/{folder_path}/{new_filename}"
                 
                 # Determine content type
-                ext = os.path.splitext(filename)[1].lower()
                 content_types = {
                     '.jpg': 'image/jpeg',
                     '.jpeg': 'image/jpeg',
@@ -315,28 +321,24 @@ class GalleryAgentService:
                 
                 print(f"☁️ Uploading to S3: {s3_key}")
                 
+                # Read file content
                 with open(local_path, 'rb') as f:
-                    self.s3_client.upload_fileobj(
-                        f,
-                        bucket_name,
-                        s3_key,
-                        ExtraArgs={'ContentType': content_type}
-                    )
+                    file_content = f.read()
                 
-                # Generate URL
-                if cloudfront_url:
-                    image_url = f"{cloudfront_url.rstrip('/')}/{s3_key}"
+                # Use existing s3_service upload method
+                url = self.s3_service.upload_file(file_content, s3_key, content_type)
+                
+                if url:
+                    uploaded.append({
+                        'id': str(uuid.uuid4()),
+                        'name': new_filename,
+                        'url': url,
+                        's3_key': s3_key,
+                        'size': img['size']
+                    })
+                    print(f"✅ Uploaded: {url}")
                 else:
-                    image_url = f"https://{bucket_name}.s3.amazonaws.com/{s3_key}"
-                
-                uploaded.append({
-                    'id': str(uuid.uuid4()),
-                    'name': filename,
-                    'url': image_url,
-                    's3_key': s3_key,
-                    'size': img['size']
-                })
-                print(f"✅ Uploaded: {image_url}")
+                    print(f"❌ Failed to upload {new_filename}: s3_service returned None")
                 
             except Exception as e:
                 print(f"❌ Error uploading {img['filename']}: {e}")
