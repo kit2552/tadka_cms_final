@@ -137,6 +137,7 @@ class GalleryAgentService:
         import trafilatura
         
         all_images = []
+        seen_urls = set()  # Track all seen URLs to avoid duplicates
         visited_urls = set()
         current_html = html
         current_url = base_url
@@ -162,7 +163,11 @@ class GalleryAgentService:
                     # Try to get higher resolution version
                     high_res_url = self._get_high_res_url(full_url)
                     
-                    if high_res_url not in [img['url'] for img in all_images]:
+                    # Normalize URL for comparison (remove query params, trailing slashes)
+                    normalized_url = high_res_url.split('?')[0].rstrip('/')
+                    
+                    if normalized_url not in seen_urls:
+                        seen_urls.add(normalized_url)
                         images_found.append({
                             'url': high_res_url,
                             'alt': img.get('alt', ''),
@@ -172,9 +177,14 @@ class GalleryAgentService:
             # Also look for links to full-size images
             for link in soup.find_all('a', href=True):
                 href = link.get('href', '')
-                if any(ext in href.lower() for ext in ['.jpg', '.jpeg', '.png', '.webp']):
+                if any(ext in href.lower() for ext in ['.jpg', '.jpeg', '.png', '.webp', '.gif']):
                     full_url = urljoin(base_url, href)
-                    if full_url not in [img['url'] for img in all_images]:
+                    
+                    # Normalize URL for comparison
+                    normalized_url = full_url.split('?')[0].rstrip('/')
+                    
+                    if normalized_url not in seen_urls:
+                        seen_urls.add(normalized_url)
                         images_found.append({
                             'url': full_url,
                             'alt': '',
@@ -182,7 +192,7 @@ class GalleryAgentService:
                         })
             
             all_images.extend(images_found)
-            print(f"📸 Found {len(images_found)} images on page, total: {len(all_images)}")
+            print(f"📸 Found {len(images_found)} unique images on page, total: {len(all_images)}")
             
             if len(all_images) >= max_images:
                 break
