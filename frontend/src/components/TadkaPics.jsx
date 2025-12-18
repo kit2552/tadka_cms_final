@@ -283,11 +283,13 @@ const TadkaPics = ({ images, onImageClick }) => {
             onMouseLeave={() => setIsAnimating(true)}
           >
             {/* Render images THREE times for seamless infinite scroll */}
-            {[...actressImages, ...actressImages, ...actressImages].map((actress, index) => (
+            {[...actressImages, ...actressImages, ...actressImages].map((actress, originalIndex) => {
+              const actualIndex = originalIndex % actressImages.length;
+              return (
               <div 
-                key={`${actress.id}-${index}`} 
+                key={`${actress.id}-${originalIndex}`} 
                 className="flex-shrink-0 cursor-pointer group transition-transform duration-300 hover:scale-105"
-                onClick={() => handleImageClick(index % actressImages.length)}
+                onClick={() => handleImageClick(actualIndex)}
               >
                 <div className="relative w-32 h-48 rounded-lg overflow-hidden transition-colors duration-300">
                   <img
