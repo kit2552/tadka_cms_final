@@ -821,15 +821,25 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {formData.reference_urls.map((url, index) => (
-                    <div key={index} className="flex items-center gap-2">
+                  {formData.reference_urls.map((item, index) => (
+                    <div key={index} className="flex items-center gap-2 bg-white p-2 rounded border border-gray-200">
                       <input
                         type="url"
-                        value={url}
-                        onChange={(e) => updateReferenceUrl(index, e.target.value)}
+                        value={getUrlValue(item)}
+                        onChange={(e) => updateReferenceUrl(index, 'url', e.target.value)}
                         placeholder="https://example.com/news"
                         className="flex-1 px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
+                      <select
+                        value={getUrlType(item)}
+                        onChange={(e) => updateReferenceUrl(index, 'url_type', e.target.value)}
+                        className="w-36 px-2 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                        title="URL Type"
+                      >
+                        {urlTypeOptions.map(opt => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
                       <button
                         type="button"
                         onClick={() => removeReferenceUrl(index)}
