@@ -854,9 +854,14 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                   ))}
                 </div>
               )}
-              <p className="text-xs text-gray-500 text-left">
-                Add reference URLs that the AI should check for the latest news. The agent will analyze these sources and use them as references when generating content.
-              </p>
+              <div className="text-xs text-gray-500 text-left space-y-1">
+                <p>Add reference URLs for the AI to use as content sources.</p>
+                <ul className="list-disc list-inside pl-2 text-gray-400">
+                  <li><strong>Auto Detect</strong> - Agent guesses if it's a listing or direct article</li>
+                  <li><strong>Listing Page</strong> - Agent finds the latest article link first, then fetches its content</li>
+                  <li><strong>Direct Article</strong> - Agent fetches content directly from this URL</li>
+                </ul>
+              </div>
             </div>
 
             {/* Image Options Section */}
