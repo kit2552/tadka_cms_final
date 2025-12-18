@@ -211,6 +211,13 @@ class AgentRunnerService:
                         article_downloaded = trafilatura.fetch_url(article_url)
                         
                         if article_downloaded:
+                            # Check raw HTML for YouTube URL
+                            if not found_youtube_url:
+                                youtube_from_html = self._extract_youtube_url(article_downloaded)
+                                if youtube_from_html:
+                                    found_youtube_url = youtube_from_html
+                                    print(f"🎬 Found YouTube URL in raw HTML: {found_youtube_url}")
+                            
                             # Extract content from the ACTUAL article
                             extracted = trafilatura.extract(
                                 article_downloaded,
