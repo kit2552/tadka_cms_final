@@ -577,10 +577,13 @@ Output:"""
             artist_entity = await self._find_or_create_artist(artist_name, gallery_category)
             entity_name = artist_entity.get('name', artist_name) if artist_entity else artist_name
             
-            # Step 7: Generate gallery folder path
-            orientation_folder = 'vertical' if gallery_type == 'vertical' else 'horizontal'
+            # Step 7: Generate gallery folder path (matching frontend format)
+            # Format: {category}/{entity_name}/{v or h}/{number}
+            # entity_name: spaces and dashes replaced with underscores
+            entity_folder_name = entity_name.lower().replace(' ', '_').replace('-', '_')
+            orientation_folder = 'h' if gallery_type == 'horizontal' else 'v'
             next_number = crud.get_next_gallery_number(db, gallery_category, entity_name) or 1
-            folder_path = f"{gallery_category.lower()}/{entity_name.lower().replace(' ', '-')}/{orientation_folder}/{next_number}"
+            folder_path = f"{gallery_category.lower()}/{entity_folder_name}/{orientation_folder}/{next_number}"
             
             print(f"📂 Gallery folder path: {folder_path}")
             
