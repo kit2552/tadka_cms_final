@@ -209,11 +209,13 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     setMessage({ type: '', text: '' });
 
     try {
-      const url = editingAgent
+      // Check if we're editing an existing agent (has id) or creating new
+      const isEditing = editingAgent && editingAgent.id;
+      const url = isEditing
         ? `${process.env.REACT_APP_BACKEND_URL}/api/ai-agents/${editingAgent.id}`
         : `${process.env.REACT_APP_BACKEND_URL}/api/ai-agents`;
       
-      const method = editingAgent ? 'PUT' : 'POST';
+      const method = isEditing ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
