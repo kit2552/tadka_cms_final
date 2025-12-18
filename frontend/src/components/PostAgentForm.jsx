@@ -494,7 +494,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               </>
             )}
 
-            {/* Common Fields - Content Settings */}
+            {/* Common Fields - Content Settings - Hide for tadka_pics */}
+            {formData.agent_type !== 'tadka_pics' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Content Settings</h3>
               
