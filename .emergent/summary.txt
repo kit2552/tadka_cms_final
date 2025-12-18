@@ -1,71 +1,63 @@
 <analysis>**original_problem_statement:**
-The initial request was to modify the AI prompts for content generation. This quickly evolved into a series of feature requests:
-1.  Update all default AI prompts to incorporate a new process: if Reference Content URLs are provided, the AI should search and summarize them before generating the main content.
-2.  Add a Split Content feature to the AI Agent form. This includes a toggle and a dropdown to select the number of paragraphs (2-4), with the backend prompts updated to instruct the AI to structure the output accordingly.
-3.  Enhance the Image Options logic. When Use Web Search is selected, the AI should follow detailed instructions to find appropriate images based on the content type (e.g., movie posters/actors for movie news, politician photos for political news).
-4.  Update UI labels in the :
-    *   Ready to Publish -> Approved
-    *   Auto Post -> Auto Publish
-5.  Set Web Search as the default selection for the Image Option in the .
-6.  **BUG FIX:** The Status filter in the Manage Content page's Posts tab is not working. It shows all content regardless of the selected status. This was reported twice.
+The initial feature request was to create a Photo Gallery Agent that could scrape images from websites, create a gallery, and generate a new article post linking to it. This evolved into a second, more specific agent type called the Tadka Pics Agent.
+
+**Tadka Pics Agent Requirements:**
+1.  **Source Options:** The agent must support two sources: Websites (functioning like the Photo Gallery Agent) and Instagram.
+2.  **Instagram Scraping:** When Instagram is selected, the user will provide public Instagram post/reel embed code. The agent must parse this code to download all images or video thumbnails from the post without requiring a login.
+3.  **Simplified Form:** The agent form should hide most fields (content type, category, word count, etc.). Enable Tadka Pics should be on and disabled by default.
+4.  **No Article Creation:** Unlike other agents, this agent's sole purpose is to create an image gallery. It should **not** generate or create an associated article/post.
+5.  **Artist Name Extraction:** The agent must automatically extract the artist/celebrity's full name (e.g., Pragya Jaiswal) from the Instagram post to name the gallery correctly.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The Tadka application is a full-stack News CMS. The AI agent creation form () has been significantly enhanced with several new features. The backend prompts () are now highly sophisticated, containing dynamic placeholders and instructions for:
--   Using reference content URLs.
--   Splitting content into multiple paragraphs.
--   Performing context-aware web searches for images.
-
-The frontend form has been updated with new UI controls for these features and label changes as per user requests. A critical bug exists where the content filtering by status is broken.
+The Tadka application is a full-stack News CMS with a multi-agent AI system.
+-   **Backend**: Features three distinct agent services:
+    -   : For standard article posts.
+    -   : For creating photo galleries and an accompanying article. This service includes robust web scraping with image deduplication, placeholder filtering, and S3 upload logic.
+    -   : A new service for the Tadka Pics Agent, designed to create galleries from websites or Instagram without creating an article.
+-   **Frontend**: The React UI features a highly dynamic  component that conditionally renders different fields based on the selected agent type (, , or ).
+-   **Completed Work:** A significant number of features and bug fixes were completed, including implementing the Photo Gallery agent, fixing YouTube video post creation, resolving content type mismatches, and moving prompt management to a central settings page.
 
 **Last working item**:
--   Last item agent was working: The agent was tasked with fixing a bug where the status filter on the Manage Content page was not working correctly. The agent correctly identified that the backend data model () was missing a dedicated  field and was instead using boolean flags (, ), causing a mismatch with the frontend statuses (approved, in_review, etc.). The agent began to add a  field to the  but was interrupted by other user requests before completing the implementation. The user has reported this bug again.
+-   Last item agent was working: Implementing the Tadka Pics Agent. The final action was to fix the logic in  to correctly extract the artist's full name (e.g., Pragya Jaiswal) from an Instagram embed code, rather than just their username ().
 -   Status: **IN PROGRESS**
 -   Agent Testing Done: N
--   Which testing method agent to use? **both**. The backend logic in  and  needs to be fixed and tested. The frontend  needs to be tested with a frontend testing agent to ensure the filter works end-to-end.
+-   Which testing method agent to use? **both**.
+    -   **Backend:** Use the backend testing agent to run the Tadka Pics agent with an Instagram URL. Verify that it extracts the correct full name, downloads all images, creates a gallery with Tadka Pics enabled, and does **not** create a post.
+    -   **Frontend:** Manually test the Tadka Pics Agent form to ensure all UI rules (hidden fields, default settings) are applied correctly.
 -   User Testing Done: N
 
 **All Pending/In progress Issue list**:
--   **Issue 1: (P0)** Manage Content Status Filter Not Working.
-
-    -   **Attempted fixes:** The agent identified the root cause: a data model mismatch between frontend statuses and the backend's use of boolean flags. It started adding a  field to  but did not complete the fix across the application.
-    -   **Next debug checklist:**
-        1.  **Schema:** Ensure the  field is present in , , and  schemas in . Set a default value (e.g., 'draft').
-        2.  **CRUD Function:** Modify the  function in . Remove the old logic based on  and . Instead, build a query that filters on the new  field (e.g., ). Ensure it handles the All case correctly (by not adding a status filter).
-        3.  **API Endpoints:** Update all endpoints that create or modify articles (e.g., in ) to correctly set the  field. This includes mapping old concepts like published to the new status field.
-        4.  **Data Migration (Consideration):** Existing articles in the database will not have the  field. The  function should be robust enough to handle articles with and without this field, or a one-time migration script might be needed. A simple approach is to treat articles without a  based on their  flag.
-        5.  **Restart & Test:** Restart the backend and use the frontend testing agent to verify the fix on the Manage Content page.
-    -   **Why fix this issue and what will be achieved with the fix?** This is a critical bug fix for a core CMS feature. It will allow users to correctly filter and manage their content workflow.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** Y (User reported it twice)
-    -   **Should Test frontend/backend/both after fix?** Both
-    -   **Blocked on other issue:** None
+-   None. The primary focus is completing the in-progress task.
 
 **In progress Task List**:
--   None
+-   **Task 1: Complete and test the Tadka Pics Agent implementation (P0)**
+    -   **Where to resume:** The agent has just applied a fix to the artist name extraction logic in . The immediate next step is to restart the backend and test the entire feature.
+    -   **What will be achieved with this?** A new, streamlined agent type that allows for the rapid creation of Tadka Pics image galleries directly from Instagram posts or websites.
+    -   **Status:** IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?** Both
+    -   **Blocked on something:** None
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks:**
-    -   **(P1) Implement Core AI Content Generation Logic:** The UI and configuration are ready, but the backend service that executes the AI agents (runs the prompt against the selected model, uses reference URLs, and creates a draft post) is not yet implemented.
-        -   **Files:**  (or a new dedicated service file), .
-    -   **(P1) Implement Other Agent Types:** The agent selection modal includes Photo Gallery Agent and Review Agent as options, but their corresponding forms and backend logic have not been created.
-        -   **Files:** Create  and ; update  to render them; create corresponding backend routes and CRUD functions.
+    -   **(P1)** Implement the Review Agent form and backend logic, which is visible as an option in the UI but not yet functional.
+-   **Future Tasks:**
+    -   **(P2)** Refactor : This component has grown very complex with logic for three different agent types and should be broken into smaller, more manageable child components.
+    -   **(P2)** Refactor scraping logic: Abstract the common web scraping, image downloading, and gallery creation logic from  and  into a shared utility or base class.
 
 **Completed work in this session**
--   **AI Prompt Enhancements ():**
-    -   Updated all default AI prompts to utilize reference content URLs for summarization.
-    -   Integrated Split Content instructions into all prompts.
-    -   Added detailed, context-aware instructions for image web search to all prompts.
--   **Frontend Feature Additions ():**
-    -   Added Split Content toggle and paragraph count selector.
-    -   Set Web Search as the default image option.
--   **UI Label Updates ():**
-    -   Changed workflow label from Ready to Publish to Approved.
-    -   Changed workflow label from Auto Post to Auto Publish.
+-   **Feature:** Implemented the Photo Gallery Agent with sophisticated web scraping to find the latest gallery on a page, download images, filter out placeholders/ads, handle duplicates, upload to S3, and create a new gallery and article.
+-   **Feature:** Implemented Video Post auto-detection, which identifies YouTube links in scraped content and sets the content type correctly.
+-   **Feature:** Added a Custom Prompt editor to the agent form, allowing per-agent prompt overrides.
+-   **Refactor:** Migrated the Category-Prompt Mapping feature from the agent form into the main System Settings page for better management.
+-   **Bug Fix:** Resolved a critical bug where the State News agent was generating content from a listing page summary instead of the actual latest article.
+-   **Bug Fix:** Fixed numerous routing and display issues related to the Video Post content type to ensure it used the correct article template.
+-   **Bug Fix:** Corrected S3 upload failures in the gallery agent by using the globally initialized S3 service.
+-   **Bug Fix:** Resolved multiple scraping issues in the Photo Gallery agent, including duplicate images, incorrect latest gallery detection, and scraping images from unrelated related galleries sections.
 
 **Earlier issues found/mentioned but not fixed**
--   The status filter bug is the only one, and it is currently the highest priority item under .
+-   None.
 
 **Known issue recurrence from previous fork**
 -   None.
@@ -77,63 +69,68 @@ The frontend form has been updated with new UI controls for these features and l
 -   **Frontend:** React, Tailwind CSS
 -   **Backend:** FastAPI (Python)
 -   **Database:** MongoDB
--   **Prompt Engineering:** Heavy use of dynamic f-strings and placeholders in Python to construct complex, context-aware prompts for an AI model.
+-   **Web Scraping:** Advanced use of  and  for parsing complex news sites and Instagram embed pages, including DOM traversal to isolate main content and avoid ads/related links.
+-   **Multi-Agent Architecture:** Backend is structured with separate, specialized services for different agent types (, , ).
+-   **Dynamic UI:** The main agent form () uses conditional rendering to present a different user interface for each of the three agent types.
 
 **key DB schema**
--   **articles (collection):**
-    -   The schema is evolving. It currently uses  and . A new  field is being added to support a more granular workflow ('draft', 'in_review', 'approved', 'published').
+-   **ai_agents (collection):** Schema is now highly flexible, supporting different fields based on . It includes , gallery settings, and a new  field for the Tadka Pics agent.
+-   **galleries (collection):** Created automatically by the  and .
 
 **changes in tech stack**
--   None
+-   No new dependencies were added, but the use of  was extended for more advanced web scraping tasks.
 
 **All files of reference**
--   **Updated:**
-    -   : Heavily modified to include enhanced logic for AI prompts (reference content, split content, image search). The  function needs to be fixed here.
-    -   : Updated with new UI elements (Split Content) and label changes.
-    -   : A  field was being added to the  schema. This work is incomplete.
--   **Important Files for Current Bug:**
-    -   : Contains the status filter UI that is not working.
-    -   : Contains the  endpoint that needs to correctly handle the status query parameter.
+-   **/app/backend/services/tadka_pics_agent_service.py:** The new service for the current in-progress feature. **Primary file to work on.**
+-   **/app/frontend/src/components/PostAgentForm.jsx:** A critical, heavily modified file that controls the UI for all agent types.
+-   **/app/backend/services/gallery_agent_service.py:** The service for the Photo Gallery agent, containing logic that is being adapted for the Tadka Pics agent.
+-   **/app/backend/routes/ai_agents_routes.py:** The API router, updated to delegate to the correct agent service based on .
+-   **/app/frontend/src/pages/AIAgents.jsx:** Modified to correctly launch the form for all agent types.
 
 **Areas that need refactoring**:
--    has become even larger and more complex with the addition of new features. It urgently needs to be broken down into smaller, manageable child components.
+-    is now extremely complex due to handling three agent types with extensive conditional logic. It should be broken down into smaller, agent-specific components to improve readability and maintainability.
+-   The web scraping and image processing logic is duplicated across  and . This should be extracted into a common utility module or a base class.
 
 **key api endpoints**
--   : (GET) This is the key endpoint for the current bug. It's supposed to filter articles by status but is failing.
+-   : The primary endpoint to trigger any agent. The backend now routes the request to the appropriate service based on the agent's type.
 
 **Critical Info for New Agent**
--   **PRIORITY ONE:** The user has reported the Status Filter bug twice. You must fix this before doing anything else. Do not get sidetracked by other requests until this bug is resolved and tested.
--   The agent was on the right track to fix the bug by adding a  field to the database schema. You must resume and complete this implementation across the backend (schema, CRUD, API endpoint) and then test it.
+-   **TOP PRIORITY (P0):** Complete the implementation of the Tadka Pics Agent. You are resuming mid-feature.
+-   **CURRENT STATE:** The UI and backend service for the Tadka Pics agent are created. A bug fix for extracting the artist's full name from Instagram embeds was just applied to  but has not been tested.
+-   **IMMEDIATE NEXT STEPS:**
+    1.  Restart the backend service to deploy the latest fix.
+    2.  Test the Tadka Pics Agent using the Instagram source.
+    3.  Verify that the agent correctly extracts the full artist name, downloads all images from the post, creates a new gallery with Tadka Pics enabled, and confirms that **NO** article/post is created.
+    4.  Also test the Website source option to ensure it functions correctly.
+-   **COMPLEXITY WARNING:** The  component is very fragile due to its complexity. Be cautious when making changes to it and test all three agent forms to prevent regressions.
 
 **documents created in this job**
--   None
+-   None.
 
 **Last 10 User Messages and any pending user messages**
-1.  **User:** Fix the priority 1 task (Movie News prompt). (Agent found it was already correct).
-2.  **User:** Update prompts to use reference content URLs. (Completed).
-3.  **User:** Add a Split Content feature. (Completed).
-4.  **User:** Add detailed image web search instructions to prompts. (Completed).
-5.  **User:** Change Ready to Publish label and fix the status filter bug. (Label changed, bug NOT fixed).
-6.  **User:** Change Auto Post to Auto Publish and set web search as default image option. (Completed).
-7.  **User:** **The status filter is still broken. Please fix it.** (**PENDING, HIGHEST PRIORITY**).
+1.  **User:** I want a Tadka Pics Agent that's like the photo gallery agent but simpler. It should only create a gallery (not a post) and have an option to scrape from Instagram. (Completed: Agent started implementation)
+2.  **User:** We'll use the Instagram embed option. Can you download all images and support reels? (Completed: Agent confirmed this is possible)
+3.  **User:** Here is a sample Instagram embed code for testing. (Completed: Agent tested and confirmed image extraction works)
+4.  **User:** You will extract the actor's name from Instagram to create the gallery, right? (Pending: Agent just implemented a fix for this)
+5.  **Agent:** Yes, extracting the artist name. The current code extracts the username (), but it should be the full name (Pragya Jaiswal). Let me fix that. (Completed: Agent applied the fix)
 
 **Project Health Check:**
--   **Broken:** A core feature of the CMS, filtering content by status, is non-functional.
+-   **Broken:** The Tadka Pics Agent feature is mid-implementation and is not yet fully functional or tested.
 -   **Mocked:** None.
 
 **3rd Party Integrations**
--   **OpenAI:** Configured for API key management (requires User API Key).
--   **Google Gemini:** Configured for API key management (requires User API Key).
--   **Anthropic Claude:** Configured for API key management (requires User API Key).
+-   **OpenAI, Google Gemini, Anthropic:** Used for text generation. Requires User API Key.
+-   **Trafilatura & BeautifulSoup4:** Used for web scraping article and gallery content from websites.
+-   **Instagram:** Used via public embed URLs to scrape images and metadata without authentication. No key required.
 
 **Testing status**
--   **Testing agent used after significant changes:** NO
+-   **Testing agent used after significant changes:** NO (for the Tadka Pics agent)
 -   **Troubleshoot agent used after agent stuck in loop:** NO
 -   **Test files created:** None
--   **Known regressions:** The status filter was likely working before (with fewer statuses) and is now broken due to new requirements not being fully implemented.
+-   **Known regressions:** None.
 
 **Credentials to test flow:**
--   None provided. Admin access is assumed for CMS functionality.
+-   None required. The agent should use the provided Instagram embed code for testing.
 
 **What agent forgot to execute**
--   The agent failed to complete the full implementation of the status filter bug fix. It started by editing the schema but was distracted by subsequent UI tweak requests and never finished the backend logic in  and , leaving the feature broken.</analysis>
+-   The agent applied a fix to the Instagram name extraction logic in  but has not yet restarted the backend service to deploy the change or tested if the fix works as intended.</analysis>
