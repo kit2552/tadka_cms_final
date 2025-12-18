@@ -70,28 +70,30 @@ const TadkaPics = ({ images, onImageClick }) => {
     fetchTadkaPics();
   }, []);
 
-  // Auto scroll effect - MUST be declared before any conditional returns
+  // Auto scroll effect - Infinite circular scroll
   useEffect(() => {
     const interval = setInterval(() => {
-      if (scrollContainerRef.current) {
+      if (scrollContainerRef.current && actressImages.length > 0) {
         const container = scrollContainerRef.current;
-        const maxScroll = container.scrollWidth - container.clientWidth;
+        const singleSetWidth = container.scrollWidth / 2; // Width of one set of images
         
-        if (scrollPosition >= maxScroll) {
-          // Reset to beginning
+        // Scroll 1px to the right
+        const newPosition = scrollPosition + 1;
+        
+        // When we've scrolled past the first set, seamlessly jump back
+        if (newPosition >= singleSetWidth) {
+          // Instant jump to beginning (no animation)
+          container.scrollLeft = 0;
           setScrollPosition(0);
-          container.scrollTo({ left: 0, behavior: 'smooth' });
         } else {
-          // Scroll 1px to the right for slow movement
-          const newPosition = scrollPosition + 1;
           setScrollPosition(newPosition);
-          container.scrollTo({ left: newPosition, behavior: 'smooth' });
+          container.scrollLeft = newPosition;
         }
       }
-    }, 50); // 50ms interval for slow, smooth scrolling
+    }, 30); // 30ms interval for smooth scrolling
 
     return () => clearInterval(interval);
-  }, [scrollPosition]);
+  }, [scrollPosition, actressImages.length]);
 
   // Show loading state or empty state
   if (loading) {
