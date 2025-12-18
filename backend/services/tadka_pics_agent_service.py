@@ -56,28 +56,31 @@ class TadkaPicsAgentService:
             for url in urls:
                 if not url:
                     continue
-                    
-                # Convert post URL to embed URL if needed
-                embed_url = self._get_embed_url(url)
-                if not embed_url:
+                
+                # Clean and get direct post URL
+                direct_url = self._get_direct_url(url)
+                if not direct_url:
                     print(f"❌ Could not parse Instagram URL: {url}")
                     continue
                 
-                print(f"📸 Fetching Instagram embed: {embed_url}")
+                print(f"📸 Fetching Instagram post: {direct_url}")
                 
                 try:
-                    response = await client.get(embed_url, headers={
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                    # Fetch the direct post page to get meta tag images
+                    response = await client.get(direct_url, headers={
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                        'Accept-Language': 'en-US,en;q=0.5',
                     })
                     
                     if response.status_code != 200:
-                        print(f"❌ Failed to fetch embed page: {response.status_code}")
+                        print(f"❌ Failed to fetch post page: {response.status_code}")
                         continue
                     
                     html = response.text
                     
-                    # Extract images from embed page
-                    images = self._parse_instagram_embed(html, content_type)
+                    # Extract images from meta tags (og:image and twitter:image)
+                    images = self._parse_instagram_meta_tags(html, content_type)
                     
                     for img in images:
                         # Normalize URL for deduplication
@@ -88,7 +91,9 @@ class TadkaPicsAgentService:
                             print(f"   📷 Found image: {img['url'][:80]}...")
                     
                 except Exception as e:
-                    print(f"❌ Error fetching Instagram embed: {e}")
+                    print(f"❌ Error fetching Instagram post: {e}")
+                    import traceback
+                    traceback.print_exc()
                     continue
         
         print(f"📊 Found {len(all_images)} unique Instagram images")
