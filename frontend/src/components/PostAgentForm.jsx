@@ -819,6 +819,124 @@ Instructions:
               )}
             </div>
 
+            {/* Tadka Pics Settings Section - Only for tadka_pics agent type */}
+            {formData.agent_type === 'tadka_pics' && (
+              <div className="bg-orange-50 rounded-lg p-4 space-y-4 border border-orange-200">
+                <div className="text-left">
+                  <h3 className="text-sm font-semibold text-orange-900">🔥 Tadka Pics Settings</h3>
+                  <p className="text-xs text-orange-600 mt-0.5">Create Tadka Pics galleries from websites or Instagram</p>
+                </div>
+                
+                {/* Source Type Selection */}
+                <div className="text-left">
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    Source Type *
+                  </label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="source_type"
+                        value="websites"
+                        checked={formData.source_type === 'websites'}
+                        onChange={(e) => setFormData(prev => ({ ...prev, source_type: e.target.value }))}
+                        className="w-4 h-4 text-orange-600"
+                      />
+                      <span className="text-sm text-gray-700">Websites</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="source_type"
+                        value="instagram"
+                        checked={formData.source_type === 'instagram'}
+                        onChange={(e) => setFormData(prev => ({ ...prev, source_type: e.target.value }))}
+                        className="w-4 h-4 text-orange-600"
+                      />
+                      <span className="text-sm text-gray-700">Instagram</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Instagram Content Type - Only show when Instagram is selected */}
+                {formData.source_type === 'instagram' && (
+                  <div className="text-left">
+                    <label className="block text-xs font-medium text-gray-700 mb-2">
+                      Instagram Content Type
+                    </label>
+                    <div className="flex gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="instagram_content_type"
+                          value="photos"
+                          checked={formData.instagram_content_type === 'photos'}
+                          onChange={(e) => setFormData(prev => ({ ...prev, instagram_content_type: e.target.value }))}
+                          className="w-4 h-4 text-orange-600"
+                        />
+                        <span className="text-sm text-gray-700">Photos</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="instagram_content_type"
+                          value="reels"
+                          checked={formData.instagram_content_type === 'reels'}
+                          onChange={(e) => setFormData(prev => ({ ...prev, instagram_content_type: e.target.value }))}
+                          className="w-4 h-4 text-orange-600"
+                        />
+                        <span className="text-sm text-gray-700">Reels</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Gallery Category */}
+                <div className="text-left">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Gallery Category *
+                  </label>
+                  <select
+                    name="gallery_category"
+                    value={formData.gallery_category}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  >
+                    <option value="Actress">Actress</option>
+                    <option value="Actor">Actor</option>
+                    <option value="Events">Events</option>
+                    <option value="Politics">Politics</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Others">Others</option>
+                  </select>
+                </div>
+                
+                {/* Max Images */}
+                <div className="text-left">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Maximum Images
+                  </label>
+                  <select
+                    name="max_images"
+                    value={formData.max_images}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  >
+                    <option value={10}>10 images</option>
+                    <option value={20}>20 images</option>
+                    <option value={30}>30 images</option>
+                    <option value={50}>50 images (max)</option>
+                  </select>
+                </div>
+                
+                {/* Tadka Pics Info */}
+                <div className="bg-orange-100 rounded p-2 text-xs text-orange-800">
+                  <strong>Note:</strong> Tadka Pics are always enabled and gallery type is always vertical.
+                  No article content will be generated - only the image gallery.
+                </div>
+              </div>
+            )}
+
             {/* Photo Gallery Settings Section - Only for photo_gallery agent type */}
             {formData.agent_type === 'photo_gallery' && (
               <div className="bg-purple-50 rounded-lg p-4 space-y-4 border border-purple-200">
