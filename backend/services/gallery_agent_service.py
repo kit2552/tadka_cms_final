@@ -57,20 +57,23 @@ class GalleryAgentService:
             from openai import OpenAI
             self.client = OpenAI(api_key=ai_config['openai_api_key'])
     
-    def _initialize_s3_client(self):
-        """Initialize S3 client for image uploads"""
-        self.aws_config = crud.get_aws_config(db)
-        if not self.aws_config:
+    def _initialize_s3_service(self):
+        """Initialize S3 service using existing s3_service from server"""
+        from s3_service import s3_service
+        
+        # Get AWS config and initialize if not already done
+        aws_config = crud.get_aws_config(db)
+        if not aws_config:
             raise ValueError("AWS configuration not found. Please configure S3 in System Settings.")
         
-        self.s3_client = boto3.client(
-            's3',
-            aws_access_key_id=self.aws_config.get('access_key_id'),
-            aws_secret_access_key=self.aws_config.get('secret_access_key'),
-            region_name=self.aws_config.get('region', 'us-east-1'),
-            config=BotoConfig(signature_version='s3v4')
-        )
-        print(f"✅ S3 client initialized for bucket: {self.aws_config.get('bucket_name')}")
+        if not s3_service.is_enabled():
+            s3_service.initialize(aws_config)
+        
+        if not s3_service.is_enabled():
+            raise ValueError("S3 service is not enabled. Please check AWS configuration in System Settings.")
+        
+        self.s3_service = s3_service
+        print(f"✅ S3 service initialized")
 
     async def _fetch_page_content(self, url: str) -> Tuple[str, str]:
         """Fetch page HTML content and extract title"""
