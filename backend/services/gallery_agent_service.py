@@ -191,8 +191,16 @@ class GalleryAgentService:
             for img in main_content.find_all('img'):
                 src = img.get('data-src') or img.get('data-lazy-src') or img.get('src') or ''
                 
-                # Skip thumbnails and icons
-                if any(skip in src.lower() for skip in ['thumb', 'icon', 'logo', 'avatar', 'placeholder']):
+                # Skip thumbnails, icons, ads, and non-gallery images
+                skip_patterns = [
+                    'thumb', 'icon', 'logo', 'avatar', 'placeholder',
+                    'youtube.com', 'ytimg.com', 'img.youtube',  # YouTube thumbnails
+                    'indianclicks', 'ad_', 'ads/', 'banner', 'sponsor',  # Ads
+                    'facebook', 'twitter', 'instagram', 'social',  # Social icons
+                    'gravatar', 'wp-emoji', 'emoji',  # Misc
+                    '200x90', '1156x100', '300x250', '728x90',  # Common ad sizes
+                ]
+                if any(skip in src.lower() for skip in skip_patterns):
                     continue
                 
                 if src and not src.startswith('data:'):
