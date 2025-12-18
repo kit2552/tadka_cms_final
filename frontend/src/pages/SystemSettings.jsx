@@ -1642,15 +1642,138 @@ const SystemSettings = () => {
 
             {/* Other Settings Tab */}
             {activeTab === 'other' && (
-              <div className="py-16">
-                <div className="flex items-start gap-4">
-                  <svg className="w-12 h-12 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <div className="text-left">
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">Other Settings</h3>
-                    <p className="text-gray-600">Additional CMS configuration options</p>
+              <div className="space-y-6">
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">Category-Prompt Mapping</h3>
+                  <p className="text-sm text-gray-600 text-left">Configure AI prompts for each category. These prompts are used as defaults when AI agents generate content for specific categories.</p>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <p className="text-sm text-blue-800">
+                    <strong>Available Placeholders:</strong> Use these in your prompts and they will be replaced dynamically:
+                  </p>
+                  <ul className="text-xs text-blue-700 mt-2 space-y-1">
+                    <li>• <code className="bg-blue-100 px-1 rounded">{'{target_state_context}'}</code> - State-specific context</li>
+                    <li>• <code className="bg-blue-100 px-1 rounded">{'{target_audience}'}</code> - Target audience</li>
+                    <li>• <code className="bg-blue-100 px-1 rounded">{'{word_count}'}</code> - Configured word count</li>
+                    <li>• <code className="bg-blue-100 px-1 rounded">{'{state_language}'}</code> - Regional language</li>
+                    <li>• <code className="bg-blue-100 px-1 rounded">{'{reference_content_section}'}</code> - Fetched reference content</li>
+                  </ul>
+                </div>
+
+                <div className="space-y-3">
+                  {categories
+                    .filter(cat => cat.slug !== 'latest-news')
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map(cat => (
+                      <div key={cat.slug} className="flex items-start gap-3 bg-white rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-colors">
+                        <div className="w-40 flex-shrink-0 text-left">
+                          <label className="text-sm font-semibold text-gray-900 block">
+                            {cat.name}
+                          </label>
+                          <span className="text-xs text-gray-500">({cat.slug})</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs text-gray-600 font-mono bg-gray-50 rounded p-2 border border-gray-200 max-h-20 overflow-hidden">
+                            {editingPromptMappings[cat.slug] ? (
+                              <>
+                                {editingPromptMappings[cat.slug].substring(0, 150)}
+                                {editingPromptMappings[cat.slug].length > 150 && '...'}
+                              </>
+                            ) : (
+                              <span className="text-gray-400 italic">No prompt defined</span>
+                            )}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => openPromptEditor(cat.slug)}
+                          className="flex-shrink-0 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                          Edit Prompt
+                        </button>
+                      </div>
+                    ))}
+                </div>
+
+                {/* Save Button */}
+                <div className="flex justify-end pt-6 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={saveCategoryPromptMappings}
+                    disabled={promptSaving}
+                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-medium text-sm transition-colors"
+                  >
+                    {promptSaving ? 'Saving...' : 'Save All Prompts'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Prompt Editor Modal */}
+            {showPromptEditor && editingCategoryPrompt && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+                  <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+                    <div className="text-left">
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Edit Prompt: {categories.find(c => c.slug === editingCategoryPrompt)?.name}
+                      </h2>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Configure the AI prompt for this category
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setShowPromptEditor(false);
+                        setEditingCategoryPrompt(null);
+                      }}
+                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto p-6">
+                    <textarea
+                      value={editingPromptMappings[editingCategoryPrompt] || ''}
+                      onChange={(e) => handlePromptChange(editingCategoryPrompt, e.target.value)}
+                      className="w-full h-96 px-4 py-3 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                      placeholder="Enter the AI prompt for this category..."
+                    />
+                    <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                      <p className="text-sm font-semibold text-yellow-900 mb-2">Available Placeholders:</p>
+                      <ul className="text-sm text-yellow-800 space-y-1">
+                        <li>• <code className="bg-yellow-100 px-1 rounded">{'{target_state_context}'}</code> - State-specific context (e.g., "focusing on Telangana region")</li>
+                        <li>• <code className="bg-yellow-100 px-1 rounded">{'{target_audience}'}</code> - Target audience (e.g., "readers in Telangana")</li>
+                        <li>• <code className="bg-yellow-100 px-1 rounded">{'{word_count}'}</code> - Configured word count</li>
+                        <li>• <code className="bg-yellow-100 px-1 rounded">{'{state_language}'}</code> - Regional language (e.g., "Telugu")</li>
+                        <li>• <code className="bg-yellow-100 px-1 rounded">{'{reference_content_section}'}</code> - Fetched reference content</li>
+                        <li>• <code className="bg-yellow-100 px-1 rounded">{'{split_content_section}'}</code> - Split content instructions</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex items-center justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowPromptEditor(false);
+                        setEditingCategoryPrompt(null);
+                      }}
+                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={savePromptEdit}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                    >
+                      Done
+                    </button>
                   </div>
                 </div>
               </div>
