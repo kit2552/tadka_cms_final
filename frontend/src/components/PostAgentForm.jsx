@@ -100,6 +100,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
   const contentTypeOptions = [
     { value: 'post', label: 'Post' },
+    { value: 'video-post', label: 'Video Post' },
     { value: 'video', label: 'Video' },
     { value: 'photo-gallery', label: 'Photo Gallery' },
     { value: 'movie-review', label: 'Movie Review' },
