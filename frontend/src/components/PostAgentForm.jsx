@@ -579,7 +579,14 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                             <div
                               key={cat.slug}
                               onClick={() => {
-                                setFormData(prev => ({ ...prev, category: cat.slug }));
+                                // Load prompt from category mapping if no custom prompt exists
+                                const defaultPrompt = categoryPromptMappings[cat.slug] || '';
+                                setFormData(prev => ({ 
+                                  ...prev, 
+                                  category: cat.slug,
+                                  // Only set custom_prompt if it's empty (new agent or category changed)
+                                  custom_prompt: prev.custom_prompt || defaultPrompt
+                                }));
                                 setCategorySearch('');
                                 setShowCategoryDropdown(false);
                               }}
