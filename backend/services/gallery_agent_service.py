@@ -391,7 +391,7 @@ Artist Name:"""
             print(f"Error extracting artist name: {e}")
             return "Unknown"
 
-    async def _generate_gallery_content(self, html: str, title: str, artist_name: str, word_count: str = "<100") -> Tuple[str, str]:
+    async def _generate_gallery_content(self, html: str, title: str, artist_name: str, word_count: str = "<100", custom_prompt: str = None) -> Tuple[str, str]:
         """Generate new title and content for the gallery post"""
         import trafilatura
         
@@ -406,7 +406,17 @@ Artist Name:"""
         elif word_count == "<250":
             max_words = 250
         
-        prompt = f"""Create engaging content for a photo gallery post.
+        # Use custom prompt if provided, otherwise use default
+        if custom_prompt and custom_prompt.strip():
+            prompt = custom_prompt
+            # Replace placeholders
+            prompt = prompt.replace('{title}', title)
+            prompt = prompt.replace('{artist_name}', artist_name)
+            prompt = prompt.replace('{content}', text_content[:2000])
+            prompt = prompt.replace('{word_count}', str(max_words))
+            print(f"📝 Using custom prompt for gallery content generation")
+        else:
+            prompt = f"""Create engaging content for a photo gallery post.
 
 Original Title: {title}
 Artist/Celebrity: {artist_name}
