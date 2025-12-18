@@ -503,20 +503,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Content Settings</h3>
               
-              {/* Category Selection with Mapping Button */}
+              {/* Category Selection */}
               <div className="text-left">
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-medium text-gray-700">
-                    Category <span className="text-red-500">*</span>
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setShowMappingModal(true)}
-                    className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
-                  >
-                    Category-Prompt Mapping
-                  </button>
-                </div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Category <span className="text-red-500">*</span>
+                </label>
                 <div className="relative">
                   {/* Selected Category Tag */}
                   {formData.category && (
