@@ -864,8 +864,8 @@ const ArticlePage = () => {
                   </div>
                 )}
               </div>
-            ) : article.content_type === 'video' || article.content_type === 'video_post' ? (
-              /* Video Content - No main content, only video */
+            ) : article.content_type === 'video' ? (
+              /* Pure Video Content - No main content, only video */
               <div className="prose prose-lg max-w-none mb-3 pt-3 pb-3">
                 <style>{`
                   /* Override ALL link styles in article content - maximum specificity */
@@ -896,7 +896,7 @@ const ArticlePage = () => {
                   }
                 `}</style>
                 <div className={`text-gray-900 leading-relaxed space-y-6 text-left`}>
-                  {/* For video content type, don't show main content - only video embed above is sufficient */}
+                  {/* For pure video content type, don't show main content - only video embed above is sufficient */}
                 </div>
               </div>
             ) : (
