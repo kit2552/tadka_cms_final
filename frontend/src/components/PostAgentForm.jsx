@@ -31,7 +31,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     gallery_type: 'vertical',
     gallery_category: 'Actress',
     tadka_pics_enabled: false,
-    max_images: 50
+    max_images: 50,
+    // Tadka Pics Agent fields
+    source_type: 'websites',  // 'websites' or 'instagram'
+    instagram_content_type: 'photos',  // 'photos' or 'reels'
+    instagram_urls: []
   });
   
   const [showAgentPromptEditor, setShowAgentPromptEditor] = useState(false);
