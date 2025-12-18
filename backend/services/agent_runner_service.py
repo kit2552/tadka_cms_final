@@ -989,12 +989,12 @@ Article:
                     youtube_url = self._extract_youtube_url(content)
                 
                 if youtube_url:
-                    print(f"🎬 YouTube video detected! Switching content type from '{content_type}' to 'video'")
-                    content_type = 'video'
+                    print(f"🎬 YouTube video detected! Switching content type from '{content_type}' to 'video-post'")
+                    content_type = 'video-post'
             
             # Step 10: Get image based on image option (skip for video posts)
             image_url = None
-            if content_type != 'video':
+            if content_type != 'video-post':
                 image_option = agent.get('image_option', 'web_search')
                 image_url = await self._get_image_for_content(content, title, image_option, agent.get('category', ''))
             else:
