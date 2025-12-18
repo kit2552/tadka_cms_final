@@ -279,7 +279,13 @@ class AgentRunnerService:
                     is_different_from_base = full_url.rstrip('/') != base_url.rstrip('/')
                     already_added = any(url == full_url for url, _, _ in found_articles)
                     
-                    if not (is_same_domain and is_not_asset and is_different_from_base and not already_added):
+                    # Check if URL belongs to same category as base URL
+                    is_same_category = True
+                    if base_category:
+                        # Check if the article URL contains the same category
+                        is_same_category = base_category.lower() in parsed_url.path.lower()
+                    
+                    if not (is_same_domain and is_not_asset and is_different_from_base and not already_added and is_same_category):
                         continue
                     
                     article_id = 0
