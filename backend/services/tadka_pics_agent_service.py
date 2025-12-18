@@ -150,51 +150,48 @@ class TadkaPicsAgentService:
     def _parse_instagram_meta_tags(self, html: str, content_type: str) -> List[Dict]:
         """Parse Instagram page HTML to extract image URLs from meta tags
         
-        Instagram now renders images via JavaScript, but meta tags still contain
-        preview images that we can use.
+        Instagram serves different content to Googlebot with pre-rendered images.
+        We need to filter out:
+        - Profile pictures (t51.2885-19 path) - these are from "More posts" section
+        - Small thumbnails (s150x150, s75x75, etc.)
+        
+        We want to keep:
+        - Main post photos (t51.82787-15 path)
+        - Video thumbnails/reels (t51.71878-15 path)
         """
         images = []
-        seen_urls = set()
+        seen_image_ids = set()
         
-        # Extract from og:image meta tag
-        og_patterns = [
-            r'<meta[^>]*property="og:image"[^>]*content="([^"]+)"',
-            r'<meta[^>]*content="([^"]+)"[^>]*property="og:image"',
-        ]
-        
-        for pattern in og_patterns:
-            matches = re.findall(pattern, html)
-            for url in matches:
-                url = url.replace('&amp;', '&')
-                if url not in seen_urls and 'cdninstagram' in url:
-                    seen_urls.add(url)
-                    images.append({'url': url})
-        
-        # Extract from twitter:image meta tag
-        twitter_patterns = [
-            r'<meta[^>]*name="twitter:image"[^>]*content="([^"]+)"',
-            r'<meta[^>]*content="([^"]+)"[^>]*name="twitter:image"',
-        ]
-        
-        for pattern in twitter_patterns:
-            matches = re.findall(pattern, html)
-            for url in matches:
-                url = url.replace('&amp;', '&')
-                if url not in seen_urls and 'cdninstagram' in url:
-                    seen_urls.add(url)
-                    images.append({'url': url})
-        
-        # Also try to find any scontent CDN URLs in the page
+        # Find all scontent CDN URLs
         cdn_pattern = r'https://scontent[^"\s<>]+cdninstagram\.com[^"\s<>]+\.(?:jpg|jpeg|webp)[^"\s<>]*'
         cdn_matches = re.findall(cdn_pattern, html)
+        
         for url in cdn_matches:
             url = url.replace('&amp;', '&')
-            # Skip very small thumbnails and profile pics
+            
+            # Skip profile pictures (t51.2885-19) - these are from "More posts from user"
+            if '/t51.2885-19/' in url:
+                continue
+            
+            # Skip very small thumbnails
             if 's150x150' in url or 's75x75' in url or 's100x100' in url:
                 continue
-            if url not in seen_urls:
-                seen_urls.add(url)
-                images.append({'url': url})
+            
+            # Only keep main content images and video thumbnails
+            # t51.82787-15 = Main post photos
+            # t51.71878-15 = Video/reel thumbnails
+            if '/t51.82787-15/' not in url and '/t51.71878-15/' not in url:
+                continue
+            
+            # Extract unique image ID to avoid duplicates of different sizes
+            id_match = re.search(r'/(\d+_\d+)', url)
+            if id_match:
+                image_id = id_match.group(1)
+                if image_id in seen_image_ids:
+                    continue
+                seen_image_ids.add(image_id)
+            
+            images.append({'url': url})
         
         return images
 
