@@ -337,12 +337,36 @@ class TadkaPicsAgentService:
         return f"TDK-{timestamp}-{random_suffix}"
 
     async def _extract_artist_name_from_instagram(self, html: str) -> str:
-        """Extract artist name from Instagram embed HTML
+        """Extract artist name from Instagram page HTML
         
-        Looks for patterns like:
+        Looks for patterns in meta tags and page content like:
+        - og:title: "Name on Instagram: caption..."
         - "A post shared by Pragya Jaiswal (@jaiswalpragya)"
         - "shared by Name Here (@username)"
         """
+        import html as html_module
+        
+        # Try to extract from og:title meta tag
+        # Format: "Name on Instagram: caption..."
+        og_title_patterns = [
+            r'<meta[^>]*property="og:title"[^>]*content="([^"]+)"',
+            r'<meta[^>]*content="([^"]+)"[^>]*property="og:title"',
+        ]
+        
+        for pattern in og_title_patterns:
+            match = re.search(pattern, html)
+            if match:
+                title = html_module.unescape(match.group(1))
+                # Extract name before "on Instagram"
+                name_match = re.match(r'^([^@]+?)\s+(?:on Instagram|&#x2605;|★)', title)
+                if name_match:
+                    name = name_match.group(1).strip()
+                    # Clean up any remaining HTML entities
+                    name = html_module.unescape(name)
+                    if name and len(name) > 1:
+                        print(f"👤 Extracted artist name from og:title: {name}")
+                        return name
+        
         # Try to find the actual name from "shared by Name (@username)" pattern
         # This gives us the real name, not just the username
         match = re.search(r'shared by ([^(]+)\s*\(@', html)
