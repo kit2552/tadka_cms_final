@@ -136,6 +136,7 @@ async def toggle_ai_agent(agent_id: str, db = Depends(get_db)):
 async def run_ai_agent(agent_id: str, db = Depends(get_db)):
     """Run an AI agent to generate content"""
     from services.agent_runner_service import agent_runner
+    from services.gallery_agent_service import gallery_agent_runner
     
     # Check if agent exists
     agent = crud.get_ai_agent(db, agent_id)
@@ -150,8 +151,15 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
         # Mark agent as running
         running_agents.add(agent_id)
         
-        # Run the agent
-        result = await agent_runner.run_agent(agent_id)
+        # Run appropriate agent based on type
+        agent_type = agent.get('agent_type', 'post')
+        
+        if agent_type == 'photo_gallery':
+            # Use Gallery Agent Service
+            result = await gallery_agent_runner.run_gallery_agent(agent_id)
+        else:
+            # Use Post Agent Service (default)
+            result = await agent_runner.run_agent(agent_id)
         
         return result
         
