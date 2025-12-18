@@ -1098,7 +1098,92 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
         </div>
       )}
 
-      {/* Prompt Editor Modal */}
+      {/* Agent Prompt Editor Modal */}
+      {showAgentPromptEditor && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+            {/* Editor Header */}
+            <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
+              <div className="text-left">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Edit Agent Prompt
+                </h2>
+                <p className="text-xs text-gray-600 mt-0.5">
+                  Customize the prompt for this specific agent instance
+                </p>
+              </div>
+              <button
+                onClick={() => setShowAgentPromptEditor(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Editor Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              <textarea
+                value={formData.custom_prompt || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, custom_prompt: e.target.value }))}
+                className="w-full h-96 px-3 py-2 border border-gray-300 rounded text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                placeholder="Enter the custom AI prompt for this agent..."
+              />
+              <div className="mt-3 bg-yellow-50 border border-yellow-200 rounded p-3">
+                <p className="text-xs font-semibold text-yellow-900 mb-2">Available Placeholders:</p>
+                <ul className="text-xs text-yellow-800 space-y-1">
+                  <li>• <code className="bg-yellow-100 px-1 rounded">{'{'}target_state_context{'}'}</code> - State-specific context (e.g., "focusing on Telangana region")</li>
+                  <li>• <code className="bg-yellow-100 px-1 rounded">{'{'}target_audience{'}'}</code> - Target audience (e.g., "readers in Telangana")</li>
+                  <li>• <code className="bg-yellow-100 px-1 rounded">{'{'}word_count{'}'}</code> - Configured word count</li>
+                  <li>• <code className="bg-yellow-100 px-1 rounded">{'{'}state_language{'}'}</code> - Regional language (e.g., "Telugu")</li>
+                  <li>• <code className="bg-yellow-100 px-1 rounded">{'{'}reference_content_section{'}'}</code> - Fetched reference content</li>
+                  <li>• <code className="bg-yellow-100 px-1 rounded">{'{'}split_content_section{'}'}</code> - Split content instructions</li>
+                </ul>
+              </div>
+              
+              {/* Load from category button */}
+              {formData.category && categoryPromptMappings[formData.category] && (
+                <div className="mt-3 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ 
+                      ...prev, 
+                      custom_prompt: categoryPromptMappings[formData.category] || '' 
+                    }))}
+                    className="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded hover:bg-gray-200 transition-colors border border-gray-300"
+                  >
+                    Load from Category Mapping
+                  </button>
+                  <span className="text-xs text-gray-500">
+                    (Category: {categories.find(c => c.slug === formData.category)?.name || formData.category})
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Editor Footer */}
+            <div className="bg-gray-50 border-t border-gray-200 px-6 py-3 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowAgentPromptEditor(false)}
+                className="px-4 py-1.5 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAgentPromptEditor(false)}
+                className="px-4 py-1.5 bg-black text-white rounded text-sm font-medium hover:bg-gray-800 transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Prompt Editor Modal (for category mapping) */}
       {showPromptEditor && editingCategory && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
