@@ -40,59 +40,60 @@ class TadkaPicsAgentService:
         print(f"✅ S3 service initialized")
 
     async def _extract_instagram_images(self, urls: List[str], content_type: str = 'photos') -> List[Dict]:
-        """Extract images from Instagram post URLs
+        """Extract images from Instagram post URLs using the captioned embed endpoint
+        
+        The captioned embed (/embed/captioned/) contains the full carousel data
+        in edge_sidecar_to_children JSON structure.
         
         Args:
-            urls: List of Instagram post/reel URLs
+            urls: List of Instagram post/reel URLs or embed codes
             content_type: 'photos' or 'reels'
         
         Returns:
             List of image dictionaries with 'url' key
         """
         all_images = []
-        seen_urls = set()
+        seen_ids = set()
         
         async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
             for url in urls:
                 if not url:
                     continue
                 
-                # Clean and get direct post URL
-                direct_url = self._get_direct_url(url)
-                if not direct_url:
-                    print(f"❌ Could not parse Instagram URL: {url}")
+                # Extract shortcode from URL or embed code
+                shortcode = self._extract_shortcode(url)
+                if not shortcode:
+                    print(f"❌ Could not extract shortcode from: {url[:50]}...")
                     continue
                 
-                print(f"📸 Fetching Instagram post: {direct_url}")
+                # Use the captioned embed endpoint - it has full carousel data
+                embed_url = f"https://www.instagram.com/p/{shortcode}/embed/captioned/"
+                print(f"📸 Fetching Instagram embed: {embed_url}")
                 
                 try:
-                    # Fetch the direct post page using Googlebot UA to get pre-rendered content
-                    # Instagram serves SEO-friendly content to crawlers with images
-                    response = await client.get(direct_url, headers={
-                        'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+                    response = await client.get(embed_url, headers={
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                        'Accept-Language': 'en-US,en;q=0.5',
                     })
                     
                     if response.status_code != 200:
-                        print(f"❌ Failed to fetch post page: {response.status_code}")
+                        print(f"❌ Failed to fetch embed page: {response.status_code}")
                         continue
                     
                     html = response.text
                     
-                    # Extract images from meta tags (og:image and twitter:image)
-                    images = self._parse_instagram_meta_tags(html, content_type)
+                    # Extract images from the embed page
+                    images = self._parse_instagram_embed_captioned(html, content_type)
                     
                     for img in images:
-                        # Normalize URL for deduplication
-                        normalized = self._normalize_instagram_url(img['url'])
-                        if normalized not in seen_urls:
-                            seen_urls.add(normalized)
+                        img_id = img.get('id', '')
+                        if img_id and img_id not in seen_ids:
+                            seen_ids.add(img_id)
                             all_images.append(img)
                             print(f"   📷 Found image: {img['url'][:80]}...")
                     
                 except Exception as e:
-                    print(f"❌ Error fetching Instagram post: {e}")
+                    print(f"❌ Error fetching Instagram embed: {e}")
                     import traceback
                     traceback.print_exc()
                     continue
