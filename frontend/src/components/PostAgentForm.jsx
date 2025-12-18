@@ -210,6 +210,28 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     { value: 'direct', label: 'Direct Article' }
   ];
 
+  // Instagram URL helpers
+  const addInstagramUrl = () => {
+    setFormData(prev => ({
+      ...prev,
+      instagram_urls: [...prev.instagram_urls, '']
+    }));
+  };
+
+  const updateInstagramUrl = (index, value) => {
+    setFormData(prev => ({
+      ...prev,
+      instagram_urls: prev.instagram_urls.map((url, i) => i === index ? value : url)
+    }));
+  };
+
+  const removeInstagramUrl = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      instagram_urls: prev.instagram_urls.filter((_, i) => i !== index)
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
