@@ -47,10 +47,13 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
   useEffect(() => {
     if (editingAgent) {
-      setFormData({
+      setFormData(prev => ({
+        ...prev,
         ...editingAgent,
-        selected_days: editingAgent.selected_days || []
-      });
+        selected_days: editingAgent.selected_days || [],
+        // Ensure agent_type is set from editingAgent
+        agent_type: editingAgent.agent_type || 'post'
+      }));
       setActiveTab(editingAgent.mode || 'recurring');
     }
     fetchCategories();
