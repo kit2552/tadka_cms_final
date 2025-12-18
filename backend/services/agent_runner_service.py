@@ -129,7 +129,7 @@ class AgentRunnerService:
 
     async def _fetch_reference_content(self, urls: list, category: str = "") -> tuple:
         """Fetch and extract main article content from reference URLs using trafilatura
-        For listing pages (like politics), finds the latest article first.
+        For listing pages (like politics), finds the latest article first and fetches THAT article's content.
         Returns: (content_text, original_title)
         """
         if not urls:
@@ -144,12 +144,70 @@ class AgentRunnerService:
             try:
                 import trafilatura
                 from urllib.parse import urljoin
+                import re
                 
                 # Download the webpage
                 downloaded = trafilatura.fetch_url(url)
                 
-                if downloaded:
-                    # First, try to extract as a direct article
+                if not downloaded:
+                    fetched_content.append(f"**Could not download page from {url}**")
+                    print(f"Failed to download {url}")
+                    continue
+                
+                # Determine if this is a listing page or a direct article
+                # Check if URL has an article ID pattern (indicating direct article)
+                has_article_id = bool(re.search(r'/\d{5,}|[-/]\d{5,}', url))
+                
+                # Categories that typically use listing pages
+                listing_categories = ['politics', 'state-politics', 'national-politics', 'sports', 
+                                     'business', 'technology', 'state-news', 'movie-news', 'andhra-news',
+                                     'telangana-news', 'national-news', 'political-news']
+                
+                is_listing_page = (not has_article_id) or (category in listing_categories and not has_article_id)
+                
+                if is_listing_page:
+                    print(f"URL appears to be a listing page (no article ID found in: {url})")
+                    print(f"Searching for latest article link on the listing page...")
+                    
+                    # Find the latest article URL from the listing page
+                    article_url = await self._find_latest_article_url(downloaded, url)
+                    
+                    if article_url:
+                        print(f"✅ Found latest article URL: {article_url}")
+                        print(f"📥 Now fetching content from the ACTUAL article page...")
+                        
+                        # IMPORTANT: Fetch the ACTUAL article page, NOT the listing page
+                        article_downloaded = trafilatura.fetch_url(article_url)
+                        
+                        if article_downloaded:
+                            # Extract content from the ACTUAL article
+                            extracted = trafilatura.extract(
+                                article_downloaded,
+                                include_comments=False,
+                                include_tables=True,
+                                no_fallback=False,
+                                favor_precision=True
+                            )
+                            metadata = trafilatura.extract_metadata(article_downloaded)
+                            
+                            if extracted:
+                                if metadata and metadata.title:
+                                    original_title = metadata.title
+                                print(f"✅ Successfully extracted article content: {len(extracted)} chars")
+                                print(f"📰 Article title: {original_title or 'Unknown'}")
+                                fetched_content.append(f"**Article Title:** {original_title or 'Unknown'}\n\n**Article Content:**\n{extracted}")
+                            else:
+                                print(f"❌ trafilatura could not extract content from article: {article_url}")
+                                fetched_content.append(f"**Could not extract article content from {article_url}**")
+                        else:
+                            print(f"❌ Failed to download the article page: {article_url}")
+                            fetched_content.append(f"**Could not download article from {article_url}**")
+                    else:
+                        print(f"❌ Could not find any article links on the listing page: {url}")
+                        fetched_content.append(f"**No article links found on listing page {url}**")
+                else:
+                    # Direct article URL - extract content directly
+                    print(f"URL appears to be a direct article link: {url}")
                     extracted = trafilatura.extract(
                         downloaded,
                         include_comments=False,
@@ -157,53 +215,17 @@ class AgentRunnerService:
                         no_fallback=False,
                         favor_precision=True
                     )
-                    
                     metadata = trafilatura.extract_metadata(downloaded)
-                    
-                    # Check if this is a listing page (short content or category page)
-                    # Listing pages typically have less direct content
-                    listing_categories = ['politics', 'state-politics', 'national-politics', 'sports', 'business', 'technology', 'state-news', 'movie-news']
-                    is_listing_page = (not extracted or len(extracted) < 500) or (category in listing_categories)
-                    
-                    # Also check if URL looks like a category/listing page (no article ID in URL)
-                    import re
-                    has_article_id = bool(re.search(r'/\d{5,}|[-/]\d{5,}', url))
-                    if not has_article_id:
-                        is_listing_page = True
-                        print(f"URL appears to be a listing page (no article ID found)")
-                    
-                    if is_listing_page:
-                        print(f"Detected listing page, searching for latest article links...")
-                        # Try to find article links on the page
-                        article_url = await self._find_latest_article_url(downloaded, url)
-                        
-                        if article_url:
-                            print(f"Found latest article: {article_url}")
-                            # Fetch the actual article
-                            article_downloaded = trafilatura.fetch_url(article_url)
-                            if article_downloaded:
-                                extracted = trafilatura.extract(
-                                    article_downloaded,
-                                    include_comments=False,
-                                    include_tables=True,
-                                    no_fallback=False,
-                                    favor_precision=True
-                                )
-                                metadata = trafilatura.extract_metadata(article_downloaded)
                     
                     if extracted:
                         if metadata and metadata.title:
                             original_title = metadata.title
-                            print(f"Extracted original title: {original_title}")
-                        
+                        print(f"✅ Successfully extracted article content: {len(extracted)} chars")
+                        print(f"📰 Article title: {original_title or 'Unknown'}")
                         fetched_content.append(f"**Article Title:** {original_title or 'Unknown'}\n\n**Article Content:**\n{extracted}")
-                        print(f"Successfully extracted article: {len(extracted)} chars")
                     else:
+                        print(f"❌ trafilatura could not extract content from {url}")
                         fetched_content.append(f"**Could not extract article content from {url}**")
-                        print(f"trafilatura could not extract content from {url}")
-                else:
-                    fetched_content.append(f"**Could not download page from {url}**")
-                    print(f"Failed to download {url}")
                     
             except Exception as e:
                 print(f"Failed to fetch {url}: {e}")
