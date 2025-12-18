@@ -425,8 +425,13 @@ class TadkaPicsAgentService:
             # Clean up HTML entities
             username = html_module.unescape(username)
             if username and len(username) > 1:
-                # Convert username to title case
-                name = username.replace('_', ' ').replace('.', ' ').title()
+                # Convert username to proper name format
+                # e.g., dishapatani -> Disha Patani (try to split on common patterns)
+                name = username.replace('_', ' ').replace('.', ' ')
+                # Try to intelligently split camelCase or compound names
+                # Insert space before capitals in camelCase: dishaPatani -> disha Patani
+                name = re.sub(r'([a-z])([A-Z])', r'\1 \2', name)
+                name = name.title()
                 print(f"👤 Extracted artist from alt: {name}")
                 return name
         
