@@ -136,10 +136,66 @@ class TadkaPicsAgentService:
         if match:
             return match.group(1)
         
+        # Try alternate pattern for newer URLs
+        match = re.search(r'/(\d+_\d+_\d+_n)\.(jpg|webp)', url)
+        if match:
+            return match.group(1)
+        
         # Fallback: remove size parameters and use base URL
         url = re.sub(r'\?.*$', '', url)
         url = re.sub(r'_s\d+x\d+', '', url)
         return url
+    
+    def _parse_instagram_meta_tags(self, html: str, content_type: str) -> List[Dict]:
+        """Parse Instagram page HTML to extract image URLs from meta tags
+        
+        Instagram now renders images via JavaScript, but meta tags still contain
+        preview images that we can use.
+        """
+        images = []
+        seen_urls = set()
+        
+        # Extract from og:image meta tag
+        og_patterns = [
+            r'<meta[^>]*property="og:image"[^>]*content="([^"]+)"',
+            r'<meta[^>]*content="([^"]+)"[^>]*property="og:image"',
+        ]
+        
+        for pattern in og_patterns:
+            matches = re.findall(pattern, html)
+            for url in matches:
+                url = url.replace('&amp;', '&')
+                if url not in seen_urls and 'cdninstagram' in url:
+                    seen_urls.add(url)
+                    images.append({'url': url})
+        
+        # Extract from twitter:image meta tag
+        twitter_patterns = [
+            r'<meta[^>]*name="twitter:image"[^>]*content="([^"]+)"',
+            r'<meta[^>]*content="([^"]+)"[^>]*name="twitter:image"',
+        ]
+        
+        for pattern in twitter_patterns:
+            matches = re.findall(pattern, html)
+            for url in matches:
+                url = url.replace('&amp;', '&')
+                if url not in seen_urls and 'cdninstagram' in url:
+                    seen_urls.add(url)
+                    images.append({'url': url})
+        
+        # Also try to find any scontent CDN URLs in the page
+        cdn_pattern = r'https://scontent[^"\s<>]+cdninstagram\.com[^"\s<>]+\.(?:jpg|jpeg|webp)[^"\s<>]*'
+        cdn_matches = re.findall(cdn_pattern, html)
+        for url in cdn_matches:
+            url = url.replace('&amp;', '&')
+            # Skip very small thumbnails and profile pics
+            if 's150x150' in url or 's75x75' in url or 's100x100' in url:
+                continue
+            if url not in seen_urls:
+                seen_urls.add(url)
+                images.append({'url': url})
+        
+        return images
 
     def _parse_instagram_embed(self, html: str, content_type: str) -> List[Dict]:
         """Parse Instagram embed HTML to extract image URLs"""
