@@ -70,8 +70,7 @@ const TadkaPics = ({ images, onImageClick }) => {
     fetchTadkaPics();
   }, []);
 
-  // Auto scroll effect - Infinite marquee scroll using CSS animation
-  // We use a ref to track if animation should run
+  // Auto scroll effect - Infinite marquee scroll
   const [isAnimating, setIsAnimating] = useState(true);
   
   useEffect(() => {
@@ -82,21 +81,26 @@ const TadkaPics = ({ images, onImageClick }) => {
     const animate = () => {
       if (scrollContainerRef.current) {
         const container = scrollContainerRef.current;
-        const singleSetWidth = container.scrollWidth / 2; // Width of one set of images
+        // Width of one set of images (we have 3 sets total)
+        const singleSetWidth = container.scrollWidth / 3;
         
         // Move 1px per frame for smooth scroll
         scrollPositionRef.current += 1;
         
-        // When we've scrolled past the first set, seamlessly reset to 0
+        // When we've scrolled past the first set, seamlessly jump back
+        // This creates the infinite loop illusion
         if (scrollPositionRef.current >= singleSetWidth) {
           scrollPositionRef.current = 0;
+          container.scrollLeft = 0;
+        } else {
+          container.scrollLeft = scrollPositionRef.current;
         }
-        
-        container.scrollLeft = scrollPositionRef.current;
       }
       animationId = requestAnimationFrame(animate);
     };
     
+    // Start from beginning
+    scrollPositionRef.current = 0;
     animationId = requestAnimationFrame(animate);
     
     return () => {
