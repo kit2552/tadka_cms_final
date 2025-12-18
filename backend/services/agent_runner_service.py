@@ -211,9 +211,14 @@ class AgentRunnerService:
             from urllib.parse import urljoin, urlparse
             from datetime import datetime
             
-            # Extract domain from base URL
+            # Extract domain and path category from base URL
             parsed_base = urlparse(base_url)
             base_domain = parsed_base.netloc
+            
+            # Extract category from base URL path (e.g., /andhra-news, /political-news, /movie-news)
+            base_path_parts = [p for p in parsed_base.path.split('/') if p]
+            base_category = base_path_parts[-1] if base_path_parts else None
+            print(f"Base category: {base_category}")
             
             found_articles = []  # List of (url, sort_key, source_type)
             
