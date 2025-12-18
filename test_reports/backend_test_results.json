@@ -1,52 +1,64 @@
 {
   "test_summary": {
-    "total_tests": 7,
-    "passed_tests": 6,
-    "success_rate": 85.7,
-    "timestamp": "2025-12-18T20:58:26.265410"
+    "total_tests": 9,
+    "passed_tests": 9,
+    "success_rate": 100.0,
+    "timestamp": "2025-12-18T20:59:10.517411"
   },
   "test_details": [
     {
       "test_name": "Get Tadka Pics Agent",
       "success": true,
       "details": "",
-      "timestamp": "2025-12-18T20:58:24.283639"
+      "timestamp": "2025-12-18T20:59:08.642288"
     },
     {
       "test_name": "Get Agent Status",
       "success": true,
       "details": "",
-      "timestamp": "2025-12-18T20:58:24.360385"
+      "timestamp": "2025-12-18T20:59:08.720602"
     },
     {
       "test_name": "Run Tadka Pics Agent",
       "success": true,
       "details": "",
-      "timestamp": "2025-12-18T20:58:26.192148"
+      "timestamp": "2025-12-18T20:59:10.440311"
     },
     {
       "test_name": "Verify Response Structure",
       "success": true,
       "details": "",
-      "timestamp": "2025-12-18T20:58:26.192893"
+      "timestamp": "2025-12-18T20:59:10.441095"
     },
     {
       "test_name": "Verify Success Flag",
       "success": true,
       "details": "",
-      "timestamp": "2025-12-18T20:58:26.192906"
+      "timestamp": "2025-12-18T20:59:10.441103"
     },
     {
       "test_name": "Verify Images Count",
       "success": true,
       "details": "Found 3 images",
-      "timestamp": "2025-12-18T20:58:26.192911"
+      "timestamp": "2025-12-18T20:59:10.441107"
     },
     {
-      "test_name": "Get Created Gallery",
-      "success": false,
-      "details": "Expected 200, got 404 - {'detail': 'Gallery not found'}",
-      "timestamp": "2025-12-18T20:58:26.264754"
+      "test_name": "Get Created Gallery by ID",
+      "success": true,
+      "details": "",
+      "timestamp": "2025-12-18T20:59:10.516694"
+    },
+    {
+      "test_name": "Verify Tadka Pics Enabled",
+      "success": true,
+      "details": "",
+      "timestamp": "2025-12-18T20:59:10.517381"
+    },
+    {
+      "test_name": "Verify No Article Created",
+      "success": true,
+      "details": "",
+      "timestamp": "2025-12-18T20:59:10.517390"
     }
   ]
 }
