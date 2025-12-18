@@ -205,7 +205,7 @@ class AgentRunnerService:
         return "\n\n---\n\n".join(fetched_content), original_title
 
     async def _find_latest_article_url(self, html_content: str, base_url: str) -> Optional[str]:
-        """Find the latest/first article URL from a listing page"""
+        """Find the latest article URL from a listing page by finding the highest article ID"""
         try:
             import re
             from urllib.parse import urljoin, urlparse
@@ -214,18 +214,19 @@ class AgentRunnerService:
             parsed_base = urlparse(base_url)
             base_domain = parsed_base.netloc
             
-            # Patterns for article links - look for news article URL patterns
+            # Patterns for article links - look for news article URL patterns with numeric IDs
             article_patterns = [
-                r'href=["\']([^"\']*(?:/political-news/|/movie-news/|/news/|/article/|/story/)\d+/[^"\']*)["\']',
-                r'href=["\']([^"\']*(?:/\d{4}/\d{2}/\d{2}/|/\d{4}/[a-z]+/\d+/)[^"\']*)["\']',
-                r'href=["\']([^"\']*(?:/[a-z-]+/\d+/)[^"\']*)["\']',  # Pattern like /category/12345/slug
+                r'href=["\']([^"\']*(?:/political-news/|/movie-news/|/news/|/telugu-news/|/article/|/story/)(\d+)/[^"\']*)["\']',
+                r'href=["\']([^"\']*(?:/[a-z-]+/)(\d+)/[^"\']*)["\']',  # Pattern like /category/12345/slug
             ]
             
-            found_urls = []
+            found_articles = []  # List of (url, article_id)
+            
             for pattern in article_patterns:
                 matches = re.findall(pattern, html_content, re.IGNORECASE)
                 for match in matches:
-                    full_url = urljoin(base_url, match)
+                    full_url = urljoin(base_url, match[0])
+                    article_id = int(match[1]) if match[1].isdigit() else 0
                     parsed_url = urlparse(full_url)
                     
                     # Filter criteria
@@ -237,15 +238,19 @@ class AgentRunnerService:
                         'login', 'signup', 'subscribe', 'search'
                     ])
                     is_different_from_base = full_url.rstrip('/') != base_url.rstrip('/')
-                    is_not_duplicate = full_url not in found_urls
+                    already_added = any(url == full_url for url, _ in found_articles)
                     
-                    if is_same_domain and is_not_asset and is_different_from_base and is_not_duplicate:
-                        found_urls.append(full_url)
+                    if is_same_domain and is_not_asset and is_different_from_base and not already_added and article_id > 0:
+                        found_articles.append((full_url, article_id))
             
-            # Return the first article URL found (usually the latest)
-            if found_urls:
-                print(f"Found {len(found_urls)} article URLs, using: {found_urls[0]}")
-                return found_urls[0]
+            # Sort by article ID (highest first) to get the latest article
+            if found_articles:
+                found_articles.sort(key=lambda x: x[1], reverse=True)
+                latest_url = found_articles[0][0]
+                latest_id = found_articles[0][1]
+                print(f"Found {len(found_articles)} articles. Latest article ID: {latest_id}")
+                print(f"Latest article URL: {latest_url}")
+                return latest_url
             
             return None
             
