@@ -162,11 +162,31 @@ class GalleryAgentService:
             soup = BeautifulSoup(current_html, 'html.parser')
             visited_urls.add(current_url)
             
+            # Remove sidebar, related, and footer sections to avoid picking up other galleries
+            for unwanted in soup.find_all(['aside', 'footer', 'nav']):
+                unwanted.decompose()
+            
+            # Remove elements with class names suggesting related/sidebar content
+            for selector in ['related', 'sidebar', 'widget', 'recommended', 'popular', 'trending', 
+                           'more-stories', 'also-read', 'you-may-like', 'recent-posts']:
+                for elem in soup.find_all(class_=lambda x: x and selector in str(x).lower()):
+                    elem.decompose()
+                for elem in soup.find_all(id=lambda x: x and selector in str(x).lower()):
+                    elem.decompose()
+            
+            # Try to find the main content area
+            main_content = (
+                soup.find('article') or 
+                soup.find('main') or 
+                soup.find(class_=lambda x: x and any(c in str(x).lower() for c in ['content', 'gallery', 'post-content', 'entry-content'])) or
+                soup
+            )
+            
             # Find images in various gallery structures
             images_found = []
             
             # Look for high-res images in various attributes
-            for img in soup.find_all('img'):
+            for img in main_content.find_all('img'):
                 src = img.get('data-src') or img.get('data-lazy-src') or img.get('src') or ''
                 
                 # Skip thumbnails and icons
