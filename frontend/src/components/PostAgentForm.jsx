@@ -782,6 +782,12 @@ Instructions:
                     {formData.custom_prompt.substring(0, 300)}
                     {formData.custom_prompt.length > 300 && '...'}
                   </div>
+                ) : formData.agent_type === 'photo_gallery' ? (
+                  <div className="text-xs text-gray-500 font-mono whitespace-pre-wrap max-h-24 overflow-y-auto">
+                    <span className="text-purple-600 font-medium">[Using built-in gallery prompt]</span>
+                    <br />
+                    Create engaging content for a photo gallery post with title and description...
+                  </div>
                 ) : formData.category && categoryPromptMappings[formData.category] ? (
                   <div className="text-xs text-gray-500 font-mono whitespace-pre-wrap max-h-24 overflow-y-auto">
                     <span className="text-blue-600 font-medium">[Using default from category mapping]</span>
