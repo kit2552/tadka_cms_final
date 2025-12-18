@@ -245,21 +245,22 @@ const TadkaPics = ({ images, onImageClick }) => {
           </Link>
         </div>
         
-        {/* Multiple Images Horizontal Scroll Container */}
-        <div className="relative">
+        {/* Multiple Images Horizontal Scroll Container - Infinite Loop */}
+        <div className="relative overflow-hidden">
           <div 
             ref={scrollContainerRef}
-            className="flex space-x-2 overflow-x-auto pt-1 pb-0 scrollbar-hide" 
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            className="flex space-x-2 pt-1 pb-0" 
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'hidden' }}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            {actressImages.map((actress, index) => (
+            {/* Render images twice for seamless infinite scroll */}
+            {[...actressImages, ...actressImages].map((actress, index) => (
               <div 
-                key={actress.id} 
+                key={`${actress.id}-${index}`} 
                 className="flex-shrink-0 cursor-pointer group transition-transform duration-300 hover:scale-105"
-                onClick={() => handleImageClick(index)}
+                onClick={() => handleImageClick(index % actressImages.length)}
               >
                 <div className="relative w-32 h-48 rounded-lg overflow-hidden transition-colors duration-300">
                   <img
