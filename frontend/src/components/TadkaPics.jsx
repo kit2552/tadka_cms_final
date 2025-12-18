@@ -12,10 +12,10 @@ const TadkaPics = ({ images, onImageClick }) => {
   // ALL STATE HOOKS MUST BE AT THE TOP
   const [actressImages, setActressImages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const scrollContainerRef = useRef(null);
+  const scrollPositionRef = useRef(0); // Use ref for animation position
 
   // Fetch Tadka Pics galleries from API
   useEffect(() => {
