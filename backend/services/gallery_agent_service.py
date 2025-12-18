@@ -195,12 +195,12 @@ class GalleryAgentService:
                 skip_patterns = [
                     'thumb', 'icon', 'logo', 'avatar', 'placeholder',
                     'youtube.com', 'ytimg.com', 'img.youtube',  # YouTube thumbnails
-                    'indianclicks', 'ad_', 'ads/', 'banner', 'sponsor',  # Ads
-                    'facebook', 'twitter', 'instagram', 'social',  # Social icons
+                    'indianclicks', '/ad/', '/ads/', 'banner', 'sponsor',  # Ads (more specific)
+                    'facebook.com', 'twitter.com', 'instagram.com',  # Social icons (full domain)
                     'gravatar', 'wp-emoji', 'emoji',  # Misc
-                    '200x90', '1156x100', '300x250', '728x90',  # Common ad sizes
                 ]
                 if any(skip in src.lower() for skip in skip_patterns):
+                    print(f"   ⏭️ Skipping (pattern match): {src[:60]}...")
                     continue
                 
                 if src and not src.startswith('data:'):
