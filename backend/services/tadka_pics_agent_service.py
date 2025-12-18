@@ -143,23 +143,22 @@ class TadkaPicsAgentService:
     def _parse_instagram_embed_captioned(self, html: str, content_type: str) -> List[Dict]:
         """Parse the captioned embed page to extract carousel images
         
-        The captioned embed page contains edge_sidecar_to_children JSON with all carousel images.
+        The captioned embed page contains the full carousel images.
         Images are in t51.2885-15 path (content images), not t51.2885-19 (profile pics).
         """
         images = []
         seen_ids = set()
         
-        # Find all scontent URLs in the page and filter for content images only
+        # Find all scontent CDN URLs for content images
         # t51.2885-15 = Content images (carousel photos)
         # t51.2885-19 = Profile pictures (skip these)
-        # t51.29350-15 = Video thumbnails (include)
         
-        pattern = r'scontent[^"\s\\]+t51\.2885-15[^"\s\\]+\.jpg[^"\s\\]*'
+        # Pattern matches: https://scontent-xxx.cdninstagram.com/v/t51.2885-15/...
+        pattern = r'https://scontent[^"\s&]+cdninstagram\.com/v/t51\.2885-15/[^"\s&]+\.jpg'
         matches = re.findall(pattern, html)
         
-        for match in matches:
-            # Reconstruct full URL and unescape
-            url = 'https://' + match.replace('\\/', '/')
+        for url in matches:
+            # Unescape HTML entities
             url = url.replace('&amp;', '&')
             
             # Extract image ID for deduplication
@@ -170,19 +169,22 @@ class TadkaPicsAgentService:
                     seen_ids.add(img_id)
                     images.append({'url': url, 'id': img_id})
         
-        # Also look for video thumbnails if reels content type
+        # Also look for video thumbnails (t51.29350-15 or t51.71878-15)
         if content_type == 'reels':
-            video_pattern = r'scontent[^"\s\\]+t51\.29350-15[^"\s\\]+\.jpg[^"\s\\]*'
-            video_matches = re.findall(video_pattern, html)
-            for match in video_matches:
-                url = 'https://' + match.replace('\\/', '/')
-                url = url.replace('&amp;', '&')
-                id_match = re.search(r'/(\d+_\d+)', url)
-                if id_match:
-                    img_id = id_match.group(1)
-                    if img_id not in seen_ids:
-                        seen_ids.add(img_id)
-                        images.append({'url': url, 'id': img_id})
+            video_patterns = [
+                r'https://scontent[^"\s&]+cdninstagram\.com/v/t51\.29350-15/[^"\s&]+\.jpg',
+                r'https://scontent[^"\s&]+cdninstagram\.com/v/t51\.71878-15/[^"\s&]+\.jpg',
+            ]
+            for video_pattern in video_patterns:
+                video_matches = re.findall(video_pattern, html)
+                for url in video_matches:
+                    url = url.replace('&amp;', '&')
+                    id_match = re.search(r'/(\d+_\d+)', url)
+                    if id_match:
+                        img_id = id_match.group(1)
+                        if img_id not in seen_ids:
+                            seen_ids.add(img_id)
+                            images.append({'url': url, 'id': img_id})
         
         return images
 
