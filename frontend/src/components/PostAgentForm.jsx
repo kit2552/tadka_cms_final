@@ -913,6 +913,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                 </div>
               )}
             </div>
+            )}
 
             {/* Reference Content Section */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
