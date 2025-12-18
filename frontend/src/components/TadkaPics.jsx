@@ -310,7 +310,8 @@ const TadkaPics = ({ images, onImageClick }) => {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
