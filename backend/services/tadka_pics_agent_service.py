@@ -270,16 +270,37 @@ class TadkaPicsAgentService:
         return f"TDK-{timestamp}-{random_suffix}"
 
     async def _extract_artist_name_from_instagram(self, html: str) -> str:
-        """Extract artist/username from Instagram embed HTML"""
-        # Look for username in the embed
+        """Extract artist name from Instagram embed HTML
+        
+        Looks for patterns like:
+        - "A post shared by Pragya Jaiswal (@jaiswalpragya)"
+        - "shared by Name Here (@username)"
+        """
+        # Try to find the actual name from "shared by Name (@username)" pattern
+        # This gives us the real name, not just the username
+        match = re.search(r'shared by ([^(]+)\s*\(@', html)
+        if match:
+            name = match.group(1).strip()
+            if name:
+                print(f"👤 Extracted artist name: {name}")
+                return name
+        
+        # Fallback: Try to get name from "by Name Here" pattern
+        match = re.search(r'by\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)*)', html)
+        if match:
+            name = match.group(1).strip()
+            if name and len(name) > 2:
+                print(f"👤 Extracted artist name (fallback): {name}")
+                return name
+        
+        # Last fallback: Use username without @
         match = re.search(r'@([a-zA-Z0-9_.]+)', html)
         if match:
-            return match.group(1)
-        
-        # Try to find from the shared by text
-        match = re.search(r'shared by ([^(]+)\(', html)
-        if match:
-            return match.group(1).strip()
+            username = match.group(1)
+            # Convert username to title case for display
+            name = username.replace('_', ' ').replace('.', ' ').title()
+            print(f"👤 Using username as name: {name}")
+            return name
         
         return "Unknown"
 
