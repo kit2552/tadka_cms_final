@@ -142,7 +142,6 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/category-prompt-mappings`);
       const data = await response.json();
       setCategoryPromptMappings(data.mappings || {});
-      setEditingMappings(data.mappings || {});
     } catch (error) {
       console.error('Failed to fetch mappings:', error);
     }
