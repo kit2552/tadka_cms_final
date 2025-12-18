@@ -43,6 +43,7 @@ class AIAgent(BaseModel):
     content_workflow: Optional[str] = None  # "in_review", "ready_to_publish", "auto_post"
     is_top_story: Optional[bool] = False  # Mark as top story
     comments_enabled: Optional[bool] = True  # Enable comments
+    custom_prompt: Optional[str] = None  # Custom prompt for this agent instance (overrides category mapping)
     
     # Adhoc mode fields
     schedule_post: Optional[bool] = False
