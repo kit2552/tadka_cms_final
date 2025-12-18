@@ -1125,9 +1125,11 @@ Instructions:
                       No Instagram URLs added. Click "Add Instagram URL" to add Instagram post or reel links.
                     </p>
                     <p className="text-xs text-pink-600 mt-2">
-                      <strong>Supported formats:</strong><br/>
-                      • Post: https://www.instagram.com/p/ABC123/<br/>
-                      • Reel: https://www.instagram.com/reel/ABC123/
+                      <strong>How to get Instagram URL:</strong><br/>
+                      1. Open the Instagram post/reel<br/>
+                      2. Click the three dots (⋯) menu<br/>
+                      3. Select "Copy Link"<br/>
+                      4. Paste it here
                     </p>
                   </div>
                 ) : (
@@ -1135,10 +1137,10 @@ Instructions:
                     {formData.instagram_urls.map((url, index) => (
                       <div key={index} className="flex items-center gap-2 bg-white p-2 rounded border border-pink-200">
                         <input
-                          type="url"
+                          type="text"
                           value={url}
                           onChange={(e) => updateInstagramUrl(index, e.target.value)}
-                          placeholder="https://www.instagram.com/p/ABC123/"
+                          placeholder="https://www.instagram.com/p/ABC123/ or paste copied link"
                           className="flex-1 px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                         />
                         <button
