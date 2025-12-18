@@ -127,47 +127,77 @@ class AgentRunnerService:
         }
         return state_language_map.get(target_state, 'Hindi')
 
-    async def _fetch_reference_content(self, urls: list, category: str = "") -> tuple:
+    async def _fetch_reference_content(self, reference_urls: list, category: str = "") -> tuple:
         """Fetch and extract main article content from reference URLs using trafilatura
-        For listing pages (like politics), finds the latest article first and fetches THAT article's content.
+        For listing pages, finds the latest article first and fetches THAT article's content.
+        
+        Args:
+            reference_urls: List of URL items. Can be:
+                - strings (old format): ["https://example.com"]
+                - objects (new format): [{"url": "https://...", "url_type": "listing"}]
+            category: Category slug for additional context
+            
         Returns: (content_text, original_title)
         """
-        if not urls:
+        if not reference_urls:
             return "", ""
         
         fetched_content = []
         original_title = ""
         
-        for url in urls:
+        for url_item in reference_urls:
+            # Handle both old format (string) and new format (object)
+            if isinstance(url_item, str):
+                url = url_item
+                url_type = 'auto'  # Default to auto-detect for old format
+            elif isinstance(url_item, dict):
+                url = url_item.get('url', '')
+                url_type = url_item.get('url_type', 'auto')
+            else:
+                continue
+            
             if not url:
                 continue
+                
             try:
                 import trafilatura
                 from urllib.parse import urljoin
                 import re
+                
+                print(f"\n{'='*60}")
+                print(f"📌 Processing URL: {url}")
+                print(f"📌 URL Type setting: {url_type}")
+                print(f"{'='*60}")
                 
                 # Download the webpage
                 downloaded = trafilatura.fetch_url(url)
                 
                 if not downloaded:
                     fetched_content.append(f"**Could not download page from {url}**")
-                    print(f"Failed to download {url}")
+                    print(f"❌ Failed to download {url}")
                     continue
                 
-                # Determine if this is a listing page or a direct article
-                # Check if URL has an article ID pattern (indicating direct article)
-                has_article_id = bool(re.search(r'/\d{5,}|[-/]\d{5,}', url))
-                
-                # Categories that typically use listing pages
-                listing_categories = ['politics', 'state-politics', 'national-politics', 'sports', 
-                                     'business', 'technology', 'state-news', 'movie-news', 'andhra-news',
-                                     'telangana-news', 'national-news', 'political-news']
-                
-                is_listing_page = (not has_article_id) or (category in listing_categories and not has_article_id)
+                # Determine if this is a listing page based on url_type setting
+                if url_type == 'listing':
+                    is_listing_page = True
+                    print(f"🔧 User specified: LISTING PAGE")
+                elif url_type == 'direct':
+                    is_listing_page = False
+                    print(f"🔧 User specified: DIRECT ARTICLE")
+                else:
+                    # Auto-detect: Check if URL has an article ID pattern
+                    has_article_id = bool(re.search(r'/\d{5,}|[-/]\d{5,}', url))
+                    
+                    # Categories that typically use listing pages
+                    listing_categories = ['politics', 'state-politics', 'national-politics', 'sports', 
+                                         'business', 'technology', 'state-news', 'movie-news', 'andhra-news',
+                                         'telangana-news', 'national-news', 'political-news']
+                    
+                    is_listing_page = (not has_article_id) or (category in listing_categories and not has_article_id)
+                    print(f"🔧 Auto-detected: {'LISTING PAGE' if is_listing_page else 'DIRECT ARTICLE'} (has_article_id={has_article_id})")
                 
                 if is_listing_page:
-                    print(f"URL appears to be a listing page (no article ID found in: {url})")
-                    print(f"Searching for latest article link on the listing page...")
+                    print(f"📋 Processing as LISTING PAGE - will find latest article first...")
                     
                     # Find the latest article URL from the listing page
                     article_url = await self._find_latest_article_url(downloaded, url)
@@ -207,7 +237,7 @@ class AgentRunnerService:
                         fetched_content.append(f"**No article links found on listing page {url}**")
                 else:
                     # Direct article URL - extract content directly
-                    print(f"URL appears to be a direct article link: {url}")
+                    print(f"📄 Processing as DIRECT ARTICLE - extracting content directly...")
                     extracted = trafilatura.extract(
                         downloaded,
                         include_comments=False,
@@ -228,7 +258,7 @@ class AgentRunnerService:
                         fetched_content.append(f"**Could not extract article content from {url}**")
                     
             except Exception as e:
-                print(f"Failed to fetch {url}: {e}")
+                print(f"❌ Failed to fetch {url}: {e}")
                 fetched_content.append(f"**Error fetching {url}: {str(e)}**")
         
         return "\n\n---\n\n".join(fetched_content), original_title
