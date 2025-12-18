@@ -3358,6 +3358,7 @@ const Dashboard = () => {
                               })()}
                               <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-50 text-gray-700 border border-gray-200">
                                 {article.content_type === 'video' ? 'Video' : 
+                                 article.content_type === 'video_post' ? 'Video Post' :
                                  article.content_type === 'photo' ? 'Photo Gallery' : 
                                  article.content_type === 'movie_review' ? 'Movie Review' : 
                                  'Post'}
