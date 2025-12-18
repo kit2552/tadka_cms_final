@@ -1250,8 +1250,10 @@ Instructions:
                 ))}
               </div>
             </div>
+            )}
 
-            {/* Content Workflow Section */}
+            {/* Content Workflow Section - Hide for tadka_pics */}
+            {formData.agent_type !== 'tadka_pics' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Content Workflow</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
