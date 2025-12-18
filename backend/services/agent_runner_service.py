@@ -137,13 +137,14 @@ class AgentRunnerService:
                 - objects (new format): [{"url": "https://...", "url_type": "listing"}]
             category: Category slug for additional context
             
-        Returns: (content_text, original_title)
+        Returns: (content_text, original_title, youtube_url)
         """
         if not reference_urls:
-            return "", ""
+            return "", "", None
         
         fetched_content = []
         original_title = ""
+        found_youtube_url = None  # Track YouTube URL from raw HTML
         
         for url_item in reference_urls:
             # Handle both old format (string) and new format (object)
