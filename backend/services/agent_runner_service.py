@@ -391,7 +391,15 @@ class AgentRunnerService:
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
         category = agent.get('category', '')
-        base_prompt = self._get_category_prompt(category)
+        
+        # Use custom_prompt if defined, otherwise fall back to category mapping
+        custom_prompt = agent.get('custom_prompt', '')
+        if custom_prompt and custom_prompt.strip():
+            base_prompt = custom_prompt
+            print(f"Using custom prompt for agent (length: {len(base_prompt)} chars)")
+        else:
+            base_prompt = self._get_category_prompt(category)
+            print(f"Using category prompt mapping for: {category}")
         
         # Get dynamic values
         target_state = agent.get('target_state', 'All States')
