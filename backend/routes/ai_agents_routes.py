@@ -45,6 +45,12 @@ class AIAgent(BaseModel):
     comments_enabled: Optional[bool] = True  # Enable comments
     custom_prompt: Optional[str] = None  # Custom prompt for this agent instance (overrides category mapping)
     
+    # Photo Gallery Agent fields
+    gallery_type: Optional[str] = "vertical"  # vertical or horizontal
+    gallery_category: Optional[str] = "Actress"  # Actor, Actress, Events, Politics, Travel, Others
+    tadka_pics_enabled: Optional[bool] = False  # Show in Tadka Pics section
+    max_images: Optional[int] = 50  # Maximum images to download
+    
     # Adhoc mode fields
     schedule_post: Optional[bool] = False
     post_date: Optional[str] = None
