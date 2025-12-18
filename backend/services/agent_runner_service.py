@@ -269,7 +269,7 @@ class AgentRunnerService:
                 print(f"❌ Failed to fetch {url}: {e}")
                 fetched_content.append(f"**Error fetching {url}: {str(e)}**")
         
-        return "\n\n---\n\n".join(fetched_content), original_title
+        return "\n\n---\n\n".join(fetched_content), original_title, found_youtube_url
 
     async def _find_latest_article_url(self, html_content: str, base_url: str) -> Optional[str]:
         """Find the latest article URL from a listing page by finding the highest article ID or latest datetime"""
