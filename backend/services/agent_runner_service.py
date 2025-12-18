@@ -1028,8 +1028,8 @@ Article:
                 'is_scheduled': False
             }
             
-            # Add YouTube URL if video content type
-            if content_type == 'video' and youtube_url:
+            # Add YouTube URL if video-post content type
+            if content_type == 'video-post' and youtube_url:
                 article_data['youtube_url'] = youtube_url
                 print(f"📹 Added YouTube URL to article: {youtube_url}")
             
