@@ -98,37 +98,53 @@ class GalleryAgentService:
         parsed_base = urlparse(base_url)
         base_domain = f"{parsed_base.scheme}://{parsed_base.netloc}"
         
-        # Common gallery link patterns
+        # Common gallery/photo link patterns - more flexible to catch various URL formats
         gallery_patterns = [
-            r'/photogallery/[^/]+-\d+',
-            r'/photos/\d+/',
-            r'/gallery/[^/]+',
-            r'/albums/[^/]+/[^/]+',
+            r'/photogallery/[^/]+-\d+',      # /photogallery/name-12345
+            r'/photos/\d+/[^/]+',             # /photos/12345/slug
+            r'/photos/\d+',                   # /photos/12345
+            r'/gallery/[^/]+',                # /gallery/name
+            r'/albums/[^/]+/[^/]+',           # /albums/category/name
+            r'/news/\d+/[^/]+',               # /news/12345/slug (some sites use news for galleries)
+            r'/\d{6}/[^/]+',                  # /387315/slug (just ID at root)
         ]
         
         # Find all links
         links = soup.find_all('a', href=True)
         gallery_links = []
         
+        print(f"🔍 Scanning {len(links)} links for gallery URLs...")
+        
         for link in links:
             href = link.get('href', '')
             full_url = urljoin(base_domain, href)
             
+            # Skip non-content links
+            if any(skip in href.lower() for skip in ['#', 'javascript:', 'mailto:', '/tag/', '/category/', '/author/', '/page/']):
+                continue
+            
             for pattern in gallery_patterns:
                 if re.search(pattern, href):
-                    # Extract ID if present
-                    id_match = re.search(r'-(\d+)$|/(\d+)/', href)
-                    gallery_id = int(id_match.group(1) or id_match.group(2)) if id_match else 0
-                    gallery_links.append((full_url, gallery_id))
+                    # Extract ID - try multiple patterns
+                    id_match = re.search(r'/(\d{5,})(?:/|$|-)', href)  # Look for 5+ digit IDs
+                    if not id_match:
+                        id_match = re.search(r'-(\d{5,})(?:\.|$)', href)  # ID at end with dash
+                    
+                    gallery_id = int(id_match.group(1)) if id_match else 0
+                    
+                    if gallery_id > 0:
+                        gallery_links.append((full_url, gallery_id))
+                        print(f"   Found: ID={gallery_id} -> {href[:60]}...")
                     break
         
         if gallery_links:
             # Sort by ID (highest = latest) and return the first one
             gallery_links.sort(key=lambda x: x[1], reverse=True)
             latest_url = gallery_links[0][0]
-            print(f"✅ Found latest gallery: {latest_url}")
+            print(f"✅ Selected latest gallery (ID={gallery_links[0][1]}): {latest_url}")
             return latest_url
         
+        print(f"❌ No gallery links found matching patterns")
         return None
 
     async def _extract_gallery_images(self, html: str, base_url: str, max_images: int = 50) -> List[Dict]:
