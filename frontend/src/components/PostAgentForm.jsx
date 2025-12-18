@@ -1106,7 +1106,7 @@ Instructions:
             {formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram' && (
               <div className="bg-pink-50 rounded-lg p-4 space-y-3 border border-pink-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-pink-900 text-left">📸 Instagram Content</h3>
+                  <h3 className="text-sm font-semibold text-pink-900 text-left">📸 Instagram Post</h3>
                   <button
                     type="button"
                     onClick={addInstagramUrl}
@@ -1115,44 +1115,52 @@ Instructions:
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    Add Instagram URL
+                    Add Instagram Post
                   </button>
                 </div>
                 
                 {formData.instagram_urls.length === 0 ? (
                   <div className="text-left bg-white rounded border border-pink-200 p-3">
                     <p className="text-xs text-gray-500">
-                      No Instagram URLs added. Click "Add Instagram URL" to add Instagram post or reel links.
+                      No Instagram posts added. Click "Add Instagram Post" to add a post/reel.
                     </p>
                     <p className="text-xs text-pink-600 mt-2">
-                      <strong>How to get Instagram URL:</strong><br/>
-                      1. Open the Instagram post/reel<br/>
-                      2. Click the three dots (⋯) menu<br/>
-                      3. Select "Copy Link"<br/>
-                      4. Paste it here
+                      <strong>How to add Instagram post:</strong><br/>
+                      1. Open the Instagram post/reel on desktop<br/>
+                      2. Click ⋯ menu → "Copy link" <strong>OR</strong><br/>
+                      3. Click ⋯ menu → "Embed" → Copy the embed code<br/>
+                      4. Paste either the URL or embed code here
                     </p>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     {formData.instagram_urls.map((url, index) => (
-                      <div key={index} className="flex items-center gap-2 bg-white p-2 rounded border border-pink-200">
-                        <input
-                          type="text"
-                          value={url}
-                          onChange={(e) => updateInstagramUrl(index, e.target.value)}
-                          placeholder="https://www.instagram.com/p/ABC123/ or paste copied link"
-                          className="flex-1 px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeInstagramUrl(index)}
-                          className="flex-shrink-0 p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
-                          title="Remove URL"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
+                      <div key={index} className="bg-white p-2 rounded border border-pink-200">
+                        <div className="flex items-start gap-2">
+                          <textarea
+                            value={url}
+                            onChange={(e) => updateInstagramUrl(index, e.target.value)}
+                            placeholder="Paste Instagram URL or embed code here...&#10;Example URL: https://www.instagram.com/p/ABC123/&#10;Example embed: <blockquote class=&quot;instagram-media&quot;..."
+                            rows={3}
+                            className="flex-1 px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-pink-500 focus:border-pink-500 resize-none font-mono"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeInstagramUrl(index)}
+                            className="flex-shrink-0 p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                            title="Remove"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                        {url && url.includes('instagram.com') && (
+                          <p className="text-xs text-green-600 mt-1">✓ Instagram link detected</p>
+                        )}
+                        {url && url.includes('blockquote') && (
+                          <p className="text-xs text-green-600 mt-1">✓ Embed code detected</p>
+                        )}
                       </div>
                     ))}
                   </div>
