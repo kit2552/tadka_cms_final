@@ -843,6 +843,7 @@ Instructions:
                 </div>
               )}
             </div>
+            )}
 
             {/* Tadka Pics Settings Section - Only for tadka_pics agent type */}
             {formData.agent_type === 'tadka_pics' && (
