@@ -70,27 +70,29 @@ const TadkaPics = ({ images, onImageClick }) => {
     fetchTadkaPics();
   }, []);
 
-  // Auto scroll effect - Infinite marquee scroll
+  // Auto scroll effect - Infinite marquee scroll using CSS animation
+  // We use a ref to track if animation should run
+  const [isAnimating, setIsAnimating] = useState(true);
+  
   useEffect(() => {
-    if (actressImages.length === 0) return;
+    if (actressImages.length === 0 || !isAnimating) return;
     
     let animationId;
-    let currentPosition = 0;
     
     const animate = () => {
       if (scrollContainerRef.current) {
         const container = scrollContainerRef.current;
         const singleSetWidth = container.scrollWidth / 2; // Width of one set of images
         
-        // Move 0.5px per frame for smooth slow scroll
-        currentPosition += 0.5;
+        // Move 1px per frame for smooth scroll
+        scrollPositionRef.current += 1;
         
-        // When we've scrolled past the first set, seamlessly reset
-        if (currentPosition >= singleSetWidth) {
-          currentPosition = 0;
+        // When we've scrolled past the first set, seamlessly reset to 0
+        if (scrollPositionRef.current >= singleSetWidth) {
+          scrollPositionRef.current = 0;
         }
         
-        container.scrollLeft = currentPosition;
+        container.scrollLeft = scrollPositionRef.current;
       }
       animationId = requestAnimationFrame(animate);
     };
@@ -102,7 +104,7 @@ const TadkaPics = ({ images, onImageClick }) => {
         cancelAnimationFrame(animationId);
       }
     };
-  }, [actressImages.length]);
+  }, [actressImages.length, isAnimating]);
 
   // Show loading state or empty state
   if (loading) {
