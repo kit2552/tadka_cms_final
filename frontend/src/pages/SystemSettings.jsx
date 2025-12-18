@@ -88,6 +88,14 @@ const SystemSettings = () => {
   });
   const [testingKey, setTestingKey] = useState(null);
 
+  // Category-Prompt Mapping State
+  const [categories, setCategories] = useState([]);
+  const [categoryPromptMappings, setCategoryPromptMappings] = useState({});
+  const [editingPromptMappings, setEditingPromptMappings] = useState({});
+  const [showPromptEditor, setShowPromptEditor] = useState(false);
+  const [editingCategoryPrompt, setEditingCategoryPrompt] = useState(null);
+  const [promptSaving, setPromptSaving] = useState(false);
+
   useEffect(() => {
     loadAWSConfig();
     loadUsers();
@@ -95,6 +103,8 @@ const SystemSettings = () => {
     loadAIAPIKeys();
     fetchAllTextModels();
     fetchAllImageModels();
+    fetchCategories();
+    fetchCategoryPromptMappings();
   }, []);
 
   const loadAWSConfig = async () => {
