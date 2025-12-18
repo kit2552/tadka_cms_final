@@ -51,6 +51,11 @@ class AIAgent(BaseModel):
     tadka_pics_enabled: Optional[bool] = False  # Show in Tadka Pics section
     max_images: Optional[int] = 50  # Maximum images to download
     
+    # Tadka Pics Agent fields
+    source_type: Optional[str] = "websites"  # websites or instagram
+    instagram_content_type: Optional[str] = "photos"  # photos or reels
+    instagram_urls: Optional[List[Any]] = None  # Instagram post/reel URLs
+    
     # Adhoc mode fields
     schedule_post: Optional[bool] = False
     post_date: Optional[str] = None
