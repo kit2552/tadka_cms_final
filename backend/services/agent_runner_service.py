@@ -205,7 +205,7 @@ class AgentRunnerService:
         return "\n\n---\n\n".join(fetched_content), original_title
 
     async def _find_latest_article_url(self, html_content: str, base_url: str) -> Optional[str]:
-        """Find the latest article URL from a listing page by finding the highest article ID"""
+        """Find the latest article URL from a listing page by finding the highest article ID or latest date"""
         try:
             import re
             from urllib.parse import urljoin, urlparse
@@ -214,34 +214,61 @@ class AgentRunnerService:
             parsed_base = urlparse(base_url)
             base_domain = parsed_base.netloc
             
-            # Patterns for article links - look for news article URL patterns with numeric IDs
-            article_patterns = [
-                r'href=["\']([^"\']*(?:/political-news/|/movie-news/|/news/|/telugu-news/|/article/|/story/)(\d+)/[^"\']*)["\']',
-                r'href=["\']([^"\']*(?:/[a-z-]+/)(\d+)/[^"\']*)["\']',  # Pattern like /category/12345/slug
-            ]
-            
             found_articles = []  # List of (url, article_id)
             
-            for pattern in article_patterns:
-                matches = re.findall(pattern, html_content, re.IGNORECASE)
-                for match in matches:
-                    full_url = urljoin(base_url, match[0])
-                    article_id = int(match[1]) if match[1].isdigit() else 0
-                    parsed_url = urlparse(full_url)
-                    
-                    # Filter criteria
-                    is_same_domain = base_domain in parsed_url.netloc
-                    is_not_asset = not any(x in full_url.lower() for x in [
-                        '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.woff', '.woff2', 
-                        '.svg', '.ico', '/feed/', '/category/', '/tag/', '/author/',
-                        'cdn.', 'assets', 'static', '#', 'javascript:', 'mailto:',
-                        'login', 'signup', 'subscribe', 'search'
-                    ])
-                    is_different_from_base = full_url.rstrip('/') != base_url.rstrip('/')
-                    already_added = any(url == full_url for url, _ in found_articles)
-                    
-                    if is_same_domain and is_not_asset and is_different_from_base and not already_added and article_id > 0:
-                        found_articles.append((full_url, article_id))
+            # Find all href links
+            href_pattern = r'href=["\']([^"\']+)["\']'
+            all_hrefs = re.findall(href_pattern, html_content, re.IGNORECASE)
+            
+            for href in all_hrefs:
+                full_url = urljoin(base_url, href)
+                parsed_url = urlparse(full_url)
+                
+                # Filter criteria
+                is_same_domain = base_domain in parsed_url.netloc
+                is_not_asset = not any(x in full_url.lower() for x in [
+                    '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.woff', '.woff2', 
+                    '.svg', '.ico', '/feed/', '/category/', '/tag/', '/author/',
+                    'cdn.', 'assets', 'static', '#', 'javascript:', 'mailto:',
+                    'login', 'signup', 'subscribe', 'search', 'page/', '/amp/'
+                ])
+                is_different_from_base = full_url.rstrip('/') != base_url.rstrip('/')
+                already_added = any(url == full_url for url, _ in found_articles)
+                
+                if not (is_same_domain and is_not_asset and is_different_from_base and not already_added):
+                    continue
+                
+                # Extract article ID from URL - can be in middle or at end
+                # Pattern 1: /category/123456/slug or /category/123456
+                # Pattern 2: /slug-slug-123456 (ID at end after last hyphen)
+                # Pattern 3: /2024/12/17/slug (date-based)
+                
+                article_id = 0
+                
+                # Try to find numeric ID in the URL path
+                # Look for patterns like /123456/ or -123456 at the end
+                id_patterns = [
+                    r'/(\d{5,})/',  # ID in middle: /123456/
+                    r'/(\d{5,})$',  # ID at end: /123456
+                    r'-(\d{5,})$',  # ID after hyphen at end: -123456
+                    r'-(\d{5,})/?$',  # ID after hyphen: -123456/
+                ]
+                
+                for pattern in id_patterns:
+                    match = re.search(pattern, parsed_url.path)
+                    if match:
+                        article_id = int(match.group(1))
+                        break
+                
+                # If no ID found, try date-based pattern
+                if article_id == 0:
+                    date_match = re.search(r'/(\d{4})/(\d{2})/(\d{2})/', parsed_url.path)
+                    if date_match:
+                        # Convert date to comparable number (YYYYMMDD)
+                        article_id = int(f"{date_match.group(1)}{date_match.group(2)}{date_match.group(3)}")
+                
+                if article_id > 0:
+                    found_articles.append((full_url, article_id))
             
             # Sort by article ID (highest first) to get the latest article
             if found_articles:
