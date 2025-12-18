@@ -727,17 +727,42 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               <div className="flex items-center justify-between">
                 <div className="text-left">
                   <h3 className="text-sm font-semibold text-gray-900">Agent Prompt</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">Customize the AI prompt for this agent (loaded from category mapping)</p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {formData.agent_type === 'photo_gallery' 
+                      ? 'Customize the AI prompt for generating gallery content and title'
+                      : 'Customize the AI prompt for this agent (loaded from category mapping)'}
+                  </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => {
-                    // If no custom prompt, load from category mapping
-                    if (!formData.custom_prompt && formData.category) {
-                      setFormData(prev => ({
-                        ...prev,
-                        custom_prompt: categoryPromptMappings[formData.category] || ''
-                      }));
+                    // If no custom prompt, load appropriate default
+                    if (!formData.custom_prompt) {
+                      if (formData.agent_type === 'photo_gallery') {
+                        // Default gallery prompt
+                        setFormData(prev => ({
+                          ...prev,
+                          custom_prompt: `Create engaging content for a photo gallery post.
+
+Original Title: {title}
+Artist/Celebrity: {artist_name}
+
+Original Content:
+{content}
+
+Instructions:
+1. Generate a catchy, SEO-friendly title (max 10 words)
+2. Write engaging content about this photoshoot/gallery ({word_count} words max)
+3. Mention the artist name naturally
+4. Use professional, engaging language suitable for entertainment news
+5. Format: First line should be the title, then a blank line, then the content`
+                        }));
+                      } else if (formData.category) {
+                        setFormData(prev => ({
+                          ...prev,
+                          custom_prompt: categoryPromptMappings[formData.category] || ''
+                        }));
+                      }
                     }
                     setShowAgentPromptEditor(true);
                   }}
