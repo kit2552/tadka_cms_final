@@ -973,20 +973,43 @@ Article:
             print("Generating article summary...")
             summary = await self._generate_summary(content)
             
-            # Step 7: Get image based on image option
-            image_option = agent.get('image_option', 'web_search')
-            image_url = await self._get_image_for_content(content, title, image_option, agent.get('category', ''))
+            # Step 9: Check for YouTube URL in reference content or generated content
+            # For movie-news and state-news categories, auto-detect video content
+            category = agent.get('category', '')
+            video_categories = ['movie-news', 'state-news', 'state-politics', 'national-politics', 
+                               'tollywood', 'bollywood', 'kollywood', 'entertainment']
             
-            # Step 8: Handle split content
+            youtube_url = None
+            content_type = agent.get('content_type', 'post')
+            
+            # Check reference content first, then generated content for YouTube URLs
+            if category in video_categories or content_type == 'post':
+                youtube_url = self._extract_youtube_url(reference_content)
+                if not youtube_url:
+                    youtube_url = self._extract_youtube_url(content)
+                
+                if youtube_url:
+                    print(f"🎬 YouTube video detected! Switching content type from '{content_type}' to 'video'")
+                    content_type = 'video'
+            
+            # Step 10: Get image based on image option (skip for video posts)
+            image_url = None
+            if content_type != 'video':
+                image_option = agent.get('image_option', 'web_search')
+                image_url = await self._get_image_for_content(content, title, image_option, agent.get('category', ''))
+            else:
+                print("📹 Skipping image generation for video post")
+            
+            # Step 11: Handle split content
             main_content = content
             secondary_content = ""
             if agent.get('split_content', False):
                 main_content, secondary_content = self._split_content(content, agent.get('split_paragraphs', 2))
             
-            # Step 9: Determine status from workflow
+            # Step 12: Determine status from workflow
             status, is_published = self._get_status_from_workflow(agent.get('content_workflow', 'in_review'))
             
-            # Step 10: Create the article
+            # Step 13: Create the article
             article_data = {
                 'title': title,
                 'content': main_content,
@@ -996,7 +1019,7 @@ Article:
                 'article_language': agent.get('article_language', 'en'),
                 'states': f'["{agent.get("target_state", "all")}"]' if agent.get('target_state') else '["all"]',
                 'category': agent.get('category', ''),
-                'content_type': agent.get('content_type', 'post'),
+                'content_type': content_type,
                 'image': image_url,
                 'is_top_story': agent.get('is_top_story', False),
                 'comments_enabled': agent.get('comments_enabled', True),
@@ -1004,6 +1027,11 @@ Article:
                 'is_published': is_published,
                 'is_scheduled': False
             }
+            
+            # Add YouTube URL if video content type
+            if content_type == 'video' and youtube_url:
+                article_data['youtube_url'] = youtube_url
+                print(f"📹 Added YouTube URL to article: {youtube_url}")
             
             # Generate slug from title
             slug = re.sub(r'[^a-zA-Z0-9\s]', '', title.lower())
