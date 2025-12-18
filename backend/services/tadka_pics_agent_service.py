@@ -159,8 +159,9 @@ class TadkaPicsAgentService:
         # t51.2885-15 = Content images (carousel photos)
         # t51.2885-19 = Profile pictures (skip these)
         
-        # Pattern matches: https://scontent-xxx.cdninstagram.com/v/t51.2885-15/...
-        pattern = r'https://scontent[^"\s&]+cdninstagram\.com/v/t51\.2885-15/[^"\s&]+\.jpg'
+        # Pattern matches full URL with query params: https://scontent-xxx.cdninstagram.com/v/t51.2885-15/...?...
+        # The URL is in src="..." so we capture until the closing quote
+        pattern = r'src="(https://scontent[^"]+cdninstagram\.com/v/t51\.2885-15/[^"]+)"'
         matches = re.findall(pattern, html)
         
         for url in matches:
@@ -178,8 +179,8 @@ class TadkaPicsAgentService:
         # Also look for video thumbnails (t51.29350-15 or t51.71878-15)
         if content_type == 'reels':
             video_patterns = [
-                r'https://scontent[^"\s&]+cdninstagram\.com/v/t51\.29350-15/[^"\s&]+\.jpg',
-                r'https://scontent[^"\s&]+cdninstagram\.com/v/t51\.71878-15/[^"\s&]+\.jpg',
+                r'src="(https://scontent[^"]+cdninstagram\.com/v/t51\.29350-15/[^"]+)"',
+                r'src="(https://scontent[^"]+cdninstagram\.com/v/t51\.71878-15/[^"]+)"',
             ]
             for video_pattern in video_patterns:
                 video_matches = re.findall(video_pattern, html)
