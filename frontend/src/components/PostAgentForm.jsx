@@ -38,11 +38,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   const [stateSearch, setStateSearch] = useState('');
   const [categorySearch, setCategorySearch] = useState('');
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
-  const [showMappingModal, setShowMappingModal] = useState(false);
-  const [showPromptEditor, setShowPromptEditor] = useState(false);
-  const [editingCategory, setEditingCategory] = useState(null);
   const [categoryPromptMappings, setCategoryPromptMappings] = useState({});
-  const [editingMappings, setEditingMappings] = useState({});
 
   useEffect(() => {
     if (editingAgent) {
