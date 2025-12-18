@@ -205,77 +205,110 @@ class AgentRunnerService:
         return "\n\n---\n\n".join(fetched_content), original_title
 
     async def _find_latest_article_url(self, html_content: str, base_url: str) -> Optional[str]:
-        """Find the latest article URL from a listing page by finding the highest article ID or latest date"""
+        """Find the latest article URL from a listing page by finding the highest article ID or latest datetime"""
         try:
             import re
             from urllib.parse import urljoin, urlparse
+            from datetime import datetime
             
             # Extract domain from base URL
             parsed_base = urlparse(base_url)
             base_domain = parsed_base.netloc
             
-            found_articles = []  # List of (url, article_id)
+            found_articles = []  # List of (url, sort_key, source_type)
             
-            # Find all href links
-            href_pattern = r'href=["\']([^"\']+)["\']'
-            all_hrefs = re.findall(href_pattern, html_content, re.IGNORECASE)
+            # First, try to find articles with datetime information
+            # Look for patterns like: <time datetime="2024-12-17T14:30:00">
+            # or <a href="..."><time datetime="...">
+            datetime_patterns = [
+                r'<a[^>]*href=["\']([^"\']+)["\'][^>]*>.*?<time[^>]*datetime=["\']([^"\']+)["\']',
+                r'<time[^>]*datetime=["\']([^"\']+)["\'][^>]*>.*?<a[^>]*href=["\']([^"\']+)["\']',
+                r'datetime=["\'](\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})[^"\']*["\'][^>]*>.*?href=["\']([^"\']+)["\']',
+            ]
             
-            for href in all_hrefs:
-                full_url = urljoin(base_url, href)
-                parsed_url = urlparse(full_url)
-                
-                # Filter criteria
-                is_same_domain = base_domain in parsed_url.netloc
-                is_not_asset = not any(x in full_url.lower() for x in [
-                    '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.woff', '.woff2', 
-                    '.svg', '.ico', '/feed/', '/category/', '/tag/', '/author/',
-                    'cdn.', 'assets', 'static', '#', 'javascript:', 'mailto:',
-                    'login', 'signup', 'subscribe', 'search', 'page/', '/amp/'
-                ])
-                is_different_from_base = full_url.rstrip('/') != base_url.rstrip('/')
-                already_added = any(url == full_url for url, _ in found_articles)
-                
-                if not (is_same_domain and is_not_asset and is_different_from_base and not already_added):
-                    continue
-                
-                # Extract article ID from URL - can be in middle or at end
-                # Pattern 1: /category/123456/slug or /category/123456
-                # Pattern 2: /slug-slug-123456 (ID at end after last hyphen)
-                # Pattern 3: /2024/12/17/slug (date-based)
-                
-                article_id = 0
-                
-                # Try to find numeric ID in the URL path
-                # Look for patterns like /123456/ or -123456 at the end
-                id_patterns = [
-                    r'/(\d{5,})/',  # ID in middle: /123456/
-                    r'/(\d{5,})$',  # ID at end: /123456
-                    r'-(\d{5,})$',  # ID after hyphen at end: -123456
-                    r'-(\d{5,})/?$',  # ID after hyphen: -123456/
-                ]
-                
-                for pattern in id_patterns:
-                    match = re.search(pattern, parsed_url.path)
-                    if match:
-                        article_id = int(match.group(1))
-                        break
-                
-                # If no ID found, try date-based pattern
-                if article_id == 0:
-                    date_match = re.search(r'/(\d{4})/(\d{2})/(\d{2})/', parsed_url.path)
-                    if date_match:
-                        # Convert date to comparable number (YYYYMMDD)
-                        article_id = int(f"{date_match.group(1)}{date_match.group(2)}{date_match.group(3)}")
-                
-                if article_id > 0:
-                    found_articles.append((full_url, article_id))
+            for pattern in datetime_patterns:
+                matches = re.findall(pattern, html_content, re.IGNORECASE | re.DOTALL)
+                for match in matches:
+                    # Determine which group is URL and which is datetime
+                    if match[0].startswith('http') or match[0].startswith('/'):
+                        href, dt_str = match[0], match[1]
+                    else:
+                        dt_str, href = match[0], match[1]
+                    
+                    full_url = urljoin(base_url, href)
+                    parsed_url = urlparse(full_url)
+                    
+                    if base_domain not in parsed_url.netloc:
+                        continue
+                    
+                    # Parse datetime
+                    try:
+                        # Handle various datetime formats
+                        dt_str_clean = dt_str.replace('Z', '+00:00')
+                        if 'T' in dt_str_clean:
+                            dt = datetime.fromisoformat(dt_str_clean.split('+')[0])
+                            sort_key = int(dt.strftime('%Y%m%d%H%M%S'))
+                            already_added = any(url == full_url for url, _, _ in found_articles)
+                            if not already_added:
+                                found_articles.append((full_url, sort_key, 'datetime'))
+                    except:
+                        pass
             
-            # Sort by article ID (highest first) to get the latest article
+            # If no datetime found, fall back to URL-based ID extraction
+            if not found_articles:
+                href_pattern = r'href=["\']([^"\']+)["\']'
+                all_hrefs = re.findall(href_pattern, html_content, re.IGNORECASE)
+                
+                for href in all_hrefs:
+                    full_url = urljoin(base_url, href)
+                    parsed_url = urlparse(full_url)
+                    
+                    # Filter criteria
+                    is_same_domain = base_domain in parsed_url.netloc
+                    is_not_asset = not any(x in full_url.lower() for x in [
+                        '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.woff', '.woff2', 
+                        '.svg', '.ico', '/feed/', '/category/', '/tag/', '/author/',
+                        'cdn.', 'assets', 'static', '#', 'javascript:', 'mailto:',
+                        'login', 'signup', 'subscribe', 'search', 'page/', '/amp/'
+                    ])
+                    is_different_from_base = full_url.rstrip('/') != base_url.rstrip('/')
+                    already_added = any(url == full_url for url, _, _ in found_articles)
+                    
+                    if not (is_same_domain and is_not_asset and is_different_from_base and not already_added):
+                        continue
+                    
+                    article_id = 0
+                    
+                    # Try to find numeric ID in the URL path
+                    id_patterns = [
+                        r'/(\d{5,})/',  # ID in middle: /123456/
+                        r'/(\d{5,})$',  # ID at end: /123456
+                        r'-(\d{5,})$',  # ID after hyphen at end: -123456
+                        r'-(\d{5,})/?$',  # ID after hyphen: -123456/
+                    ]
+                    
+                    for pattern in id_patterns:
+                        match = re.search(pattern, parsed_url.path)
+                        if match:
+                            article_id = int(match.group(1))
+                            break
+                    
+                    # If no ID found, try date-based pattern in URL
+                    if article_id == 0:
+                        date_match = re.search(r'/(\d{4})/(\d{2})/(\d{2})/', parsed_url.path)
+                        if date_match:
+                            article_id = int(f"{date_match.group(1)}{date_match.group(2)}{date_match.group(3)}000000")
+                    
+                    if article_id > 0:
+                        found_articles.append((full_url, article_id, 'url_id'))
+            
+            # Sort by sort_key (highest first) to get the latest article
             if found_articles:
                 found_articles.sort(key=lambda x: x[1], reverse=True)
                 latest_url = found_articles[0][0]
-                latest_id = found_articles[0][1]
-                print(f"Found {len(found_articles)} articles. Latest article ID: {latest_id}")
+                latest_key = found_articles[0][1]
+                source = found_articles[0][2]
+                print(f"Found {len(found_articles)} articles (source: {source}). Latest key: {latest_key}")
                 print(f"Latest article URL: {latest_url}")
                 return latest_url
             
