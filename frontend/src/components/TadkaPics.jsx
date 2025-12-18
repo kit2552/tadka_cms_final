@@ -84,8 +84,8 @@ const TadkaPics = ({ images, onImageClick }) => {
         // Width of one set of images (we have 3 sets total)
         const singleSetWidth = container.scrollWidth / 3;
         
-        // Move 1px per frame for smooth scroll
-        scrollPositionRef.current += 1;
+        // Move 0.3px per frame for slow smooth scroll
+        scrollPositionRef.current += 0.3;
         
         // When we've scrolled past the first set, seamlessly jump back
         // This creates the infinite loop illusion
