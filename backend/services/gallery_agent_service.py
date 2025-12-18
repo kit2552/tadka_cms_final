@@ -504,9 +504,9 @@ Output:"""
         temp_dir = None
         
         try:
-            # Initialize AI client and S3
+            # Initialize AI client and S3 service
             self._initialize_ai_client()
-            self._initialize_s3_client()
+            self._initialize_s3_service()
             
             # Get agent configuration
             reference_urls = agent.get('reference_urls', [])
