@@ -26,7 +26,12 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     post_date: '',
     adhoc_post_time: '09:00 AM',
     is_active: true,
-    custom_prompt: ''  // Custom prompt for this agent instance
+    custom_prompt: '',  // Custom prompt for this agent instance
+    // Photo Gallery Agent fields
+    gallery_type: 'vertical',
+    gallery_category: 'Actress',
+    tadka_pics_enabled: false,
+    max_images: 50
   });
   
   const [showAgentPromptEditor, setShowAgentPromptEditor] = useState(false);
