@@ -1012,8 +1012,8 @@ Article:
                         youtube_url = self._extract_youtube_url(content)
             
             if youtube_url:
-                print(f"🎬 YouTube video detected! Switching content type from '{content_type}' to 'video-post'")
-                content_type = 'video-post'
+                print(f"🎬 YouTube video detected! Switching content type from '{content_type}' to 'video_post'")
+                content_type = 'video_post'
             
             # Step 10: Get image based on image option (skip for video posts)
             image_url = None
