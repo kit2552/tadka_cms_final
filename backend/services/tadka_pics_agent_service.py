@@ -149,49 +149,61 @@ class TadkaPicsAgentService:
     def _parse_instagram_embed_captioned(self, html: str, content_type: str) -> List[Dict]:
         """Parse the captioned embed page to extract carousel images
         
-        The captioned embed page contains the full carousel images.
-        Images are in t51.2885-15 path (content images), not t51.2885-19 (profile pics).
+        The captioned embed page contains carousel data in 'edge_sidecar_to_children' JSON.
+        We extract display_url values from this JSON to get ALL carousel images,
+        not just the first one shown in the embed.
+        
+        The JSON is escaped (\\\" for quotes, \\\\/ for slashes).
         """
         images = []
         seen_ids = set()
         
-        # Find all scontent CDN URLs for content images
-        # t51.2885-15 = Content images (carousel photos)
-        # t51.2885-19 = Profile pictures (skip these)
-        
-        # Pattern matches full URL with query params: https://scontent-xxx.cdninstagram.com/v/t51.2885-15/...?...
-        # The URL is in src="..." so we capture until the closing quote
-        pattern = r'src="(https://scontent[^"]+cdninstagram\.com/v/t51\.2885-15/[^"]+)"'
-        matches = re.findall(pattern, html)
-        
-        for url in matches:
-            # Unescape HTML entities
-            url = url.replace('&amp;', '&')
+        # First, try to extract from edge_sidecar_to_children JSON (for carousel posts)
+        sidecar_start = html.find('edge_sidecar_to_children')
+        if sidecar_start > 0:
+            # Find the end of this section
+            sidecar_end = html.find('edge_media_to_parent_comment', sidecar_start)
+            if sidecar_end < 0:
+                sidecar_end = sidecar_start + 30000
+            sidecar_section = html[sidecar_start:sidecar_end]
             
-            # Extract image ID for deduplication
-            id_match = re.search(r'/(\d+_\d+)', url)
-            if id_match:
-                img_id = id_match.group(1)
-                if img_id not in seen_ids:
-                    seen_ids.add(img_id)
-                    images.append({'url': url, 'id': img_id})
+            # Extract display_url values from escaped JSON
+            # Pattern matches: display_url\":\"https:\/\/...\"
+            pattern = r'display_url\\":\\"(https:[^"]+?)\\"'
+            matches = re.findall(pattern, sidecar_section)
+            
+            for match in matches:
+                # Unescape the URL
+                url = match.replace('\\\\\\/\\\\\\/', '//').replace('\\\\\\/', '/').replace('\\\\\/', '/').replace('\\\\/', '/').replace('\\/', '/')
+                url = url.replace('\\\\u0026', '&').replace('\\u0026', '&')
+                
+                # Only keep content images (t51.2885-15), not profile pics
+                if 't51.2885-15' not in url:
+                    continue
+                
+                # Extract image ID for deduplication
+                id_match = re.search(r'/(\d+_\d+)', url)
+                if id_match:
+                    img_id = id_match.group(1)
+                    if img_id not in seen_ids:
+                        seen_ids.add(img_id)
+                        images.append({'url': url, 'id': img_id})
         
-        # Also look for video thumbnails (t51.29350-15 or t51.71878-15)
-        if content_type == 'reels':
-            video_patterns = [
-                r'src="(https://scontent[^"]+cdninstagram\.com/v/t51\.29350-15/[^"]+)"',
-                r'src="(https://scontent[^"]+cdninstagram\.com/v/t51\.71878-15/[^"]+)"',
-            ]
-            for video_pattern in video_patterns:
-                video_matches = re.findall(video_pattern, html)
-                for url in video_matches:
-                    url = url.replace('&amp;', '&')
-                    id_match = re.search(r'/(\d+_\d+)', url)
-                    if id_match:
-                        img_id = id_match.group(1)
-                        if img_id not in seen_ids:
-                            seen_ids.add(img_id)
-                            images.append({'url': url, 'id': img_id})
+        # If no sidecar (single image post), fall back to src attribute
+        if not images:
+            pattern = r'src="(https://scontent[^"]+cdninstagram\.com/v/t51\.2885-15/[^"]+)"'
+            matches = re.findall(pattern, html)
+            
+            for url in matches:
+                url = url.replace('&amp;', '&')
+                id_match = re.search(r'/(\d+_\d+)', url)
+                if id_match:
+                    img_id = id_match.group(1)
+                    # Skip HoverCard images (these are "More posts" section)
+                    # HoverCard images have the same ID pattern but we can skip if we already have sidecar images
+                    if img_id not in seen_ids:
+                        seen_ids.add(img_id)
+                        images.append({'url': url, 'id': img_id})
         
         return images
 
