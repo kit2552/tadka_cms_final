@@ -391,38 +391,38 @@ class TadkaPicsAgentService:
         return f"TDK-{timestamp}-{random_suffix}"
 
     async def _extract_artist_name_from_instagram(self, html: str) -> str:
-        """Extract artist name from Instagram page HTML
+        """Extract artist name from Instagram embed page HTML
         
-        Looks for patterns in meta tags and page content like:
-        - og:title: "Name on Instagram: caption..."
-        - "A post shared by Pragya Jaiswal (@jaiswalpragya)"
+        Looks for patterns like:
+        - "full_name":"Artist Name" in JSON
+        - alt="Instagram post shared by @username"
         - "shared by Name Here (@username)"
         """
         import html as html_module
         
-        # Try to extract from og:title meta tag
-        # Format: "Name on Instagram: caption..."
-        og_title_patterns = [
-            r'<meta[^>]*property="og:title"[^>]*content="([^"]+)"',
-            r'<meta[^>]*content="([^"]+)"[^>]*property="og:title"',
-        ]
+        # Try to extract full_name from JSON in the page
+        full_name_match = re.search(r'"full_name":"([^"]+)"', html)
+        if full_name_match:
+            name = full_name_match.group(1)
+            # Unescape unicode
+            name = name.encode().decode('unicode_escape')
+            if name and len(name) > 1:
+                print(f"👤 Extracted artist name from full_name: {name}")
+                return name
         
-        for pattern in og_title_patterns:
-            match = re.search(pattern, html)
-            if match:
-                title = html_module.unescape(match.group(1))
-                # Extract name before "on Instagram"
-                name_match = re.match(r'^([^@]+?)\s+(?:on Instagram|&#x2605;|★)', title)
-                if name_match:
-                    name = name_match.group(1).strip()
-                    # Clean up any remaining HTML entities
-                    name = html_module.unescape(name)
-                    if name and len(name) > 1:
-                        print(f"👤 Extracted artist name from og:title: {name}")
-                        return name
+        # Try to extract from alt attribute
+        alt_match = re.search(r'alt="Instagram post shared by (?:&#064;|@)?([^"]+)"', html)
+        if alt_match:
+            username = alt_match.group(1)
+            # Clean up HTML entities
+            username = html_module.unescape(username)
+            if username and len(username) > 1:
+                # Convert username to title case
+                name = username.replace('_', ' ').replace('.', ' ').title()
+                print(f"👤 Extracted artist from alt: {name}")
+                return name
         
         # Try to find the actual name from "shared by Name (@username)" pattern
-        # This gives us the real name, not just the username
         match = re.search(r'shared by ([^(]+)\s*\(@', html)
         if match:
             name = match.group(1).strip()
