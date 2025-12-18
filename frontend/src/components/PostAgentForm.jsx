@@ -1273,6 +1273,7 @@ Instructions:
                 ))}
               </div>
             </div>
+            )}
 
             {/* Message */}
             {message.text && (
