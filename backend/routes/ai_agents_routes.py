@@ -4,7 +4,7 @@ Handles AI agent creation and management
 """
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Union, Any
 from datetime import datetime
 from database import get_db
 import crud
@@ -13,6 +13,11 @@ router = APIRouter()
 
 # Track running agents to prevent duplicate runs
 running_agents = set()
+
+class ReferenceUrlItem(BaseModel):
+    """Reference URL with type specification"""
+    url: str
+    url_type: Optional[str] = "auto"  # "auto", "listing", "direct"
 
 class AIAgent(BaseModel):
     agent_name: str
@@ -33,7 +38,7 @@ class AIAgent(BaseModel):
     word_count: Optional[str] = None  # "<100", "<150", etc.
     split_content: Optional[bool] = False  # Whether to split content
     split_paragraphs: Optional[int] = 2  # Number of paragraphs for split
-    reference_urls: Optional[List[str]] = None  # Reference content URLs
+    reference_urls: Optional[List[Any]] = None  # Reference URLs - can be strings or ReferenceUrlItem objects
     image_option: Optional[str] = None  # "ai_generate", "upload", "existing", "web_search"
     content_workflow: Optional[str] = None  # "in_review", "ready_to_publish", "auto_post"
     is_top_story: Optional[bool] = False  # Mark as top story
