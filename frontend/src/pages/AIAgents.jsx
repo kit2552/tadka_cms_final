@@ -342,8 +342,8 @@ const AIAgents = () => {
         />
       )}
 
-      {/* Agent Form Modal */}
-      {showAgentForm && selectedAgentType === 'post' && (
+      {/* Agent Form Modal - Show for both post and photo_gallery agents */}
+      {showAgentForm && (selectedAgentType === 'post' || selectedAgentType === 'photo_gallery') && (
         <PostAgentForm
           onClose={() => {
             setShowAgentForm(false);
@@ -351,7 +351,7 @@ const AIAgents = () => {
             setEditingAgent(null);
           }}
           onSave={handleAgentSaved}
-          editingAgent={editingAgent}
+          editingAgent={editingAgent ? editingAgent : { agent_type: selectedAgentType }}
         />
       )}
     </div>
