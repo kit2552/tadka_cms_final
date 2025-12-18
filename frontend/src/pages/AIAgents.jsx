@@ -342,8 +342,8 @@ const AIAgents = () => {
         />
       )}
 
-      {/* Agent Form Modal - Show for both post and photo_gallery agents */}
-      {showAgentForm && (selectedAgentType === 'post' || selectedAgentType === 'photo_gallery') && (
+      {/* Agent Form Modal - Show for post, photo_gallery, and tadka_pics agents */}
+      {showAgentForm && (selectedAgentType === 'post' || selectedAgentType === 'photo_gallery' || selectedAgentType === 'tadka_pics') && (
         <PostAgentForm
           onClose={() => {
             setShowAgentForm(false);
