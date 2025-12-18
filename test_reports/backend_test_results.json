@@ -1,0 +1,52 @@
+{
+  "test_summary": {
+    "total_tests": 7,
+    "passed_tests": 6,
+    "success_rate": 85.7,
+    "timestamp": "2025-12-18T20:58:26.265410"
+  },
+  "test_details": [
+    {
+      "test_name": "Get Tadka Pics Agent",
+      "success": true,
+      "details": "",
+      "timestamp": "2025-12-18T20:58:24.283639"
+    },
+    {
+      "test_name": "Get Agent Status",
+      "success": true,
+      "details": "",
+      "timestamp": "2025-12-18T20:58:24.360385"
+    },
+    {
+      "test_name": "Run Tadka Pics Agent",
+      "success": true,
+      "details": "",
+      "timestamp": "2025-12-18T20:58:26.192148"
+    },
+    {
+      "test_name": "Verify Response Structure",
+      "success": true,
+      "details": "",
+      "timestamp": "2025-12-18T20:58:26.192893"
+    },
+    {
+      "test_name": "Verify Success Flag",
+      "success": true,
+      "details": "",
+      "timestamp": "2025-12-18T20:58:26.192906"
+    },
+    {
+      "test_name": "Verify Images Count",
+      "success": true,
+      "details": "Found 3 images",
+      "timestamp": "2025-12-18T20:58:26.192911"
+    },
+    {
+      "test_name": "Get Created Gallery",
+      "success": false,
+      "details": "Expected 200, got 404 - {'detail': 'Gallery not found'}",
+      "timestamp": "2025-12-18T20:58:26.264754"
+    }
+  ]
+}
