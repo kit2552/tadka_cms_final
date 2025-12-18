@@ -776,7 +776,100 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               )}
             </div>
 
-            {/* Split Content Section */}
+            {/* Photo Gallery Settings Section - Only for photo_gallery agent type */}
+            {formData.agent_type === 'photo_gallery' && (
+              <div className="bg-purple-50 rounded-lg p-4 space-y-4 border border-purple-200">
+                <div className="text-left">
+                  <h3 className="text-sm font-semibold text-purple-900">📸 Photo Gallery Settings</h3>
+                  <p className="text-xs text-purple-600 mt-0.5">Configure how the gallery agent scrapes and creates galleries</p>
+                </div>
+                
+                {/* Gallery Type & Category Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {/* Gallery Type (Orientation) */}
+                  <div className="text-left">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Gallery Type *
+                    </label>
+                    <select
+                      name="gallery_type"
+                      value={formData.gallery_type}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    >
+                      <option value="vertical">Vertical</option>
+                      <option value="horizontal">Horizontal</option>
+                    </select>
+                  </div>
+                  
+                  {/* Gallery Category */}
+                  <div className="text-left">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Gallery Category *
+                    </label>
+                    <select
+                      name="gallery_category"
+                      value={formData.gallery_category}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    >
+                      <option value="Actress">Actress</option>
+                      <option value="Actor">Actor</option>
+                      <option value="Events">Events</option>
+                      <option value="Politics">Politics</option>
+                      <option value="Travel">Travel</option>
+                      <option value="Others">Others</option>
+                    </select>
+                  </div>
+                </div>
+                
+                {/* Max Images */}
+                <div className="text-left">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Maximum Images to Download
+                  </label>
+                  <select
+                    name="max_images"
+                    value={formData.max_images}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  >
+                    <option value={10}>10 images</option>
+                    <option value={20}>20 images</option>
+                    <option value={30}>30 images</option>
+                    <option value={50}>50 images (max)</option>
+                  </select>
+                </div>
+                
+                {/* Tadka Pics Toggle - Only for Vertical Galleries */}
+                {formData.gallery_type === 'vertical' && (
+                  <div className="flex items-center gap-2 pt-2 border-t border-purple-200">
+                    <input
+                      type="checkbox"
+                      name="tadka_pics_enabled"
+                      id="tadka_pics_enabled"
+                      checked={formData.tadka_pics_enabled}
+                      onChange={(e) => setFormData(prev => ({ ...prev, tadka_pics_enabled: e.target.checked }))}
+                      className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                    />
+                    <label htmlFor="tadka_pics_enabled" className="text-sm text-gray-700">
+                      Enable for Tadka Pics
+                    </label>
+                    <span className="text-xs text-gray-500 ml-2">
+                      (Show in Tadka Pics section on homepage)
+                    </span>
+                  </div>
+                )}
+                
+                <div className="bg-purple-100 rounded p-2 text-xs text-purple-800">
+                  <strong>How it works:</strong> The agent will scrape the reference URL, download images, upload to S3, 
+                  create a gallery, identify/create the artist, and generate an article with Photo Gallery content type.
+                </div>
+              </div>
+            )}
+
+            {/* Split Content Section - Only for post agent type */}
+            {formData.agent_type !== 'photo_gallery' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="text-left">
