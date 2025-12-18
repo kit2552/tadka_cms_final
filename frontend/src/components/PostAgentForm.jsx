@@ -224,7 +224,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
       });
 
       if (response.ok) {
-        setMessage({ type: 'success', text: `Agent ${editingAgent ? 'updated' : 'created'} successfully!` });
+        setMessage({ type: 'success', text: `Agent ${isEditing ? 'updated' : 'created'} successfully!` });
         setTimeout(() => {
           onSave();
         }, 1500);
