@@ -446,7 +446,7 @@ class TadkaPicsAgentService:
                     if direct_url:
                         async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
                             response = await client.get(direct_url, headers={
-                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                                'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
                                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                             })
                             if response.status_code == 200:
