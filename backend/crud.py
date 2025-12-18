@@ -2388,6 +2388,29 @@ def get_gallery_entity_by_id(db, entity_id: int):
             return entity
     return None
 
+def get_gallery_entity_by_name(db, entity_type: str, name: str):
+    """Get gallery entity by exact name match"""
+    collection_map = {
+        "actor": GALLERY_ACTORS,
+        "actress": GALLERY_ACTRESSES,
+        "events": GALLERY_EVENTS,
+        "politics": GALLERY_POLITICS,
+        "travel": GALLERY_TRAVEL,
+        "others": GALLERY_OTHERS
+    }
+    
+    collection = collection_map.get(entity_type.lower())
+    if not collection:
+        return None
+    
+    # Exact case-insensitive match
+    entity = db[collection].find_one(
+        {"name": {"$regex": f"^{name}$", "$options": "i"}},
+        {"_id": 0}
+    )
+    return entity
+
+
 def update_gallery_entity(db, entity_id: int, entity_data: dict):
     """Update gallery entity"""
     collection_map = {
