@@ -210,8 +210,8 @@ class GalleryAgentService:
                             'title': img.get('title', '')
                         })
             
-            # Also look for links to full-size images
-            for link in soup.find_all('a', href=True):
+            # Also look for links to full-size images (within main content only)
+            for link in main_content.find_all('a', href=True):
                 href = link.get('href', '')
                 if any(ext in href.lower() for ext in ['.jpg', '.jpeg', '.png', '.webp', '.gif']):
                     full_url = urljoin(base_url, href)
