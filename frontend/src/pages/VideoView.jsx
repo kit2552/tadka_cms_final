@@ -73,8 +73,19 @@ const VideoView = () => {
           console.log('🎬 Current video data:', {
             id: articleData.id,
             title: articleData.title,
-            category: articleData.category
+            category: articleData.category,
+            content_type: articleData.content_type
           });
+          
+          // Redirect video_post to article page (video_post uses article template with embedded video)
+          if (articleData.content_type === 'video_post') {
+            const slug = articleData.slug || articleData.title?.toLowerCase().replace(/\s+/g, '-');
+            const searchParams = new URLSearchParams(window.location.search);
+            const previewParam = searchParams.get('preview') ? '?preview=true' : '';
+            navigate(`/article/${id}/${slug}${previewParam}`, { replace: true });
+            return;
+          }
+          
           setArticle(articleData);
           
           // Fetch related videos based on article category with state filtering
