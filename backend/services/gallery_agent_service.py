@@ -14,8 +14,6 @@ from typing import Optional, Dict, Any, List, Tuple
 from urllib.parse import urljoin, urlparse
 from database import db
 import crud
-import boto3
-from botocore.config import Config as BotoConfig
 
 
 class GalleryAgentService:
@@ -25,8 +23,6 @@ class GalleryAgentService:
         self.client = None
         self.model = None
         self.provider = None
-        self.s3_client = None
-        self.aws_config = None
         
     def _initialize_ai_client(self):
         """Initialize the appropriate AI client based on selected model"""
