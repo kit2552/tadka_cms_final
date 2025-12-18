@@ -102,8 +102,9 @@ const ArticlePage = () => {
         if (response.ok) {
           const data = await response.json();
           
-          // Redirect to video page if this is a video content type
-          if (data.content_type === 'video' || data.content_type === 'video_post') {
+          // Redirect to video page only for pure video content type (not video_post)
+          // video_post uses the article template with embedded YouTube video
+          if (data.content_type === 'video') {
             navigate(`/video/${articleId}`, { replace: true });
             return;
           }
