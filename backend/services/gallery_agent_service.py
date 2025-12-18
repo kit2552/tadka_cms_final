@@ -185,6 +185,8 @@ class GalleryAgentService:
             # Find images in various gallery structures
             images_found = []
             
+            print(f"🔍 Searching for images in main content area...")
+            
             # Look for high-res images in various attributes
             for img in main_content.find_all('img'):
                 src = img.get('data-src') or img.get('data-lazy-src') or img.get('src') or ''
@@ -209,6 +211,8 @@ class GalleryAgentService:
                             'alt': img.get('alt', ''),
                             'title': img.get('title', '')
                         })
+                        # Log each found image URL
+                        print(f"   📷 Found: {high_res_url[:80]}...")
             
             # Also look for links to full-size images (within main content only)
             for link in main_content.find_all('a', href=True):
