@@ -146,11 +146,11 @@ class TadkaPicsAgentTester:
             self.log_test("Verify Gallery Creation", False, "No gallery_id provided")
             return False
         
-        # Try to get gallery details (assuming there's a galleries endpoint)
+        # Try to get gallery details using the gallery ID endpoint
         success, response = self.run_test(
-            "Get Created Gallery",
+            "Get Created Gallery by ID",
             "GET",
-            f"api/galleries/{gallery_id}",
+            f"api/galleries/by-id/{gallery_id}",
             200
         )
         
