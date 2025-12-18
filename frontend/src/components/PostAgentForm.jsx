@@ -154,14 +154,21 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   const addReferenceUrl = () => {
     setFormData(prev => ({
       ...prev,
-      reference_urls: [...prev.reference_urls, '']
+      reference_urls: [...prev.reference_urls, { url: '', url_type: 'auto' }]
     }));
   };
 
-  const updateReferenceUrl = (index, value) => {
+  const updateReferenceUrl = (index, field, value) => {
     setFormData(prev => ({
       ...prev,
-      reference_urls: prev.reference_urls.map((url, i) => i === index ? value : url)
+      reference_urls: prev.reference_urls.map((item, i) => {
+        if (i !== index) return item;
+        // Handle both old format (string) and new format (object)
+        if (typeof item === 'string') {
+          return field === 'url' ? { url: value, url_type: 'auto' } : { url: item, url_type: value };
+        }
+        return { ...item, [field]: value };
+      })
     }));
   };
 
@@ -171,6 +178,22 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
       reference_urls: prev.reference_urls.filter((_, i) => i !== index)
     }));
   };
+
+  // Helper to get URL value (handles both old string format and new object format)
+  const getUrlValue = (item) => {
+    return typeof item === 'string' ? item : (item?.url || '');
+  };
+
+  // Helper to get URL type (handles both old string format and new object format)
+  const getUrlType = (item) => {
+    return typeof item === 'string' ? 'auto' : (item?.url_type || 'auto');
+  };
+
+  const urlTypeOptions = [
+    { value: 'auto', label: 'Auto Detect' },
+    { value: 'listing', label: 'Listing Page' },
+    { value: 'direct', label: 'Direct Article' }
+  ];
 
   const handlePromptChange = (categorySlug, prompt) => {
     setEditingMappings(prev => ({
