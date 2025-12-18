@@ -47,12 +47,15 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
   useEffect(() => {
     if (editingAgent) {
+      const agentType = editingAgent.agent_type || 'post';
       setFormData(prev => ({
         ...prev,
         ...editingAgent,
         selected_days: editingAgent.selected_days || [],
         // Ensure agent_type is set from editingAgent
-        agent_type: editingAgent.agent_type || 'post'
+        agent_type: agentType,
+        // Pre-select "photoshoots" category for new photo_gallery agents
+        category: editingAgent.category || (agentType === 'photo_gallery' ? 'photoshoots' : prev.category)
       }));
       setActiveTab(editingAgent.mode || 'recurring');
     }
