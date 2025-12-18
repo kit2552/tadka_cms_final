@@ -101,35 +101,90 @@ class TadkaPicsAgentService:
         print(f"📊 Found {len(all_images)} unique Instagram images")
         return all_images
 
-    def _get_direct_url(self, url: str) -> Optional[str]:
-        """Convert Instagram URL to direct post URL"""
-        # Clean up URL
-        url = url.strip()
+    def _extract_shortcode(self, input_str: str) -> Optional[str]:
+        """Extract Instagram shortcode from URL or embed code
         
-        # Remove embed suffix if present
-        url = url.replace('/embed/', '/').replace('/embed', '/')
+        Supports:
+        - Direct URLs: https://www.instagram.com/p/ABC123/
+        - Reel URLs: https://www.instagram.com/reel/ABC123/
+        - Embed codes: <blockquote ... data-instgrm-permalink="https://www.instagram.com/p/ABC123/...">
+        """
+        input_str = input_str.strip()
         
-        # Extract shortcode from various URL formats
+        # Extract shortcode from various formats
         patterns = [
-            r'instagram\.com/p/([A-Za-z0-9_-]+)',      # Post
-            r'instagram\.com/reel/([A-Za-z0-9_-]+)',   # Reel
+            r'instagram\.com/p/([A-Za-z0-9_-]+)',      # Post URL
+            r'instagram\.com/reel/([A-Za-z0-9_-]+)',   # Reel URL
             r'instagram\.com/reels/([A-Za-z0-9_-]+)',  # Reels alternate
+            r'data-instgrm-permalink="[^"]*instagram\.com/p/([A-Za-z0-9_-]+)',  # Embed code
         ]
         
         for pattern in patterns:
-            match = re.search(pattern, url)
+            match = re.search(pattern, input_str)
             if match:
-                shortcode = match.group(1)
-                return f"https://www.instagram.com/p/{shortcode}/"
+                return match.group(1)
         
+        return None
+    
+    def _get_direct_url(self, url: str) -> Optional[str]:
+        """Convert Instagram URL to direct post URL"""
+        shortcode = self._extract_shortcode(url)
+        if shortcode:
+            return f"https://www.instagram.com/p/{shortcode}/"
         return None
     
     def _get_embed_url(self, url: str) -> Optional[str]:
         """Convert Instagram URL to embed URL (for extracting artist name)"""
-        direct_url = self._get_direct_url(url)
-        if direct_url:
-            return direct_url.rstrip('/') + '/embed/'
+        shortcode = self._extract_shortcode(url)
+        if shortcode:
+            return f"https://www.instagram.com/p/{shortcode}/embed/captioned/"
         return None
+    
+    def _parse_instagram_embed_captioned(self, html: str, content_type: str) -> List[Dict]:
+        """Parse the captioned embed page to extract carousel images
+        
+        The captioned embed page contains edge_sidecar_to_children JSON with all carousel images.
+        Images are in t51.2885-15 path (content images), not t51.2885-19 (profile pics).
+        """
+        images = []
+        seen_ids = set()
+        
+        # Find all scontent URLs in the page and filter for content images only
+        # t51.2885-15 = Content images (carousel photos)
+        # t51.2885-19 = Profile pictures (skip these)
+        # t51.29350-15 = Video thumbnails (include)
+        
+        pattern = r'scontent[^"\s\\]+t51\.2885-15[^"\s\\]+\.jpg[^"\s\\]*'
+        matches = re.findall(pattern, html)
+        
+        for match in matches:
+            # Reconstruct full URL and unescape
+            url = 'https://' + match.replace('\\/', '/')
+            url = url.replace('&amp;', '&')
+            
+            # Extract image ID for deduplication
+            id_match = re.search(r'/(\d+_\d+)', url)
+            if id_match:
+                img_id = id_match.group(1)
+                if img_id not in seen_ids:
+                    seen_ids.add(img_id)
+                    images.append({'url': url, 'id': img_id})
+        
+        # Also look for video thumbnails if reels content type
+        if content_type == 'reels':
+            video_pattern = r'scontent[^"\s\\]+t51\.29350-15[^"\s\\]+\.jpg[^"\s\\]*'
+            video_matches = re.findall(video_pattern, html)
+            for match in video_matches:
+                url = 'https://' + match.replace('\\/', '/')
+                url = url.replace('&amp;', '&')
+                id_match = re.search(r'/(\d+_\d+)', url)
+                if id_match:
+                    img_id = id_match.group(1)
+                    if img_id not in seen_ids:
+                        seen_ids.add(img_id)
+                        images.append({'url': url, 'id': img_id})
+        
+        return images
 
     def _normalize_instagram_url(self, url: str) -> str:
         """Normalize Instagram image URL for deduplication"""
