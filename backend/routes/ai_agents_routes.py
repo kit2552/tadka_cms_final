@@ -162,6 +162,10 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
         if agent_type == 'photo_gallery':
             # Use Gallery Agent Service
             result = await gallery_agent_runner.run_gallery_agent(agent_id)
+        elif agent_type == 'tadka_pics':
+            # Use Tadka Pics Agent Service
+            from services.tadka_pics_agent_service import tadka_pics_agent_runner
+            result = await tadka_pics_agent_runner.run_tadka_pics_agent(agent_id)
         else:
             # Use Post Agent Service (default)
             result = await agent_runner.run_agent(agent_id)
