@@ -301,7 +301,8 @@ class TadkaPicsAgentService:
     async def _download_images(self, images: List[Dict], temp_dir: str) -> List[Dict]:
         """Download images to temp directory"""
         downloaded = []
-        MIN_IMAGE_SIZE = 10 * 1024  # 10KB minimum
+        # Lower threshold for Instagram carousel images which may be smaller
+        MIN_IMAGE_SIZE = 5 * 1024  # 5KB minimum (Instagram thumbnails are ~9KB)
         
         async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
             for i, img in enumerate(images):
