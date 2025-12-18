@@ -244,13 +244,32 @@ class GalleryAgentService:
         return None
 
     async def _download_images(self, images: List[Dict], temp_dir: str) -> List[Dict]:
-        """Download images to temp directory"""
+        """Download images to temp directory, filtering out placeholder images"""
         downloaded = []
+        
+        # Minimum file size to filter out placeholders (10KB)
+        MIN_IMAGE_SIZE = 10 * 1024  # 10KB
+        
+        # Skip URLs that look like placeholders
+        placeholder_patterns = [
+            'placeholder', 'loading', 'spinner', 'loader', 'blank',
+            'pixel', 'spacer', 'transparent', 'empty', '1x1',
+            'data:image', 'base64'
+        ]
+        
+        valid_image_count = 0
         
         async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
             for i, img in enumerate(images):
                 try:
                     url = img['url']
+                    
+                    # Skip placeholder URLs
+                    url_lower = url.lower()
+                    if any(pattern in url_lower for pattern in placeholder_patterns):
+                        print(f"⏭️ Skipping placeholder URL: {url[:60]}...")
+                        continue
+                    
                     print(f"⬇️ Downloading image {i+1}/{len(images)}: {url[:80]}...")
                     
                     response = await client.get(url, headers={
@@ -258,17 +277,33 @@ class GalleryAgentService:
                     })
                     
                     if response.status_code == 200:
-                        # Determine file extension
+                        file_size = len(response.content)
+                        
+                        # Skip tiny images (likely placeholders)
+                        if file_size < MIN_IMAGE_SIZE:
+                            print(f"⏭️ Skipping small image ({file_size} bytes < {MIN_IMAGE_SIZE}): likely placeholder")
+                            continue
+                        
+                        # Determine file extension from content-type first, then URL
                         content_type = response.headers.get('content-type', '')
-                        ext = '.jpg'
-                        if 'png' in content_type:
-                            ext = '.png'
-                        elif 'webp' in content_type:
+                        ext = '.jpg'  # default
+                        
+                        if 'webp' in content_type:
                             ext = '.webp'
+                        elif 'png' in content_type:
+                            ext = '.png'
                         elif 'gif' in content_type:
                             ext = '.gif'
+                        elif 'jpeg' in content_type or 'jpg' in content_type:
+                            ext = '.jpg'
+                        else:
+                            # Fallback to URL extension
+                            url_ext = os.path.splitext(urlparse(url).path)[1].lower()
+                            if url_ext in ['.jpg', '.jpeg', '.png', '.webp', '.gif']:
+                                ext = url_ext if url_ext != '.jpeg' else '.jpg'
                         
-                        filename = f"image_{i+1:03d}{ext}"
+                        valid_image_count += 1
+                        filename = f"image_{valid_image_count:03d}{ext}"
                         filepath = os.path.join(temp_dir, filename)
                         
                         with open(filepath, 'wb') as f:
@@ -278,9 +313,9 @@ class GalleryAgentService:
                             'local_path': filepath,
                             'filename': filename,
                             'original_url': url,
-                            'size': len(response.content)
+                            'size': file_size
                         })
-                        print(f"✅ Downloaded: {filename} ({len(response.content)} bytes)")
+                        print(f"✅ Downloaded: {filename} ({file_size} bytes)")
                     else:
                         print(f"❌ Failed to download: {url} (status: {response.status_code})")
                         
@@ -288,6 +323,7 @@ class GalleryAgentService:
                     print(f"❌ Error downloading {img['url']}: {e}")
                     continue
         
+        print(f"📊 Downloaded {len(downloaded)} valid images (skipped {len(images) - len(downloaded)} placeholders/small files)")
         return downloaded
 
     async def _upload_images_to_s3(self, images: List[Dict], folder_path: str) -> List[Dict]:
