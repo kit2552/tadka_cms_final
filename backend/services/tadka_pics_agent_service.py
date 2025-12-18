@@ -99,10 +99,13 @@ class TadkaPicsAgentService:
         print(f"📊 Found {len(all_images)} unique Instagram images")
         return all_images
 
-    def _get_embed_url(self, url: str) -> Optional[str]:
-        """Convert Instagram URL to embed URL"""
+    def _get_direct_url(self, url: str) -> Optional[str]:
+        """Convert Instagram URL to direct post URL"""
         # Clean up URL
         url = url.strip()
+        
+        # Remove embed suffix if present
+        url = url.replace('/embed/', '/').replace('/embed', '/')
         
         # Extract shortcode from various URL formats
         patterns = [
@@ -115,12 +118,15 @@ class TadkaPicsAgentService:
             match = re.search(pattern, url)
             if match:
                 shortcode = match.group(1)
-                return f"https://www.instagram.com/p/{shortcode}/embed/"
+                return f"https://www.instagram.com/p/{shortcode}/"
         
-        # Already an embed URL
-        if '/embed' in url:
-            return url
-        
+        return None
+    
+    def _get_embed_url(self, url: str) -> Optional[str]:
+        """Convert Instagram URL to embed URL (for extracting artist name)"""
+        direct_url = self._get_direct_url(url)
+        if direct_url:
+            return direct_url.rstrip('/') + '/embed/'
         return None
 
     def _normalize_instagram_url(self, url: str) -> str:
