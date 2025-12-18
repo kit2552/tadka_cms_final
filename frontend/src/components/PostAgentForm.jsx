@@ -25,8 +25,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     schedule_post: false,
     post_date: '',
     adhoc_post_time: '09:00 AM',
-    is_active: true
+    is_active: true,
+    custom_prompt: ''  // Custom prompt for this agent instance
   });
+  
+  const [showAgentPromptEditor, setShowAgentPromptEditor] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
