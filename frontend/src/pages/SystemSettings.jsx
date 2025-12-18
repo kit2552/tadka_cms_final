@@ -603,6 +603,73 @@ const SystemSettings = () => {
     }
   };
 
+  // Category-Prompt Functions
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cms/config`);
+      const data = await response.json();
+      setCategories(data.categories || []);
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  };
+
+  const fetchCategoryPromptMappings = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/category-prompt-mappings`);
+      const data = await response.json();
+      setCategoryPromptMappings(data.mappings || {});
+      setEditingPromptMappings(data.mappings || {});
+    } catch (error) {
+      console.error('Failed to fetch category-prompt mappings:', error);
+    }
+  };
+
+  const handlePromptChange = (categorySlug, prompt) => {
+    setEditingPromptMappings(prev => ({
+      ...prev,
+      [categorySlug]: prompt
+    }));
+  };
+
+  const openPromptEditor = (categorySlug) => {
+    setEditingCategoryPrompt(categorySlug);
+    setShowPromptEditor(true);
+  };
+
+  const savePromptEdit = () => {
+    setShowPromptEditor(false);
+    setEditingCategoryPrompt(null);
+  };
+
+  const saveCategoryPromptMappings = async () => {
+    setPromptSaving(true);
+    try {
+      const mappingsArray = Object.entries(editingPromptMappings).map(([category, prompt]) => ({
+        category,
+        prompt
+      }));
+
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/category-prompt-mappings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mappingsArray)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCategoryPromptMappings(data.mappings);
+        setMessage({ type: 'success', text: 'Category-prompt mappings saved successfully!' });
+      } else {
+        setMessage({ type: 'error', text: 'Failed to save mappings' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to save mappings' });
+    } finally {
+      setPromptSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-8">
