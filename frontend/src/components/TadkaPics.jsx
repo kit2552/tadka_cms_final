@@ -221,13 +221,18 @@ const TadkaPics = ({ images, onImageClick }) => {
     if (isLeftSwipe || isRightSwipe) {
       const container = scrollContainerRef.current;
       if (container) {
-        const imageWidth = 110; // Width + margin
+        const imageWidth = 136; // Width (128px) + gap (8px)
         const currentScroll = container.scrollLeft;
-        const newPosition = isLeftSwipe ? 
-          Math.min(currentScroll + imageWidth, container.scrollWidth - container.clientWidth) :
-          Math.max(currentScroll - imageWidth, 0);
+        const singleSetWidth = container.scrollWidth / 2;
+        let newPosition = isLeftSwipe ? 
+          currentScroll + imageWidth :
+          currentScroll - imageWidth;
         
-        setScrollPosition(newPosition);
+        // Keep within bounds of duplicated set
+        if (newPosition < 0) newPosition = 0;
+        if (newPosition >= singleSetWidth) newPosition = newPosition - singleSetWidth;
+        
+        scrollPositionRef.current = newPosition;
         container.scrollTo({ left: newPosition, behavior: 'smooth' });
       }
     }
