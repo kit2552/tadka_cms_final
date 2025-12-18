@@ -900,6 +900,34 @@ Article:
         else:  # 'in_review'
             return 'in_review', False
 
+    def _extract_youtube_url(self, content: str) -> Optional[str]:
+        """Extract YouTube video URL from content if present.
+        Returns the first YouTube URL found, or None if not found.
+        """
+        import re
+        
+        # YouTube URL patterns
+        youtube_patterns = [
+            # Standard YouTube URLs
+            r'(?:https?://)?(?:www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_-]{11})',
+            # Short YouTube URLs
+            r'(?:https?://)?(?:www\.)?youtu\.be/([a-zA-Z0-9_-]{11})',
+            # YouTube embed URLs
+            r'(?:https?://)?(?:www\.)?youtube\.com/embed/([a-zA-Z0-9_-]{11})',
+            # YouTube shorts
+            r'(?:https?://)?(?:www\.)?youtube\.com/shorts/([a-zA-Z0-9_-]{11})',
+        ]
+        
+        for pattern in youtube_patterns:
+            match = re.search(pattern, content, re.IGNORECASE)
+            if match:
+                video_id = match.group(1)
+                youtube_url = f"https://www.youtube.com/watch?v={video_id}"
+                print(f"🎬 Found YouTube video URL: {youtube_url}")
+                return youtube_url
+        
+        return None
+
     async def run_agent(self, agent_id: str) -> Dict[str, Any]:
         """Run an AI agent and generate an article"""
         # Get agent configuration
