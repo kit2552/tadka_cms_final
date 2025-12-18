@@ -162,8 +162,15 @@ class AgentRunnerService:
                     
                     # Check if this is a listing page (short content or category page)
                     # Listing pages typically have less direct content
-                    is_listing_page = (not extracted or len(extracted) < 500) or \
-                                      (category in ['politics', 'sports', 'business', 'technology', 'state-news'])
+                    listing_categories = ['politics', 'state-politics', 'national-politics', 'sports', 'business', 'technology', 'state-news', 'movie-news']
+                    is_listing_page = (not extracted or len(extracted) < 500) or (category in listing_categories)
+                    
+                    # Also check if URL looks like a category/listing page (no article ID in URL)
+                    import re
+                    has_article_id = bool(re.search(r'/\d{5,}|[-/]\d{5,}', url))
+                    if not has_article_id:
+                        is_listing_page = True
+                        print(f"URL appears to be a listing page (no article ID found)")
                     
                     if is_listing_page:
                         print(f"Detected listing page, searching for latest article links...")
