@@ -70,30 +70,39 @@ const TadkaPics = ({ images, onImageClick }) => {
     fetchTadkaPics();
   }, []);
 
-  // Auto scroll effect - Infinite circular scroll
+  // Auto scroll effect - Infinite marquee scroll
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (scrollContainerRef.current && actressImages.length > 0) {
+    if (actressImages.length === 0) return;
+    
+    let animationId;
+    let currentPosition = 0;
+    
+    const animate = () => {
+      if (scrollContainerRef.current) {
         const container = scrollContainerRef.current;
         const singleSetWidth = container.scrollWidth / 2; // Width of one set of images
         
-        // Scroll 1px to the right
-        const newPosition = scrollPosition + 1;
+        // Move 0.5px per frame for smooth slow scroll
+        currentPosition += 0.5;
         
-        // When we've scrolled past the first set, seamlessly jump back
-        if (newPosition >= singleSetWidth) {
-          // Instant jump to beginning (no animation)
-          container.scrollLeft = 0;
-          setScrollPosition(0);
-        } else {
-          setScrollPosition(newPosition);
-          container.scrollLeft = newPosition;
+        // When we've scrolled past the first set, seamlessly reset
+        if (currentPosition >= singleSetWidth) {
+          currentPosition = 0;
         }
+        
+        container.scrollLeft = currentPosition;
       }
-    }, 30); // 30ms interval for smooth scrolling
-
-    return () => clearInterval(interval);
-  }, [scrollPosition, actressImages.length]);
+      animationId = requestAnimationFrame(animate);
+    };
+    
+    animationId = requestAnimationFrame(animate);
+    
+    return () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
+  }, [actressImages.length]);
 
   // Show loading state or empty state
   if (loading) {
