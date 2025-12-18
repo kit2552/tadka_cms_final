@@ -53,7 +53,8 @@ const CreateAgentModal = ({ onClose, onSelect }) => {
     const colors = {
       blue: 'bg-blue-100 text-blue-600 hover:bg-blue-50 border-blue-200',
       purple: 'bg-purple-100 text-purple-600 hover:bg-purple-50 border-purple-200',
-      green: 'bg-green-100 text-green-600 hover:bg-green-50 border-green-200'
+      green: 'bg-green-100 text-green-600 hover:bg-green-50 border-green-200',
+      orange: 'bg-orange-100 text-orange-600 hover:bg-orange-50 border-orange-200'
     };
     return colors[color] || colors.blue;
   };
