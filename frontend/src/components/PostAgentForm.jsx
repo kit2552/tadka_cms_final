@@ -762,6 +762,68 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               </div>
             </div>
 
+            {/* Agent Prompt Section */}
+            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-left">
+                  <h3 className="text-sm font-semibold text-gray-900">Agent Prompt</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">Customize the AI prompt for this agent (loaded from category mapping)</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    // If no custom prompt, load from category mapping
+                    if (!formData.custom_prompt && formData.category) {
+                      setFormData(prev => ({
+                        ...prev,
+                        custom_prompt: categoryPromptMappings[formData.category] || ''
+                      }));
+                    }
+                    setShowAgentPromptEditor(true);
+                  }}
+                  className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition-colors"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Edit Prompt
+                </button>
+              </div>
+              
+              {/* Prompt Preview */}
+              <div className="bg-white rounded border border-gray-300 p-3">
+                {formData.custom_prompt ? (
+                  <div className="text-xs text-gray-700 font-mono whitespace-pre-wrap max-h-24 overflow-y-auto">
+                    {formData.custom_prompt.substring(0, 300)}
+                    {formData.custom_prompt.length > 300 && '...'}
+                  </div>
+                ) : formData.category && categoryPromptMappings[formData.category] ? (
+                  <div className="text-xs text-gray-500 font-mono whitespace-pre-wrap max-h-24 overflow-y-auto">
+                    <span className="text-blue-600 font-medium">[Using default from category mapping]</span>
+                    <br />
+                    {categoryPromptMappings[formData.category].substring(0, 250)}...
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-400 italic">
+                    {formData.category ? 'No prompt defined for this category. Click "Edit Prompt" to add one.' : 'Select a category first to load the default prompt.'}
+                  </p>
+                )}
+              </div>
+              
+              {formData.custom_prompt && (
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-xs text-green-600 font-medium">✓ Using custom prompt</span>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, custom_prompt: '' }))}
+                    className="text-xs text-red-600 hover:text-red-800 underline"
+                  >
+                    Reset to default
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Split Content Section */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
