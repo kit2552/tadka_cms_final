@@ -312,6 +312,7 @@ class VideoAgentService:
         search_query = agent.get('search_query', '')  # Optional specific search
         max_videos = agent.get('max_videos', 5)
         agent_article_language = agent.get('article_language', 'en')  # Get language code from agent config
+        content_workflow = agent.get('content_workflow', 'draft')  # Get workflow status from agent config
         
         # Get state-language mapping
         self.state_language_map = await self._get_state_language_mapping()
@@ -322,6 +323,7 @@ class VideoAgentService:
         print(f"📌 Search Language: {search_language}")
         print(f"📌 Article Language: {agent_article_language}")
         print(f"📌 Video Category: {video_category}")
+        print(f"📌 Content Workflow: {content_workflow}")
         print(f"📌 Today (IST): {self._get_today_ist()}")
         
         # Search based on category
