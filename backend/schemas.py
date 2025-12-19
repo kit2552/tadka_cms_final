@@ -387,6 +387,15 @@ class ArticleListResponse(BaseModel):
     published_at: Optional[datetime] = None
     view_count: int
 
+    @field_validator('artists', mode='before')
+    @classmethod
+    def convert_artists_to_string(cls, v):
+        if v is None:
+            return None
+        if isinstance(v, list):
+            return json.dumps(v)
+        return v
+
     class Config:
         from_attributes = True
 
