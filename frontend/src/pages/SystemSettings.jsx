@@ -2475,10 +2475,26 @@ const SystemSettings = () => {
             {showYoutubeChannelModal && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
-                  <div className="p-4 border-b border-gray-200">
+                  <div className="p-4 border-b border-gray-200 flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-gray-900 text-left">
                       {editingYoutubeChannel ? 'Edit Channel' : 'Channel Details'}
                     </h3>
+                    {editingYoutubeChannel && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditRefreshUrlInput('');
+                          setEditRefreshError('');
+                          setShowEditRefreshModal(true);
+                        }}
+                        className="px-3 py-1.5 text-xs text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 flex items-center gap-1"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Refresh
+                      </button>
+                    )}
                   </div>
                   <form onSubmit={handleYoutubeChannelSubmit} className="p-4 space-y-4">
                     {/* Error Alert */}
