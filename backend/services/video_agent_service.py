@@ -240,7 +240,7 @@ class VideoAgentService:
             Dictionary with results including created posts
         """
         # Get agent configuration
-        agent = crud.get_ai_agent_by_id(db, agent_id)
+        agent = crud.get_ai_agent(db, agent_id)
         if not agent:
             raise ValueError("Agent not found")
         
