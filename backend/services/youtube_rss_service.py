@@ -117,8 +117,8 @@ class YouTubeRSSService:
                             detected_category == 'Shorts'
                         )
                         
-                        # Filter out Shorts for news, production house, music label, popular channels
-                        if channel_type in ['news_channel', 'production_house', 'music_label', 'popular_channel']:
+                        # Filter out Shorts for news, production house, music label, popular channels, reality shows
+                        if channel_type in ['news_channel', 'production_house', 'music_label', 'popular_channel', 'reality_show']:
                             if is_short:
                                 continue  # Skip Shorts for these channel types
                         
