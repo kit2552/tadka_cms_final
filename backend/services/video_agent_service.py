@@ -323,8 +323,9 @@ class VideoAgentService:
                 if not any(keyword in title_lower for keyword in trailer_keywords):
                     continue
                 
-                # Check if from official channel
-                is_official = any(official in channel_lower for official in self.OFFICIAL_CHANNELS)
+                # Check if from official channel (use DB channels)
+                official_channels = self._get_official_channels(search_language)
+                is_official = any(official in channel_lower for official in official_channels)
                 
                 if is_official:
                     print(f"   ✅ Official: {video.get('channel')}: {video['title'][:40]}...")
