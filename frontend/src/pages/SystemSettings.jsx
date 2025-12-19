@@ -1296,6 +1296,58 @@ const SystemSettings = () => {
                     </div>
                   </div>
 
+                  {/* YouTube Data API Section */}
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <svg className="w-8 h-8 text-red-600" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                      <div className="text-left">
+                        <h4 className="text-base font-semibold text-gray-900">YouTube Data API</h4>
+                        <p className="text-sm text-gray-600">For Video Agent to search trailers, trending videos & shorts</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="text-left">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">YouTube API Key</label>
+                        <div className="relative">
+                          <input
+                            type={showYouTubeKey ? "text" : "password"}
+                            name="youtube_api_key"
+                            value={aiApiKeys.youtube_api_key || ''}
+                            onChange={handleAIKeyChange}
+                            className="w-full px-4 py-2.5 pr-24 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm font-mono"
+                            placeholder="AIza..."
+                          />
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setShowYouTubeKey(!showYouTubeKey)}
+                              className="text-gray-400 hover:text-gray-600 transition-colors"
+                              title={showYouTubeKey ? "Hide key" : "Show full key"}
+                            >
+                              {showYouTubeKey ? (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                              ) : (
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                </svg>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Get your API key from <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline">Google Cloud Console</a>. 
+                          Enable "YouTube Data API v3" in your project.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Default Text Generation Model Section */}
                   <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6">
                     <div className="flex items-center gap-3 mb-4">
