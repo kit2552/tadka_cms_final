@@ -2487,6 +2487,12 @@ const SystemSettings = () => {
                       </button>
                       <button
                         type="submit"
+                        onClick={(e) => {
+                          // Fallback submit handler
+                          if (e.target.form) {
+                            e.target.form.requestSubmit();
+                          }
+                        }}
                         className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
                       >
                         {editingYoutubeChannel ? 'Update Channel' : 'Add Channel'}
