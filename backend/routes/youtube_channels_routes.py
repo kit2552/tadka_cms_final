@@ -227,15 +227,20 @@ async def create_youtube_channel(channel: YouTubeChannelCreate):
     if existing:
         raise HTTPException(status_code=400, detail="Channel already exists")
     
+    # Generate RSS URL if not provided but channel_id exists
+    rss_url = channel.rss_url
+    if not rss_url and channel.channel_id:
+        rss_url = RSS_URL_TEMPLATE.format(channel_id=channel.channel_id)
+    
     now = datetime.utcnow()
     channel_doc = {
         "id": str(uuid.uuid4()),
         "channel_name": channel.channel_name,
         "channel_id": channel.channel_id,
+        "rss_url": rss_url,
         "channel_type": channel.channel_type,
         "languages": channel.languages,
         "is_active": channel.is_active,
-        "priority": channel.priority,
         "created_at": now,
         "updated_at": now
     }
@@ -253,6 +258,10 @@ async def update_youtube_channel(channel_id: str, channel: YouTubeChannelUpdate)
     
     update_data = {k: v for k, v in channel.dict().items() if v is not None}
     update_data["updated_at"] = datetime.utcnow()
+    
+    # Generate RSS URL if channel_id is being updated
+    if 'channel_id' in update_data and update_data['channel_id']:
+        update_data['rss_url'] = RSS_URL_TEMPLATE.format(channel_id=update_data['channel_id'])
     
     db[YOUTUBE_CHANNELS].update_one({"id": channel_id}, {"$set": update_data})
     
