@@ -107,14 +107,17 @@ const SystemSettings = () => {
   const [youtubeTypeFilter, setYoutubeTypeFilter] = useState('');
   const [showYoutubeChannelModal, setShowYoutubeChannelModal] = useState(false);
   const [showManageVideosModal, setShowManageVideosModal] = useState(false);
+  const [showChannelUrlModal, setShowChannelUrlModal] = useState(false);
+  const [channelUrlInput, setChannelUrlInput] = useState('');
+  const [extractingChannel, setExtractingChannel] = useState(false);
   const [editingYoutubeChannel, setEditingYoutubeChannel] = useState(null);
   const [youtubeChannelForm, setYoutubeChannelForm] = useState({
     channel_name: '',
     channel_id: '',
+    rss_url: '',
     channel_type: 'production_house',
     languages: [],
-    is_active: true,
-    priority: 5
+    is_active: true
   });
   const [youtubeLanguages] = useState([
     { value: 'Hindi', label: 'Hindi (Bollywood)' },
