@@ -1488,7 +1488,14 @@ Instructions:
               disabled={loading}
               className="px-4 py-1.5 bg-black text-white rounded text-sm font-medium hover:bg-gray-800 disabled:bg-gray-400 transition-colors"
             >
-              {loading ? 'Saving...' : 'Save Agent'}
+              {loading 
+                ? 'Saving...' 
+                : editingAgent 
+                  ? 'Save Agent'
+                  : activeTab === 'recurring' 
+                    ? 'Save Recurring Agent' 
+                    : 'Save Adhoc Agent'
+              }
             </button>
           </div>
         </form>
