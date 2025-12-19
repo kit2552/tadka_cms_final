@@ -1,9 +1,11 @@
 """
 Video Agent Service
 Handles YouTube video search for trailers, teasers, trending videos, events/interviews and tadka shorts
+Now searches directly in specified YouTube channels using channel IDs
 """
 
 import httpx
+import asyncio
 import re
 from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Optional
@@ -14,29 +16,29 @@ import crud
 IST = timezone(timedelta(hours=5, minutes=30))
 
 class VideoAgentService:
-    """Service for Video Agent - searches YouTube for videos based on category"""
+    """Service for Video Agent - searches YouTube channels by channel ID"""
     
-    # Video categories
+    # Video categories with their search keywords
     CATEGORIES = {
         'trailers_teasers': {
             'name': 'Trailers & Teasers',
-            'keywords': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
-            'search_suffix': 'official'
+            'keywords': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster', 'promo'],
+            'exclude_keywords': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making']
         },
         'trending_videos': {
             'name': 'Trending Videos',
-            'keywords': ['trending', 'viral', 'hit song', 'movie song'],
-            'search_suffix': ''
+            'keywords': ['song', 'video song', 'lyrical', 'full video'],
+            'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental']
         },
         'events_interviews': {
             'name': 'Events & Interviews',
-            'keywords': ['interview', 'press meet', 'event', 'promotion', 'talk show'],
-            'search_suffix': ''
+            'keywords': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
+            'exclude_keywords': ['trailer', 'teaser', 'song']
         },
         'tadka_shorts': {
             'name': 'Tadka Shorts',
-            'keywords': ['hot', 'sexy', 'bold', 'photoshoot', 'actress'],
-            'search_suffix': '#shorts',
+            'keywords': ['shorts', 'reels', 'hot', 'photoshoot'],
+            'exclude_keywords': [],
             'video_type': 'short'
         }
     }
@@ -69,6 +71,14 @@ class VideoAgentService:
         'English': 'en'
     }
     
+    # Known fake/unannounced movie sequels to filter out
+    FAKE_MOVIE_KEYWORDS = [
+        'kgf 3', 'kgf chapter 3', 'pushpa 3', 'bahubali 3', 'rrr 2',
+        'dangal 2', 'pk 2', '3 idiots 2', 'sholay 2', 'ddlj 2',
+        'concept', 'fan made', 'fanmade', 'unofficial', 'fake',
+        'leaked', 'update', 'announcement soon', 'coming soon 202'
+    ]
+    
     def __init__(self):
         self.youtube_api_key = None
         self.state_language_map = {}
@@ -83,7 +93,6 @@ class VideoAgentService:
     async def _get_state_language_mapping(self) -> Dict[str, str]:
         """Get state-language mapping from system settings"""
         try:
-            # Try to fetch from DB
             mapping_doc = db.system_settings.find_one({"setting_key": "state_language_mapping"})
             if mapping_doc and mapping_doc.get('mapping'):
                 return mapping_doc['mapping']
@@ -96,42 +105,98 @@ class VideoAgentService:
         state_lower = state.lower().replace(' ', '-')
         return self.state_language_map.get(state_lower, 'Hindi')
     
-    def _get_today_ist(self) -> str:
-        """Get today's date in IST timezone in YouTube format (YYYY-MM-DD)"""
-        now_ist = datetime.now(IST)
-        return now_ist.strftime('%Y-%m-%d')
+    def _get_db_language(self, language: str) -> str:
+        """Map common language names to database values"""
+        lang_map = {
+            'hindi': 'Hindi',
+            'bollywood': 'Hindi',
+            'telugu': 'Telugu',
+            'tollywood': 'Telugu',
+            'tamil': 'Tamil',
+            'kollywood': 'Tamil',
+            'kannada': 'Kannada',
+            'sandalwood': 'Kannada',
+            'malayalam': 'Malayalam',
+            'mollywood': 'Malayalam',
+            'bengali': 'Bengali',
+            'marathi': 'Marathi',
+            'punjabi': 'Punjabi'
+        }
+        return lang_map.get(language.lower(), language)
     
     def _get_published_after(self, days_ago: int = 7) -> str:
-        """Get the publishedAfter parameter for YouTube API (RFC 3339 format)
-        
-        Args:
-            days_ago: Number of days to look back (default 7 for more results)
-        """
+        """Get the publishedAfter parameter for YouTube API (RFC 3339 format)"""
         now_ist = datetime.now(IST)
-        # Go back N days
         start_date = now_ist - timedelta(days=days_ago)
         start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
         return start_date.strftime('%Y-%m-%dT%H:%M:%SZ')
     
-    async def search_youtube(
+    def _get_channels_by_types_and_language(
+        self, 
+        channel_types: List[str], 
+        language: str,
+        limit: int = 20
+    ) -> List[Dict]:
+        """Get YouTube channels from DB filtered by channel types and language
+        
+        Args:
+            channel_types: List of channel types (production_house, music_label, popular_channel)
+            language: Language to filter by (Telugu, Hindi, Tamil, etc.)
+            limit: Maximum number of channels to return
+        
+        Returns:
+            List of channel documents with channel_id, channel_name, etc.
+        """
+        try:
+            db_language = self._get_db_language(language)
+            
+            query = {
+                "is_active": True,
+                "channel_id": {"$ne": None, "$exists": True},  # Must have channel_id
+                "languages": db_language
+            }
+            
+            # Filter by channel types if provided
+            if channel_types and len(channel_types) > 0:
+                query["channel_type"] = {"$in": channel_types}
+            
+            channels = list(
+                db.youtube_channels.find(query, {"_id": 0})
+                .sort("priority", -1)
+                .limit(limit)
+            )
+            
+            print(f"📺 Found {len(channels)} channels for {db_language} with types {channel_types}")
+            for ch in channels[:5]:
+                print(f"   - {ch.get('channel_name')} ({ch.get('channel_type')}) ID: {ch.get('channel_id', 'NO ID')}")
+            
+            return channels
+            
+        except Exception as e:
+            print(f"❌ Error fetching channels from DB: {e}")
+            return []
+    
+    async def search_channel_videos(
         self,
-        query: str,
-        max_results: int = 10,
-        video_type: Optional[str] = None,
+        channel_id: str,
+        channel_name: str,
+        query: str = "",
+        max_results: int = 5,
         published_after: Optional[str] = None,
         video_duration: Optional[str] = None
     ) -> List[Dict]:
-        """Search YouTube using Data API v3
+        """Search for videos within a specific YouTube channel
         
         Args:
-            query: Search query
-            max_results: Maximum number of results
-            video_type: 'short' for YouTube Shorts, None for regular videos
-            published_after: RFC 3339 timestamp to filter videos after this date
-            video_duration: 'short' (<4min), 'medium' (4-20min), 'long' (>20min)
+            channel_id: YouTube channel ID
+            channel_name: Channel name for logging
+            query: Optional search query to filter within channel
+            max_results: Maximum results per channel
+            published_after: RFC 3339 timestamp
+            video_duration: 'short', 'medium', 'long'
         
         Returns:
-            List of video dictionaries with id, title, thumbnail, channel, publishedAt
+            List of video dictionaries
         """
         if not self.youtube_api_key:
             self.youtube_api_key = await self._get_youtube_api_key()
@@ -140,24 +205,23 @@ class VideoAgentService:
             print("❌ YouTube API key not configured")
             return []
         
-        # Build API URL
         base_url = "https://www.googleapis.com/youtube/v3/search"
         params = {
             'part': 'snippet',
-            'q': query,
+            'channelId': channel_id,  # Search within this specific channel
             'type': 'video',
             'maxResults': max_results,
-            'order': 'relevance',  # Most relevant first for better quality
-            'key': self.youtube_api_key,
-            'regionCode': 'IN',  # India
-            'relevanceLanguage': 'hi'  # Default to Hindi
+            'order': 'date',  # Most recent first
+            'key': self.youtube_api_key
         }
         
+        # Add search query if provided
+        if query:
+            params['q'] = query
+        
         # Filter by video duration
-        if video_type == 'short':
-            params['videoDuration'] = 'short'  # Under 4 minutes
-        elif video_duration:
-            params['videoDuration'] = video_duration  # 'short', 'medium', 'long'
+        if video_duration:
+            params['videoDuration'] = video_duration
         
         # Filter by publish date
         if published_after:
@@ -168,8 +232,9 @@ class VideoAgentService:
                 response = await client.get(base_url, params=params)
                 
                 if response.status_code != 200:
-                    print(f"❌ YouTube API error: {response.status_code}")
-                    print(f"   Response: {response.text[:500]}")
+                    error_data = response.json() if response.text else {}
+                    error_reason = error_data.get('error', {}).get('message', response.text[:200])
+                    print(f"❌ YouTube API error for {channel_name}: {response.status_code} - {error_reason}")
                     return []
                 
                 data = response.json()
@@ -186,242 +251,128 @@ class VideoAgentService:
                             'description': snippet.get('description', ''),
                             'thumbnail': snippet.get('thumbnails', {}).get('high', {}).get('url', ''),
                             'channel': snippet.get('channelTitle', ''),
+                            'channel_id': channel_id,
                             'published_at': snippet.get('publishedAt', ''),
                             'url': f"https://www.youtube.com/watch?v={video_id}"
                         })
                 
-                print(f"📺 Found {len(videos)} YouTube videos for: {query}")
+                if videos:
+                    print(f"   ✅ {channel_name}: Found {len(videos)} videos")
+                
                 return videos
                 
         except Exception as e:
-            print(f"❌ YouTube API error: {e}")
-            import traceback
-            traceback.print_exc()
+            print(f"❌ Error searching channel {channel_name}: {e}")
             return []
     
-    # Known fake/unannounced movie sequels to filter out
-    FAKE_MOVIE_KEYWORDS = [
-        'kgf 3', 'kgf chapter 3', 'pushpa 3', 'bahubali 3', 'rrr 2',
-        'dangal 2', 'pk 2', '3 idiots 2', 'sholay 2', 'ddlj 2',
-        'concept', 'fan made', 'fanmade', 'unofficial', 'fake',
-        'leaked', 'update', 'announcement soon', 'coming soon 202'
-    ]
-    
-    def _get_official_channels(self, language: str = None) -> List[str]:
-        """Get official channels from database, optionally filtered by language"""
-        try:
-            query = {"is_active": True}
-            if language:
-                query["languages"] = language
-            
-            channels = list(db.youtube_channels.find(query, {"_id": 0, "channel_name": 1}).sort("priority", -1))
-            channel_names = [ch['channel_name'].lower() for ch in channels]
-            
-            # Always include 'official' and 'verified' as keywords
-            channel_names.extend(['official', 'verified'])
-            
-            print(f"📺 Loaded {len(channel_names)} official channels for {language or 'all languages'}")
-            return channel_names
-        except Exception as e:
-            print(f"⚠️ Error loading channels from DB: {e}, using fallback")
-            # Fallback to hardcoded list if DB fails
-            return ['t-series', 'yash raj films', 'dharma productions', 'aditya music', 
-                   'sony music', 'zee music', 'official', 'verified']
-    
-    def _get_top_channels_for_language(self, language: str, limit: int = 5) -> List[str]:
-        """Get top priority channels for a specific language"""
-        try:
-            # Map common language names to database values
-            lang_map = {
-                'hindi': 'Hindi',
-                'bollywood': 'Hindi',
-                'telugu': 'Telugu',
-                'tollywood': 'Telugu',
-                'tamil': 'Tamil',
-                'kollywood': 'Tamil',
-                'kannada': 'Kannada',
-                'sandalwood': 'Kannada',
-                'malayalam': 'Malayalam',
-                'mollywood': 'Malayalam',
-                'bengali': 'Bengali',
-                'marathi': 'Marathi',
-                'punjabi': 'Punjabi'
-            }
-            
-            db_language = lang_map.get(language.lower(), language)
-            
-            query = {"is_active": True, "languages": db_language}
-            channels = list(db.youtube_channels.find(query, {"_id": 0, "channel_name": 1})
-                          .sort("priority", -1).limit(limit))
-            
-            channel_names = [ch['channel_name'] for ch in channels]
-            print(f"📺 Top {len(channel_names)} channels for {db_language}: {channel_names}")
-            return channel_names
-        except Exception as e:
-            print(f"⚠️ Error getting top channels: {e}")
+    async def search_videos_from_channels(
+        self,
+        channels: List[Dict],
+        video_category: str,
+        search_query: str = "",
+        max_videos_per_channel: int = 5,
+        days_ago: int = 7
+    ) -> List[Dict]:
+        """Search for videos from multiple channels in parallel
+        
+        Args:
+            channels: List of channel documents from DB
+            video_category: Category type for filtering
+            search_query: Optional specific search query
+            max_videos_per_channel: Max videos to fetch per channel
+            days_ago: How many days back to search
+        
+        Returns:
+            Combined list of videos from all channels
+        """
+        if not channels:
+            print("⚠️ No channels provided for search")
             return []
-    
-    async def search_trailers_teasers(self, language: str, movie_name: Optional[str] = None) -> List[Dict]:
-        """Search for official movie trailers and teasers from verified channels only"""
-        # Get top official channels from database for this language
-        top_channels = self._get_top_channels_for_language(language, limit=5)
         
-        # Build targeted search queries
-        official_channel_queries = []
+        category_config = self.CATEGORIES.get(video_category, {})
+        keywords = category_config.get('keywords', [])
+        exclude_keywords = category_config.get('exclude_keywords', [])
+        video_duration = 'short' if category_config.get('video_type') == 'short' else None
         
-        if movie_name:
-            # Search for specific movie trailer
-            official_channel_queries = [f"{movie_name} official trailer {language}"]
+        # Build search query based on category
+        if search_query:
+            query = search_query
+        elif keywords:
+            # Use first few keywords for search
+            query = ' '.join(keywords[:2])
         else:
-            # Build queries using top channels from DB
-            for channel in top_channels:
-                official_channel_queries.append(f"{channel} official trailer teaser 2024")
+            query = ""
+        
+        published_after = self._get_published_after(days_ago)
+        
+        print(f"\n🔍 Searching {len(channels)} channels for '{video_category}'")
+        print(f"   Query: '{query}' | Duration: {video_duration or 'any'} | After: {published_after[:10]}")
+        
+        # Create tasks for parallel execution
+        tasks = []
+        for channel in channels:
+            channel_id = channel.get('channel_id')
+            channel_name = channel.get('channel_name', 'Unknown')
             
-            # Add generic language queries
-            official_channel_queries.extend([
-                f"{language} movie official trailer teaser December 2024",
-                f"{language} film official trailer 2024"
-            ])
+            if not channel_id:
+                print(f"   ⚠️ Skipping {channel_name} - no channel_id")
+                continue
+            
+            task = self.search_channel_videos(
+                channel_id=channel_id,
+                channel_name=channel_name,
+                query=query,
+                max_results=max_videos_per_channel,
+                published_after=published_after,
+                video_duration=video_duration
+            )
+            tasks.append(task)
         
-        # Keywords that indicate event/interview content - should be excluded
-        event_keywords = [
-            'speech', 'event', 'interview', 'press meet', 'press conference', 
-            'promotion', 'launch', 'pre-release', 'prerelease', 'success meet',
-            'audio launch', 'music launch', 'grand release', 'celebration',
-            'thanks meet', 'appreciation', 'felicitation', 'bytes', 'talk',
-            'interaction', 'q&a', 'panel', 'discussion', 'fun chat'
-        ]
-        # Keywords that indicate actual trailer/teaser content - required
-        trailer_keywords = ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster', 'promo']
+        if not tasks:
+            print("⚠️ No valid channels to search")
+            return []
         
-        # Collect videos from all queries
-        official_videos = []
-        other_videos = []
+        # Execute all searches in parallel
+        print(f"   ⏳ Executing {len(tasks)} parallel API calls...")
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        # Combine results and filter
+        all_videos = []
         seen_ids = set()
         
-        for query in official_channel_queries:
-            print(f"🔍 Searching: {query}")
-            videos = await self.search_youtube(
-                query=query,
-                max_results=25,
-                published_after=self._get_published_after(),
-                video_duration='medium'
-            )
-            
-            for video in videos:
-                # Skip if already seen
-                if video['video_id'] in seen_ids:
-                    continue
-                seen_ids.add(video['video_id'])
-                
-                title_lower = video['title'].lower()
-                channel_lower = video.get('channel', '').lower()
-                
-                # Skip fake/unannounced movie sequels
-                if any(fake in title_lower for fake in self.FAKE_MOVIE_KEYWORDS):
-                    print(f"   🚫 Skipping fake movie: {video['title'][:50]}...")
-                    continue
-                
-                # Skip if title contains event-related keywords
-                if any(skip in title_lower for skip in event_keywords):
-                    continue
-                
-                # Skip unwanted content
-                skip_keywords = ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 
-                               'explained', 'making', 'behind the scenes', 'fan made', 'fanmade',
-                               'unofficial', 'leaked', 'concept', 'edit', 'version', 'mix']
-                if any(skip in title_lower for skip in skip_keywords):
-                    continue
-                
-                # Must have trailer/teaser related keyword
-                if not any(keyword in title_lower for keyword in trailer_keywords):
-                    continue
-                
-                # Check if from official channel (use DB channels)
-                official_channels = self._get_official_channels(search_language)
-                is_official = any(official in channel_lower for official in official_channels)
-                
-                if is_official:
-                    print(f"   ✅ Official: {video.get('channel')}: {video['title'][:40]}...")
-                    official_videos.append(video)
-                else:
-                    # Also collect non-official as backup
-                    other_videos.append(video)
-            
-            # Stop searching if we have enough official videos
-            if len(official_videos) >= 10:
-                break
-        
-        # Return official videos first, then fill with others if needed
-        result = official_videos[:10]
-        if len(result) < 5 and other_videos:
-            # If very few official videos, include some others
-            print(f"⚠️ Only {len(result)} official videos, adding {min(5-len(result), len(other_videos))} others")
-            result.extend(other_videos[:5-len(result)])
-        
-        print(f"📊 Results: {len(official_videos)} official, {len(other_videos)} other, returning {len(result)}")
-        return result
-    
-    async def search_trending_videos(self, language: str) -> List[Dict]:
-        """Search for trending movie/music videos from official channels"""
-        query = f"{language} movie song official video -shorts -reaction -cover"
-        
-        print(f"🔍 Searching trending videos: {query}")
-        videos = await self.search_youtube(
-            query=query,
-            max_results=20,
-            published_after=self._get_published_after(),
-            video_duration='medium'
-        )
-        
-        # Filter out shorts and unofficial content
-        filtered = []
-        for video in videos:
-            title_lower = video['title'].lower()
-            if any(skip in title_lower for skip in ['#shorts', 'reaction', 'cover', 'spoof', 'parody']):
+        for result in results:
+            if isinstance(result, Exception):
+                print(f"   ❌ Task failed: {result}")
                 continue
-            filtered.append(video)
+            
+            for video in result:
+                video_id = video.get('video_id')
+                if video_id and video_id not in seen_ids:
+                    # Apply category-specific filtering
+                    title_lower = video['title'].lower()
+                    
+                    # Skip fake movies
+                    if any(fake in title_lower for fake in self.FAKE_MOVIE_KEYWORDS):
+                        continue
+                    
+                    # Skip excluded keywords
+                    if any(excl in title_lower for excl in exclude_keywords):
+                        continue
+                    
+                    # For trailers/teasers, must have at least one keyword
+                    if video_category == 'trailers_teasers':
+                        if not any(kw in title_lower for kw in keywords):
+                            continue
+                    
+                    seen_ids.add(video_id)
+                    all_videos.append(video)
         
-        return filtered[:10]
-    
-    async def search_events_interviews(self, language: str, celebrity_name: Optional[str] = None) -> List[Dict]:
-        """Search for celebrity events and interviews"""
-        if celebrity_name:
-            query = f"{celebrity_name} interview event press meet -shorts"
-        else:
-            query = f"{language} movie star interview event promotion -shorts"
+        # Sort by published date (newest first)
+        all_videos.sort(key=lambda x: x.get('published_at', ''), reverse=True)
         
-        print(f"🔍 Searching events/interviews: {query}")
-        videos = await self.search_youtube(
-            query=query,
-            max_results=20,
-            published_after=self._get_published_after(),
-            video_duration='medium'
-        )
+        print(f"\n📊 Total: {len(all_videos)} unique videos from {len(channels)} channels")
         
-        # Filter out shorts
-        filtered = []
-        for video in videos:
-            title_lower = video['title'].lower()
-            if '#shorts' in title_lower:
-                continue
-            filtered.append(video)
-        
-        return filtered[:10]
-    
-    async def search_tadka_shorts(self, language: str, actress_name: Optional[str] = None) -> List[Dict]:
-        """Search for hot/trending YouTube Shorts of actresses"""
-        if actress_name:
-            query = f"{actress_name} hot photoshoot shorts"
-        else:
-            query = f"{language} actress hot trending shorts"
-        
-        print(f"🔍 Searching tadka shorts: {query}")
-        return await self.search_youtube(
-            query=query,
-            max_results=10,
-            video_type='short'
-        )
+        return all_videos
     
     async def run_video_agent(self, agent_id: str) -> Dict:
         """Run the Video Agent to find and create video posts
@@ -437,60 +388,70 @@ class VideoAgentService:
         if not agent:
             raise ValueError("Agent not found")
         
-        agent_name = agent.get('agent_name', 'Video')  # Get agent name for article attribution
+        agent_name = agent.get('agent_name', 'Video')
         print(f"\n🎬 Running Video Agent: {agent_name}")
         
         # Get configuration from agent
         target_state = agent.get('target_state', 'bollywood')
         video_category = agent.get('video_category', 'trailers_teasers')
-        search_query = agent.get('search_query', '')  # Optional specific search
+        search_query = agent.get('search_query', '')
         max_videos = agent.get('max_videos', 5)
-        agent_article_language = agent.get('article_language', 'en')  # Get language code from agent config
-        content_workflow = agent.get('content_workflow', 'draft')  # Get workflow status from agent config
+        agent_article_language = agent.get('article_language', 'en')
+        content_workflow = agent.get('content_workflow', 'draft')
+        agent_category = agent.get('category', '')
+        
+        # Get channel types from agent config (NEW FIELD)
+        channel_types = agent.get('channel_types', [])
+        if not channel_types:
+            # Default to all types if not specified
+            channel_types = ['production_house', 'music_label', 'popular_channel']
         
         # Get state-language mapping
         self.state_language_map = await self._get_state_language_mapping()
-        
-        # Get language for target state (used for YouTube search queries)
         search_language = self._get_language_for_state(target_state)
+        
         print(f"📌 Target State: {target_state}")
         print(f"📌 Search Language: {search_language}")
-        print(f"📌 Article Language: {agent_article_language}")
         print(f"📌 Video Category: {video_category}")
+        print(f"📌 Channel Types: {channel_types}")
+        print(f"📌 Article Language: {agent_article_language}")
         print(f"📌 Content Workflow: {content_workflow}")
-        print(f"📌 Today (IST): {self._get_today_ist()}")
         
-        # Search based on category
-        videos = []
-        if video_category == 'trailers_teasers':
-            videos = await self.search_trailers_teasers(search_language, search_query if search_query else None)
-        elif video_category == 'trending_videos':
-            videos = await self.search_trending_videos(search_language)
-        elif video_category == 'events_interviews':
-            videos = await self.search_events_interviews(search_language, search_query if search_query else None)
-        elif video_category == 'tadka_shorts':
-            videos = await self.search_tadka_shorts(search_language, search_query if search_query else None)
-        else:
-            # Default general search
-            videos = await self.search_youtube(
-                query=f"{search_language} {search_query or 'movie video'} {self._get_today_ist()}",
-                max_results=max_videos,
-                published_after=self._get_published_after()
-            )
+        # Get channels from DB based on channel types and language
+        channels = self._get_channels_by_types_and_language(
+            channel_types=channel_types,
+            language=search_language,
+            limit=20  # Get top 20 channels by priority
+        )
         
-        if not videos:
+        if not channels:
             return {
                 "success": False,
-                "message": "No videos found for the given criteria",
+                "message": f"No channels found for language '{search_language}' with types {channel_types}. Please add channels in Settings > YouTube Channels.",
                 "videos_found": 0,
                 "posts_created": 0
             }
         
+        # Search videos from channels
+        videos = await self.search_videos_from_channels(
+            channels=channels,
+            video_category=video_category,
+            search_query=search_query,
+            max_videos_per_channel=3,  # Get 3 videos per channel
+            days_ago=7
+        )
+        
+        if not videos:
+            return {
+                "success": False,
+                "message": f"No videos found in {len(channels)} channels for the given criteria",
+                "videos_found": 0,
+                "posts_created": 0,
+                "channels_searched": len(channels)
+            }
+        
         # Limit to max_videos
         videos = videos[:max_videos]
-        
-        # Get the agent's category setting (use the category from agent config)
-        agent_category = agent.get('category', '')
         
         # Create video posts
         created_posts = []
@@ -498,10 +459,9 @@ class VideoAgentService:
         
         for video in videos:
             try:
-                # Build the YouTube embed/watch URL
                 youtube_url = f"https://www.youtube.com/watch?v={video['video_id']}"
                 
-                # Check for duplicate - skip if video already exists
+                # Check for duplicate
                 existing = db.articles.find_one({
                     '$or': [
                         {'youtube_video_id': video['video_id']},
@@ -509,34 +469,27 @@ class VideoAgentService:
                     ]
                 })
                 if existing:
-                    print(f"⏭️ Skipping duplicate video: {video['title'][:50]}...")
+                    print(f"⏭️ Skipping duplicate: {video['title'][:50]}...")
                     skipped_duplicates += 1
                     continue
                 
-                # Clean up title - remove hashtags and extra content
                 clean_title = self._clean_video_title(video['title'])
-                
-                # Generate slug from title
                 slug = self._generate_slug(clean_title)
-                
-                # Get current time in UTC for created_at/published_at
-                from datetime import datetime, timezone
                 current_time = datetime.now(timezone.utc)
                 
-                # Create article with video content type
                 article_data = {
                     "title": clean_title,
-                    "slug": slug,  # Required field
-                    "author": "AI Agent",  # Required field for AI generated content
-                    "agent_name": agent_name,  # Store agent name for display
+                    "slug": slug,
+                    "author": "AI Agent",
+                    "agent_name": agent_name,
                     "content": f"<p>{video['description'][:500] if video['description'] else clean_title}</p>",
-                    "summary": video['description'][:200] if video['description'] else clean_title,  # Required field
-                    "content_type": "video",  # Explicitly set to video
-                    "youtube_url": youtube_url,  # YouTube watch URL (correct field name)
-                    "image": video['thumbnail'],  # Use 'image' instead of 'featured_image'
-                    "category": agent_category,  # Use category from agent config
-                    "states": f'["{target_state}"]',  # Use 'states' field as JSON string array
-                    "status": content_workflow,  # Use workflow status from agent config
+                    "summary": video['description'][:200] if video['description'] else clean_title,
+                    "content_type": "video",
+                    "youtube_url": youtube_url,
+                    "image": video['thumbnail'],
+                    "category": agent_category,
+                    "states": f'["{target_state}"]',
+                    "status": content_workflow,
                     "source": "YouTube",
                     "source_url": youtube_url,
                     "seo_title": clean_title[:60],
@@ -545,21 +498,13 @@ class VideoAgentService:
                     "agent_type": "video",
                     "youtube_video_id": video['video_id'],
                     "channel_name": video.get('channel', ''),
-                    "article_language": agent_article_language,  # Use language from agent config
+                    "article_language": agent_article_language,
                     "created_at": current_time,
                     "published_at": current_time
                 }
                 
-                print(f"📝 Creating article:")
-                print(f"   Title: {clean_title}")
-                print(f"   Category: {agent_category}")
-                print(f"   States: {target_state}")
-                print(f"   YouTube URL: {youtube_url}")
-                print(f"   Content Type: {article_data['content_type']}")
-                print(f"   Status: {content_workflow}")
-                print(f"   Article Language: {agent_article_language}")
+                print(f"📝 Creating: {clean_title[:50]}... from {video.get('channel', 'Unknown')}")
                 
-                # Create the article
                 created = crud.create_article(db, article_data)
                 if created:
                     created_posts.append({
@@ -568,17 +513,15 @@ class VideoAgentService:
                         "video_url": youtube_url,
                         "channel": video.get('channel', '')
                     })
-                    print(f"✅ Created video post: {clean_title[:50]}...")
-                else:
-                    print(f"❌ Failed to create article for: {clean_title[:50]}")
+                    print(f"   ✅ Created successfully")
                     
             except Exception as e:
-                print(f"❌ Error creating post for video: {e}")
+                print(f"❌ Error creating post: {e}")
                 import traceback
                 traceback.print_exc()
                 continue
         
-        message = f"Successfully created {len(created_posts)} video posts"
+        message = f"Successfully created {len(created_posts)} video posts from {len(channels)} channels"
         if skipped_duplicates > 0:
             message += f" (skipped {skipped_duplicates} duplicates)"
         
@@ -588,77 +531,38 @@ class VideoAgentService:
             "videos_found": len(videos),
             "posts_created": len(created_posts),
             "duplicates_skipped": skipped_duplicates,
+            "channels_searched": len(channels),
             "posts": created_posts
         }
     
     def _clean_video_title(self, title: str) -> str:
-        """Extract just the movie name from video title"""
-        import re
-        
-        # Remove hashtags first
+        """Extract clean title from video title"""
+        # Remove hashtags
         title = re.sub(r'#\w+', '', title)
         
-        # Split by common separators to get movie name
-        separators = ['|', ' - ', ':', 'Official', 'OFFICIAL', 'Trailer', 'TRAILER', 'Teaser', 'TEASER', 
-                      'First Look', 'Glimpse', 'Motion Poster', 'Promo', 'Review', 'Song']
+        # Split by common separators
+        separators = ['|', ' - ', 'Official', 'OFFICIAL', 'Trailer', 'TRAILER', 
+                      'Teaser', 'TEASER', 'First Look', 'Glimpse', 'Motion Poster', 
+                      'Promo', 'Review', 'Song', 'Full Video']
         
-        movie_name = title
+        clean_title = title
         for sep in separators:
-            if sep in movie_name:
-                movie_name = movie_name.split(sep)[0]
+            if sep in clean_title:
+                clean_title = clean_title.split(sep)[0]
         
-        # Clean up
-        movie_name = movie_name.strip()
-        movie_name = re.sub(r'\s+', ' ', movie_name)
+        clean_title = clean_title.strip()
+        clean_title = re.sub(r'\s+', ' ', clean_title)
+        clean_title = clean_title.rstrip('|-:').strip()
         
-        # Remove trailing special characters
-        movie_name = movie_name.rstrip('|-:')
-        movie_name = movie_name.strip()
-        
-        return movie_name if movie_name else title.split()[0]
-    
-    def _get_category_for_video_type(self, video_category: str) -> str:
-        """Map video category to article category"""
-        category_map = {
-            'trailers_teasers': 'trailers',
-            'trending_videos': 'trending',
-            'events_interviews': 'events-interviews',
-            'tadka_shorts': 'tadka-shorts'
-        }
-        return category_map.get(video_category, 'videos')
-    
-    def _get_section_for_state(self, target_state: str) -> str:
-        """Map target state to section"""
-        state_section_map = {
-            'bollywood': 'bollywood',
-            'andhra-pradesh': 'tollywood',
-            'telangana': 'tollywood',
-            'tamil-nadu': 'kollywood',
-            'karnataka': 'sandalwood',
-            'kerala': 'mollywood',
-            'maharashtra': 'marathi',
-            'west-bengal': 'bengali',
-            'punjab': 'pollywood'
-        }
-        state_lower = target_state.lower().replace(' ', '-')
-        return state_section_map.get(state_lower, 'bollywood')
+        return clean_title if clean_title else title.split()[0] if title.split() else "Video"
     
     def _generate_slug(self, title: str) -> str:
         """Generate URL-friendly slug from title"""
-        import re
-        from datetime import datetime
-        
-        # Convert to lowercase
         slug = title.lower()
-        # Replace spaces with hyphens
         slug = slug.replace(' ', '-')
-        # Remove special characters except hyphens
         slug = re.sub(r'[^a-z0-9\-]', '', slug)
-        # Remove multiple consecutive hyphens
         slug = re.sub(r'-+', '-', slug)
-        # Remove leading/trailing hyphens
         slug = slug.strip('-')
-        # Add timestamp to ensure uniqueness
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         return f"{slug}-{timestamp}"
 
