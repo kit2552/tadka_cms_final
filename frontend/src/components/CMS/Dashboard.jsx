@@ -3374,17 +3374,25 @@ const Dashboard = () => {
                                 </span>
                               )}
                               <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border ${
-                                article.is_published 
+                                article.status === 'published' || article.is_published 
                                   ? 'bg-green-50 text-green-700 border-green-200'
-                                  : article.is_scheduled
-                                    ? 'bg-orange-50 text-orange-700 border-orange-200'
-                                    : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                                  : article.status === 'approved'
+                                    ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                    : article.status === 'in_review'
+                                      ? 'bg-purple-50 text-purple-700 border-purple-200'
+                                      : article.is_scheduled
+                                        ? 'bg-orange-50 text-orange-700 border-orange-200'
+                                        : 'bg-yellow-50 text-yellow-700 border-yellow-200'
                               }`}>
-                                {article.is_published 
+                                {article.status === 'published' || article.is_published 
                                   ? 'Published' 
-                                  : article.is_scheduled 
-                                    ? 'Scheduled' 
-                                    : 'Draft'}
+                                  : article.status === 'approved'
+                                    ? 'Approved'
+                                    : article.status === 'in_review'
+                                      ? 'In Review'
+                                      : article.is_scheduled 
+                                        ? 'Scheduled' 
+                                        : 'Draft'}
                               </span>
                             </div>
                           </div>
