@@ -176,8 +176,8 @@ class YouTubeRSSService:
     def _detect_video_category(self, title: str, description: str, video_url: str = "") -> str:
         """Detect video category from title, description and URL
         
-        Categories: Trailer, Teaser, Song, Movie, Event, Interview, Press Meet, 
-                   Behind The Scenes, Review, Promo, First Look, Glimpse, Shorts, Other
+        Categories: Trailer, Teaser, Song, Events, Interview, Press Meet, 
+                   Making Videos, Review, Glimpse or Promos, Shorts, Full Movie, Other
         """
         # First check if it's a YouTube Short by URL
         if video_url and '/shorts/' in video_url:
@@ -194,17 +194,15 @@ class YouTubeRSSService:
             'Trailer': [r'\btrailer\b', r'\bofficial trailer\b', r'\bmovie trailer\b'],
             'Teaser': [r'\bteaser\b', r'\bofficial teaser\b'],
             'First Look': [r'\bfirst look\b', r'\b1st look\b'],
-            'Glimpse': [r'\bglimpse\b'],
-            'Motion Poster': [r'\bmotion poster\b'],
+            'Glimpse or Promos': [r'\bglimpse\b', r'\bpromo\b', r'\bdialogue promo\b', r'\bscene\b', r'\bmotion poster\b'],
             'Song': [r'\bsong\b', r'\blyrical\b', r'\bvideo song\b', r'\bfull song\b', r'\bmusic video\b', r'\bjukebox\b'],
             'Interview': [r'\binterview\b', r'\bexclusive interview\b', r'\bchit chat\b', r'\bconversation\b'],
             'Press Meet': [r'\bpress meet\b', r'\bpressmeet\b', r'\bpress conference\b', r'\bmedia interaction\b'],
-            'Event': [r'\bevent\b', r'\blaunch\b', r'\bpre-release\b', r'\bprerelease\b', r'\baudio launch\b', 
+            'Events': [r'\bevent\b', r'\blaunch\b', r'\bpre-release\b', r'\bprerelease\b', r'\baudio launch\b', 
                      r'\bsuccess meet\b', r'\bcelebration\b', r'\bpromotion\b', r'\bpromo event\b'],
             'Speech': [r'\bspeech\b', r'\baddress\b'],
-            'Behind The Scenes': [r'\bbehind the scenes\b', r'\bbts\b', r'\bmaking\b', r'\bon set\b', r'\bmaking of\b'],
+            'Making Videos': [r'\bbehind the scenes\b', r'\bbts\b', r'\bmaking\b', r'\bon set\b', r'\bmaking of\b'],
             'Review': [r'\breview\b', r'\bpublic talk\b', r'\bpublic response\b', r'\breaction\b'],
-            'Promo': [r'\bpromo\b', r'\bdialogue promo\b', r'\bscene\b'],
             'Full Movie': [r'\bfull movie\b', r'\bcomplete movie\b']
         }
         
