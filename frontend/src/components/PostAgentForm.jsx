@@ -1080,10 +1080,10 @@ Instructions:
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   >
-                    <option value="trailers_teasers">🎬 Trailers & Teasers</option>
-                    <option value="trending_videos">🔥 Trending Videos</option>
-                    <option value="events_interviews">🎤 Events & Interviews</option>
-                    <option value="tadka_shorts">📱 Tadka Shorts</option>
+                    <option value="trailers_teasers">Trailers & Teasers</option>
+                    <option value="trending_videos">Trending Videos</option>
+                    <option value="events_interviews">Events & Interviews</option>
+                    <option value="tadka_shorts">Tadka Shorts</option>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
                     {formData.video_category === 'trailers_teasers' && 'Find movie trailers, teasers, first looks released today'}
