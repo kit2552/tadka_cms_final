@@ -1976,7 +1976,7 @@ const CreateArticle = () => {
                     <div className="relative">
                       <input
                         type="text"
-                        value={showCategoryDropdown ? categorySearchQuery : (formData.category ? categories.find(cat => cat.slug === formData.category)?.name : '')}
+                        value={showCategoryDropdown ? categorySearchQuery : (formData.category ? (categories.find(cat => cat.slug === formData.category)?.name || formData.category) : '')}
                         onChange={(e) => {
                           setCategorySearchQuery(e.target.value);
                           setShowCategoryDropdown(true);
