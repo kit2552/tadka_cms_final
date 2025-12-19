@@ -60,6 +60,7 @@ const SystemSettings = () => {
     openai_api_key: '',
     gemini_api_key: '',
     anthropic_api_key: '',
+    youtube_api_key: '',
     openai_default_model: '',
     gemini_default_model: '',
     anthropic_default_model: '',
@@ -69,10 +70,12 @@ const SystemSettings = () => {
   const [showOpenAIKey, setShowOpenAIKey] = useState(false);
   const [showGeminiKey, setShowGeminiKey] = useState(false);
   const [showAnthropicKey, setShowAnthropicKey] = useState(false);
+  const [showYouTubeKey, setShowYouTubeKey] = useState(false);
   const [unmaskedKeys, setUnmaskedKeys] = useState({
     openai: null,
     gemini: null,
-    anthropic: null
+    anthropic: null,
+    youtube: null
   });
   const [aiModels, setAiModels] = useState({
     openai: [],
