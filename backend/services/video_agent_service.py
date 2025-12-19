@@ -377,6 +377,7 @@ class VideoAgentService:
                     "title": clean_title,
                     "slug": slug,  # Required field
                     "author": "AI Agent",  # Required field for AI generated content
+                    "agent_name": agent_name,  # Store agent name for display
                     "content": f"<p>{video['description'][:500] if video['description'] else clean_title}</p>",
                     "summary": video['description'][:200] if video['description'] else clean_title,  # Required field
                     "content_type": "video",  # Explicitly set to video
