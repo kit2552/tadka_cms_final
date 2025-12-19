@@ -166,6 +166,10 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
             # Use Tadka Pics Agent Service
             from services.tadka_pics_agent_service import tadka_pics_agent_runner
             result = await tadka_pics_agent_runner.run_tadka_pics_agent(agent_id)
+        elif agent_type == 'video':
+            # Use Video Agent Service
+            from services.video_agent_service import video_agent_runner
+            result = await video_agent_runner.run_video_agent(agent_id)
         else:
             # Use Post Agent Service (default)
             result = await agent_runner.run_agent(agent_id)
