@@ -766,7 +766,7 @@ const SystemSettings = () => {
         setMessage({ type: 'success', text: `Channel ${editingYoutubeChannel ? 'updated' : 'created'} successfully!` });
         setShowYoutubeChannelModal(false);
         setEditingYoutubeChannel(null);
-        setYoutubeChannelForm({ channel_name: '', channel_id: '', channel_type: 'production_house', languages: [], is_active: true, priority: 5 });
+        setYoutubeChannelForm({ channel_name: '', channel_id: '', rss_url: '', channel_type: 'production_house', languages: [], is_active: true });
         fetchYoutubeChannels();
       } else {
         const error = await response.json();
@@ -774,6 +774,44 @@ const SystemSettings = () => {
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to save channel' });
+    }
+  };
+
+  const extractChannelDetails = async () => {
+    if (!channelUrlInput.trim()) {
+      setMessage({ type: 'error', text: 'Please enter a YouTube channel URL' });
+      return;
+    }
+    
+    setExtractingChannel(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/extract-details`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: channelUrlInput })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setYoutubeChannelForm({
+          channel_name: data.channel_name,
+          channel_id: data.channel_id,
+          rss_url: data.rss_url,
+          channel_type: 'production_house',
+          languages: [],
+          is_active: true
+        });
+        setShowChannelUrlModal(false);
+        setShowYoutubeChannelModal(true);
+        setChannelUrlInput('');
+      } else {
+        const error = await response.json();
+        setMessage({ type: 'error', text: error.detail || 'Failed to extract channel details' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to extract channel details' });
+    } finally {
+      setExtractingChannel(false);
     }
   };
 
@@ -795,10 +833,10 @@ const SystemSettings = () => {
     setYoutubeChannelForm({
       channel_name: channel.channel_name,
       channel_id: channel.channel_id || '',
+      rss_url: channel.rss_url || '',
       channel_type: channel.channel_type,
       languages: channel.languages,
-      is_active: channel.is_active,
-      priority: channel.priority
+      is_active: channel.is_active
     });
     setShowYoutubeChannelModal(true);
   };
