@@ -103,6 +103,9 @@ class YouTubeRSSService:
                         # Try to detect language from title/description
                         detected_language = self._detect_language(title, description, languages)
                         
+                        # Detect video category from title
+                        detected_category = self._detect_video_category(title, description)
+                        
                         # Parse published date
                         try:
                             published_datetime = datetime.fromisoformat(published_at.replace('Z', '+00:00'))
@@ -122,6 +125,7 @@ class YouTubeRSSService:
                             'channel_type': channel_type,
                             'languages': languages,
                             'detected_language': detected_language,
+                            'detected_category': detected_category,  # New field
                             'fetched_at': datetime.now(timezone.utc),
                             'is_used': False,  # Track if used by video agent
                             'source': 'rss'
