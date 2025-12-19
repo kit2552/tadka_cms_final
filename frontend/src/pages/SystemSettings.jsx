@@ -2331,13 +2331,60 @@ const SystemSettings = () => {
               </div>
             )}
 
-            {/* YouTube Channel Modal */}
+            {/* Channel URL Modal (Step 1) */}
+            {showChannelUrlModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+                  <div className="p-4 border-b border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900 text-left">Add YouTube Channel</h3>
+                    <p className="text-sm text-gray-600 text-left mt-1">Enter any YouTube channel URL to get started</p>
+                  </div>
+                  <div className="p-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">YouTube Channel URL</label>
+                      <input
+                        type="text"
+                        value={channelUrlInput}
+                        onChange={(e) => setChannelUrlInput(e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g., https://youtube.com/@TSeries or channel ID"
+                      />
+                      <p className="text-xs text-gray-500 mt-1 text-left">
+                        Supports: @handle, /channel/ID, /user/name, /c/name, or direct channel ID
+                      </p>
+                    </div>
+                    <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowChannelUrlModal(false);
+                          setChannelUrlInput('');
+                        }}
+                        className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={extractChannelDetails}
+                        disabled={extractingChannel || !channelUrlInput.trim()}
+                        className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {extractingChannel ? 'Extracting...' : 'Get Channel Details'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* YouTube Channel Modal (Step 2 - Details) */}
             {showYoutubeChannelModal && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
                   <div className="p-4 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {editingYoutubeChannel ? 'Edit Channel' : 'Add New Channel'}
+                    <h3 className="text-lg font-semibold text-gray-900 text-left">
+                      {editingYoutubeChannel ? 'Edit Channel' : 'Channel Details'}
                     </h3>
                   </div>
                   <form onSubmit={handleYoutubeChannelSubmit} className="p-4 space-y-4">
@@ -2353,13 +2400,24 @@ const SystemSettings = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">YouTube Channel ID (optional)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">Channel ID</label>
                       <input
                         type="text"
                         value={youtubeChannelForm.channel_id}
                         onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, channel_id: e.target.value }))}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50"
                         placeholder="e.g., UCq-Fj5jknLsUf-MWSy4_brA"
+                        readOnly={!editingYoutubeChannel}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">RSS Feed URL</label>
+                      <input
+                        type="text"
+                        value={youtubeChannelForm.rss_url}
+                        onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, rss_url: e.target.value }))}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50 text-xs"
+                        readOnly
                       />
                     </div>
                     <div>
@@ -2394,29 +2452,16 @@ const SystemSettings = () => {
                         ))}
                       </div>
                     </div>
-                    <div className="flex gap-4">
-                      <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">Priority (1-10)</label>
+                    <div className="flex items-center">
+                      <label className="flex items-center gap-2 cursor-pointer">
                         <input
-                          type="number"
-                          min="1"
-                          max="10"
-                          value={youtubeChannelForm.priority}
-                          onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, priority: parseInt(e.target.value) || 5 }))}
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          type="checkbox"
+                          checked={youtubeChannelForm.is_active}
+                          onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, is_active: e.target.checked }))}
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         />
-                      </div>
-                      <div className="flex-1 flex items-end">
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={youtubeChannelForm.is_active}
-                            onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, is_active: e.target.checked }))}
-                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                          />
-                          <span className="text-sm text-gray-700">Active</span>
-                        </label>
-                      </div>
+                        <span className="text-sm text-gray-700">Active</span>
+                      </label>
                     </div>
                     <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                       <button
