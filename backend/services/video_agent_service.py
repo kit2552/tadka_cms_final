@@ -200,31 +200,50 @@ class VideoAgentService:
             return []
     
     async def search_trailers_teasers(self, language: str, movie_name: Optional[str] = None) -> List[Dict]:
-        """Search for official movie trailers and teasers"""
+        """Search for official movie trailers and teasers only - NOT events or interviews"""
         if movie_name:
             # Search for specific movie trailer from official channel
             query = f"{movie_name} official trailer {language}"
         else:
-            # General search for official trailers - exclude shorts, reviews, reactions
-            query = f"{language} movie official trailer teaser -shorts -review -reaction -scene"
+            # General search for official trailers - exclude events, speeches, interviews
+            query = f"{language} movie official trailer teaser 2024 2025 -event -speech -interview -press -meet -launch -promotion -review -reaction -shorts"
         
         print(f"🔍 Searching trailers: {query}")
         videos = await self.search_youtube(
             query=query,
-            max_results=20,  # Get more to filter
+            max_results=30,  # Get more to filter
             published_after=self._get_published_after(),
             video_duration='medium'  # Trailers are typically 1-4 minutes
         )
         
-        # Filter results to get only likely official trailers
+        # Filter results to get only actual trailers/teasers - exclude event content
         filtered = []
+        # Keywords that indicate event/interview content - should be excluded
+        event_keywords = [
+            'speech', 'event', 'interview', 'press meet', 'press conference', 
+            'promotion', 'launch', 'pre-release', 'prerelease', 'success meet',
+            'audio launch', 'music launch', 'grand release', 'celebration',
+            'thanks meet', 'appreciation', 'felicitation', 'bytes', 'talk',
+            'interaction', 'q&a', 'panel', 'discussion', 'fun chat'
+        ]
+        # Keywords that indicate actual trailer/teaser content - required
+        trailer_keywords = ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster', 'promo']
+        
         for video in videos:
             title_lower = video['title'].lower()
-            # Skip if title contains unwanted keywords
-            if any(skip in title_lower for skip in ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 'explained']):
+            
+            # Skip if title contains event-related keywords
+            if any(skip in title_lower for skip in event_keywords):
+                print(f"   ⏭️ Skipping event video: {video['title'][:50]}...")
                 continue
-            # Prefer titles with "official" or "trailer" or "teaser"
-            if any(keyword in title_lower for keyword in ['official', 'trailer', 'teaser', 'first look', 'glimpse', 'motion poster']):
+            
+            # Skip if title contains other unwanted keywords
+            if any(skip in title_lower for skip in ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 'explained', 'making', 'behind the scenes']):
+                continue
+            
+            # Must have trailer/teaser related keyword
+            if any(keyword in title_lower for keyword in trailer_keywords):
+                print(f"   ✅ Found trailer: {video['title'][:50]}...")
                 filtered.append(video)
         
         return filtered[:10]
