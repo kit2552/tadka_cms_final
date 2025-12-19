@@ -375,9 +375,10 @@ class VideoAgentService:
                 print(f"📝 Creating article:")
                 print(f"   Title: {clean_title}")
                 print(f"   Category: {agent_category}")
-                print(f"   State: {target_state}")
-                print(f"   Video URL: {youtube_url}")
+                print(f"   States: {target_state}")
+                print(f"   YouTube URL: {youtube_url}")
                 print(f"   Content Type: {article_data['content_type']}")
+                print(f"   Language: {language}")
                 
                 # Create the article
                 created = crud.create_article(db, article_data)
