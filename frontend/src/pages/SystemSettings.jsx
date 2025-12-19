@@ -758,21 +758,19 @@ const SystemSettings = () => {
 
   const handleYoutubeChannelSubmit = async (e) => {
     if (e) e.preventDefault();
-    console.log('Submitting channel form:', youtubeChannelForm);
+    setChannelModalError('');
+    setSavingChannel(true);
+    
     try {
       const url = editingYoutubeChannel 
         ? `${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/${editingYoutubeChannel.id}`
         : `${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels`;
-      
-      console.log('Submitting to URL:', url);
       
       const response = await fetch(url, {
         method: editingYoutubeChannel ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(youtubeChannelForm)
       });
-      
-      console.log('Response status:', response.status);
       
       if (response.ok) {
         setMessage({ type: 'success', text: `Channel ${editingYoutubeChannel ? 'updated' : 'created'} successfully!` });
@@ -782,12 +780,12 @@ const SystemSettings = () => {
         fetchYoutubeChannels();
       } else {
         const error = await response.json();
-        console.log('Error response:', error);
-        setMessage({ type: 'error', text: error.detail || 'Failed to save channel' });
+        setChannelModalError(error.detail || 'Failed to save channel');
       }
     } catch (error) {
-      console.error('Submit error:', error);
-      setMessage({ type: 'error', text: 'Failed to save channel: ' + error.message });
+      setChannelModalError('Failed to save channel: ' + error.message);
+    } finally {
+      setSavingChannel(false);
     }
   };
 
