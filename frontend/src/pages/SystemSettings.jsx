@@ -106,6 +106,7 @@ const SystemSettings = () => {
   const [youtubeLanguageFilter, setYoutubeLanguageFilter] = useState('');
   const [youtubeTypeFilter, setYoutubeTypeFilter] = useState('');
   const [showYoutubeChannelModal, setShowYoutubeChannelModal] = useState(false);
+  const [showManageVideosModal, setShowManageVideosModal] = useState(false);
   const [editingYoutubeChannel, setEditingYoutubeChannel] = useState(null);
   const [youtubeChannelForm, setYoutubeChannelForm] = useState({
     channel_name: '',
