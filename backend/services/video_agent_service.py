@@ -193,10 +193,9 @@ class VideoAgentService:
     
     async def search_trending_videos(self, language: str) -> List[Dict]:
         """Search for trending movie/music videos"""
-        category = self.CATEGORIES['trending_videos']
+        query = f"{language} movie song trending viral"
         
-        query = f"{language} trending movie song video {self._get_today_ist()}"
-        
+        print(f"🔍 Searching trending videos: {query}")
         return await self.search_youtube(
             query=query,
             max_results=10,
