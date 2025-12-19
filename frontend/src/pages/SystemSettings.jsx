@@ -2345,14 +2345,23 @@ const SystemSettings = () => {
                           </td>
                           <td className="px-4 py-3 text-right">
                             {channel.channel_id && (
-                              <a
-                                href={`https://www.youtube.com/channel/${channel.channel_id}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-red-600 hover:text-red-800 text-sm mr-3"
-                              >
-                                View
-                              </a>
+                              <>
+                                <a
+                                  href={`https://www.youtube.com/channel/${channel.channel_id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-red-600 hover:text-red-800 text-sm mr-3"
+                                >
+                                  View
+                                </a>
+                                <button
+                                  onClick={() => fetchChannelVideos(channel)}
+                                  disabled={fetchingChannelId === channel.id}
+                                  className="text-green-600 hover:text-green-800 text-sm mr-3 disabled:opacity-50"
+                                >
+                                  {fetchingChannelId === channel.id ? 'Fetching...' : 'Fetch'}
+                                </button>
+                              </>
                             )}
                             <button
                               onClick={() => editYoutubeChannel(channel)}
