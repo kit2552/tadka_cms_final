@@ -423,16 +423,34 @@ class VideoAgentService:
         
         # Create video posts
         created_posts = []
+        skipped_duplicates = 0
+        
         for video in videos:
             try:
-                # Clean up title - remove hashtags and extra content
-                clean_title = self._clean_video_title(video['title'])
-                
                 # Build the YouTube embed/watch URL
                 youtube_url = f"https://www.youtube.com/watch?v={video['video_id']}"
                 
+                # Check for duplicate - skip if video already exists
+                existing = db.articles.find_one({
+                    '$or': [
+                        {'youtube_video_id': video['video_id']},
+                        {'youtube_url': youtube_url}
+                    ]
+                })
+                if existing:
+                    print(f"⏭️ Skipping duplicate video: {video['title'][:50]}...")
+                    skipped_duplicates += 1
+                    continue
+                
+                # Clean up title - remove hashtags and extra content
+                clean_title = self._clean_video_title(video['title'])
+                
                 # Generate slug from title
                 slug = self._generate_slug(clean_title)
+                
+                # Get current time in UTC for created_at/published_at
+                from datetime import datetime, timezone
+                current_time = datetime.now(timezone.utc)
                 
                 # Create article with video content type
                 article_data = {
@@ -456,7 +474,9 @@ class VideoAgentService:
                     "agent_type": "video",
                     "youtube_video_id": video['video_id'],
                     "channel_name": video.get('channel', ''),
-                    "article_language": agent_article_language  # Use language from agent config
+                    "article_language": agent_article_language,  # Use language from agent config
+                    "created_at": current_time,
+                    "published_at": current_time
                 }
                 
                 print(f"📝 Creating article:")
