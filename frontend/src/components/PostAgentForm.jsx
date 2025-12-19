@@ -63,7 +63,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
         // Ensure agent_type is set from editingAgent
         agent_type: agentType,
         // Pre-select category based on agent type
-        category: editingAgent.category || (agentType === 'photo_gallery' ? 'photoshoots' : agentType === 'video' ? 'trailers' : prev.category),
+        category: editingAgent.category || (agentType === 'photo_gallery' ? 'photoshoots' : agentType === 'video' ? 'trailers-teasers' : prev.category),
         // Set content_type to video for video agents
         content_type: agentType === 'video' ? 'video' : (editingAgent.content_type || prev.content_type)
       }));
