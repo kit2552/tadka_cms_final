@@ -135,7 +135,11 @@ const SystemSettings = () => {
   const [youtubeChannelTypes] = useState([
     { value: 'production_house', label: 'Production House' },
     { value: 'music_label', label: 'Music Label' },
-    { value: 'popular_channel', label: 'Popular YouTube Channel' }
+    { value: 'popular_channel', label: 'Popular YouTube Channel' },
+    { value: 'movie_channel', label: 'Movie Channel' },
+    { value: 'news_channel', label: 'News Channel' },
+    { value: 'tv_channel', label: 'TV Channel' },
+    { value: 'reality_show', label: 'Reality Show' }
   ]);
 
   useEffect(() => {
