@@ -272,7 +272,8 @@ class YouTubeRSSService:
                     channel_id=channel.get('channel_id'),
                     channel_name=channel.get('channel_name', 'Unknown'),
                     channel_type=channel.get('channel_type', 'unknown'),
-                    languages=channel.get('languages', ['Hindi'])
+                    languages=channel.get('languages', ['Hindi']),
+                    rss_url=channel.get('rss_url')  # Use stored RSS URL if available
                 )
                 tasks.append(task)
             
