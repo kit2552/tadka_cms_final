@@ -56,6 +56,11 @@ class AIAgent(BaseModel):
     instagram_content_type: Optional[str] = "photos"  # photos or reels
     instagram_urls: Optional[List[Any]] = None  # Instagram post/reel URLs
     
+    # Video Agent fields
+    video_category: Optional[str] = "trailers_teasers"  # trailers_teasers, trending_videos, events_interviews, tadka_shorts
+    search_query: Optional[str] = None  # Optional specific search query (movie name, celebrity name, etc.)
+    max_videos: Optional[int] = 5  # Maximum videos to fetch
+    
     # Adhoc mode fields
     schedule_post: Optional[bool] = False
     post_date: Optional[str] = None
