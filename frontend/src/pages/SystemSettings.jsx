@@ -748,22 +748,6 @@ const SystemSettings = () => {
     }
   };
 
-  const seedDefaultChannels = async () => {
-    setYoutubeChannelsLoading(true);
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/seed-default`, {
-        method: 'POST'
-      });
-      const data = await response.json();
-      setMessage({ type: 'success', text: data.message });
-      fetchYoutubeChannels();
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to seed channels' });
-    } finally {
-      setYoutubeChannelsLoading(false);
-    }
-  };
-
   const handleYoutubeChannelSubmit = async (e) => {
     if (e) e.preventDefault();
     setChannelModalError('');
