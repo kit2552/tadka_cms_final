@@ -113,6 +113,7 @@ const SystemSettings = () => {
   const [channelModalError, setChannelModalError] = useState('');
   const [channelUrlError, setChannelUrlError] = useState('');
   const [savingChannel, setSavingChannel] = useState(false);
+  const [fetchingChannelId, setFetchingChannelId] = useState(null);
   const [editingYoutubeChannel, setEditingYoutubeChannel] = useState(null);
   const [youtubeChannelForm, setYoutubeChannelForm] = useState({
     channel_name: '',
