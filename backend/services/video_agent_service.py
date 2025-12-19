@@ -240,16 +240,27 @@ class VideoAgentService:
     async def search_events_interviews(self, language: str, celebrity_name: Optional[str] = None) -> List[Dict]:
         """Search for celebrity events and interviews"""
         if celebrity_name:
-            query = f"{celebrity_name} interview event press meet"
+            query = f"{celebrity_name} interview event press meet -shorts"
         else:
-            query = f"{language} actress actor interview event promotion"
+            query = f"{language} movie star interview event promotion -shorts"
         
         print(f"🔍 Searching events/interviews: {query}")
-        return await self.search_youtube(
+        videos = await self.search_youtube(
             query=query,
-            max_results=10,
-            published_after=self._get_published_after()
+            max_results=20,
+            published_after=self._get_published_after(),
+            video_duration='medium'
         )
+        
+        # Filter out shorts
+        filtered = []
+        for video in videos:
+            title_lower = video['title'].lower()
+            if '#shorts' in title_lower:
+                continue
+            filtered.append(video)
+        
+        return filtered[:10]
     
     async def search_tadka_shorts(self, language: str, actress_name: Optional[str] = None) -> List[Dict]:
         """Search for hot/trending YouTube Shorts of actresses"""
