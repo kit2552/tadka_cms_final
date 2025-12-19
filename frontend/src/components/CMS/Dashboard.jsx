@@ -294,6 +294,9 @@ const Dashboard = () => {
   const [selectedAdStatus, setSelectedAdStatus] = useState('');
   const [adsLoading, setAdsLoading] = useState(false);
   
+  // Action menu state for articles
+  const [actionMenu, setActionMenu] = useState({ show: false, articleId: null, article: null, scrollPosition: 0 });
+  
   // Manage Related Articles state
   const [relatedArticlesConfig, setRelatedArticlesConfig] = useState({});
   const [selectedPage, setSelectedPage] = useState('');
