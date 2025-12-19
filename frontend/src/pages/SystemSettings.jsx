@@ -783,22 +783,20 @@ const SystemSettings = () => {
         setYoutubeChannelForm({ channel_name: '', channel_id: '', rss_url: '', channel_type: 'production_house', languages: [], is_active: true });
         fetchYoutubeChannels();
         
-        // Auto-fetch RSS videos for newly created channel
+        // Auto-fetch RSS videos for newly created channel (show loading modal)
         if (!editingYoutubeChannel && createdChannel.id && createdChannel.channel_id) {
-          setMessage({ type: 'success', text: `Channel created! Fetching videos...` });
+          setFetchingChannelId(createdChannel.id);
+          setFetchingChannelName(createdChannel.channel_name);
           try {
-            const fetchResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-rss/fetch-channel/${createdChannel.id}`, {
+            await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-rss/fetch-channel/${createdChannel.id}`, {
               method: 'POST'
             });
-            if (fetchResponse.ok) {
-              const fetchData = await fetchResponse.json();
-              setMessage({ type: 'success', text: `Channel created and fetched ${fetchData.new_videos} videos!` });
-            }
           } catch (fetchError) {
             console.error('Auto-fetch error:', fetchError);
+          } finally {
+            setFetchingChannelId(null);
+            setFetchingChannelName('');
           }
-        } else {
-          setMessage({ type: 'success', text: `Channel ${editingYoutubeChannel ? 'updated' : 'created'} successfully!` });
         }
       } else {
         const error = await response.json();
