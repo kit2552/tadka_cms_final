@@ -259,13 +259,18 @@ class VideoAgentService:
         # Keywords that indicate actual trailer/teaser content - required
         trailer_keywords = ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster', 'promo']
         
-        # Separate official channel videos from others
+        # Only accept videos from official channels
         official_videos = []
-        other_videos = []
         
         for video in videos:
             title_lower = video['title'].lower()
             channel_lower = video.get('channel', '').lower()
+            description_lower = video.get('description', '').lower()
+            
+            # Skip fake/unannounced movie sequels
+            if any(fake in title_lower for fake in self.FAKE_MOVIE_KEYWORDS):
+                print(f"   🚫 Skipping fake/unannounced movie: {video['title'][:50]}...")
+                continue
             
             # Skip if title contains event-related keywords
             if any(skip in title_lower for skip in event_keywords):
@@ -273,31 +278,29 @@ class VideoAgentService:
                 continue
             
             # Skip if title contains other unwanted keywords
-            if any(skip in title_lower for skip in ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 'explained', 'making', 'behind the scenes', 'fan made', 'unofficial', 'leaked']):
+            skip_keywords = ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 
+                           'explained', 'making', 'behind the scenes', 'fan made', 'fanmade',
+                           'unofficial', 'leaked', 'concept', 'edit', 'version', 'mix']
+            if any(skip in title_lower for skip in skip_keywords):
+                print(f"   ⏭️ Skipping unwanted content: {video['title'][:50]}...")
                 continue
             
             # Must have trailer/teaser related keyword
             if not any(keyword in title_lower for keyword in trailer_keywords):
                 continue
             
-            # Check if from official channel
+            # ONLY accept videos from official channels - no unofficial content
             is_official = any(official in channel_lower for official in self.OFFICIAL_CHANNELS)
             
             if is_official:
                 print(f"   ✅ Official trailer from {video.get('channel')}: {video['title'][:40]}...")
                 official_videos.append(video)
             else:
-                print(f"   ⚠️ Non-official channel ({video.get('channel')}): {video['title'][:40]}...")
-                other_videos.append(video)
+                print(f"   ❌ Rejecting non-official channel ({video.get('channel')}): {video['title'][:40]}...")
         
-        # Prioritize official channel videos, then fill with others if needed
-        result = official_videos[:10]
-        if len(result) < 10:
-            remaining = 10 - len(result)
-            result.extend(other_videos[:remaining])
-        
-        print(f"📊 Results: {len(official_videos)} official, {len(other_videos)} other, returning {len(result)}")
-        return result
+        # Only return official channel videos - no unofficial content
+        print(f"📊 Results: {len(official_videos)} official videos found")
+        return official_videos[:10]
     
     async def search_trending_videos(self, language: str) -> List[Dict]:
         """Search for trending movie/music videos from official channels"""
