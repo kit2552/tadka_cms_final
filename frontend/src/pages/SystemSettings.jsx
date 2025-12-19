@@ -121,6 +121,7 @@ const SystemSettings = () => {
   const [editRefreshUrlInput, setEditRefreshUrlInput] = useState('');
   const [editRefreshError, setEditRefreshError] = useState('');
   const [extractingEditChannel, setExtractingEditChannel] = useState(false);
+  const [channelRefreshed, setChannelRefreshed] = useState(false);
   const [youtubeChannelForm, setYoutubeChannelForm] = useState({
     channel_name: '',
     channel_id: '',
