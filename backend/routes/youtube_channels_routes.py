@@ -6,41 +6,197 @@ from typing import List, Optional
 from pydantic import BaseModel
 from datetime import datetime
 import uuid
+import httpx
+import re
 
 from database import get_db, db
 
 router = APIRouter(prefix="/youtube-channels", tags=["YouTube Channels"])
 
+# RSS URL template
+RSS_URL_TEMPLATE = "https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
+
 # Pydantic models
 class YouTubeChannelCreate(BaseModel):
     channel_name: str
-    channel_id: Optional[str] = None  # YouTube channel ID (optional)
-    channel_type: str  # production_house, music_label, popular_channel
+    channel_id: Optional[str] = None  # YouTube channel ID
+    rss_url: Optional[str] = None  # RSS feed URL
+    channel_type: str  # production_house, music_label, popular_channel, movie_channel, news_channel, tv_channel, reality_show
     languages: List[str] = []  # Languages this channel covers
     is_active: bool = True
-    priority: int = 1  # Higher priority = checked first
 
 class YouTubeChannelUpdate(BaseModel):
     channel_name: Optional[str] = None
     channel_id: Optional[str] = None
+    rss_url: Optional[str] = None
     channel_type: Optional[str] = None
     languages: Optional[List[str]] = None
     is_active: Optional[bool] = None
-    priority: Optional[int] = None
 
 class YouTubeChannelResponse(BaseModel):
     id: str
     channel_name: str
     channel_id: Optional[str] = None
+    rss_url: Optional[str] = None
     channel_type: str
     languages: List[str]
     is_active: bool
-    priority: int
     created_at: datetime
     updated_at: datetime
 
+class ChannelURLRequest(BaseModel):
+    url: str
+
+class ChannelDetailsResponse(BaseModel):
+    channel_id: str
+    channel_name: str
+    rss_url: str
+    thumbnail: Optional[str] = None
+    description: Optional[str] = None
+
 # Collection name
 YOUTUBE_CHANNELS = "youtube_channels"
+
+
+@router.post("/extract-details")
+async def extract_channel_details(request: ChannelURLRequest):
+    """Extract channel ID, name, and RSS URL from any YouTube channel URL
+    
+    Supports formats:
+    - https://www.youtube.com/channel/UC...
+    - https://www.youtube.com/@handle
+    - https://www.youtube.com/user/username
+    - https://www.youtube.com/c/customname
+    - Direct channel ID (UC...)
+    """
+    url = request.url.strip()
+    channel_id = None
+    channel_name = None
+    
+    # Pattern 1: Direct channel ID (starts with UC)
+    if url.startswith('UC') and len(url) == 24:
+        channel_id = url
+    
+    # Pattern 2: Full channel URL with /channel/
+    elif '/channel/' in url:
+        match = re.search(r'/channel/(UC[a-zA-Z0-9_-]{22})', url)
+        if match:
+            channel_id = match.group(1)
+    
+    # Pattern 3: Handle URL (@username)
+    elif '/@' in url or url.startswith('@'):
+        handle = re.search(r'@([a-zA-Z0-9_-]+)', url)
+        if handle:
+            handle_name = handle.group(1)
+            # Need to fetch the page to get channel ID
+            channel_id = await _get_channel_id_from_handle(f"@{handle_name}")
+    
+    # Pattern 4: /user/ URL
+    elif '/user/' in url:
+        match = re.search(r'/user/([a-zA-Z0-9_-]+)', url)
+        if match:
+            username = match.group(1)
+            channel_id = await _get_channel_id_from_handle(f"user/{username}")
+    
+    # Pattern 5: /c/ custom URL
+    elif '/c/' in url:
+        match = re.search(r'/c/([a-zA-Z0-9_-]+)', url)
+        if match:
+            custom_name = match.group(1)
+            channel_id = await _get_channel_id_from_handle(f"c/{custom_name}")
+    
+    # Pattern 6: Just a handle without @
+    elif not url.startswith('http'):
+        channel_id = await _get_channel_id_from_handle(f"@{url}")
+    
+    if not channel_id:
+        raise HTTPException(status_code=400, detail="Could not extract channel ID from URL. Please provide a valid YouTube channel URL.")
+    
+    # Generate RSS URL
+    rss_url = RSS_URL_TEMPLATE.format(channel_id=channel_id)
+    
+    # Try to get channel name from RSS feed
+    channel_name = await _get_channel_name_from_rss(rss_url)
+    
+    if not channel_name:
+        channel_name = f"Channel {channel_id[-8:]}"
+    
+    return {
+        "channel_id": channel_id,
+        "channel_name": channel_name,
+        "rss_url": rss_url
+    }
+
+
+async def _get_channel_id_from_handle(handle_path: str) -> Optional[str]:
+    """Fetch channel ID by scraping YouTube page"""
+    try:
+        if handle_path.startswith('@'):
+            url = f"https://www.youtube.com/{handle_path}"
+        elif handle_path.startswith('user/') or handle_path.startswith('c/'):
+            url = f"https://www.youtube.com/{handle_path}"
+        else:
+            url = f"https://www.youtube.com/@{handle_path}"
+        
+        async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
+            response = await client.get(url, headers={
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            })
+            
+            if response.status_code != 200:
+                return None
+            
+            html = response.text
+            
+            # Look for channel ID in the page
+            # Pattern 1: "channelId":"UC..."
+            match = re.search(r'"channelId":"(UC[a-zA-Z0-9_-]{22})"', html)
+            if match:
+                return match.group(1)
+            
+            # Pattern 2: "externalId":"UC..."
+            match = re.search(r'"externalId":"(UC[a-zA-Z0-9_-]{22})"', html)
+            if match:
+                return match.group(1)
+            
+            # Pattern 3: /channel/UC... in canonical URL
+            match = re.search(r'/channel/(UC[a-zA-Z0-9_-]{22})', html)
+            if match:
+                return match.group(1)
+            
+            return None
+            
+    except Exception as e:
+        print(f"Error fetching channel ID: {e}")
+        return None
+
+
+async def _get_channel_name_from_rss(rss_url: str) -> Optional[str]:
+    """Get channel name from RSS feed"""
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(rss_url)
+            
+            if response.status_code != 200:
+                return None
+            
+            # Parse XML to get channel title
+            import xml.etree.ElementTree as ET
+            root = ET.fromstring(response.text)
+            
+            # Find title element
+            ns = {'atom': 'http://www.w3.org/2005/Atom'}
+            title_elem = root.find('atom:title', ns)
+            
+            if title_elem is not None and title_elem.text:
+                return title_elem.text
+            
+            return None
+            
+    except Exception as e:
+        print(f"Error fetching channel name: {e}")
+        return None
+
 
 @router.get("", response_model=List[YouTubeChannelResponse])
 async def get_youtube_channels(
