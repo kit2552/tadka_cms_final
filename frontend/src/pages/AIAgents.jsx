@@ -88,12 +88,25 @@ const AIAgents = () => {
       const data = await response.json();
       
       if (response.ok && data.success) {
+        // Handle different agent types
+        let message = '';
+        if (data.posts_created !== undefined) {
+          // Video agent response
+          message = `${data.posts_created} video post(s) created successfully!`;
+        } else if (data.gallery_id !== undefined) {
+          // Gallery agent response
+          message = `Gallery "${data.title}" created successfully!`;
+        } else {
+          // Post agent response
+          message = `Article "${data.title || 'Untitled'}" created successfully!`;
+        }
+        
         setRunResults(prev => ({ 
           ...prev, 
           [agentId]: { 
             success: true, 
-            message: `Article "${data.title}" created successfully!`,
-            articleId: data.article_id
+            message: message,
+            articleId: data.article_id || data.gallery_id
           }
         }));
       } else {
