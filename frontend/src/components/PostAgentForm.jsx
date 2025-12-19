@@ -1058,8 +1058,93 @@ Instructions:
               </div>
             )}
 
+            {/* Video Agent Settings */}
+            {formData.agent_type === 'video' && (
+              <div className="bg-red-50 rounded-lg p-4 space-y-4 border border-red-200">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="text-sm font-semibold text-red-900 text-left">Video Agent Settings</h3>
+                </div>
+                
+                {/* Video Category */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Video Category</label>
+                  <select
+                    name="video_category"
+                    value={formData.video_category}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  >
+                    <option value="trailers_teasers">🎬 Trailers & Teasers</option>
+                    <option value="trending_videos">🔥 Trending Videos</option>
+                    <option value="events_interviews">🎤 Events & Interviews</option>
+                    <option value="tadka_shorts">📱 Tadka Shorts</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.video_category === 'trailers_teasers' && 'Find movie trailers, teasers, first looks released today'}
+                    {formData.video_category === 'trending_videos' && 'Find trending movie/music videos released today'}
+                    {formData.video_category === 'events_interviews' && 'Find celebrity events, interviews, promotions'}
+                    {formData.video_category === 'tadka_shorts' && 'Find hot & trending YouTube Shorts of actresses'}
+                  </p>
+                </div>
+                
+                {/* Search Query */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Search Query <span className="text-gray-400">(Optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="search_query"
+                    value={formData.search_query || ''}
+                    onChange={handleInputChange}
+                    placeholder={
+                      formData.video_category === 'trailers_teasers' ? 'e.g., Pushpa 2, Game Changer' :
+                      formData.video_category === 'events_interviews' ? 'e.g., Samantha, Rashmika' :
+                      formData.video_category === 'tadka_shorts' ? 'e.g., Disha Patani, Janhvi Kapoor' :
+                      'Enter specific movie or celebrity name'
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Leave empty for general search based on selected state/language
+                  </p>
+                </div>
+                
+                {/* Max Videos */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Maximum Videos to Fetch</label>
+                  <div className="flex items-center gap-2">
+                    {[3, 5, 10, 15].map(num => (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, max_videos: num }))}
+                        className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                          formData.max_videos === num
+                            ? 'bg-red-600 text-white'
+                            : 'bg-white border border-gray-300 text-gray-700 hover:border-red-400'
+                        }`}
+                      >
+                        {num}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Info Note */}
+                <div className="bg-white rounded border border-red-200 p-3 text-xs text-gray-600">
+                  <strong>How it works:</strong> The agent will search YouTube for videos released today (IST) based on your 
+                  selected state/language and category. Videos will be created as posts with "Video" content type.
+                </div>
+              </div>
+            )}
+
             {/* Split Content Section - Only for post agent type */}
-            {formData.agent_type !== 'photo_gallery' && (
+            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'video' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="text-left">
