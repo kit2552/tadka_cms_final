@@ -173,13 +173,21 @@ class YouTubeRSSService:
         # Fall back to first channel language
         return channel_languages[0] if channel_languages else 'Hindi'
     
-    def _detect_video_category(self, title: str, description: str) -> str:
-        """Detect video category from title and description
+    def _detect_video_category(self, title: str, description: str, video_url: str = "") -> str:
+        """Detect video category from title, description and URL
         
         Categories: Trailer, Teaser, Song, Movie, Event, Interview, Press Meet, 
-                   Behind The Scenes, Review, Promo, First Look, Glimpse, Other
+                   Behind The Scenes, Review, Promo, First Look, Glimpse, Shorts, Other
         """
+        # First check if it's a YouTube Short by URL
+        if video_url and '/shorts/' in video_url:
+            return 'Shorts'
+        
         text = f"{title} {description}".lower()
+        
+        # Check for #shorts hashtag in title (common indicator)
+        if '#shorts' in text or '#short' in text:
+            return 'Shorts'
         
         # Category detection patterns (ordered by priority)
         category_patterns = {
@@ -197,7 +205,6 @@ class YouTubeRSSService:
             'Behind The Scenes': [r'\bbehind the scenes\b', r'\bbts\b', r'\bmaking\b', r'\bon set\b', r'\bmaking of\b'],
             'Review': [r'\breview\b', r'\bpublic talk\b', r'\bpublic response\b', r'\breaction\b'],
             'Promo': [r'\bpromo\b', r'\bdialogue promo\b', r'\bscene\b'],
-            'Short': [r'#shorts', r'\bshort\b', r'\breels\b'],
             'Full Movie': [r'\bfull movie\b', r'\bcomplete movie\b']
         }
         
