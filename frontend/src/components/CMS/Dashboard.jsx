@@ -7217,10 +7217,10 @@ const Dashboard = () => {
                 Delete
               </button>
             </div>
-            <div className="p-2 border-t border-gray-200">
+            <div className="p-3 border-t border-gray-200 bg-gray-50">
               <button
                 onClick={() => setActionMenu({ show: false, articleId: null, article: null, scrollPosition: 0 })}
-                className="w-full px-3 py-2 text-sm text-gray-500 hover:bg-gray-100 rounded"
+                className="w-full px-3 py-2 text-sm text-gray-600 bg-gray-200 hover:bg-gray-300 rounded font-medium transition-colors"
               >
                 Cancel
               </button>
