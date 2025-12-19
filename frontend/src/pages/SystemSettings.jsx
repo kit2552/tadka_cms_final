@@ -2597,6 +2597,7 @@ const SystemSettings = () => {
                           setShowYoutubeChannelModal(false);
                           setEditingYoutubeChannel(null);
                           setChannelModalError('');
+                          setChannelRefreshed(false);
                         }}
                         className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
                         disabled={savingChannel}
