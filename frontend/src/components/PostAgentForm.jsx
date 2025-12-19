@@ -1493,7 +1493,7 @@ Instructions:
             >
               {loading 
                 ? 'Saving...' 
-                : editingAgent 
+                : editingAgent?.id 
                   ? 'Save Agent'
                   : activeTab === 'recurring' 
                     ? 'Save Recurring Agent' 
