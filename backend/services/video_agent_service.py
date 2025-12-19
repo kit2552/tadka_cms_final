@@ -395,18 +395,30 @@ class VideoAgentService:
         }
     
     def _clean_video_title(self, title: str) -> str:
-        """Clean up video title - remove hashtags and excessive text"""
+        """Extract just the movie name from video title"""
         import re
-        # Remove hashtags
+        
+        # Remove hashtags first
         title = re.sub(r'#\w+', '', title)
-        # Remove multiple spaces
-        title = re.sub(r'\s+', ' ', title)
-        # Remove leading/trailing whitespace
-        title = title.strip()
-        # Truncate if too long
-        if len(title) > 150:
-            title = title[:147] + '...'
-        return title
+        
+        # Split by common separators to get movie name
+        separators = ['|', ' - ', ':', 'Official', 'OFFICIAL', 'Trailer', 'TRAILER', 'Teaser', 'TEASER', 
+                      'First Look', 'Glimpse', 'Motion Poster', 'Promo', 'Review', 'Song']
+        
+        movie_name = title
+        for sep in separators:
+            if sep in movie_name:
+                movie_name = movie_name.split(sep)[0]
+        
+        # Clean up
+        movie_name = movie_name.strip()
+        movie_name = re.sub(r'\s+', ' ', movie_name)
+        
+        # Remove trailing special characters
+        movie_name = movie_name.rstrip('|-:')
+        movie_name = movie_name.strip()
+        
+        return movie_name if movie_name else title.split()[0]
     
     def _get_category_for_video_type(self, video_category: str) -> str:
         """Map video category to article category"""
