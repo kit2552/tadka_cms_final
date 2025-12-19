@@ -2221,9 +2221,6 @@ const SystemSettings = () => {
                         <tr key={channel.id} className="hover:bg-gray-50">
                           <td className="px-4 py-3">
                             <div className="font-medium text-gray-900 text-left">{channel.channel_name}</div>
-                            {channel.channel_id && (
-                              <div className="text-xs text-gray-500 text-left">{channel.channel_id}</div>
-                            )}
                           </td>
                           <td className="px-4 py-3 text-left">
                             <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
@@ -2254,6 +2251,16 @@ const SystemSettings = () => {
                             </span>
                           </td>
                           <td className="px-4 py-3 text-right">
+                            {channel.channel_id && (
+                              <a
+                                href={`https://www.youtube.com/channel/${channel.channel_id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-red-600 hover:text-red-800 text-sm mr-3"
+                              >
+                                View
+                              </a>
+                            )}
                             <button
                               onClick={() => editYoutubeChannel(channel)}
                               className="text-blue-600 hover:text-blue-800 text-sm mr-3"
@@ -2262,7 +2269,7 @@ const SystemSettings = () => {
                             </button>
                             <button
                               onClick={() => deleteYoutubeChannel(channel.id)}
-                              className="text-red-600 hover:text-red-800 text-sm"
+                              className="text-gray-600 hover:text-gray-800 text-sm"
                             >
                               Delete
                             </button>
