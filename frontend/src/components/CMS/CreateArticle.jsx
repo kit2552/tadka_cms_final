@@ -109,6 +109,7 @@ const CreateArticle = () => {
     return cleaned;
   };
   const [loadingArticle, setLoadingArticle] = useState(false);
+  const [configLoaded, setConfigLoaded] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [states, setStates] = useState([]);
   const [categories, setCategories] = useState([]);
