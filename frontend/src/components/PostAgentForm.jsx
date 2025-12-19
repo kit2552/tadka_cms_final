@@ -1267,7 +1267,6 @@ Instructions:
                           }}
                           className="sr-only"
                         />
-                        <span className="text-base">{type.icon}</span>
                         <span className="text-sm font-medium">{type.label}</span>
                         {(formData.channel_types || []).includes(type.value) && (
                           <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
