@@ -350,11 +350,16 @@ class VideoAgentService:
                 # Build the YouTube embed/watch URL
                 youtube_url = f"https://www.youtube.com/watch?v={video['video_id']}"
                 
+                # Generate slug from title
+                slug = self._generate_slug(clean_title)
+                
                 # Create article with video content type
                 article_data = {
                     "title": clean_title,
+                    "slug": slug,  # Required field
+                    "author": "AI Agent",  # Required field for AI generated content
                     "content": f"<p>{video['description'][:500] if video['description'] else clean_title}</p>",
-                    "summary": video['description'][:200] if video['description'] else clean_title,
+                    "summary": video['description'][:200] if video['description'] else clean_title,  # Required field
                     "content_type": "video",  # Explicitly set to video
                     "youtube_url": youtube_url,  # YouTube watch URL (correct field name)
                     "image": video['thumbnail'],  # Use 'image' instead of 'featured_image'
