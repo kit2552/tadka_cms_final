@@ -575,10 +575,16 @@ const CreateArticle = () => {
     }
   };
 
+  // First useEffect: Load config and other data
   useEffect(() => {
     fetchCMSConfig();
     fetchAvailableArtists(); // Fetch available artists
     fetchGalleries(); // Fetch available galleries
+  }, []);
+
+  // Second useEffect: Load article only after config is loaded (for edit mode)
+  useEffect(() => {
+    if (!configLoaded) return; // Wait for config to load first
     
     if (isEditMode && id) {
       loadArticle(id);
@@ -638,7 +644,7 @@ const CreateArticle = () => {
         }
       }
     }
-  }, [isEditMode, id]);
+  }, [configLoaded, isEditMode, id]);
 
   // Auto-save draft data every 30 seconds for new articles
   useEffect(() => {
