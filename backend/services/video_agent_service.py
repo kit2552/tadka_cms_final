@@ -204,13 +204,12 @@ class VideoAgentService:
     
     async def search_events_interviews(self, language: str, celebrity_name: Optional[str] = None) -> List[Dict]:
         """Search for celebrity events and interviews"""
-        category = self.CATEGORIES['events_interviews']
-        
         if celebrity_name:
-            query = f"{celebrity_name} {language} interview event press meet {self._get_today_ist()}"
+            query = f"{celebrity_name} interview event press meet"
         else:
-            query = f"{language} celebrity interview event promotion {self._get_today_ist()}"
+            query = f"{language} actress actor interview event promotion"
         
+        print(f"🔍 Searching events/interviews: {query}")
         return await self.search_youtube(
             query=query,
             max_results=10,
