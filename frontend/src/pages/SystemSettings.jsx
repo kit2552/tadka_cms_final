@@ -99,6 +99,40 @@ const SystemSettings = () => {
   const [editingCategoryPrompt, setEditingCategoryPrompt] = useState(null);
   const [promptSaving, setPromptSaving] = useState(false);
 
+  // YouTube Channels State
+  const [youtubeChannels, setYoutubeChannels] = useState([]);
+  const [youtubeChannelsLoading, setYoutubeChannelsLoading] = useState(false);
+  const [youtubeLanguageFilter, setYoutubeLanguageFilter] = useState('');
+  const [youtubeTypeFilter, setYoutubeTypeFilter] = useState('');
+  const [showYoutubeChannelModal, setShowYoutubeChannelModal] = useState(false);
+  const [editingYoutubeChannel, setEditingYoutubeChannel] = useState(null);
+  const [youtubeChannelForm, setYoutubeChannelForm] = useState({
+    channel_name: '',
+    channel_id: '',
+    channel_type: 'production_house',
+    languages: [],
+    is_active: true,
+    priority: 5
+  });
+  const [youtubeLanguages] = useState([
+    { value: 'Hindi', label: 'Hindi (Bollywood)' },
+    { value: 'Telugu', label: 'Telugu (Tollywood)' },
+    { value: 'Tamil', label: 'Tamil (Kollywood)' },
+    { value: 'Kannada', label: 'Kannada (Sandalwood)' },
+    { value: 'Malayalam', label: 'Malayalam (Mollywood)' },
+    { value: 'Marathi', label: 'Marathi' },
+    { value: 'Bengali', label: 'Bengali' },
+    { value: 'Punjabi', label: 'Punjabi (Pollywood)' },
+    { value: 'Gujarati', label: 'Gujarati' },
+    { value: 'Bhojpuri', label: 'Bhojpuri' },
+    { value: 'Multi', label: 'Multi-language' }
+  ]);
+  const [youtubeChannelTypes] = useState([
+    { value: 'production_house', label: 'Production House' },
+    { value: 'music_label', label: 'Music Label' },
+    { value: 'popular_channel', label: 'Popular YouTube Channel' }
+  ]);
+
   useEffect(() => {
     loadAWSConfig();
     loadUsers();
