@@ -219,41 +219,41 @@ async def seed_default_channels():
         {"channel_name": "14 Reels Plus", "channel_id": "UC7P5-b4R9zqxhL6TCaGIIvQ", "channel_type": "production_house", "languages": ["Telugu"], "priority": 7},
         
         # Telugu - Popular Channels
-        {"channel_name": "Mango Telugu Cinema", "channel_type": "popular_channel", "languages": ["Telugu"], "priority": 8},
-        {"channel_name": "Telugu Filmnagar", "channel_type": "popular_channel", "languages": ["Telugu"], "priority": 7},
-        {"channel_name": "iDream Telugu Movies", "channel_type": "popular_channel", "languages": ["Telugu"], "priority": 6},
+        {"channel_name": "Mango Telugu Cinema", "channel_id": "UCNApqoVYJbYSrni8YsbHbmA", "channel_type": "popular_channel", "languages": ["Telugu"], "priority": 8},
+        {"channel_name": "Telugu Filmnagar", "channel_id": "UCCp2mSpCAwc01DUrfMjv_qg", "channel_type": "popular_channel", "languages": ["Telugu"], "priority": 7},
+        {"channel_name": "iDream Telugu Movies", "channel_id": "UCfMAvufcxvLFqEWE4pQFbJA", "channel_type": "popular_channel", "languages": ["Telugu"], "priority": 6},
         
         # Tamil - Music Labels
-        {"channel_name": "Think Music India", "channel_type": "music_label", "languages": ["Tamil"], "priority": 10},
-        {"channel_name": "Sun TV", "channel_type": "music_label", "languages": ["Tamil"], "priority": 9},
-        {"channel_name": "Divo Music", "channel_type": "music_label", "languages": ["Tamil"], "priority": 8},
+        {"channel_name": "Think Music India", "channel_id": "UCpPzPdxvFjPvDwwbQAJWkvw", "channel_type": "music_label", "languages": ["Tamil"], "priority": 10},
+        {"channel_name": "Sun Music", "channel_id": "UCOVpmZr1b-gELzQQ8bGIEDg", "channel_type": "music_label", "languages": ["Tamil"], "priority": 9},
+        {"channel_name": "Divo Music", "channel_id": "UCosgJD9D5jvXYzKHuZ9xqtw", "channel_type": "music_label", "languages": ["Tamil"], "priority": 8},
         
         # Tamil - Production Houses
-        {"channel_name": "Lyca Productions", "channel_type": "production_house", "languages": ["Tamil"], "priority": 10},
-        {"channel_name": "Sun Pictures", "channel_type": "production_house", "languages": ["Tamil"], "priority": 9},
-        {"channel_name": "AGS Entertainment", "channel_type": "production_house", "languages": ["Tamil"], "priority": 8},
-        {"channel_name": "Red Giant Movies", "channel_type": "production_house", "languages": ["Tamil"], "priority": 8},
-        {"channel_name": "Raaj Kamal Films International", "channel_type": "production_house", "languages": ["Tamil"], "priority": 8},
+        {"channel_name": "Lyca Productions", "channel_id": "UCqOO_AkI8Y71cjF3FzHzF0g", "channel_type": "production_house", "languages": ["Tamil"], "priority": 10},
+        {"channel_name": "Sun Pictures", "channel_id": "UCqXqU8i9a4vTQx5Q9uUq7oQ", "channel_type": "production_house", "languages": ["Tamil"], "priority": 9},
+        {"channel_name": "AGS Entertainment", "channel_id": "UC3r4eQ15tFXEoJjOw6iE65A", "channel_type": "production_house", "languages": ["Tamil"], "priority": 8},
+        {"channel_name": "Red Giant Movies", "channel_id": "UCJLhHhBdN3qZZ8R3XPz8kfQ", "channel_type": "production_house", "languages": ["Tamil"], "priority": 8},
+        {"channel_name": "Raaj Kamal Films International", "channel_id": "UClAaZD7wuWqVRjn7hdQn8wA", "channel_type": "production_house", "languages": ["Tamil"], "priority": 8},
         
         # Kannada
-        {"channel_name": "Hombale Films", "channel_type": "production_house", "languages": ["Kannada"], "priority": 10},
-        {"channel_name": "Anand Audio", "channel_type": "music_label", "languages": ["Kannada"], "priority": 9},
-        {"channel_name": "Zee Kannada", "channel_type": "popular_channel", "languages": ["Kannada"], "priority": 7},
+        {"channel_name": "Hombale Films", "channel_id": "UCFvPmMl1CJILCqnG-MhUHwQ", "channel_type": "production_house", "languages": ["Kannada"], "priority": 10},
+        {"channel_name": "Anand Audio", "channel_id": "UCwPXVxCnx7VnFTBhpH7-8Ng", "channel_type": "music_label", "languages": ["Kannada"], "priority": 9},
+        {"channel_name": "Zee Kannada", "channel_id": "UCpuP3PD_BTHM2g5gJgMy8hg", "channel_type": "popular_channel", "languages": ["Kannada"], "priority": 7},
         
         # Malayalam
-        {"channel_name": "Muzik247", "channel_type": "music_label", "languages": ["Malayalam"], "priority": 9},
-        {"channel_name": "Goodwill Entertainment", "channel_type": "production_house", "languages": ["Malayalam"], "priority": 8},
-        {"channel_name": "Aashirvad Cinemas", "channel_type": "production_house", "languages": ["Malayalam"], "priority": 8},
+        {"channel_name": "Muzik247", "channel_id": "UCxyozfLfYidHp6BSvQtMCnA", "channel_type": "music_label", "languages": ["Malayalam"], "priority": 9},
+        {"channel_name": "Goodwill Entertainments", "channel_id": "UChFwj3M2o6pPukVSa3c0UrQ", "channel_type": "production_house", "languages": ["Malayalam"], "priority": 8},
+        {"channel_name": "Aashirvad Cinemas", "channel_id": "UCvvOz3PxZa0cSUzp2G9aY8A", "channel_type": "production_house", "languages": ["Malayalam"], "priority": 8},
         
         # Bengali
-        {"channel_name": "SVF", "channel_type": "production_house", "languages": ["Bengali"], "priority": 9},
-        {"channel_name": "Zee Bangla Cinema", "channel_type": "popular_channel", "languages": ["Bengali"], "priority": 7},
+        {"channel_name": "SVF", "channel_id": "UCXDGbkl6e-l-8U9NvFqWevA", "channel_type": "production_house", "languages": ["Bengali"], "priority": 9},
+        {"channel_name": "Zee Bangla Cinema", "channel_id": "UCFwj8IW3fV3RCvPFJ3Qkcdg", "channel_type": "popular_channel", "languages": ["Bengali"], "priority": 7},
         
         # Marathi
-        {"channel_name": "Zee Marathi", "channel_type": "popular_channel", "languages": ["Marathi"], "priority": 8},
+        {"channel_name": "Zee Marathi", "channel_id": "UCa0k7vLAE79vPvw5XVdRMJQ", "channel_type": "popular_channel", "languages": ["Marathi"], "priority": 8},
         
         # Multi-language
-        {"channel_name": "Goldmines", "channel_type": "popular_channel", "languages": ["Hindi", "Telugu", "Tamil", "Multi"], "priority": 8},
+        {"channel_name": "Goldmines", "channel_id": "UCyoXW-Dse7fURq30EWl_CUA", "channel_type": "popular_channel", "languages": ["Hindi", "Telugu", "Tamil", "Multi"], "priority": 8},
     ]
     
     created = 0
