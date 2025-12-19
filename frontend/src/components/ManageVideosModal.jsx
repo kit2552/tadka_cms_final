@@ -37,17 +37,14 @@ const ManageVideosModal = ({ onClose }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Fetch config
       const configRes = await fetch(`${BACKEND_URL}/api/youtube-rss/config`);
       const configData = await configRes.json();
       setConfig(configData);
 
-      // Fetch stats
       const statsRes = await fetch(`${BACKEND_URL}/api/youtube-rss/stats`);
       const statsData = await statsRes.json();
       setStats(statsData);
 
-      // Fetch channel video counts
       const channelsRes = await fetch(`${BACKEND_URL}/api/youtube-rss/videos/by-channel`);
       const channelsData = await channelsRes.json();
       setChannelVideos(channelsData.channels || []);
@@ -118,7 +115,7 @@ const ManageVideosModal = ({ onClose }) => {
           type: 'success', 
           text: `Fetched ${data.new_videos} new videos from ${data.channels_fetched} channels` 
         });
-        fetchData(); // Refresh stats
+        fetchData();
       } else {
         setMessage({ type: 'error', text: data.message || 'Fetch failed' });
       }
@@ -148,7 +145,7 @@ const ManageVideosModal = ({ onClose }) => {
           type: 'success', 
           text: `Deleted ${data.deleted_count} old videos` 
         });
-        fetchData(); // Refresh stats
+        fetchData();
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to delete videos' });
@@ -157,7 +154,6 @@ const ManageVideosModal = ({ onClose }) => {
     }
   };
 
-  // Handle clicking on available count to show video list
   const handleShowVideos = async (channel) => {
     setSelectedChannel(channel);
     setShowVideoList(true);
@@ -182,10 +178,8 @@ const ManageVideosModal = ({ onClose }) => {
     ? channelVideos 
     : channelVideos.filter(ch => ch.channel_type === filterType);
 
-  // Get unique categories from video list
   const videoCategories = [...new Set(channelVideosList.map(v => v.detected_category || 'Other'))].sort();
   
-  // Filter videos by category
   const filteredVideosList = videosCategoryFilter === 'all'
     ? channelVideosList
     : channelVideosList.filter(v => (v.detected_category || 'Other') === videosCategoryFilter);
@@ -203,9 +197,9 @@ const ManageVideosModal = ({ onClose }) => {
 
   const getTypeLabel = (type) => {
     const labels = {
-      production_house: '🎬 Production House',
-      music_label: '🎵 Music Label',
-      popular_channel: '📺 Popular Channel'
+      production_house: 'Production House',
+      music_label: 'Music Label',
+      popular_channel: 'Popular Channel'
     };
     return labels[type] || type;
   };
@@ -234,33 +228,11 @@ const ManageVideosModal = ({ onClose }) => {
       'Behind The Scenes': 'bg-cyan-100 text-cyan-700',
       'Review': 'bg-teal-100 text-teal-700',
       'Promo': 'bg-emerald-100 text-emerald-700',
-      'Short': 'bg-rose-100 text-rose-700',
+      'Shorts': 'bg-rose-100 text-rose-700',
       'Full Movie': 'bg-slate-100 text-slate-700',
       'Other': 'bg-gray-100 text-gray-600'
     };
     return colors[category] || 'bg-gray-100 text-gray-600';
-  };
-
-  const getCategoryIcon = (category) => {
-    const icons = {
-      'Trailer': '🎬',
-      'Teaser': '🎥',
-      'First Look': '👀',
-      'Glimpse': '✨',
-      'Motion Poster': '🖼️',
-      'Song': '🎵',
-      'Interview': '🎤',
-      'Press Meet': '📰',
-      'Event': '🎉',
-      'Speech': '🎙️',
-      'Behind The Scenes': '🎞️',
-      'Review': '⭐',
-      'Promo': '📢',
-      'Short': '📱',
-      'Full Movie': '🎦',
-      'Other': '📹'
-    };
-    return icons[category] || '📹';
   };
 
   return (
@@ -268,11 +240,8 @@ const ManageVideosModal = ({ onClose }) => {
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <span className="text-2xl">📺</span>
-              Manage YouTube Videos
-            </h2>
+          <div className="text-left">
+            <h2 className="text-xl font-bold text-gray-900">Manage YouTube Videos</h2>
             <p className="text-sm text-gray-600 mt-1">Configure RSS scheduler and manage video collection</p>
           </div>
           <button
@@ -287,7 +256,7 @@ const ManageVideosModal = ({ onClose }) => {
 
         {/* Message */}
         {message.text && (
-          <div className={`mx-6 mt-4 px-4 py-2 rounded-lg text-sm ${
+          <div className={`mx-6 mt-4 px-4 py-2 rounded-lg text-sm text-left ${
             message.type === 'success' ? 'bg-green-100 text-green-700' :
             message.type === 'error' ? 'bg-red-100 text-red-700' :
             'bg-blue-100 text-blue-700'
@@ -305,10 +274,8 @@ const ManageVideosModal = ({ onClose }) => {
           ) : (
             <>
               {/* RSS Scheduler Config */}
-              <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                  <span>⏰</span> RSS Feed Scheduler
-                </h3>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-4 text-left">
+                <h3 className="font-semibold text-gray-900">RSS Feed Scheduler</h3>
                 
                 <div className="flex items-center justify-between">
                   <div>
@@ -330,9 +297,7 @@ const ManageVideosModal = ({ onClose }) => {
                 {config.enabled && (
                   <div className="space-y-3 pt-2 border-t border-gray-200">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Fetch Frequency
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Fetch Frequency</label>
                       <select
                         value={config.frequency_hours}
                         onChange={(e) => handleFrequencyChange(parseInt(e.target.value))}
@@ -370,41 +335,34 @@ const ManageVideosModal = ({ onClose }) => {
                       Fetching...
                     </>
                   ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                      </svg>
-                      Fetch Now
-                    </>
+                    'Fetch Now'
                   )}
                 </button>
               </div>
 
               {/* Stats Overview */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
+                <div className="bg-blue-50 rounded-lg p-4 text-left">
                   <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
                   <div className="text-xs text-blue-600">Total Videos</div>
                 </div>
-                <div className="bg-green-50 rounded-lg p-4 text-center">
+                <div className="bg-green-50 rounded-lg p-4 text-left">
                   <div className="text-2xl font-bold text-green-600">{stats.unused}</div>
                   <div className="text-xs text-green-600">Available</div>
                 </div>
-                <div className="bg-purple-50 rounded-lg p-4 text-center">
+                <div className="bg-purple-50 rounded-lg p-4 text-left">
                   <div className="text-2xl font-bold text-purple-600">{stats.used}</div>
                   <div className="text-xs text-purple-600">Used</div>
                 </div>
-                <div className="bg-orange-50 rounded-lg p-4 text-center">
+                <div className="bg-orange-50 rounded-lg p-4 text-left">
                   <div className="text-2xl font-bold text-orange-600">{channelVideos.length}</div>
                   <div className="text-xs text-orange-600">Channels</div>
                 </div>
               </div>
 
               {/* Delete Old Videos */}
-              <div className="bg-red-50 rounded-lg p-4 space-y-3">
-                <h3 className="font-semibold text-red-900 flex items-center gap-2">
-                  <span>🗑️</span> Cleanup Old Videos
-                </h3>
+              <div className="bg-red-50 rounded-lg p-4 space-y-3 text-left">
+                <h3 className="font-semibold text-red-900">Cleanup Old Videos</h3>
                 <p className="text-xs text-red-700">
                   Delete videos older than the selected period. This only removes from the staging collection, 
                   not published articles.
@@ -436,7 +394,7 @@ const ManageVideosModal = ({ onClose }) => {
               </div>
 
               {/* Channel Video Counts */}
-              <div className="space-y-3">
+              <div className="space-y-3 text-left">
                 <div className="flex items-center justify-between">
                   <h3 className="font-semibold text-gray-900">Videos by Channel</h3>
                   <select
@@ -445,16 +403,16 @@ const ManageVideosModal = ({ onClose }) => {
                     className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   >
                     <option value="all">All Types</option>
-                    <option value="production_house">🎬 Production Houses</option>
-                    <option value="music_label">🎵 Music Labels</option>
-                    <option value="popular_channel">📺 Popular Channels</option>
+                    <option value="production_house">Production Houses</option>
+                    <option value="music_label">Music Labels</option>
+                    <option value="popular_channel">Popular Channels</option>
                   </select>
                 </div>
 
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                   <div className="max-h-64 overflow-y-auto">
                     {filteredChannels.length === 0 ? (
-                      <div className="p-4 text-center text-gray-500 text-sm">
+                      <div className="p-4 text-left text-gray-500 text-sm">
                         No videos in collection. Click "Fetch Now" to load videos from RSS feeds.
                       </div>
                     ) : (
@@ -463,26 +421,26 @@ const ManageVideosModal = ({ onClose }) => {
                           <tr>
                             <th className="text-left px-4 py-2 font-medium text-gray-700">Channel</th>
                             <th className="text-left px-4 py-2 font-medium text-gray-700">Type</th>
-                            <th className="text-right px-4 py-2 font-medium text-gray-700">Videos</th>
-                            <th className="text-right px-4 py-2 font-medium text-gray-700">Available</th>
+                            <th className="text-left px-4 py-2 font-medium text-gray-700">Videos</th>
+                            <th className="text-left px-4 py-2 font-medium text-gray-700">Available</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                           {filteredChannels.map((channel, idx) => (
                             <tr key={idx} className="hover:bg-gray-50">
-                              <td className="px-4 py-2">
+                              <td className="px-4 py-2 text-left">
                                 <div className="font-medium text-gray-900">{channel.channel_name}</div>
                                 <div className="text-xs text-gray-500 font-mono">{channel.channel_id}</div>
                               </td>
-                              <td className="px-4 py-2">
+                              <td className="px-4 py-2 text-left">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getTypeBadgeColor(channel.channel_type)}`}>
                                   {getTypeLabel(channel.channel_type)}
                                 </span>
                               </td>
-                              <td className="px-4 py-2 text-right font-medium text-gray-900">
+                              <td className="px-4 py-2 text-left font-medium text-gray-900">
                                 {channel.video_count}
                               </td>
-                              <td className="px-4 py-2 text-right">
+                              <td className="px-4 py-2 text-left">
                                 <button
                                   onClick={() => handleShowVideos(channel)}
                                   className="text-green-600 font-medium hover:text-green-800 hover:underline cursor-pointer"
@@ -506,7 +464,7 @@ const ManageVideosModal = ({ onClose }) => {
         {/* Footer */}
         <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
           <div className="flex justify-between items-center">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 text-left">
               Videos are fetched via RSS feeds (no API quota used). Enable scheduler for automatic updates.
             </p>
             <button
@@ -526,13 +484,10 @@ const ManageVideosModal = ({ onClose }) => {
             {/* Popup Header */}
             <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4">
               <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                    <span>📹</span>
-                    Available Videos
-                  </h3>
+                <div className="text-left">
+                  <h3 className="text-lg font-bold text-gray-900">Available Videos</h3>
                   <p className="text-sm text-gray-600 mt-1">
-                    {selectedChannel.channel_name} • {filteredVideosList.length} videos
+                    {selectedChannel.channel_name} - {filteredVideosList.length} videos
                   </p>
                 </div>
                 <button
@@ -551,7 +506,7 @@ const ManageVideosModal = ({ onClose }) => {
               
               {/* Category Filter */}
               {videoCategories.length > 1 && (
-                <div className="mt-3 flex items-center gap-2 flex-wrap">
+                <div className="mt-3 flex items-center gap-2 flex-wrap text-left">
                   <span className="text-xs text-gray-500">Filter:</span>
                   <button
                     onClick={() => setVideosCategoryFilter('all')}
@@ -567,13 +522,12 @@ const ManageVideosModal = ({ onClose }) => {
                     <button
                       key={cat}
                       onClick={() => setVideosCategoryFilter(cat)}
-                      className={`px-2 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
+                      className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
                         videosCategoryFilter === cat
                           ? getCategoryBadgeColor(cat)
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       }`}
                     >
-                      <span>{getCategoryIcon(cat)}</span>
                       {cat} ({channelVideosList.filter(v => (v.detected_category || 'Other') === cat).length})
                     </button>
                   ))}
@@ -588,7 +542,7 @@ const ManageVideosModal = ({ onClose }) => {
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
                 </div>
               ) : filteredVideosList.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-left py-12 text-gray-500">
                   No available videos in this channel
                 </div>
               ) : (
@@ -616,7 +570,7 @@ const ManageVideosModal = ({ onClose }) => {
                         )}
                         
                         {/* Video Info */}
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 text-left">
                           <a
                             href={video.video_url || `https://www.youtube.com/watch?v=${video.video_id}`}
                             target="_blank"
@@ -628,19 +582,18 @@ const ManageVideosModal = ({ onClose }) => {
                           
                           <div className="flex items-center gap-2 mt-2 flex-wrap">
                             {/* Category Badge */}
-                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${getCategoryBadgeColor(video.detected_category || 'Other')}`}>
-                              <span>{getCategoryIcon(video.detected_category || 'Other')}</span>
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getCategoryBadgeColor(video.detected_category || 'Other')}`}>
                               {video.detected_category || 'Other'}
                             </span>
                             
                             {/* Language Badge */}
                             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
-                              🌐 {video.detected_language || (video.languages && video.languages[0]) || 'Unknown'}
+                              {video.detected_language || (video.languages && video.languages[0]) || 'Unknown'}
                             </span>
                             
                             {/* Date */}
                             <span className="text-xs text-gray-500">
-                              📅 {formatShortDate(video.published_at)}
+                              {formatShortDate(video.published_at)}
                             </span>
                           </div>
                         </div>
