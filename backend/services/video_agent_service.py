@@ -55,6 +55,20 @@ class VideoAgentService:
         'punjab': 'Punjabi'
     }
     
+    # Language name to code mapping for article_language field
+    LANGUAGE_CODE_MAP = {
+        'Telugu': 'te',
+        'Tamil': 'ta',
+        'Kannada': 'kn',
+        'Malayalam': 'ml',
+        'Marathi': 'mr',
+        'Bengali': 'bn',
+        'Hindi': 'hi',
+        'Gujarati': 'gu',
+        'Punjabi': 'pa',
+        'English': 'en'
+    }
+    
     def __init__(self):
         self.youtube_api_key = None
         self.state_language_map = {}
