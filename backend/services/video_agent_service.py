@@ -463,6 +463,25 @@ class VideoAgentService:
         }
         state_lower = target_state.lower().replace(' ', '-')
         return state_section_map.get(state_lower, 'bollywood')
+    
+    def _generate_slug(self, title: str) -> str:
+        """Generate URL-friendly slug from title"""
+        import re
+        from datetime import datetime
+        
+        # Convert to lowercase
+        slug = title.lower()
+        # Replace spaces with hyphens
+        slug = slug.replace(' ', '-')
+        # Remove special characters except hyphens
+        slug = re.sub(r'[^a-z0-9\-]', '', slug)
+        # Remove multiple consecutive hyphens
+        slug = re.sub(r'-+', '-', slug)
+        # Remove leading/trailing hyphens
+        slug = slug.strip('-')
+        # Add timestamp to ensure uniqueness
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        return f"{slug}-{timestamp}"
 
 
 # Singleton instance
