@@ -22,6 +22,13 @@ const ManageVideosModal = ({ onClose }) => {
   const [fetching, setFetching] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  
+  // Video list popup state
+  const [showVideoList, setShowVideoList] = useState(false);
+  const [selectedChannel, setSelectedChannel] = useState(null);
+  const [channelVideosList, setChannelVideosList] = useState([]);
+  const [videosLoading, setVideosLoading] = useState(false);
+  const [videosCategoryFilter, setVideosCategoryFilter] = useState('all');
 
   useEffect(() => {
     fetchData();
@@ -150,13 +157,48 @@ const ManageVideosModal = ({ onClose }) => {
     }
   };
 
+  // Handle clicking on available count to show video list
+  const handleShowVideos = async (channel) => {
+    setSelectedChannel(channel);
+    setShowVideoList(true);
+    setVideosLoading(true);
+    setVideosCategoryFilter('all');
+    
+    try {
+      const res = await fetch(
+        `${BACKEND_URL}/api/youtube-rss/videos?channel_id=${channel.channel_id}&is_used=false&limit=100`
+      );
+      const data = await res.json();
+      setChannelVideosList(data.videos || []);
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+      setChannelVideosList([]);
+    } finally {
+      setVideosLoading(false);
+    }
+  };
+
   const filteredChannels = filterType === 'all' 
     ? channelVideos 
     : channelVideos.filter(ch => ch.channel_type === filterType);
 
+  // Get unique categories from video list
+  const videoCategories = [...new Set(channelVideosList.map(v => v.detected_category || 'Other'))].sort();
+  
+  // Filter videos by category
+  const filteredVideosList = videosCategoryFilter === 'all'
+    ? channelVideosList
+    : channelVideosList.filter(v => (v.detected_category || 'Other') === videosCategoryFilter);
+
   const formatDate = (dateStr) => {
     if (!dateStr) return 'Never';
     return new Date(dateStr).toLocaleString();
+  };
+
+  const formatShortDate = (dateStr) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   const getTypeLabel = (type) => {
@@ -175,6 +217,50 @@ const ManageVideosModal = ({ onClose }) => {
       popular_channel: 'bg-green-100 text-green-700'
     };
     return colors[type] || 'bg-gray-100 text-gray-700';
+  };
+
+  const getCategoryBadgeColor = (category) => {
+    const colors = {
+      'Trailer': 'bg-red-100 text-red-700',
+      'Teaser': 'bg-orange-100 text-orange-700',
+      'First Look': 'bg-amber-100 text-amber-700',
+      'Glimpse': 'bg-yellow-100 text-yellow-700',
+      'Motion Poster': 'bg-lime-100 text-lime-700',
+      'Song': 'bg-pink-100 text-pink-700',
+      'Interview': 'bg-blue-100 text-blue-700',
+      'Press Meet': 'bg-indigo-100 text-indigo-700',
+      'Event': 'bg-purple-100 text-purple-700',
+      'Speech': 'bg-violet-100 text-violet-700',
+      'Behind The Scenes': 'bg-cyan-100 text-cyan-700',
+      'Review': 'bg-teal-100 text-teal-700',
+      'Promo': 'bg-emerald-100 text-emerald-700',
+      'Short': 'bg-rose-100 text-rose-700',
+      'Full Movie': 'bg-slate-100 text-slate-700',
+      'Other': 'bg-gray-100 text-gray-600'
+    };
+    return colors[category] || 'bg-gray-100 text-gray-600';
+  };
+
+  const getCategoryIcon = (category) => {
+    const icons = {
+      'Trailer': '🎬',
+      'Teaser': '🎥',
+      'First Look': '👀',
+      'Glimpse': '✨',
+      'Motion Poster': '🖼️',
+      'Song': '🎵',
+      'Interview': '🎤',
+      'Press Meet': '📰',
+      'Event': '🎉',
+      'Speech': '🎙️',
+      'Behind The Scenes': '🎞️',
+      'Review': '⭐',
+      'Promo': '📢',
+      'Short': '📱',
+      'Full Movie': '🎦',
+      'Other': '📹'
+    };
+    return icons[category] || '📹';
   };
 
   return (
@@ -397,7 +483,13 @@ const ManageVideosModal = ({ onClose }) => {
                                 {channel.video_count}
                               </td>
                               <td className="px-4 py-2 text-right">
-                                <span className="text-green-600 font-medium">{channel.unused_count}</span>
+                                <button
+                                  onClick={() => handleShowVideos(channel)}
+                                  className="text-green-600 font-medium hover:text-green-800 hover:underline cursor-pointer"
+                                  title="Click to view available videos"
+                                >
+                                  {channel.unused_count}
+                                </button>
                               </td>
                             </tr>
                           ))}
@@ -426,6 +518,155 @@ const ManageVideosModal = ({ onClose }) => {
           </div>
         </div>
       </div>
+
+      {/* Video List Popup */}
+      {showVideoList && selectedChannel && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[85vh] overflow-hidden flex flex-col">
+            {/* Popup Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <span>📹</span>
+                    Available Videos
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {selectedChannel.channel_name} • {filteredVideosList.length} videos
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowVideoList(false);
+                    setSelectedChannel(null);
+                    setChannelVideosList([]);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              {/* Category Filter */}
+              {videoCategories.length > 1 && (
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
+                  <span className="text-xs text-gray-500">Filter:</span>
+                  <button
+                    onClick={() => setVideosCategoryFilter('all')}
+                    className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                      videosCategoryFilter === 'all'
+                        ? 'bg-gray-800 text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    All ({channelVideosList.length})
+                  </button>
+                  {videoCategories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setVideosCategoryFilter(cat)}
+                      className={`px-2 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
+                        videosCategoryFilter === cat
+                          ? getCategoryBadgeColor(cat)
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      <span>{getCategoryIcon(cat)}</span>
+                      {cat} ({channelVideosList.filter(v => (v.detected_category || 'Other') === cat).length})
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Popup Content */}
+            <div className="flex-1 overflow-y-auto p-4">
+              {videosLoading ? (
+                <div className="flex justify-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+                </div>
+              ) : filteredVideosList.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  No available videos in this channel
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {filteredVideosList.map((video, idx) => (
+                    <div
+                      key={video.video_id || idx}
+                      className="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex gap-3">
+                        {/* Thumbnail */}
+                        {video.thumbnail && (
+                          <a
+                            href={video.video_url || `https://www.youtube.com/watch?v=${video.video_id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-shrink-0"
+                          >
+                            <img
+                              src={video.thumbnail}
+                              alt=""
+                              className="w-32 h-20 object-cover rounded"
+                            />
+                          </a>
+                        )}
+                        
+                        {/* Video Info */}
+                        <div className="flex-1 min-w-0">
+                          <a
+                            href={video.video_url || `https://www.youtube.com/watch?v=${video.video_id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-medium text-gray-900 hover:text-red-600 line-clamp-2"
+                          >
+                            {video.title}
+                          </a>
+                          
+                          <div className="flex items-center gap-2 mt-2 flex-wrap">
+                            {/* Category Badge */}
+                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${getCategoryBadgeColor(video.detected_category || 'Other')}`}>
+                              <span>{getCategoryIcon(video.detected_category || 'Other')}</span>
+                              {video.detected_category || 'Other'}
+                            </span>
+                            
+                            {/* Language Badge */}
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                              🌐 {video.detected_language || (video.languages && video.languages[0]) || 'Unknown'}
+                            </span>
+                            
+                            {/* Date */}
+                            <span className="text-xs text-gray-500">
+                              📅 {formatShortDate(video.published_at)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Popup Footer */}
+            <div className="border-t border-gray-200 px-6 py-3 bg-gray-50 flex justify-end">
+              <button
+                onClick={() => {
+                  setShowVideoList(false);
+                  setSelectedChannel(null);
+                  setChannelVideosList([]);
+                }}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
