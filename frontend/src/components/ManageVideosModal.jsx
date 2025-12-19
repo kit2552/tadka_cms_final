@@ -412,6 +412,10 @@ const ManageVideosModal = ({ onClose }) => {
                     <option value="production_house">Production Houses</option>
                     <option value="music_label">Music Labels</option>
                     <option value="popular_channel">Popular Channels</option>
+                    <option value="movie_channel">Movie Channels</option>
+                    <option value="news_channel">News Channels</option>
+                    <option value="tv_channel">TV Channels</option>
+                    <option value="reality_show">Reality Shows</option>
                   </select>
                 </div>
 
