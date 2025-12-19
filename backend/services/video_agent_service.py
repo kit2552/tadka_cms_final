@@ -228,6 +228,39 @@ class VideoAgentService:
             return ['t-series', 'yash raj films', 'dharma productions', 'aditya music', 
                    'sony music', 'zee music', 'official', 'verified']
     
+    def _get_top_channels_for_language(self, language: str, limit: int = 5) -> List[str]:
+        """Get top priority channels for a specific language"""
+        try:
+            # Map common language names to database values
+            lang_map = {
+                'hindi': 'Hindi',
+                'bollywood': 'Hindi',
+                'telugu': 'Telugu',
+                'tollywood': 'Telugu',
+                'tamil': 'Tamil',
+                'kollywood': 'Tamil',
+                'kannada': 'Kannada',
+                'sandalwood': 'Kannada',
+                'malayalam': 'Malayalam',
+                'mollywood': 'Malayalam',
+                'bengali': 'Bengali',
+                'marathi': 'Marathi',
+                'punjabi': 'Punjabi'
+            }
+            
+            db_language = lang_map.get(language.lower(), language)
+            
+            query = {"is_active": True, "languages": db_language}
+            channels = list(db.youtube_channels.find(query, {"_id": 0, "channel_name": 1})
+                          .sort("priority", -1).limit(limit))
+            
+            channel_names = [ch['channel_name'] for ch in channels]
+            print(f"📺 Top {len(channel_names)} channels for {db_language}: {channel_names}")
+            return channel_names
+        except Exception as e:
+            print(f"⚠️ Error getting top channels: {e}")
+            return []
+    
     async def search_trailers_teasers(self, language: str, movie_name: Optional[str] = None) -> List[Dict]:
         """Search for official movie trailers and teasers from verified channels only"""
         # Get top official channels from database for this language
