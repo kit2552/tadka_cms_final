@@ -383,7 +383,7 @@ class VideoAgentService:
                     "image": video['thumbnail'],  # Use 'image' instead of 'featured_image'
                     "category": agent_category,  # Use category from agent config
                     "states": f'["{target_state}"]',  # Use 'states' field as JSON string array
-                    "status": "draft",
+                    "status": content_workflow,  # Use workflow status from agent config
                     "source": "YouTube",
                     "source_url": youtube_url,
                     "seo_title": clean_title[:60],
@@ -401,6 +401,7 @@ class VideoAgentService:
                 print(f"   States: {target_state}")
                 print(f"   YouTube URL: {youtube_url}")
                 print(f"   Content Type: {article_data['content_type']}")
+                print(f"   Status: {content_workflow}")
                 print(f"   Article Language: {agent_article_language}")
                 
                 # Create the article
