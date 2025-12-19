@@ -124,6 +124,14 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.warning(f"⚠️ Scheduler initialization failed: {e}")
         
+        logger.info("Step 5: Initializing YouTube RSS scheduler...")
+        try:
+            from services.youtube_rss_scheduler import youtube_rss_scheduler
+            youtube_rss_scheduler.initialize()
+            logger.info("✅ YouTube RSS scheduler initialized")
+        except Exception as e:
+            logger.warning(f"⚠️ YouTube RSS scheduler initialization failed: {e}")
+        
         logger.info("""
         ========================================
         ✅ STARTUP COMPLETE - SERVER READY
