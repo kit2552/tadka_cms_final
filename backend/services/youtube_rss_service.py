@@ -108,11 +108,24 @@ class YouTubeRSSService:
                         # Detect video category from title
                         detected_category = self._detect_video_category(title, description, video_url)
                         
+                        # Check if video is a YouTube Short
+                        title_lower = title.lower()
+                        is_short = (
+                            '/shorts/' in video_url or 
+                            '#shorts' in title_lower or 
+                            '#short' in title_lower or
+                            detected_category == 'Shorts'
+                        )
+                        
+                        # Filter out Shorts for news, production house, music label, popular channels
+                        if channel_type in ['news_channel', 'production_house', 'music_label', 'popular_channel']:
+                            if is_short:
+                                continue  # Skip Shorts for these channel types
+                        
                         # For movie_channel type, only keep full-length movies
                         if channel_type == 'movie_channel':
                             if detected_category != 'Full Movie':
                                 # Check if title suggests it's a full movie
-                                title_lower = title.lower()
                                 is_full_movie = any(kw in title_lower for kw in [
                                     'full movie', 'full film', 'complete movie', 'hd movie',
                                     'superhit movie', 'blockbuster movie', 'latest movie'
@@ -124,7 +137,7 @@ class YouTubeRSSService:
                                     '#shorts', 'shorts', 'best scenes', 'comedy scenes'
                                 ])
                                 # Also skip YouTube Shorts
-                                if '/shorts/' in video_url:
+                                if is_short:
                                     is_not_movie = True
                                 
                                 if is_not_movie or not is_full_movie:
