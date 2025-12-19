@@ -2129,6 +2129,262 @@ const SystemSettings = () => {
               </div>
             )}
 
+            {activeTab === 'youtube-channels' && (
+              <div className="space-y-6">
+                {/* Header with actions */}
+                <div className="flex items-center justify-between">
+                  <div className="text-left">
+                    <h3 className="text-lg font-medium text-gray-900">YouTube Channels</h3>
+                    <p className="text-sm text-gray-600">Manage official YouTube channels for video content</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={seedDefaultChannels}
+                      disabled={youtubeChannelsLoading}
+                      className="px-4 py-2 text-sm text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 disabled:opacity-50"
+                    >
+                      {youtubeChannelsLoading ? 'Loading...' : 'Load Default Channels'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingYoutubeChannel(null);
+                        setYoutubeChannelForm({ channel_name: '', channel_id: '', channel_type: 'production_house', languages: [], is_active: true, priority: 5 });
+                        setShowYoutubeChannelModal(true);
+                      }}
+                      className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                    >
+                      Add Channel
+                    </button>
+                  </div>
+                </div>
+
+                {/* Filters */}
+                <div className="flex gap-4 bg-gray-50 p-4 rounded-lg">
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-gray-700 mb-1 text-left">Filter by Language</label>
+                    <select
+                      value={youtubeLanguageFilter}
+                      onChange={(e) => setYoutubeLanguageFilter(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">All Languages</option>
+                      {youtubeLanguages.map(lang => (
+                        <option key={lang.value} value={lang.value}>{lang.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-gray-700 mb-1 text-left">Filter by Type</label>
+                    <select
+                      value={youtubeTypeFilter}
+                      onChange={(e) => setYoutubeTypeFilter(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">All Types</option>
+                      {youtubeChannelTypes.map(type => (
+                        <option key={type.value} value={type.value}>{type.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Channels count */}
+                <div className="text-sm text-gray-600 text-left">
+                  Showing {youtubeChannels.length} channels
+                </div>
+
+                {/* Channels list */}
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Channel Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Languages</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {youtubeChannelsLoading ? (
+                        <tr>
+                          <td colSpan={6} className="px-4 py-8 text-center text-gray-500">Loading...</td>
+                        </tr>
+                      ) : youtubeChannels.length === 0 ? (
+                        <tr>
+                          <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                            No channels found. Click "Load Default Channels" to populate with Indian movie channels.
+                          </td>
+                        </tr>
+                      ) : youtubeChannels.map(channel => (
+                        <tr key={channel.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-3">
+                            <div className="font-medium text-gray-900 text-left">{channel.channel_name}</div>
+                            {channel.channel_id && (
+                              <div className="text-xs text-gray-500 text-left">{channel.channel_id}</div>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-left">
+                            <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
+                              channel.channel_type === 'production_house' ? 'bg-purple-100 text-purple-800' :
+                              channel.channel_type === 'music_label' ? 'bg-blue-100 text-blue-800' :
+                              'bg-green-100 text-green-800'
+                            }`}>
+                              {youtubeChannelTypes.find(t => t.value === channel.channel_type)?.label || channel.channel_type}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-left">
+                            <div className="flex flex-wrap gap-1">
+                              {channel.languages.map(lang => (
+                                <span key={lang} className="inline-flex px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded">
+                                  {lang}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-left">
+                            <span className="text-sm text-gray-600">{channel.priority}</span>
+                          </td>
+                          <td className="px-4 py-3 text-left">
+                            <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
+                              channel.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            }`}>
+                              {channel.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <button
+                              onClick={() => editYoutubeChannel(channel)}
+                              className="text-blue-600 hover:text-blue-800 text-sm mr-3"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => deleteYoutubeChannel(channel.id)}
+                              className="text-red-600 hover:text-red-800 text-sm"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* YouTube Channel Modal */}
+            {showYoutubeChannelModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+                  <div className="p-4 border-b border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {editingYoutubeChannel ? 'Edit Channel' : 'Add New Channel'}
+                    </h3>
+                  </div>
+                  <form onSubmit={handleYoutubeChannelSubmit} className="p-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">Channel Name *</label>
+                      <input
+                        type="text"
+                        required
+                        value={youtubeChannelForm.channel_name}
+                        onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, channel_name: e.target.value }))}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g., T-Series, Yash Raj Films"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">YouTube Channel ID (optional)</label>
+                      <input
+                        type="text"
+                        value={youtubeChannelForm.channel_id}
+                        onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, channel_id: e.target.value }))}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g., UCq-Fj5jknLsUf-MWSy4_brA"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">Channel Type *</label>
+                      <select
+                        required
+                        value={youtubeChannelForm.channel_type}
+                        onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, channel_type: e.target.value }))}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      >
+                        {youtubeChannelTypes.map(type => (
+                          <option key={type.value} value={type.value}>{type.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">Languages *</label>
+                      <div className="flex flex-wrap gap-2">
+                        {youtubeLanguages.map(lang => (
+                          <button
+                            key={lang.value}
+                            type="button"
+                            onClick={() => toggleYoutubeLanguage(lang.value)}
+                            className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+                              youtubeChannelForm.languages.includes(lang.value)
+                                ? 'bg-blue-600 text-white border-blue-600'
+                                : 'bg-white text-gray-700 border-gray-300 hover:border-blue-300'
+                            }`}
+                          >
+                            {lang.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-1 text-left">Priority (1-10)</label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="10"
+                          value={youtubeChannelForm.priority}
+                          onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, priority: parseInt(e.target.value) || 5 }))}
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div className="flex-1 flex items-end">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={youtubeChannelForm.is_active}
+                            onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, is_active: e.target.checked }))}
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                          <span className="text-sm text-gray-700">Active</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowYoutubeChannelModal(false);
+                          setEditingYoutubeChannel(null);
+                        }}
+                        className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                      >
+                        {editingYoutubeChannel ? 'Update Channel' : 'Add Channel'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
