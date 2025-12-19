@@ -151,8 +151,9 @@ const SystemSettings = () => {
     loadUsers();
     fetchAdSettings();
     loadAIAPIKeys();
-    fetchAllTextModels();
-    fetchAllImageModels();
+    // Don't auto-fetch models - only fetch when user clicks Refresh
+    // fetchAllTextModels();
+    // fetchAllImageModels();
     fetchCategories();
     fetchCategoryPromptMappings();
     fetchYoutubeChannels();
