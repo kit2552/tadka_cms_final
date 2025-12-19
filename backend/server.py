@@ -2215,6 +2215,7 @@ app.include_router(ad_settings_router, prefix="/api")  # Add ad settings routes
 app.include_router(artists_router, prefix="/api")  # Add artists routes
 app.include_router(ai_agents_router, prefix="/api")  # Add AI agents routes
 app.include_router(youtube_channels_router, prefix="/api")  # Add YouTube channels routes
+app.include_router(youtube_rss_router, prefix="/api")  # Add YouTube RSS routes
 
 app.add_middleware(
     CORSMiddleware,
