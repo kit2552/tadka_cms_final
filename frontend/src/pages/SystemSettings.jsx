@@ -2623,6 +2623,67 @@ const SystemSettings = () => {
               <ManageVideosModal onClose={() => setShowManageVideosModal(false)} />
             )}
 
+            {/* Edit Channel Refresh Modal - URL Input */}
+            {showEditRefreshModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+                <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+                  <div className="p-4 border-b border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900 text-left">Refresh Channel Details</h3>
+                    <p className="text-sm text-gray-600 text-left mt-1">Enter a YouTube channel URL to update channel ID and RSS feed</p>
+                  </div>
+                  <div className="p-4 space-y-4">
+                    {/* Error Alert */}
+                    {editRefreshError && (
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
+                        <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                        <div className="text-sm text-red-700 text-left">{editRefreshError}</div>
+                      </div>
+                    )}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">YouTube Channel URL</label>
+                      <input
+                        type="text"
+                        value={editRefreshUrlInput}
+                        onChange={(e) => {
+                          setEditRefreshUrlInput(e.target.value);
+                          setEditRefreshError('');
+                        }}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="https://www.youtube.com/@ChannelName or channel URL"
+                      />
+                      <p className="text-xs text-gray-500 mt-1 text-left">
+                        Supports: youtube.com/@handle, youtube.com/c/name, youtube.com/channel/ID, youtube.com/user/name
+                      </p>
+                    </div>
+                  </div>
+                  <div className="p-4 border-t border-gray-200 flex justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowEditRefreshModal(false);
+                        setEditRefreshUrlInput('');
+                        setEditRefreshError('');
+                      }}
+                      className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                      disabled={extractingEditChannel}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={extractEditChannelDetails}
+                      disabled={extractingEditChannel || !editRefreshUrlInput.trim()}
+                      className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {extractingEditChannel ? 'Extracting...' : 'Get Channel Details'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
