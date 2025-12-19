@@ -865,6 +865,7 @@ const SystemSettings = () => {
         }));
         setShowEditRefreshModal(false);
         setEditRefreshUrlInput('');
+        setChannelRefreshed(true); // Mark that channel was refreshed to trigger video fetch on save
       } else {
         const error = await response.json();
         setEditRefreshError(error.detail || 'Failed to extract channel details');
