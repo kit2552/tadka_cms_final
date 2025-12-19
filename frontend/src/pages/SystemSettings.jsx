@@ -791,10 +791,11 @@ const SystemSettings = () => {
 
   const extractChannelDetails = async () => {
     if (!channelUrlInput.trim()) {
-      setMessage({ type: 'error', text: 'Please enter a YouTube channel URL' });
+      setChannelUrlError('Please enter a YouTube channel URL');
       return;
     }
     
+    setChannelUrlError('');
     setExtractingChannel(true);
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/extract-details`, {
@@ -813,15 +814,16 @@ const SystemSettings = () => {
           languages: [],
           is_active: true
         });
+        setChannelModalError('');
         setShowChannelUrlModal(false);
         setShowYoutubeChannelModal(true);
         setChannelUrlInput('');
       } else {
         const error = await response.json();
-        setMessage({ type: 'error', text: error.detail || 'Failed to extract channel details' });
+        setChannelUrlError(error.detail || 'Failed to extract channel details');
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to extract channel details' });
+      setChannelUrlError('Failed to extract channel details');
     } finally {
       setExtractingChannel(false);
     }
