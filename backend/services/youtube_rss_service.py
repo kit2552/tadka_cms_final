@@ -106,6 +106,29 @@ class YouTubeRSSService:
                         # Detect video category from title
                         detected_category = self._detect_video_category(title, description, video_url)
                         
+                        # For movie_channel type, only keep full-length movies
+                        if channel_type == 'movie_channel':
+                            if detected_category != 'Full Movie':
+                                # Check if title suggests it's a full movie
+                                title_lower = title.lower()
+                                is_full_movie = any(kw in title_lower for kw in [
+                                    'full movie', 'full film', 'complete movie', 'hd movie',
+                                    'superhit movie', 'blockbuster movie', 'latest movie'
+                                ])
+                                # Skip shorts, trailers, promos, songs etc
+                                is_not_movie = any(kw in title_lower for kw in [
+                                    'trailer', 'teaser', 'promo', 'song', 'scene', 'clip',
+                                    'making', 'behind', 'interview', 'review', 'glimpse',
+                                    '#shorts', 'shorts', 'best scenes', 'comedy scenes'
+                                ])
+                                # Also skip YouTube Shorts
+                                if '/shorts/' in video_url:
+                                    is_not_movie = True
+                                
+                                if is_not_movie or not is_full_movie:
+                                    continue  # Skip non-movie content
+                                detected_category = 'Full Movie'
+                        
                         # Parse published date
                         try:
                             published_datetime = datetime.fromisoformat(published_at.replace('Z', '+00:00'))
