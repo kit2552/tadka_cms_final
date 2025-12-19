@@ -3411,11 +3411,13 @@ const Dashboard = () => {
                         </div>
                         
                         {/* Details Column */}
-                        <div className="col-span-4">
+                        <div className="col-span-5">
                           <div className="space-y-1 text-left">
                             <div className="flex flex-wrap gap-2 text-xs">
                               <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-100 text-gray-700 border border-gray-200">
-                                By {article.author}
+                                By {article.author === 'AI Agent' && article.agent_name 
+                                  ? `${article.agent_name} AI Agent` 
+                                  : article.author}
                               </span>
                             </div>
                             <div className="flex flex-wrap gap-2 text-xs">
@@ -3429,59 +3431,24 @@ const Dashboard = () => {
                           </div>
                         </div>
                         
-                        {/* Actions Column */}
-                        <div className="col-span-3 text-right">
-                          <div className="flex justify-end gap-2">
-                            <button
-                              onClick={() => handleManageTopics(article)}
-                              className="text-blue-600 hover:text-blue-800 text-xs px-2 py-1 rounded border border-blue-200 hover:bg-blue-50"
-                            >
-                              Topics
-                            </button>
-                            {/* Show Related Videos button only for video articles */}
-                            {article.youtube_url && (
-                              <button
-                                onClick={() => handleManageRelatedVideos(article)}
-                                className="text-purple-600 hover:text-purple-800 text-xs px-2 py-1 rounded border border-purple-200 hover:bg-purple-50"
-                                title="Manage Related Videos"
-                              >
-                                Related Videos
-                              </button>
-                            )}
-                            <Link
-                              to={`/cms/edit/${article.id}`}
-                              className="text-gray-600 hover:text-gray-800 text-xs px-2 py-1 rounded border border-gray-200 hover:bg-gray-50"
-                            >
-                              Edit
-                            </Link>
-                            <Link
-                              to={`/cms/preview/${article.id}`}
-                              onClick={() => {
-                                // Save scroll position before navigating
-                                sessionStorage.setItem('cms_scroll_position', window.scrollY.toString());
-                                sessionStorage.setItem('cms_current_page', currentPage.toString());
-                              }}
-                              className="text-green-600 hover:text-green-800 text-xs px-2 py-1 rounded border border-green-200 hover:bg-green-50"
-                            >
-                              Preview
-                            </Link>
-                            <button
-                              onClick={() => handleWorkflowAction(article.id)}
-                              className={`text-xs px-2 py-1 rounded border ${
-                                (article.status === 'published' || article.is_published)
-                                  ? 'text-orange-600 hover:text-orange-800 border-orange-200 hover:bg-orange-50' 
-                                  : 'text-green-600 hover:text-green-800 border-green-200 hover:bg-green-50'
-                              }`}
-                            >
-                              {getNextWorkflowStatus(article).label}
-                            </button>
-                            <button
-                              onClick={() => handleDeleteArticle(article.id, article.title)}
-                              className="text-red-600 hover:text-red-800 text-xs px-2 py-1 rounded border border-red-200 hover:bg-red-50"
-                            >
-                              Delete
-                            </button>
-                          </div>
+                        {/* Actions Column - 3 dots menu */}
+                        <div className="col-span-2 text-right">
+                          <button
+                            onClick={() => setActionMenu({ 
+                              show: true, 
+                              articleId: article.id, 
+                              article: article,
+                              scrollPosition: window.scrollY 
+                            })}
+                            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                            title="Actions"
+                          >
+                            <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                              <circle cx="12" cy="5" r="2"/>
+                              <circle cx="12" cy="12" r="2"/>
+                              <circle cx="12" cy="19" r="2"/>
+                            </svg>
+                          </button>
                         </div>
                       </div>
                     ))}
