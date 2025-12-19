@@ -49,6 +49,7 @@ class AIAPIKeysConfig(BaseModel):
     openai_api_key: Optional[str] = None
     gemini_api_key: Optional[str] = None
     anthropic_api_key: Optional[str] = None
+    youtube_api_key: Optional[str] = None  # YouTube Data API v3 key
     openai_default_model: Optional[str] = None
     gemini_default_model: Optional[str] = None
     anthropic_default_model: Optional[str] = None
