@@ -285,3 +285,187 @@ async def seed_default_channels():
         created += 1
     
     return {"message": f"Seeded {created} channels, skipped {skipped} existing"}
+
+
+@router.post("/seed-extended")
+async def seed_extended_channels():
+    """Seed additional channels: Movie Channels, News Channels, TV Channels, Reality Shows"""
+    extended_channels = [
+        # ========== MOVIE CHANNELS (Full Length Movies) ==========
+        # Hindi Movie Channels
+        {"channel_name": "Goldmines", "channel_id": "UCyoXW-Dse7fURq30EWl_CUA", "channel_type": "movie_channel", "languages": ["Hindi", "Multi"], "priority": 10},
+        {"channel_name": "Goldmines Telefilms", "channel_id": "UCXIcN2C8xgmvuOtX1v0FENw", "channel_type": "movie_channel", "languages": ["Hindi"], "priority": 9},
+        {"channel_name": "Shemaroo Movies", "channel_id": "UCF1JIbMUs6uqoZEY1Haw0GQ", "channel_type": "movie_channel", "languages": ["Hindi"], "priority": 9},
+        {"channel_name": "Ultra Movie Parlour", "channel_id": "UCo76UeCi9ybV13rPzMqfYdA", "channel_type": "movie_channel", "languages": ["Hindi"], "priority": 8},
+        {"channel_name": "NH Studioz", "channel_id": "UC_p5HFAGmIL8aPnAvU3M8kQ", "channel_type": "movie_channel", "languages": ["Hindi"], "priority": 8},
+        {"channel_name": "Rajshri", "channel_id": "UCFxWkWH5zSTJtLO4CXhvP5A", "channel_type": "movie_channel", "languages": ["Hindi"], "priority": 8},
+        {"channel_name": "Pen Movies", "channel_id": "UCPTxuUK-VJk56IYNpHb4xYg", "channel_type": "movie_channel", "languages": ["Hindi"], "priority": 8},
+        
+        # Telugu Movie Channels
+        {"channel_name": "Mango Telugu Cinema", "channel_id": "UCqOQ9xBq0_ubrXQlnM_n8Yw", "channel_type": "movie_channel", "languages": ["Telugu"], "priority": 10},
+        {"channel_name": "Telugu FilmNagar", "channel_id": "UCnJjcn5FrgrOEp5_N45ZLEQ", "channel_type": "movie_channel", "languages": ["Telugu"], "priority": 9},
+        {"channel_name": "iDream Telugu Movies", "channel_id": "UCfMAvufcxvLFqEWE4pQFbJA", "channel_type": "movie_channel", "languages": ["Telugu"], "priority": 9},
+        {"channel_name": "Telugu Full Movies", "channel_id": "UC5Z3tJLfrL-V-Rv7tRgJvWw", "channel_type": "movie_channel", "languages": ["Telugu"], "priority": 8},
+        {"channel_name": "Sri Balaji Full Movies", "channel_id": "UCgYhw8dR4VB6G2u58vIlmqQ", "channel_type": "movie_channel", "languages": ["Telugu"], "priority": 8},
+        
+        # Tamil Movie Channels
+        {"channel_name": "Tamil Full Movies", "channel_id": "UCpLKMt_S6h_Q3CtFJlMoiUA", "channel_type": "movie_channel", "languages": ["Tamil"], "priority": 9},
+        {"channel_name": "AP International", "channel_id": "UCWGFb3hJQV8VKpK5J6ZJrpA", "channel_type": "movie_channel", "languages": ["Tamil"], "priority": 8},
+        
+        # Kannada Movie Channels
+        {"channel_name": "Kannada Full Movies", "channel_id": "UCYr3u4v6jT3R0kZ0R5U5r5Q", "channel_type": "movie_channel", "languages": ["Kannada"], "priority": 8},
+        
+        # Malayalam Movie Channels
+        {"channel_name": "Malayalam Full Movies", "channel_id": "UCXDGbkl6e-l-8U9NvFqWevA", "channel_type": "movie_channel", "languages": ["Malayalam"], "priority": 8},
+        
+        # ========== NEWS CHANNELS ==========
+        # National News Channels
+        {"channel_name": "NDTV", "channel_id": "UCttspZesZIDEwwpVIgoZtWQ", "channel_type": "news_channel", "languages": ["Hindi", "English"], "priority": 10},
+        {"channel_name": "India Today", "channel_id": "UCYPvAwZP8pZhSMW8qs7cVCw", "channel_type": "news_channel", "languages": ["English"], "priority": 10},
+        {"channel_name": "Aaj Tak", "channel_id": "UCt4t-jeY85JegMlZ-E5UWtA", "channel_type": "news_channel", "languages": ["Hindi"], "priority": 10},
+        {"channel_name": "ABP News", "channel_id": "UCRWFSbif-RFENbBrSiez1DA", "channel_type": "news_channel", "languages": ["Hindi"], "priority": 9},
+        {"channel_name": "Zee News", "channel_id": "UCIvaYmXn910QMdemBG3v1pQ", "channel_type": "news_channel", "languages": ["Hindi"], "priority": 9},
+        {"channel_name": "Republic World", "channel_id": "UCwqusr8YDwM-0SFcDPDrVOQ", "channel_type": "news_channel", "languages": ["English"], "priority": 9},
+        {"channel_name": "Times Now", "channel_id": "UCHoxB8YJhG_p6FckBfjIDqA", "channel_type": "news_channel", "languages": ["English"], "priority": 9},
+        {"channel_name": "News18 India", "channel_id": "UCaq1lGsphbqKxCezpgbshLg", "channel_type": "news_channel", "languages": ["Hindi"], "priority": 8},
+        {"channel_name": "DD News", "channel_id": "UCGzA5R8HscSPLXCYWj_yXHA", "channel_type": "news_channel", "languages": ["Hindi", "English"], "priority": 8},
+        {"channel_name": "WION", "channel_id": "UC_gUM8rL-Lrg6O3adPW9K1g", "channel_type": "news_channel", "languages": ["English"], "priority": 8},
+        
+        # Telugu News Channels
+        {"channel_name": "TV9 Telugu", "channel_id": "UC3Zs7WxhODGGjgtL3ufP7pQ", "channel_type": "news_channel", "languages": ["Telugu"], "priority": 10},
+        {"channel_name": "NTV Telugu", "channel_id": "UCumtGkPBapFxHK4gDw6KJdQ", "channel_type": "news_channel", "languages": ["Telugu"], "priority": 9},
+        {"channel_name": "ABN Telugu", "channel_id": "UCC8WgKCu8rS7r88V4V5n-aQ", "channel_type": "news_channel", "languages": ["Telugu"], "priority": 9},
+        {"channel_name": "Sakshi TV", "channel_id": "UCB_IQoXVm3aJo9YCLVX-6Ug", "channel_type": "news_channel", "languages": ["Telugu"], "priority": 9},
+        {"channel_name": "V6 News Telugu", "channel_id": "UCWaibMqSPG_MxEEf4cJEu-Q", "channel_type": "news_channel", "languages": ["Telugu"], "priority": 8},
+        {"channel_name": "10TV Telugu", "channel_id": "UCbVH3X00_Y89sEMUEuM-WPw", "channel_type": "news_channel", "languages": ["Telugu"], "priority": 8},
+        {"channel_name": "ETV Andhra Pradesh", "channel_id": "UCPVuQHVF8JJh7TwGAHw2WJQ", "channel_type": "news_channel", "languages": ["Telugu"], "priority": 8},
+        
+        # Tamil News Channels
+        {"channel_name": "Sun News", "channel_id": "UC2Bjr0F_uKPrdeTjsGWFqXQ", "channel_type": "news_channel", "languages": ["Tamil"], "priority": 10},
+        {"channel_name": "Thanthi TV", "channel_id": "UCqOQ9xBq0_ubrXQlnM_n8Yw", "channel_type": "news_channel", "languages": ["Tamil"], "priority": 9},
+        {"channel_name": "Puthiya Thalaimurai TV", "channel_id": "UCuGCjJw5pBfqHqL7pKsIqbQ", "channel_type": "news_channel", "languages": ["Tamil"], "priority": 9},
+        {"channel_name": "Polimer News", "channel_id": "UC_sjLNVAy38y4N3IgexLx3g", "channel_type": "news_channel", "languages": ["Tamil"], "priority": 8},
+        
+        # Kannada News Channels
+        {"channel_name": "TV9 Kannada", "channel_id": "UCrJsqhA97NUMIaKP9ftqHjQ", "channel_type": "news_channel", "languages": ["Kannada"], "priority": 10},
+        {"channel_name": "Public TV", "channel_id": "UCpuP3PD_BTHM2g5gJgMy8hg", "channel_type": "news_channel", "languages": ["Kannada"], "priority": 9},
+        
+        # Malayalam News Channels
+        {"channel_name": "Asianet News", "channel_id": "UCj-Z8fNjtwdqTl3Fhz7_Rdg", "channel_type": "news_channel", "languages": ["Malayalam"], "priority": 10},
+        {"channel_name": "Manorama News", "channel_id": "UCiyIpTN1Ll57cjLRbdgLGZA", "channel_type": "news_channel", "languages": ["Malayalam"], "priority": 10},
+        {"channel_name": "Mathrubhumi News", "channel_id": "UCzz4coGljuvHqGH65KPd4LA", "channel_type": "news_channel", "languages": ["Malayalam"], "priority": 9},
+        
+        # Bengali News Channels
+        {"channel_name": "ABP Ananda", "channel_id": "UCgNgBBiWDwKINLmqnpUz6_A", "channel_type": "news_channel", "languages": ["Bengali"], "priority": 9},
+        {"channel_name": "Zee 24 Ghanta", "channel_id": "UC_wKoBgrNEMFi49WEgCpn8A", "channel_type": "news_channel", "languages": ["Bengali"], "priority": 9},
+        
+        # Marathi News Channels  
+        {"channel_name": "ABP Majha", "channel_id": "UCYJLVxPsCAaXaWQrEXOoq0w", "channel_type": "news_channel", "languages": ["Marathi"], "priority": 9},
+        {"channel_name": "TV9 Marathi", "channel_id": "UCzNxdLbjI5k_GWE8hxRqKZA", "channel_type": "news_channel", "languages": ["Marathi"], "priority": 9},
+        
+        # ========== TV CHANNELS (Entertainment & Serials) ==========
+        # Hindi TV Channels
+        {"channel_name": "SET India", "channel_id": "UCpEhnqL0y41EpW2TvWAHD7Q", "channel_type": "tv_channel", "languages": ["Hindi"], "priority": 10},
+        {"channel_name": "Colors TV", "channel_id": "UCZf2Rs32KraSORu3-1rnitw", "channel_type": "tv_channel", "languages": ["Hindi"], "priority": 10},
+        {"channel_name": "Zee TV", "channel_id": "UC5hwFk32SbqUGNxFN-pRLUQ", "channel_type": "tv_channel", "languages": ["Hindi"], "priority": 10},
+        {"channel_name": "Star Plus", "channel_id": "UCiyIp5R_U2YfqgGvNapXFdg", "channel_type": "tv_channel", "languages": ["Hindi"], "priority": 10},
+        {"channel_name": "SAB TV", "channel_id": "UC6-F5tO8uklgE9Zy8IvbdFw", "channel_type": "tv_channel", "languages": ["Hindi"], "priority": 9},
+        {"channel_name": "Star Bharat", "channel_id": "UCqJfVYA4cWsUcR8xd4VqLKw", "channel_type": "tv_channel", "languages": ["Hindi"], "priority": 8},
+        
+        # Telugu TV Channels
+        {"channel_name": "Star Maa", "channel_id": "UC8Chy6L5M5Fh_UBWZ-Y1TeA", "channel_type": "tv_channel", "languages": ["Telugu"], "priority": 10},
+        {"channel_name": "Zee Telugu", "channel_id": "UCHpUvMRSQccdpYG1cWLBu5Q", "channel_type": "tv_channel", "languages": ["Telugu"], "priority": 10},
+        {"channel_name": "Gemini TV", "channel_id": "UC5Z3tJLfrL-V-Rv7tRgJvWw", "channel_type": "tv_channel", "languages": ["Telugu"], "priority": 9},
+        {"channel_name": "ETV Telugu", "channel_id": "UCPVuQHVF8JJh7TwGAHw2WJQ", "channel_type": "tv_channel", "languages": ["Telugu"], "priority": 9},
+        
+        # Tamil TV Channels
+        {"channel_name": "Sun TV", "channel_id": "UC5Sb_aSSqyHQ8E34yQ6HLiA", "channel_type": "tv_channel", "languages": ["Tamil"], "priority": 10},
+        {"channel_name": "Zee Tamil", "channel_id": "UC0MfxNJhzwBmwgI0MYNcdwQ", "channel_type": "tv_channel", "languages": ["Tamil"], "priority": 10},
+        {"channel_name": "Star Vijay", "channel_id": "UCiPPAOa1I2CUJKXhHoTbmug", "channel_type": "tv_channel", "languages": ["Tamil"], "priority": 10},
+        {"channel_name": "Colors Tamil", "channel_id": "UCi7HmjqD9MU4P_1-mJp4-VQ", "channel_type": "tv_channel", "languages": ["Tamil"], "priority": 9},
+        
+        # Kannada TV Channels
+        {"channel_name": "Zee Kannada", "channel_id": "UCqxf4Y2uHj1RuGVhQWbZspQ", "channel_type": "tv_channel", "languages": ["Kannada"], "priority": 10},
+        {"channel_name": "Colors Kannada", "channel_id": "UCRPiF1L2qBLIefBXWqjPNzQ", "channel_type": "tv_channel", "languages": ["Kannada"], "priority": 9},
+        {"channel_name": "Star Suvarna", "channel_id": "UC5q3JgIwWrFnJP0hADPdDKA", "channel_type": "tv_channel", "languages": ["Kannada"], "priority": 9},
+        
+        # Malayalam TV Channels
+        {"channel_name": "Asianet", "channel_id": "UCj2d_8sZQgrPJaKkdWKcT5A", "channel_type": "tv_channel", "languages": ["Malayalam"], "priority": 10},
+        {"channel_name": "Zee Keralam", "channel_id": "UCv3BnBGlmWJVzRhCdJHjdBA", "channel_type": "tv_channel", "languages": ["Malayalam"], "priority": 9},
+        {"channel_name": "Mazhavil Manorama", "channel_id": "UCqppS4-VaFvq1NC9HjLWo2A", "channel_type": "tv_channel", "languages": ["Malayalam"], "priority": 9},
+        
+        # Bengali TV Channels
+        {"channel_name": "Zee Bangla", "channel_id": "UCOTFy5fZ09U6RPgvPk_-f3g", "channel_type": "tv_channel", "languages": ["Bengali"], "priority": 10},
+        {"channel_name": "Star Jalsha", "channel_id": "UC2ksXQEiVlFYt1xMWWZJ8_w", "channel_type": "tv_channel", "languages": ["Bengali"], "priority": 9},
+        {"channel_name": "Colors Bangla", "channel_id": "UCTd0kCZz8jSZCr-1-T79wKQ", "channel_type": "tv_channel", "languages": ["Bengali"], "priority": 9},
+        
+        # Marathi TV Channels
+        {"channel_name": "Zee Marathi", "channel_id": "UCVJpR7SQnBwjzLqhaMBrX5g", "channel_type": "tv_channel", "languages": ["Marathi"], "priority": 10},
+        {"channel_name": "Colors Marathi", "channel_id": "UCyDl3TgKCP7PCvl-qMPqFWQ", "channel_type": "tv_channel", "languages": ["Marathi"], "priority": 9},
+        {"channel_name": "Star Pravah", "channel_id": "UCnF46TWTJS6P2a1opZ5gIiQ", "channel_type": "tv_channel", "languages": ["Marathi"], "priority": 9},
+        
+        # ========== REALITY SHOWS ==========
+        # Hindi Reality Shows
+        {"channel_name": "Indian Idol", "channel_id": "UCpEhnqL0y41EpW2TvWAHD7Q", "channel_type": "reality_show", "languages": ["Hindi"], "priority": 10},
+        {"channel_name": "Bigg Boss", "channel_id": "UCZf2Rs32KraSORu3-1rnitw", "channel_type": "reality_show", "languages": ["Hindi"], "priority": 10},
+        {"channel_name": "Khatron Ke Khiladi", "channel_id": "UCZf2Rs32KraSORu3-1rnitw", "channel_type": "reality_show", "languages": ["Hindi"], "priority": 9},
+        {"channel_name": "Dance India Dance", "channel_id": "UC5hwFk32SbqUGNxFN-pRLUQ", "channel_type": "reality_show", "languages": ["Hindi"], "priority": 9},
+        {"channel_name": "The Kapil Sharma Show", "channel_id": "UCpEhnqL0y41EpW2TvWAHD7Q", "channel_type": "reality_show", "languages": ["Hindi"], "priority": 9},
+        {"channel_name": "Kaun Banega Crorepati", "channel_id": "UCpEhnqL0y41EpW2TvWAHD7Q", "channel_type": "reality_show", "languages": ["Hindi"], "priority": 9},
+        {"channel_name": "Sa Re Ga Ma Pa", "channel_id": "UC5hwFk32SbqUGNxFN-pRLUQ", "channel_type": "reality_show", "languages": ["Hindi"], "priority": 8},
+        {"channel_name": "Super Dancer", "channel_id": "UCpEhnqL0y41EpW2TvWAHD7Q", "channel_type": "reality_show", "languages": ["Hindi"], "priority": 8},
+        
+        # Telugu Reality Shows
+        {"channel_name": "Bigg Boss Telugu", "channel_id": "UC8Chy6L5M5Fh_UBWZ-Y1TeA", "channel_type": "reality_show", "languages": ["Telugu"], "priority": 10},
+        {"channel_name": "Telugu Indian Idol", "channel_id": "UCgYTqPLJG9kEEo1OdWpBHPg", "channel_type": "reality_show", "languages": ["Telugu"], "priority": 9},
+        {"channel_name": "Sa Re Ga Ma Pa Telugu", "channel_id": "UCHpUvMRSQccdpYG1cWLBu5Q", "channel_type": "reality_show", "languages": ["Telugu"], "priority": 8},
+        
+        # Tamil Reality Shows
+        {"channel_name": "Bigg Boss Tamil", "channel_id": "UCiPPAOa1I2CUJKXhHoTbmug", "channel_type": "reality_show", "languages": ["Tamil"], "priority": 10},
+        {"channel_name": "Super Singer", "channel_id": "UCiPPAOa1I2CUJKXhHoTbmug", "channel_type": "reality_show", "languages": ["Tamil"], "priority": 9},
+        
+        # Kannada Reality Shows
+        {"channel_name": "Bigg Boss Kannada", "channel_id": "UCRPiF1L2qBLIefBXWqjPNzQ", "channel_type": "reality_show", "languages": ["Kannada"], "priority": 10},
+        
+        # Malayalam Reality Shows
+        {"channel_name": "Bigg Boss Malayalam", "channel_id": "UCj2d_8sZQgrPJaKkdWKcT5A", "channel_type": "reality_show", "languages": ["Malayalam"], "priority": 10},
+    ]
+    
+    created = 0
+    skipped = 0
+    updated = 0
+    
+    for channel_data in extended_channels:
+        # Check if channel exists by name
+        existing = db[YOUTUBE_CHANNELS].find_one({
+            "channel_name": {"$regex": f"^{channel_data['channel_name']}$", "$options": "i"}
+        })
+        
+        if existing:
+            # Update to new type if it's a more specific type
+            if existing.get('channel_type') in ['popular_channel'] and channel_data['channel_type'] in ['movie_channel', 'news_channel', 'tv_channel', 'reality_show']:
+                db[YOUTUBE_CHANNELS].update_one(
+                    {"_id": existing["_id"]},
+                    {"$set": {"channel_type": channel_data["channel_type"], "updated_at": datetime.utcnow()}}
+                )
+                updated += 1
+            else:
+                skipped += 1
+            continue
+        
+        now = datetime.utcnow()
+        channel_doc = {
+            "id": str(uuid.uuid4()),
+            "channel_name": channel_data["channel_name"],
+            "channel_id": channel_data.get("channel_id"),
+            "channel_type": channel_data["channel_type"],
+            "languages": channel_data["languages"],
+            "is_active": True,
+            "priority": channel_data["priority"],
+            "created_at": now,
+            "updated_at": now
+        }
+        db[YOUTUBE_CHANNELS].insert_one(channel_doc)
+        created += 1
+    
+    return {"message": f"Created {created} channels, updated {updated}, skipped {skipped} existing"}
