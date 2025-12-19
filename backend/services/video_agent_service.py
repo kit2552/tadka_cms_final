@@ -369,9 +369,6 @@ class VideoAgentService:
                 # Generate slug from title
                 slug = self._generate_slug(clean_title)
                 
-                # Convert language name to language code for article_language field
-                language_code = self.LANGUAGE_CODE_MAP.get(language, 'en')
-                
                 # Create article with video content type
                 article_data = {
                     "title": clean_title,
@@ -393,7 +390,7 @@ class VideoAgentService:
                     "agent_type": "video",
                     "youtube_video_id": video['video_id'],
                     "channel_name": video.get('channel', ''),
-                    "article_language": language_code  # Use language code (en, te, hi, etc.)
+                    "article_language": agent_article_language  # Use language from agent config
                 }
                 
                 print(f"📝 Creating article:")
