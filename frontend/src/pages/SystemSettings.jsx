@@ -748,7 +748,7 @@ const SystemSettings = () => {
     }
   };
 
-  const handleYoutubeChannelSubmit = async (e) => {
+  const handleYoutubeChannelSubmit = async (e, shouldFetchVideos = false) => {
     if (e) e.preventDefault();
     setChannelModalError('');
     setSavingChannel(true);
@@ -765,18 +765,18 @@ const SystemSettings = () => {
       });
       
       if (response.ok) {
-        const createdChannel = await response.json();
+        const savedChannel = await response.json();
         setShowYoutubeChannelModal(false);
         setEditingYoutubeChannel(null);
         setYoutubeChannelForm({ channel_name: '', channel_id: '', rss_url: '', channel_type: 'production_house', languages: [], is_active: true });
         fetchYoutubeChannels();
         
-        // Auto-fetch RSS videos for newly created channel (show loading modal)
-        if (!editingYoutubeChannel && createdChannel.id && createdChannel.channel_id) {
-          setFetchingChannelId(createdChannel.id);
-          setFetchingChannelName(createdChannel.channel_name);
+        // Auto-fetch RSS videos for newly created channel OR when explicitly requested (refresh flow)
+        if ((shouldFetchVideos || !editingYoutubeChannel) && savedChannel.id && savedChannel.channel_id) {
+          setFetchingChannelId(savedChannel.id);
+          setFetchingChannelName(savedChannel.channel_name);
           try {
-            await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-rss/fetch-channel/${createdChannel.id}`, {
+            await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-rss/fetch-channel/${savedChannel.id}`, {
               method: 'POST'
             });
           } catch (fetchError) {
