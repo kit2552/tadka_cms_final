@@ -1232,9 +1232,13 @@ Instructions:
                   <p className="text-xs text-gray-500 mb-2">Select which types of channels to search for videos</p>
                   <div className="flex flex-wrap gap-3">
                     {[
-                      { value: 'production_house', label: 'Production Houses', icon: '🎬' },
-                      { value: 'music_label', label: 'Music Labels', icon: '🎵' },
-                      { value: 'popular_channel', label: 'Popular Channels', icon: '📺' }
+                      { value: 'production_house', label: 'Production Houses' },
+                      { value: 'music_label', label: 'Music Labels' },
+                      { value: 'popular_channel', label: 'Popular Channels' },
+                      { value: 'movie_channel', label: 'Movie Channels' },
+                      { value: 'news_channel', label: 'News Channels' },
+                      { value: 'tv_channel', label: 'TV Channels' },
+                      { value: 'reality_show', label: 'Reality Shows' }
                     ].map(type => (
                       <label
                         key={type.value}
