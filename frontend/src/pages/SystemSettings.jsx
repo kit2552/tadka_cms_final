@@ -749,10 +749,13 @@ const SystemSettings = () => {
     }
   };
 
-  const handleYoutubeChannelSubmit = async (e, shouldFetchVideos = false) => {
+  const handleYoutubeChannelSubmit = async (e) => {
     if (e) e.preventDefault();
     setChannelModalError('');
     setSavingChannel(true);
+    
+    // Capture whether to fetch videos before resetting state
+    const shouldFetchVideos = channelRefreshed;
     
     try {
       const url = editingYoutubeChannel 
@@ -769,10 +772,11 @@ const SystemSettings = () => {
         const savedChannel = await response.json();
         setShowYoutubeChannelModal(false);
         setEditingYoutubeChannel(null);
+        setChannelRefreshed(false);
         setYoutubeChannelForm({ channel_name: '', channel_id: '', rss_url: '', channel_type: 'production_house', languages: [], is_active: true });
         fetchYoutubeChannels();
         
-        // Auto-fetch RSS videos for newly created channel OR when explicitly requested (refresh flow)
+        // Auto-fetch RSS videos for newly created channel OR when channel was refreshed (refresh flow)
         if ((shouldFetchVideos || !editingYoutubeChannel) && savedChannel.id && savedChannel.channel_id) {
           setFetchingChannelId(savedChannel.id);
           setFetchingChannelName(savedChannel.channel_name);
