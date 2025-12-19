@@ -104,6 +104,58 @@ async def trigger_rss_fetch_sync():
     return result
 
 
+@router.post("/fetch-channel/{channel_id}")
+async def fetch_single_channel(channel_id: str):
+    """Fetch RSS feed for a single channel by its database ID"""
+    # Get channel from database
+    channel = db.youtube_channels.find_one({"id": channel_id})
+    if not channel:
+        raise HTTPException(status_code=404, detail="Channel not found")
+    
+    if not channel.get('channel_id'):
+        raise HTTPException(status_code=400, detail="Channel has no YouTube channel ID configured")
+    
+    # Fetch RSS for this channel
+    videos = await youtube_rss_service.fetch_channel_rss(
+        channel_id=channel.get('channel_id'),
+        channel_name=channel.get('channel_name', 'Unknown'),
+        channel_type=channel.get('channel_type', 'unknown'),
+        languages=channel.get('languages', ['Hindi']),
+        rss_url=channel.get('rss_url')
+    )
+    
+    # Store videos in database
+    new_videos = 0
+    updated_videos = 0
+    
+    for video in videos:
+        existing = db.youtube_videos.find_one({'video_id': video['video_id']})
+        if existing:
+            if video.get('updated_at') != existing.get('updated_at'):
+                db.youtube_videos.update_one(
+                    {'video_id': video['video_id']},
+                    {'$set': {
+                        'title': video['title'],
+                        'description': video['description'],
+                        'thumbnail': video['thumbnail'],
+                        'updated_at': video['updated_at'],
+                        'fetched_at': video['fetched_at']
+                    }}
+                )
+                updated_videos += 1
+        else:
+            db.youtube_videos.insert_one(video)
+            new_videos += 1
+    
+    return {
+        "success": True,
+        "channel_name": channel.get('channel_name'),
+        "videos_found": len(videos),
+        "new_videos": new_videos,
+        "updated_videos": updated_videos
+    }
+
+
 @router.get("/stats")
 async def get_video_stats():
     """Get video collection statistics"""
