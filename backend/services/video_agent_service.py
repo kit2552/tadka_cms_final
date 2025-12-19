@@ -68,10 +68,13 @@ class VideoAgentService:
     
     async def _get_state_language_mapping(self) -> Dict[str, str]:
         """Get state-language mapping from system settings"""
-        # Try to fetch from DB
-        mapping = crud.get_state_language_mapping(db)
-        if mapping:
-            return mapping
+        try:
+            # Try to fetch from DB
+            mapping_doc = db.system_settings.find_one({"setting_key": "state_language_mapping"})
+            if mapping_doc and mapping_doc.get('mapping'):
+                return mapping_doc['mapping']
+        except Exception as e:
+            print(f"Warning: Could not fetch state-language mapping: {e}")
         return self.DEFAULT_STATE_LANGUAGE_MAP
     
     def _get_language_for_state(self, state: str) -> str:
