@@ -2349,7 +2349,7 @@ const SystemSettings = () => {
                       ) : youtubeChannels.length === 0 ? (
                         <tr>
                           <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                            No channels found. Click "Add Channel" to add YouTube channels.
+                            No channels found. Click &quot;Add Channel&quot; to add YouTube channels.
                           </td>
                         </tr>
                       ) : youtubeChannels.map(channel => (
