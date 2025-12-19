@@ -304,7 +304,8 @@ class VideoAgentService:
         if not agent:
             raise ValueError("Agent not found")
         
-        print(f"\n🎬 Running Video Agent: {agent.get('name', 'Unnamed')}")
+        agent_name = agent.get('agent_name', 'Video')  # Get agent name for article attribution
+        print(f"\n🎬 Running Video Agent: {agent_name}")
         
         # Get configuration from agent
         target_state = agent.get('target_state', 'bollywood')
