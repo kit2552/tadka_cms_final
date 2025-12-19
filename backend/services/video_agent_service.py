@@ -223,6 +223,14 @@ class VideoAgentService:
         'official', 'verified'
     ]
     
+    # Known fake/unannounced movie sequels to filter out
+    FAKE_MOVIE_KEYWORDS = [
+        'kgf 3', 'kgf chapter 3', 'pushpa 3', 'bahubali 3', 'rrr 2',
+        'dangal 2', 'pk 2', '3 idiots 2', 'sholay 2', 'ddlj 2',
+        'concept', 'fan made', 'fanmade', 'unofficial', 'fake',
+        'leaked', 'update', 'announcement soon', 'coming soon 202'
+    ]
+    
     async def search_trailers_teasers(self, language: str, movie_name: Optional[str] = None) -> List[Dict]:
         """Search for official movie trailers and teasers from verified channels only"""
         if movie_name:
