@@ -104,7 +104,8 @@ class VideoAgentService:
         query: str,
         max_results: int = 10,
         video_type: Optional[str] = None,
-        published_after: Optional[str] = None
+        published_after: Optional[str] = None,
+        video_duration: Optional[str] = None
     ) -> List[Dict]:
         """Search YouTube using Data API v3
         
@@ -113,6 +114,7 @@ class VideoAgentService:
             max_results: Maximum number of results
             video_type: 'short' for YouTube Shorts, None for regular videos
             published_after: RFC 3339 timestamp to filter videos after this date
+            video_duration: 'short' (<4min), 'medium' (4-20min), 'long' (>20min)
         
         Returns:
             List of video dictionaries with id, title, thumbnail, channel, publishedAt
@@ -131,17 +133,19 @@ class VideoAgentService:
             'q': query,
             'type': 'video',
             'maxResults': max_results,
-            'order': 'date',  # Most recent first
+            'order': 'relevance',  # Most relevant first for better quality
             'key': self.youtube_api_key,
             'regionCode': 'IN',  # India
-            'relevanceLanguage': 'hi'  # Default to Hindi, will be overridden
+            'relevanceLanguage': 'hi'  # Default to Hindi
         }
         
-        # Filter for shorts if specified
+        # Filter by video duration
         if video_type == 'short':
             params['videoDuration'] = 'short'  # Under 4 minutes
+        elif video_duration:
+            params['videoDuration'] = video_duration  # 'short', 'medium', 'long'
         
-        # Filter by publish date (today)
+        # Filter by publish date
         if published_after:
             params['publishedAfter'] = published_after
         
