@@ -233,14 +233,51 @@ class VideoAgentService:
     
     async def search_trailers_teasers(self, language: str, movie_name: Optional[str] = None) -> List[Dict]:
         """Search for official movie trailers and teasers from verified channels only"""
-        if movie_name:
-            # Search for specific movie trailer from official channel
-            query = f"{movie_name} official trailer {language}"
-        else:
-            # General search for official trailers - exclude events, speeches, interviews
-            query = f"{language} movie official trailer teaser 2024 2025 -event -speech -interview -press -meet -launch -promotion -review -reaction -shorts"
+        # Build targeted search queries for official channels
+        official_channel_queries = []
         
-        print(f"🔍 Searching trailers: {query}")
+        if language.lower() in ['hindi', 'bollywood']:
+            # Bollywood specific searches
+            official_channel_queries = [
+                f"T-Series official trailer 2024",
+                f"Yash Raj Films official trailer teaser",
+                f"Dharma Productions official trailer",
+                f"Hindi movie official trailer teaser December 2024",
+                f"Bollywood movie trailer teaser 2024"
+            ]
+        elif language.lower() == 'telugu':
+            # Telugu specific searches
+            official_channel_queries = [
+                f"Aditya Music Telugu official trailer teaser",
+                f"Mango Telugu Cinema official trailer",
+                f"Telugu movie official trailer teaser December 2024",
+                f"Tollywood movie trailer teaser 2024",
+                f"Sri Venkateswara Creations trailer"
+            ]
+        elif language.lower() == 'tamil':
+            # Tamil specific searches
+            official_channel_queries = [
+                f"Think Music India official trailer",
+                f"Sony Music South official trailer",
+                f"Tamil movie official trailer teaser 2024",
+                f"Kollywood movie trailer teaser 2024"
+            ]
+        else:
+            official_channel_queries = [
+                f"{language} movie official trailer teaser 2024",
+                f"{language} film official trailer December 2024"
+            ]
+        
+        if movie_name:
+            # Search for specific movie trailer
+            official_channel_queries = [f"{movie_name} official trailer {language}"]
+        
+        # Collect videos from all queries
+        all_videos = []
+        seen_ids = set()
+        
+        for query in official_channel_queries:
+            print(f"🔍 Searching: {query}")
         videos = await self.search_youtube(
             query=query,
             max_results=50,  # Get more to filter for official channels
