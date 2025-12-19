@@ -2313,7 +2313,6 @@ const SystemSettings = () => {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Channel Name</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Languages</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
                       </tr>
@@ -2321,25 +2320,21 @@ const SystemSettings = () => {
                     <tbody className="divide-y divide-gray-200">
                       {youtubeChannelsLoading ? (
                         <tr>
-                          <td colSpan={6} className="px-4 py-8 text-center text-gray-500">Loading...</td>
+                          <td colSpan={5} className="px-4 py-8 text-center text-gray-500">Loading...</td>
                         </tr>
                       ) : youtubeChannels.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                          <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
                             No channels found. Click "Load Default Channels" to populate with Indian movie channels.
                           </td>
                         </tr>
                       ) : youtubeChannels.map(channel => (
                         <tr key={channel.id} className="hover:bg-gray-50">
                           <td className="px-4 py-3">
-                            <div className="font-medium text-gray-900 text-left">{channel.channel_name}</div>
+                            <div className="text-sm text-gray-900 text-left">{channel.channel_name}</div>
                           </td>
                           <td className="px-4 py-3 text-left">
-                            <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
-                              channel.channel_type === 'production_house' ? 'bg-purple-100 text-purple-800' :
-                              channel.channel_type === 'music_label' ? 'bg-blue-100 text-blue-800' :
-                              'bg-green-100 text-green-800'
-                            }`}>
+                            <span className="text-sm text-gray-700">
                               {youtubeChannelTypes.find(t => t.value === channel.channel_type)?.label || channel.channel_type}
                             </span>
                           </td>
@@ -2353,12 +2348,7 @@ const SystemSettings = () => {
                             </div>
                           </td>
                           <td className="px-4 py-3 text-left">
-                            <span className="text-sm text-gray-600">{channel.priority}</span>
-                          </td>
-                          <td className="px-4 py-3 text-left">
-                            <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
-                              channel.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                            }`}>
+                            <span className={`text-sm ${channel.is_active ? 'text-green-600' : 'text-red-600'}`}>
                               {channel.is_active ? 'Active' : 'Inactive'}
                             </span>
                           </td>
