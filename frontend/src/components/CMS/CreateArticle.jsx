@@ -1781,11 +1781,11 @@ const CreateArticle = () => {
           </div>
 
         {/* Form */}
-        {loadingArticle ? (
+        {(loadingArticle || (isEditMode && !configLoaded)) ? (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
             <div className="text-center">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              <p className="mt-2 text-gray-600">Loading article data...</p>
+              <p className="mt-2 text-gray-600">{!configLoaded ? 'Loading configuration...' : 'Loading article data...'}</p>
             </div>
           </div>
         ) : (
