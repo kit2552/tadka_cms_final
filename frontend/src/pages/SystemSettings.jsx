@@ -708,6 +708,112 @@ const SystemSettings = () => {
     }
   };
 
+  // YouTube Channels Functions
+  const fetchYoutubeChannels = async () => {
+    setYoutubeChannelsLoading(true);
+    try {
+      let url = `${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels`;
+      const params = new URLSearchParams();
+      if (youtubeLanguageFilter) params.append('language', youtubeLanguageFilter);
+      if (youtubeTypeFilter) params.append('channel_type', youtubeTypeFilter);
+      if (params.toString()) url += `?${params.toString()}`;
+      
+      const response = await fetch(url);
+      const data = await response.json();
+      setYoutubeChannels(data);
+    } catch (error) {
+      console.error('Error fetching YouTube channels:', error);
+    } finally {
+      setYoutubeChannelsLoading(false);
+    }
+  };
+
+  const seedDefaultChannels = async () => {
+    setYoutubeChannelsLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/seed-default`, {
+        method: 'POST'
+      });
+      const data = await response.json();
+      setMessage({ type: 'success', text: data.message });
+      fetchYoutubeChannels();
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to seed channels' });
+    } finally {
+      setYoutubeChannelsLoading(false);
+    }
+  };
+
+  const handleYoutubeChannelSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const url = editingYoutubeChannel 
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/${editingYoutubeChannel.id}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels`;
+      
+      const response = await fetch(url, {
+        method: editingYoutubeChannel ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(youtubeChannelForm)
+      });
+      
+      if (response.ok) {
+        setMessage({ type: 'success', text: `Channel ${editingYoutubeChannel ? 'updated' : 'created'} successfully!` });
+        setShowYoutubeChannelModal(false);
+        setEditingYoutubeChannel(null);
+        setYoutubeChannelForm({ channel_name: '', channel_id: '', channel_type: 'production_house', languages: [], is_active: true, priority: 5 });
+        fetchYoutubeChannels();
+      } else {
+        const error = await response.json();
+        setMessage({ type: 'error', text: error.detail || 'Failed to save channel' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to save channel' });
+    }
+  };
+
+  const deleteYoutubeChannel = async (channelId) => {
+    if (!window.confirm('Are you sure you want to delete this channel?')) return;
+    try {
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/${channelId}`, {
+        method: 'DELETE'
+      });
+      setMessage({ type: 'success', text: 'Channel deleted successfully!' });
+      fetchYoutubeChannels();
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to delete channel' });
+    }
+  };
+
+  const editYoutubeChannel = (channel) => {
+    setEditingYoutubeChannel(channel);
+    setYoutubeChannelForm({
+      channel_name: channel.channel_name,
+      channel_id: channel.channel_id || '',
+      channel_type: channel.channel_type,
+      languages: channel.languages,
+      is_active: channel.is_active,
+      priority: channel.priority
+    });
+    setShowYoutubeChannelModal(true);
+  };
+
+  const toggleYoutubeLanguage = (lang) => {
+    setYoutubeChannelForm(prev => ({
+      ...prev,
+      languages: prev.languages.includes(lang)
+        ? prev.languages.filter(l => l !== lang)
+        : [...prev.languages, lang]
+    }));
+  };
+
+  // Refetch when filters change
+  useEffect(() => {
+    if (activeTab === 'youtube-channels') {
+      fetchYoutubeChannels();
+    }
+  }, [youtubeLanguageFilter, youtubeTypeFilter, activeTab]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-8">
