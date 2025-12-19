@@ -497,33 +497,38 @@ class VideoAgentService:
                 slug = self._generate_slug(clean_title)
                 current_time = datetime.now(timezone.utc)
                 
+                # Handle both RSS and API video formats
+                description = video.get('description', '') or ''
+                thumbnail = video.get('thumbnail', '') or video.get('image', '')
+                channel_name = video.get('channel_name', '') or video.get('channel', '')
+                
                 article_data = {
                     "title": clean_title,
                     "slug": slug,
                     "author": "AI Agent",
                     "agent_name": agent_name,
-                    "content": f"<p>{video['description'][:500] if video['description'] else clean_title}</p>",
-                    "summary": video['description'][:200] if video['description'] else clean_title,
+                    "content": f"<p>{description[:500] if description else clean_title}</p>",
+                    "summary": description[:200] if description else clean_title,
                     "content_type": "video",
                     "youtube_url": youtube_url,
-                    "image": video['thumbnail'],
+                    "image": thumbnail,
                     "category": agent_category,
                     "states": f'["{target_state}"]',
                     "status": content_workflow,
                     "source": "YouTube",
                     "source_url": youtube_url,
                     "seo_title": clean_title[:60],
-                    "seo_description": video['description'][:160] if video['description'] else clean_title[:160],
+                    "seo_description": description[:160] if description else clean_title[:160],
                     "created_by_agent": agent_id,
                     "agent_type": "video",
                     "youtube_video_id": video['video_id'],
-                    "channel_name": video.get('channel', ''),
+                    "channel_name": channel_name,
                     "article_language": agent_article_language,
                     "created_at": current_time,
                     "published_at": current_time
                 }
                 
-                print(f"📝 Creating: {clean_title[:50]}... from {video.get('channel', 'Unknown')}")
+                print(f"📝 Creating: {clean_title[:50]}... from {channel_name or 'Unknown'}")
                 
                 created = crud.create_article(db, article_data)
                 if created:
