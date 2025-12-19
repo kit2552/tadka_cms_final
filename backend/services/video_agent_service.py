@@ -87,12 +87,17 @@ class VideoAgentService:
         now_ist = datetime.now(IST)
         return now_ist.strftime('%Y-%m-%d')
     
-    def _get_published_after(self) -> str:
-        """Get the publishedAfter parameter for YouTube API (RFC 3339 format)"""
+    def _get_published_after(self, days_ago: int = 7) -> str:
+        """Get the publishedAfter parameter for YouTube API (RFC 3339 format)
+        
+        Args:
+            days_ago: Number of days to look back (default 7 for more results)
+        """
         now_ist = datetime.now(IST)
-        # Start of today in IST
-        start_of_day = now_ist.replace(hour=0, minute=0, second=0, microsecond=0)
-        return start_of_day.strftime('%Y-%m-%dT%H:%M:%SZ')
+        # Go back N days
+        start_date = now_ist - timedelta(days=days_ago)
+        start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        return start_date.strftime('%Y-%m-%dT%H:%M:%SZ')
     
     async def search_youtube(
         self,
