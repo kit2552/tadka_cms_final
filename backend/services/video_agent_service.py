@@ -199,30 +199,6 @@ class VideoAgentService:
             traceback.print_exc()
             return []
     
-    # Official Indian music labels and production houses
-    OFFICIAL_CHANNELS = [
-        # Music Labels
-        't-series', 'tseries', 'saregama', 'sony music', 'zee music', 'tips official',
-        'aditya music', 'lahari music', 'mango music', 'speed records', 'white hill music',
-        'shemaroo', 'eros now', 'goldmines', 'ultra bollywood', 'venus', 'yrf',
-        'sony music south', 'think music', 'aditya movies', 'sri balaji video',
-        # Production Houses
-        'yash raj films', 'dharma productions', 'excel entertainment', 'red chillies',
-        'annapurna studios', 'mythri movie makers', 'sri venkateswara creations',
-        'hombale films', 'uv creations', 'geetha arts', 'sithara entertainments',
-        'people media factory', 'dil raju productions', 'suresh productions',
-        'pen studios', 'reliance entertainment', 'eros', 'nadiadwala grandson',
-        'balaji motion pictures', 'colour yellow', 'ajay devgn ffilms',
-        'maddock films', 'junglee pictures', 'phantom films', 'abundantia entertainment',
-        # Telugu specific
-        'mango telugu cinema', 'telugu filmnagar', 'suresh productions',
-        'aditya music telugu', 'aditya movies', 'gemini tv music', 'etv telugu',
-        # Tamil specific  
-        'sun tv', 'think music india', 'sony music south',
-        # Official/Verified indicators
-        'official', 'verified'
-    ]
-    
     # Known fake/unannounced movie sequels to filter out
     FAKE_MOVIE_KEYWORDS = [
         'kgf 3', 'kgf chapter 3', 'pushpa 3', 'bahubali 3', 'rrr 2',
@@ -230,6 +206,27 @@ class VideoAgentService:
         'concept', 'fan made', 'fanmade', 'unofficial', 'fake',
         'leaked', 'update', 'announcement soon', 'coming soon 202'
     ]
+    
+    def _get_official_channels(self, language: str = None) -> List[str]:
+        """Get official channels from database, optionally filtered by language"""
+        try:
+            query = {"is_active": True}
+            if language:
+                query["languages"] = language
+            
+            channels = list(db.youtube_channels.find(query, {"_id": 0, "channel_name": 1}).sort("priority", -1))
+            channel_names = [ch['channel_name'].lower() for ch in channels]
+            
+            # Always include 'official' and 'verified' as keywords
+            channel_names.extend(['official', 'verified'])
+            
+            print(f"📺 Loaded {len(channel_names)} official channels for {language or 'all languages'}")
+            return channel_names
+        except Exception as e:
+            print(f"⚠️ Error loading channels from DB: {e}, using fallback")
+            # Fallback to hardcoded list if DB fails
+            return ['t-series', 'yash raj films', 'dharma productions', 'aditya music', 
+                   'sony music', 'zee music', 'official', 'verified']
     
     async def search_trailers_teasers(self, language: str, movie_name: Optional[str] = None) -> List[Dict]:
         """Search for official movie trailers and teasers from verified channels only"""
