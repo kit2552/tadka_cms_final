@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://tadka-app-verify.preview.emergentagent.com"
+BACKEND_URL = "https://video-curator-4.preview.emergentagent.com"
 
 def test_politics_api_structure():
     """
