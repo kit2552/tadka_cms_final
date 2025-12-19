@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field, field_validator
-from typing import List, Optional, Any
+from pydantic import BaseModel, Field, field_validator, model_validator
+from typing import List, Optional, Any, Union
 from datetime import datetime, date
 from bson import ObjectId
+import json
 
 # Custom ObjectId type for Pydantic
 class PyObjectId(ObjectId):
