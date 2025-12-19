@@ -272,19 +272,6 @@ class VideoAgentService:
             # Search for specific movie trailer
             official_channel_queries = [f"{movie_name} official trailer {language}"]
         
-        # Collect videos from all queries
-        all_videos = []
-        seen_ids = set()
-        
-        for query in official_channel_queries:
-            print(f"🔍 Searching: {query}")
-        videos = await self.search_youtube(
-            query=query,
-            max_results=50,  # Get more to filter for official channels
-            published_after=self._get_published_after(),
-            video_duration='medium'  # Trailers are typically 1-4 minutes
-        )
-        
         # Keywords that indicate event/interview content - should be excluded
         event_keywords = [
             'speech', 'event', 'interview', 'press meet', 'press conference', 
@@ -296,48 +283,72 @@ class VideoAgentService:
         # Keywords that indicate actual trailer/teaser content - required
         trailer_keywords = ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster', 'promo']
         
-        # Only accept videos from official channels
+        # Collect videos from all queries
         official_videos = []
+        other_videos = []
+        seen_ids = set()
         
-        for video in videos:
-            title_lower = video['title'].lower()
-            channel_lower = video.get('channel', '').lower()
-            description_lower = video.get('description', '').lower()
+        for query in official_channel_queries:
+            print(f"🔍 Searching: {query}")
+            videos = await self.search_youtube(
+                query=query,
+                max_results=25,
+                published_after=self._get_published_after(),
+                video_duration='medium'
+            )
             
-            # Skip fake/unannounced movie sequels
-            if any(fake in title_lower for fake in self.FAKE_MOVIE_KEYWORDS):
-                print(f"   🚫 Skipping fake/unannounced movie: {video['title'][:50]}...")
-                continue
+            for video in videos:
+                # Skip if already seen
+                if video['video_id'] in seen_ids:
+                    continue
+                seen_ids.add(video['video_id'])
+                
+                title_lower = video['title'].lower()
+                channel_lower = video.get('channel', '').lower()
+                
+                # Skip fake/unannounced movie sequels
+                if any(fake in title_lower for fake in self.FAKE_MOVIE_KEYWORDS):
+                    print(f"   🚫 Skipping fake movie: {video['title'][:50]}...")
+                    continue
+                
+                # Skip if title contains event-related keywords
+                if any(skip in title_lower for skip in event_keywords):
+                    continue
+                
+                # Skip unwanted content
+                skip_keywords = ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 
+                               'explained', 'making', 'behind the scenes', 'fan made', 'fanmade',
+                               'unofficial', 'leaked', 'concept', 'edit', 'version', 'mix']
+                if any(skip in title_lower for skip in skip_keywords):
+                    continue
+                
+                # Must have trailer/teaser related keyword
+                if not any(keyword in title_lower for keyword in trailer_keywords):
+                    continue
+                
+                # Check if from official channel
+                is_official = any(official in channel_lower for official in self.OFFICIAL_CHANNELS)
+                
+                if is_official:
+                    print(f"   ✅ Official: {video.get('channel')}: {video['title'][:40]}...")
+                    official_videos.append(video)
+                else:
+                    # Also collect non-official as backup
+                    other_videos.append(video)
             
-            # Skip if title contains event-related keywords
-            if any(skip in title_lower for skip in event_keywords):
-                print(f"   ⏭️ Skipping event video: {video['title'][:50]}...")
-                continue
-            
-            # Skip if title contains other unwanted keywords
-            skip_keywords = ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 
-                           'explained', 'making', 'behind the scenes', 'fan made', 'fanmade',
-                           'unofficial', 'leaked', 'concept', 'edit', 'version', 'mix']
-            if any(skip in title_lower for skip in skip_keywords):
-                print(f"   ⏭️ Skipping unwanted content: {video['title'][:50]}...")
-                continue
-            
-            # Must have trailer/teaser related keyword
-            if not any(keyword in title_lower for keyword in trailer_keywords):
-                continue
-            
-            # ONLY accept videos from official channels - no unofficial content
-            is_official = any(official in channel_lower for official in self.OFFICIAL_CHANNELS)
-            
-            if is_official:
-                print(f"   ✅ Official trailer from {video.get('channel')}: {video['title'][:40]}...")
-                official_videos.append(video)
-            else:
-                print(f"   ❌ Rejecting non-official channel ({video.get('channel')}): {video['title'][:40]}...")
+            # Stop searching if we have enough official videos
+            if len(official_videos) >= 10:
+                break
         
-        # Only return official channel videos - no unofficial content
-        print(f"📊 Results: {len(official_videos)} official videos found")
-        return official_videos[:10]
+        # Return official videos first, then fill with others if needed
+        result = official_videos[:10]
+        if len(result) < 5 and other_videos:
+            # If very few official videos, include some others
+            print(f"⚠️ Only {len(result)} official videos, adding {min(5-len(result), len(other_videos))} others")
+            result.extend(other_videos[:5-len(result)])
+        
+        print(f"📊 Results: {len(official_videos)} official, {len(other_videos)} other, returning {len(result)}")
+        return result
     
     async def search_trending_videos(self, language: str) -> List[Dict]:
         """Search for trending movie/music videos from official channels"""
