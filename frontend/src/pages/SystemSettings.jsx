@@ -843,6 +843,35 @@ const SystemSettings = () => {
     }
   };
 
+  const fetchChannelVideos = async (channel) => {
+    if (!channel.channel_id) {
+      setMessage({ type: 'error', text: 'Channel has no YouTube ID configured' });
+      return;
+    }
+    
+    setFetchingChannelId(channel.id);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-rss/fetch-channel/${channel.id}`, {
+        method: 'POST'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setMessage({ 
+          type: 'success', 
+          text: `Fetched ${data.new_videos} new videos from ${data.channel_name}` 
+        });
+      } else {
+        const error = await response.json();
+        setMessage({ type: 'error', text: error.detail || 'Failed to fetch videos' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to fetch videos' });
+    } finally {
+      setFetchingChannelId(null);
+    }
+  };
+
   const editYoutubeChannel = (channel) => {
     setEditingYoutubeChannel(channel);
     setYoutubeChannelForm({
