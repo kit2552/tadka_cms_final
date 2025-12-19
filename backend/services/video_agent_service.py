@@ -216,15 +216,26 @@ class VideoAgentService:
         return filtered[:10]
     
     async def search_trending_videos(self, language: str) -> List[Dict]:
-        """Search for trending movie/music videos"""
-        query = f"{language} movie song trending viral"
+        """Search for trending movie/music videos from official channels"""
+        query = f"{language} movie song official video -shorts -reaction -cover"
         
         print(f"🔍 Searching trending videos: {query}")
-        return await self.search_youtube(
+        videos = await self.search_youtube(
             query=query,
-            max_results=10,
-            published_after=self._get_published_after()
+            max_results=20,
+            published_after=self._get_published_after(),
+            video_duration='medium'
         )
+        
+        # Filter out shorts and unofficial content
+        filtered = []
+        for video in videos:
+            title_lower = video['title'].lower()
+            if any(skip in title_lower for skip in ['#shorts', 'reaction', 'cover', 'spoof', 'parody']):
+                continue
+            filtered.append(video)
+        
+        return filtered[:10]
     
     async def search_events_interviews(self, language: str, celebrity_name: Optional[str] = None) -> List[Dict]:
         """Search for celebrity events and interviews"""
