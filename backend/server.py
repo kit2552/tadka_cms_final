@@ -156,6 +156,13 @@ async def lifespan(app: FastAPI):
         logger.info("✅ Scheduler stopped")
     except Exception as e:
         logger.warning(f"⚠️ Shutdown warning: {e}")
+    
+    try:
+        from services.youtube_rss_scheduler import youtube_rss_scheduler
+        youtube_rss_scheduler.stop_scheduler()
+        logger.info("✅ YouTube RSS scheduler stopped")
+    except Exception as e:
+        logger.warning(f"⚠️ YouTube RSS scheduler shutdown warning: {e}")
 
 # Create the main app without any rate limiting
 app = FastAPI(title="Blog CMS API", version="1.0.0", lifespan=lifespan)
