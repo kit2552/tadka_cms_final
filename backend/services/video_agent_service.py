@@ -417,29 +417,49 @@ class VideoAgentService:
         print(f"📌 Article Language: {agent_article_language}")
         print(f"📌 Content Workflow: {content_workflow}")
         
-        # Get channels from DB based on channel types and language
-        channels = self._get_channels_by_types_and_language(
+        # Check if RSS collection has videos (preferred method - no API quota)
+        from services.youtube_rss_service import youtube_rss_service
+        
+        rss_videos = youtube_rss_service.get_videos_for_agent(
             channel_types=channel_types,
             language=search_language,
-            limit=20  # Get top 20 channels by priority
-        )
-        
-        if not channels:
-            return {
-                "success": False,
-                "message": f"No channels found for language '{search_language}' with types {channel_types}. Please add channels in Settings > YouTube Channels.",
-                "videos_found": 0,
-                "posts_created": 0
-            }
-        
-        # Search videos from channels
-        videos = await self.search_videos_from_channels(
-            channels=channels,
             video_category=video_category,
-            search_query=search_query,
-            max_videos_per_channel=3,  # Get 3 videos per channel
+            max_videos=max_videos * 2,  # Get extra for filtering
             days_ago=7
         )
+        
+        if rss_videos:
+            print(f"📺 Using {len(rss_videos)} videos from RSS collection (no API calls)")
+            videos = rss_videos
+            source_method = "rss_collection"
+        else:
+            # Fallback to API calls if RSS collection is empty
+            print("⚠️ RSS collection empty, falling back to YouTube API...")
+            
+            # Get channels from DB based on channel types and language
+            channels = self._get_channels_by_types_and_language(
+                channel_types=channel_types,
+                language=search_language,
+                limit=20  # Get top 20 channels by priority
+            )
+            
+            if not channels:
+                return {
+                    "success": False,
+                    "message": f"No channels found for language '{search_language}' with types {channel_types}. Please add channels in Settings > YouTube Channels.",
+                    "videos_found": 0,
+                    "posts_created": 0
+                }
+            
+            # Search videos from channels using API
+            videos = await self.search_videos_from_channels(
+                channels=channels,
+                video_category=video_category,
+                search_query=search_query,
+                max_videos_per_channel=3,
+                days_ago=7
+            )
+            source_method = "youtube_api"
         
         if not videos:
             return {
