@@ -199,7 +199,11 @@ const ManageVideosModal = ({ onClose }) => {
     const labels = {
       production_house: 'Production House',
       music_label: 'Music Label',
-      popular_channel: 'Popular Channel'
+      popular_channel: 'Popular Channel',
+      movie_channel: 'Movie Channel',
+      news_channel: 'News Channel',
+      tv_channel: 'TV Channel',
+      reality_show: 'Reality Show'
     };
     return labels[type] || type;
   };
@@ -208,7 +212,11 @@ const ManageVideosModal = ({ onClose }) => {
     const colors = {
       production_house: 'bg-blue-100 text-blue-700',
       music_label: 'bg-purple-100 text-purple-700',
-      popular_channel: 'bg-green-100 text-green-700'
+      popular_channel: 'bg-green-100 text-green-700',
+      movie_channel: 'bg-red-100 text-red-700',
+      news_channel: 'bg-orange-100 text-orange-700',
+      tv_channel: 'bg-cyan-100 text-cyan-700',
+      reality_show: 'bg-pink-100 text-pink-700'
     };
     return colors[type] || 'bg-gray-100 text-gray-700';
   };
