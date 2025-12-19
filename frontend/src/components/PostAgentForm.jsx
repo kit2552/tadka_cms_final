@@ -305,13 +305,14 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               <button
                 type="button"
                 onClick={() => {
-                  if (!editingAgent) setActiveTab('recurring');
+                  // Only allow tab switching for new agents (no id means new agent)
+                  if (!editingAgent?.id) setActiveTab('recurring');
                 }}
-                disabled={editingAgent && editingAgent.mode !== 'recurring'}
+                disabled={editingAgent?.id && editingAgent.mode !== 'recurring'}
                 className={`py-2.5 px-4 font-medium text-xs border-b-2 transition-colors ${
                   activeTab === 'recurring'
                     ? 'border-blue-600 text-blue-600'
-                    : editingAgent && editingAgent.mode !== 'recurring'
+                    : editingAgent?.id && editingAgent.mode !== 'recurring'
                     ? 'border-transparent text-gray-300 cursor-not-allowed'
                     : 'border-transparent text-gray-500 hover:text-gray-700 cursor-pointer'
                 }`}
@@ -321,20 +322,22 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               <button
                 type="button"
                 onClick={() => {
-                  if (!editingAgent) setActiveTab('adhoc');
+                  // Only allow tab switching for new agents (no id means new agent)
+                  if (!editingAgent?.id) setActiveTab('adhoc');
                 }}
-                disabled={editingAgent && editingAgent.mode !== 'adhoc'}
+                disabled={editingAgent?.id && editingAgent.mode !== 'adhoc'}
                 className={`py-2.5 px-4 font-medium text-xs border-b-2 transition-colors ${
                   activeTab === 'adhoc'
                     ? 'border-blue-600 text-blue-600'
-                    : editingAgent && editingAgent.mode !== 'adhoc'
+                    : editingAgent?.id && editingAgent.mode !== 'adhoc'
                     ? 'border-transparent text-gray-300 cursor-not-allowed'
                     : 'border-transparent text-gray-500 hover:text-gray-700 cursor-pointer'
                 }`}
               >
                 Adhoc Mode
               </button>
-              {editingAgent && (
+              {/* Only show warning when editing existing agent (has id) */}
+              {editingAgent?.id && (
                 <span className="text-xs text-orange-600 ml-2 flex items-center gap-1">
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v2m0-2h2m-2 0H9m3-8V7m0 0V5m0 2h2m-2 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
