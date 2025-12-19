@@ -311,14 +311,16 @@ class VideoAgentService:
         video_category = agent.get('video_category', 'trailers_teasers')
         search_query = agent.get('search_query', '')  # Optional specific search
         max_videos = agent.get('max_videos', 5)
+        agent_article_language = agent.get('article_language', 'en')  # Get language code from agent config
         
         # Get state-language mapping
         self.state_language_map = await self._get_state_language_mapping()
         
-        # Get language for target state
-        language = self._get_language_for_state(target_state)
+        # Get language for target state (used for YouTube search queries)
+        search_language = self._get_language_for_state(target_state)
         print(f"📌 Target State: {target_state}")
-        print(f"📌 Language: {language}")
+        print(f"📌 Search Language: {search_language}")
+        print(f"📌 Article Language: {agent_article_language}")
         print(f"📌 Video Category: {video_category}")
         print(f"📌 Today (IST): {self._get_today_ist()}")
         
