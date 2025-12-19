@@ -104,7 +104,7 @@ class YouTubeRSSService:
                         detected_language = self._detect_language(title, description, languages)
                         
                         # Detect video category from title
-                        detected_category = self._detect_video_category(title, description)
+                        detected_category = self._detect_video_category(title, description, video_url)
                         
                         # Parse published date
                         try:
