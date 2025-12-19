@@ -219,10 +219,11 @@ class VideoAgentService:
     async def search_tadka_shorts(self, language: str, actress_name: Optional[str] = None) -> List[Dict]:
         """Search for hot/trending YouTube Shorts of actresses"""
         if actress_name:
-            query = f"{actress_name} hot sexy photoshoot #shorts"
+            query = f"{actress_name} hot photoshoot shorts"
         else:
-            query = f"{language} actress hot trending #shorts"
+            query = f"{language} actress hot trending shorts"
         
+        print(f"🔍 Searching tadka shorts: {query}")
         return await self.search_youtube(
             query=query,
             max_results=10,
