@@ -26,6 +26,7 @@ from routes.gallery_entities_routes import router as gallery_entities_router
 from routes.gallery_image_routes import router as gallery_image_router
 from routes.ad_settings_routes import router as ad_settings_router
 from routes.artists_routes import router as artists_router
+from routes.youtube_channels_routes import router as youtube_channels_router
 from auth import create_default_admin
 from scheduler_service import article_scheduler
 from s3_service import s3_service
