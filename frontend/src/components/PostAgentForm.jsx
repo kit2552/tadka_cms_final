@@ -1327,8 +1327,8 @@ Instructions:
             </div>
             )}
 
-            {/* Image Options Section - Hide for photo_gallery and tadka_pics */}
-            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'tadka_pics' && (
+            {/* Image Options Section - Hide for photo_gallery, tadka_pics, and video */}
+            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Image Options</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
