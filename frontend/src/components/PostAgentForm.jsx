@@ -35,7 +35,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     // Tadka Pics Agent fields
     source_type: 'websites',  // 'websites' or 'instagram'
     instagram_content_type: 'photos',  // 'photos' or 'reels'
-    instagram_urls: []
+    instagram_urls: [],
+    // Video Agent fields
+    video_category: 'trailers_teasers',  // trailers_teasers, trending_videos, events_interviews, tadka_shorts
+    search_query: '',  // Optional specific search query
+    max_videos: 5
   });
   
   const [showAgentPromptEditor, setShowAgentPromptEditor] = useState(false);
