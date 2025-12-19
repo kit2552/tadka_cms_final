@@ -269,7 +269,7 @@ async def seed_default_channels():
         channel_doc = {
             "id": str(uuid.uuid4()),
             "channel_name": channel_data["channel_name"],
-            "channel_id": None,
+            "channel_id": channel_data.get("channel_id"),  # Include channel ID from seed data
             "channel_type": channel_data["channel_type"],
             "languages": channel_data["languages"],
             "is_active": True,
