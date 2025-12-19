@@ -13,6 +13,7 @@ const AIAgents = () => {
   const [editingAgent, setEditingAgent] = useState(null);
   const [runningAgents, setRunningAgents] = useState(new Set());
   const [runResults, setRunResults] = useState({});
+  const [deleteConfirm, setDeleteConfirm] = useState({ show: false, agentId: null, agentName: '' });
 
   useEffect(() => {
     fetchAgents();
