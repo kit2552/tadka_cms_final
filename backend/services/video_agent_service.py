@@ -337,6 +337,9 @@ class VideoAgentService:
         # Limit to max_videos
         videos = videos[:max_videos]
         
+        # Get the agent's category setting (use the category from agent config)
+        agent_category = agent.get('category', '')
+        
         # Create video posts
         created_posts = []
         for video in videos:
@@ -344,28 +347,39 @@ class VideoAgentService:
                 # Clean up title - remove hashtags and extra content
                 clean_title = self._clean_video_title(video['title'])
                 
+                # Build the YouTube embed/watch URL
+                youtube_url = f"https://www.youtube.com/watch?v={video['video_id']}"
+                
                 # Create article with video content type
                 article_data = {
                     "title": clean_title,
                     "content": f"<p>{video['description'][:500] if video['description'] else clean_title}</p>",
                     "excerpt": video['description'][:200] if video['description'] else clean_title,
                     "content_type": "video",  # Explicitly set to video
-                    "video_url": video['url'],
+                    "video_url": youtube_url,  # YouTube watch URL
                     "featured_image": video['thumbnail'],
-                    "category": self._get_category_for_video_type(video_category),
+                    "category": agent_category,  # Use category from agent config
                     "section": self._get_section_for_state(target_state),
+                    "target_state": target_state,  # Add target state
+                    "state": target_state,  # Also add as state field
                     "status": "draft",
                     "source": "YouTube",
-                    "source_url": video['url'],
+                    "source_url": youtube_url,
                     "meta_title": clean_title[:60],
                     "meta_description": video['description'][:160] if video['description'] else clean_title[:160],
                     "created_by_agent": agent_id,
                     "agent_type": "video",
                     "youtube_video_id": video['video_id'],
-                    "channel_name": video.get('channel', '')
+                    "channel_name": video.get('channel', ''),
+                    "language": language  # Add language
                 }
                 
-                print(f"📝 Creating article with content_type: {article_data['content_type']}")
+                print(f"📝 Creating article:")
+                print(f"   Title: {clean_title}")
+                print(f"   Category: {agent_category}")
+                print(f"   State: {target_state}")
+                print(f"   Video URL: {youtube_url}")
+                print(f"   Content Type: {article_data['content_type']}")
                 
                 # Create the article
                 created = crud.create_article(db, article_data)
@@ -373,7 +387,7 @@ class VideoAgentService:
                     created_posts.append({
                         "id": created.get('id'),
                         "title": clean_title,
-                        "video_url": video['url'],
+                        "video_url": youtube_url,
                         "channel": video.get('channel', '')
                     })
                     print(f"✅ Created video post: {clean_title[:50]}...")
