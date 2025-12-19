@@ -754,7 +754,7 @@ const SystemSettings = () => {
   };
 
   const handleYoutubeChannelSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     console.log('Submitting channel form:', youtubeChannelForm);
     try {
       const url = editingYoutubeChannel 
