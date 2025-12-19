@@ -3310,12 +3310,12 @@ const Dashboard = () => {
                     {articles.map((article, index) => (
                       <div 
                         key={article.id} 
-                        className={`grid grid-cols-12 gap-4 px-4 py-4 min-w-[800px] ${
+                        className={`grid grid-cols-10 gap-4 px-4 py-4 min-w-[800px] ${
                           index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                         } hover:bg-gray-100 transition-colors duration-150`}
                       >
-                        {/* Post Column */}
-                        <div className="col-span-5">
+                        {/* Post Column - 60% */}
+                        <div className="col-span-6">
                           <div className="text-left">
                             <h3 className={`text-sm font-medium hover:text-blue-600 mb-1 text-left ${
                               article.is_top_story ? 'font-bold text-blue-700' : 'text-gray-900'
