@@ -3292,14 +3292,14 @@ const Dashboard = () => {
                 <div>
                   {/* Sticky Table Header */}
                   <div className="bg-gray-50 sticky top-28 z-30 border-b border-gray-200 shadow-sm px-4 py-3 overflow-x-auto min-w-full">
-                    <div className="grid grid-cols-12 gap-4 min-w-[800px]">
-                      <div className="col-span-5 text-left">
+                    <div className="grid grid-cols-10 gap-4 min-w-[800px]">
+                      <div className="col-span-6 text-left">
                         <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">POST</span>
                       </div>
-                      <div className="col-span-4 text-left">
+                      <div className="col-span-3 text-left">
                         <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">DETAILS</span>
                       </div>
-                      <div className="col-span-3 text-left">
+                      <div className="col-span-1 text-center">
                         <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">ACTIONS</span>
                       </div>
                     </div>
