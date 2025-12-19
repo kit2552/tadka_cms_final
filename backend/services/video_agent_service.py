@@ -372,6 +372,20 @@ class VideoAgentService:
             "posts": created_posts
         }
     
+    def _clean_video_title(self, title: str) -> str:
+        """Clean up video title - remove hashtags and excessive text"""
+        import re
+        # Remove hashtags
+        title = re.sub(r'#\w+', '', title)
+        # Remove multiple spaces
+        title = re.sub(r'\s+', ' ', title)
+        # Remove leading/trailing whitespace
+        title = title.strip()
+        # Truncate if too long
+        if len(title) > 150:
+            title = title[:147] + '...'
+        return title
+    
     def _get_category_for_video_type(self, video_category: str) -> str:
         """Map video category to article category"""
         category_map = {
