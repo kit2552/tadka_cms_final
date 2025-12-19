@@ -39,7 +39,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     // Video Agent fields
     video_category: 'trailers_teasers',  // trailers_teasers, trending_videos, events_interviews, tadka_shorts
     search_query: '',  // Optional specific search query
-    max_videos: 5
+    max_videos: 5,
+    channel_types: ['production_house', 'music_label', 'popular_channel']  // YouTube channel types to search
   });
   
   const [showAgentPromptEditor, setShowAgentPromptEditor] = useState(false);
