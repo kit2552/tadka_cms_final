@@ -1226,10 +1226,63 @@ Instructions:
                   </div>
                 </div>
                 
+                {/* Channel Types Selection */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">YouTube Channel Types</label>
+                  <p className="text-xs text-gray-500 mb-2">Select which types of channels to search for videos</p>
+                  <div className="flex flex-wrap gap-3">
+                    {[
+                      { value: 'production_house', label: 'Production Houses', icon: '🎬' },
+                      { value: 'music_label', label: 'Music Labels', icon: '🎵' },
+                      { value: 'popular_channel', label: 'Popular Channels', icon: '📺' }
+                    ].map(type => (
+                      <label
+                        key={type.value}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-all ${
+                          (formData.channel_types || []).includes(type.value)
+                            ? 'bg-red-50 border-red-400 text-red-700'
+                            : 'bg-white border-gray-300 text-gray-700 hover:border-red-300'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={(formData.channel_types || []).includes(type.value)}
+                          onChange={(e) => {
+                            const currentTypes = formData.channel_types || [];
+                            if (e.target.checked) {
+                              setFormData(prev => ({
+                                ...prev,
+                                channel_types: [...currentTypes, type.value]
+                              }));
+                            } else {
+                              setFormData(prev => ({
+                                ...prev,
+                                channel_types: currentTypes.filter(t => t !== type.value)
+                              }));
+                            }
+                          }}
+                          className="sr-only"
+                        />
+                        <span className="text-base">{type.icon}</span>
+                        <span className="text-sm font-medium">{type.label}</span>
+                        {(formData.channel_types || []).includes(type.value) && (
+                          <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </label>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Videos will be searched directly in channels of selected types (based on state/language)
+                  </p>
+                </div>
+                
                 {/* Info Note */}
                 <div className="bg-white rounded border border-red-200 p-3 text-xs text-gray-600">
-                  <strong>How it works:</strong> The agent will search YouTube for videos released today (IST) based on your 
-                  selected state/language and category. Videos will be created as posts with "Video" content type.
+                  <strong>How it works:</strong> The agent searches videos directly within official YouTube channels 
+                  (by channel ID) filtered by the selected channel types and language. This ensures only verified, 
+                  official content is fetched. Manage channels in Settings → YouTube Channels.
                 </div>
               </div>
             )}
