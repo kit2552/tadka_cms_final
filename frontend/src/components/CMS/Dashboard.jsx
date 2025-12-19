@@ -3037,15 +3037,24 @@ const Dashboard = () => {
     );
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString, showTimezone = true) => {
     if (!dateString) return 'Draft';
-    return new Date(dateString).toLocaleDateString('en-US', {
+    const date = new Date(dateString);
+    const formatted = date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     });
+    if (showTimezone) {
+      // Get timezone abbreviation
+      const timezone = Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+        .formatToParts(date)
+        .find(part => part.type === 'timeZoneName')?.value || 'IST';
+      return `${formatted} ${timezone}`;
+    }
+    return formatted;
   };
 
   return (
