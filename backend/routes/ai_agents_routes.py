@@ -60,6 +60,7 @@ class AIAgent(BaseModel):
     video_category: Optional[str] = "trailers_teasers"  # trailers_teasers, trending_videos, events_interviews, tadka_shorts
     search_query: Optional[str] = None  # Optional specific search query (movie name, celebrity name, etc.)
     max_videos: Optional[int] = 5  # Maximum videos to fetch
+    channel_types: Optional[List[str]] = None  # List of channel types: production_house, music_label, popular_channel
     
     # Adhoc mode fields
     schedule_post: Optional[bool] = False
