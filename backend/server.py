@@ -1100,11 +1100,18 @@ async def patch_cms_article(
     # Convert Pydantic model to dict, excluding unset values
     update_data = article_update.dict(exclude_unset=True)
     
-    # Only override status based on is_published if no explicit status was provided
-    if 'status' not in update_data:
-        if update_data.get('is_published') == True:
+    # Ensure status and is_published are always in sync
+    if 'status' in update_data:
+        # If status is explicitly set, sync is_published accordingly
+        if update_data['status'] == 'published':
+            update_data['is_published'] = True
+        elif update_data['status'] in ['draft', 'in_review', 'approved']:
+            update_data['is_published'] = False
+    elif 'is_published' in update_data:
+        # If only is_published is set, sync status accordingly
+        if update_data['is_published'] == True:
             update_data['status'] = 'published'
-        elif update_data.get('is_published') == False:
+        elif update_data['is_published'] == False:
             update_data['status'] = 'draft'
     
     updated_article = crud.update_article_cms(db, article_id, update_data)
