@@ -340,7 +340,7 @@ const AIAgents = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteAgent(agent.id)}
+                    onClick={() => handleDeleteAgent(agent.id, agent.agent_name)}
                     className="flex-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 rounded transition-colors"
                   >
                     Delete
