@@ -536,9 +536,13 @@ class VideoAgentService:
                         "id": created.get('id'),
                         "title": clean_title,
                         "video_url": youtube_url,
-                        "channel": video.get('channel', '')
+                        "channel": channel_name
                     })
                     print(f"   ✅ Created successfully")
+                    
+                    # Mark video as used in RSS collection (if from RSS)
+                    if video.get('source') == 'rss':
+                        youtube_rss_service.mark_video_as_used(video['video_id'])
                     
             except Exception as e:
                 print(f"❌ Error creating post: {e}")
@@ -546,7 +550,7 @@ class VideoAgentService:
                 traceback.print_exc()
                 continue
         
-        message = f"Successfully created {len(created_posts)} video posts from {len(channels)} channels"
+        message = f"Successfully created {len(created_posts)} video posts"
         if skipped_duplicates > 0:
             message += f" (skipped {skipped_duplicates} duplicates)"
         
@@ -556,7 +560,7 @@ class VideoAgentService:
             "videos_found": len(videos),
             "posts_created": len(created_posts),
             "duplicates_skipped": skipped_duplicates,
-            "channels_searched": len(channels),
+            "source_method": source_method if 'source_method' in dir() else "unknown",
             "posts": created_posts
         }
     
