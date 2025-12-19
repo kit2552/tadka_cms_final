@@ -696,9 +696,11 @@ const CreateArticle = () => {
       setLanguages(data.languages);
       setStates(data.states); // Now uses updated backend states
       setCategories(data.categories);
+      setConfigLoaded(true);
       // No default category - user must select one
     } catch (error) {
       console.error('Error fetching CMS config:', error);
+      setConfigLoaded(true); // Set to true even on error to avoid infinite loading
     }
   };
 
