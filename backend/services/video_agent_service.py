@@ -178,15 +178,13 @@ class VideoAgentService:
     
     async def search_trailers_teasers(self, language: str, movie_name: Optional[str] = None) -> List[Dict]:
         """Search for movie trailers and teasers released today"""
-        category = self.CATEGORIES['trailers_teasers']
-        
         if movie_name:
-            query = f"{movie_name} {language} trailer teaser official {self._get_today_ist()}"
+            query = f"{movie_name} {language} official trailer teaser"
         else:
-            # General search for trailers released today
-            keywords = ' OR '.join(category['keywords'])
-            query = f"{language} movie ({keywords}) {self._get_today_ist()}"
+            # General search for trailers - YouTube will filter by date
+            query = f"{language} movie trailer teaser first look 2024"
         
+        print(f"🔍 Searching trailers: {query}")
         return await self.search_youtube(
             query=query,
             max_results=10,
