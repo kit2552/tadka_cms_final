@@ -1258,8 +1258,8 @@ Instructions:
               </div>
             )}
 
-            {/* Reference Content Section - Hide for Tadka Pics with Instagram source */}
-            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && (
+            {/* Reference Content Section - Hide for Tadka Pics with Instagram source and Video agents */}
+            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && formData.agent_type !== 'video' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-gray-900 text-left">Reference Content</h3>
