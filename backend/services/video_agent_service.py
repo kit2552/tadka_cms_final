@@ -327,17 +327,17 @@ class VideoAgentService:
         # Search based on category
         videos = []
         if video_category == 'trailers_teasers':
-            videos = await self.search_trailers_teasers(language, search_query if search_query else None)
+            videos = await self.search_trailers_teasers(search_language, search_query if search_query else None)
         elif video_category == 'trending_videos':
-            videos = await self.search_trending_videos(language)
+            videos = await self.search_trending_videos(search_language)
         elif video_category == 'events_interviews':
-            videos = await self.search_events_interviews(language, search_query if search_query else None)
+            videos = await self.search_events_interviews(search_language, search_query if search_query else None)
         elif video_category == 'tadka_shorts':
-            videos = await self.search_tadka_shorts(language, search_query if search_query else None)
+            videos = await self.search_tadka_shorts(search_language, search_query if search_query else None)
         else:
             # Default general search
             videos = await self.search_youtube(
-                query=f"{language} {search_query or 'movie video'} {self._get_today_ist()}",
+                query=f"{search_language} {search_query or 'movie video'} {self._get_today_ist()}",
                 max_results=max_videos,
                 published_after=self._get_published_after()
             )
