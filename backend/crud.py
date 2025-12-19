@@ -1355,6 +1355,9 @@ def update_ai_api_keys(db, config: dict):
     if "anthropic_api_key" in config and config["anthropic_api_key"]:
         update_fields["anthropic_api_key"] = config["anthropic_api_key"]
     
+    if "youtube_api_key" in config and config["youtube_api_key"]:
+        update_fields["youtube_api_key"] = config["youtube_api_key"]
+    
     if "openai_default_model" in config:
         update_fields["openai_default_model"] = config.get("openai_default_model")
     
