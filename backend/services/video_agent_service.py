@@ -518,11 +518,16 @@ class VideoAgentService:
                 traceback.print_exc()
                 continue
         
+        message = f"Successfully created {len(created_posts)} video posts"
+        if skipped_duplicates > 0:
+            message += f" (skipped {skipped_duplicates} duplicates)"
+        
         return {
             "success": True,
-            "message": f"Successfully created {len(created_posts)} video posts",
+            "message": message,
             "videos_found": len(videos),
             "posts_created": len(created_posts),
+            "duplicates_skipped": skipped_duplicates,
             "posts": created_posts
         }
     
