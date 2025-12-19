@@ -354,24 +354,22 @@ class VideoAgentService:
                 article_data = {
                     "title": clean_title,
                     "content": f"<p>{video['description'][:500] if video['description'] else clean_title}</p>",
-                    "excerpt": video['description'][:200] if video['description'] else clean_title,
+                    "summary": video['description'][:200] if video['description'] else clean_title,
                     "content_type": "video",  # Explicitly set to video
-                    "video_url": youtube_url,  # YouTube watch URL
-                    "featured_image": video['thumbnail'],
+                    "youtube_url": youtube_url,  # YouTube watch URL (correct field name)
+                    "image": video['thumbnail'],  # Use 'image' instead of 'featured_image'
                     "category": agent_category,  # Use category from agent config
-                    "section": self._get_section_for_state(target_state),
-                    "target_state": target_state,  # Add target state
-                    "state": target_state,  # Also add as state field
+                    "states": f'["{target_state}"]',  # Use 'states' field as JSON string array
                     "status": "draft",
                     "source": "YouTube",
                     "source_url": youtube_url,
-                    "meta_title": clean_title[:60],
-                    "meta_description": video['description'][:160] if video['description'] else clean_title[:160],
+                    "seo_title": clean_title[:60],
+                    "seo_description": video['description'][:160] if video['description'] else clean_title[:160],
                     "created_by_agent": agent_id,
                     "agent_type": "video",
                     "youtube_video_id": video['video_id'],
                     "channel_name": video.get('channel', ''),
-                    "language": language  # Add language
+                    "article_language": language  # Use correct field name
                 }
                 
                 print(f"📝 Creating article:")
