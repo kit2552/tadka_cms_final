@@ -182,19 +182,34 @@ class VideoAgentService:
             return []
     
     async def search_trailers_teasers(self, language: str, movie_name: Optional[str] = None) -> List[Dict]:
-        """Search for movie trailers and teasers released today"""
+        """Search for official movie trailers and teasers"""
         if movie_name:
-            query = f"{movie_name} {language} official trailer teaser"
+            # Search for specific movie trailer from official channel
+            query = f"{movie_name} official trailer {language}"
         else:
-            # General search for trailers - YouTube will filter by date
-            query = f"{language} movie trailer teaser first look 2024"
+            # General search for official trailers - exclude shorts, reviews, reactions
+            query = f"{language} movie official trailer teaser -shorts -review -reaction -scene"
         
         print(f"🔍 Searching trailers: {query}")
-        return await self.search_youtube(
+        videos = await self.search_youtube(
             query=query,
-            max_results=10,
-            published_after=self._get_published_after()
+            max_results=20,  # Get more to filter
+            published_after=self._get_published_after(),
+            video_duration='medium'  # Trailers are typically 1-4 minutes
         )
+        
+        # Filter results to get only likely official trailers
+        filtered = []
+        for video in videos:
+            title_lower = video['title'].lower()
+            # Skip if title contains unwanted keywords
+            if any(skip in title_lower for skip in ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 'explained']):
+                continue
+            # Prefer titles with "official" or "trailer" or "teaser"
+            if any(keyword in title_lower for keyword in ['official', 'trailer', 'teaser', 'first look', 'glimpse', 'motion poster']):
+                filtered.append(video)
+        
+        return filtered[:10]
     
     async def search_trending_videos(self, language: str) -> List[Dict]:
         """Search for trending movie/music videos"""
