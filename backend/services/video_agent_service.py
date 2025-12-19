@@ -199,8 +199,32 @@ class VideoAgentService:
             traceback.print_exc()
             return []
     
+    # Official Indian music labels and production houses
+    OFFICIAL_CHANNELS = [
+        # Music Labels
+        't-series', 'tseries', 'saregama', 'sony music', 'zee music', 'tips official',
+        'aditya music', 'lahari music', 'mango music', 'speed records', 'white hill music',
+        'shemaroo', 'eros now', 'goldmines', 'ultra bollywood', 'venus', 'yrf',
+        'sony music south', 'think music', 'aditya movies', 'sri balaji video',
+        # Production Houses
+        'yash raj films', 'dharma productions', 'excel entertainment', 'red chillies',
+        'annapurna studios', 'mythri movie makers', 'sri venkateswara creations',
+        'hombale films', 'uv creations', 'geetha arts', 'sithara entertainments',
+        'people media factory', 'dil raju productions', 'suresh productions',
+        'pen studios', 'reliance entertainment', 'eros', 'nadiadwala grandson',
+        'balaji motion pictures', 'colour yellow', 'ajay devgn ffilms',
+        'maddock films', 'junglee pictures', 'phantom films', 'abundantia entertainment',
+        # Telugu specific
+        'mango telugu cinema', 'telugu filmnagar', 'suresh productions',
+        'aditya music telugu', 'aditya movies', 'gemini tv music', 'etv telugu',
+        # Tamil specific  
+        'sun tv', 'think music india', 'sony music south',
+        # Official/Verified indicators
+        'official', 'verified'
+    ]
+    
     async def search_trailers_teasers(self, language: str, movie_name: Optional[str] = None) -> List[Dict]:
-        """Search for official movie trailers and teasers only - NOT events or interviews"""
+        """Search for official movie trailers and teasers from verified channels only"""
         if movie_name:
             # Search for specific movie trailer from official channel
             query = f"{movie_name} official trailer {language}"
@@ -211,13 +235,11 @@ class VideoAgentService:
         print(f"🔍 Searching trailers: {query}")
         videos = await self.search_youtube(
             query=query,
-            max_results=30,  # Get more to filter
+            max_results=50,  # Get more to filter for official channels
             published_after=self._get_published_after(),
             video_duration='medium'  # Trailers are typically 1-4 minutes
         )
         
-        # Filter results to get only actual trailers/teasers - exclude event content
-        filtered = []
         # Keywords that indicate event/interview content - should be excluded
         event_keywords = [
             'speech', 'event', 'interview', 'press meet', 'press conference', 
@@ -229,8 +251,13 @@ class VideoAgentService:
         # Keywords that indicate actual trailer/teaser content - required
         trailer_keywords = ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster', 'promo']
         
+        # Separate official channel videos from others
+        official_videos = []
+        other_videos = []
+        
         for video in videos:
             title_lower = video['title'].lower()
+            channel_lower = video.get('channel', '').lower()
             
             # Skip if title contains event-related keywords
             if any(skip in title_lower for skip in event_keywords):
@@ -238,15 +265,31 @@ class VideoAgentService:
                 continue
             
             # Skip if title contains other unwanted keywords
-            if any(skip in title_lower for skip in ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 'explained', 'making', 'behind the scenes']):
+            if any(skip in title_lower for skip in ['#shorts', 'review', 'reaction', 'scene', 'spoof', 'roast', 'explained', 'making', 'behind the scenes', 'fan made', 'unofficial', 'leaked']):
                 continue
             
             # Must have trailer/teaser related keyword
-            if any(keyword in title_lower for keyword in trailer_keywords):
-                print(f"   ✅ Found trailer: {video['title'][:50]}...")
-                filtered.append(video)
+            if not any(keyword in title_lower for keyword in trailer_keywords):
+                continue
+            
+            # Check if from official channel
+            is_official = any(official in channel_lower for official in self.OFFICIAL_CHANNELS)
+            
+            if is_official:
+                print(f"   ✅ Official trailer from {video.get('channel')}: {video['title'][:40]}...")
+                official_videos.append(video)
+            else:
+                print(f"   ⚠️ Non-official channel ({video.get('channel')}): {video['title'][:40]}...")
+                other_videos.append(video)
         
-        return filtered[:10]
+        # Prioritize official channel videos, then fill with others if needed
+        result = official_videos[:10]
+        if len(result) < 10:
+            remaining = 10 - len(result)
+            result.extend(other_videos[:remaining])
+        
+        print(f"📊 Results: {len(official_videos)} official, {len(other_videos)} other, returning {len(result)}")
+        return result
     
     async def search_trending_videos(self, language: str) -> List[Dict]:
         """Search for trending movie/music videos from official channels"""
