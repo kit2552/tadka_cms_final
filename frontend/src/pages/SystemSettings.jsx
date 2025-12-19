@@ -2359,7 +2359,7 @@ const SystemSettings = () => {
                           <td className="px-4 py-3 text-left">
                             <div className="flex flex-wrap gap-1">
                               {channel.languages.map(lang => (
-                                <span key={lang} className="inline-flex px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded">
+                                <span key={lang} className="inline-flex px-2 py-0.5 text-xs text-gray-700">
                                   {lang}
                                 </span>
                               ))}
