@@ -142,6 +142,7 @@ const SystemSettings = () => {
     fetchAllImageModels();
     fetchCategories();
     fetchCategoryPromptMappings();
+    fetchYoutubeChannels();
   }, []);
 
   const loadAWSConfig = async () => {
