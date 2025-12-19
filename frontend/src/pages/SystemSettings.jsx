@@ -2403,6 +2403,11 @@ const SystemSettings = () => {
               </div>
             )}
 
+            {/* Manage Videos Modal */}
+            {showManageVideosModal && (
+              <ManageVideosModal onClose={() => setShowManageVideosModal(false)} />
+            )}
+
           </div>
         </div>
       </div>
