@@ -319,38 +319,49 @@ class VideoAgentService:
         created_posts = []
         for video in videos:
             try:
+                # Clean up title - remove hashtags and extra content
+                clean_title = self._clean_video_title(video['title'])
+                
                 # Create article with video content type
                 article_data = {
-                    "title": video['title'],
-                    "content": f"<p>{video['description'][:500] if video['description'] else video['title']}</p>",
-                    "excerpt": video['description'][:200] if video['description'] else video['title'],
-                    "content_type": "video",
+                    "title": clean_title,
+                    "content": f"<p>{video['description'][:500] if video['description'] else clean_title}</p>",
+                    "excerpt": video['description'][:200] if video['description'] else clean_title,
+                    "content_type": "video",  # Explicitly set to video
                     "video_url": video['url'],
-                    "video_id": video['video_id'],
                     "featured_image": video['thumbnail'],
                     "category": self._get_category_for_video_type(video_category),
                     "section": self._get_section_for_state(target_state),
                     "status": "draft",
                     "source": "YouTube",
                     "source_url": video['url'],
-                    "meta_title": video['title'][:60],
-                    "meta_description": video['description'][:160] if video['description'] else video['title'][:160],
+                    "meta_title": clean_title[:60],
+                    "meta_description": video['description'][:160] if video['description'] else clean_title[:160],
                     "created_by_agent": agent_id,
-                    "agent_type": "video"
+                    "agent_type": "video",
+                    "youtube_video_id": video['video_id'],
+                    "channel_name": video.get('channel', '')
                 }
+                
+                print(f"📝 Creating article with content_type: {article_data['content_type']}")
                 
                 # Create the article
                 created = crud.create_article(db, article_data)
                 if created:
                     created_posts.append({
                         "id": created.get('id'),
-                        "title": video['title'],
-                        "video_url": video['url']
+                        "title": clean_title,
+                        "video_url": video['url'],
+                        "channel": video.get('channel', '')
                     })
-                    print(f"✅ Created video post: {video['title'][:50]}...")
+                    print(f"✅ Created video post: {clean_title[:50]}...")
+                else:
+                    print(f"❌ Failed to create article for: {clean_title[:50]}")
                     
             except Exception as e:
                 print(f"❌ Error creating post for video: {e}")
+                import traceback
+                traceback.print_exc()
                 continue
         
         return {
