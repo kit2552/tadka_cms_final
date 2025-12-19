@@ -304,28 +304,32 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             <div className="flex gap-4 items-center">
               <button
                 type="button"
-                onClick={() => !editingAgent && setActiveTab('recurring')}
+                onClick={() => {
+                  if (!editingAgent) setActiveTab('recurring');
+                }}
                 disabled={editingAgent && editingAgent.mode !== 'recurring'}
                 className={`py-2.5 px-4 font-medium text-xs border-b-2 transition-colors ${
                   activeTab === 'recurring'
                     ? 'border-blue-600 text-blue-600'
                     : editingAgent && editingAgent.mode !== 'recurring'
                     ? 'border-transparent text-gray-300 cursor-not-allowed'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 cursor-pointer'
                 }`}
               >
                 Recurring Mode
               </button>
               <button
                 type="button"
-                onClick={() => !editingAgent && setActiveTab('adhoc')}
+                onClick={() => {
+                  if (!editingAgent) setActiveTab('adhoc');
+                }}
                 disabled={editingAgent && editingAgent.mode !== 'adhoc'}
                 className={`py-2.5 px-4 font-medium text-xs border-b-2 transition-colors ${
                   activeTab === 'adhoc'
                     ? 'border-blue-600 text-blue-600'
                     : editingAgent && editingAgent.mode !== 'adhoc'
                     ? 'border-transparent text-gray-300 cursor-not-allowed'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 cursor-pointer'
                 }`}
               >
                 Adhoc Mode
