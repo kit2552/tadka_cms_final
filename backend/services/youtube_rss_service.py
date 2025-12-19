@@ -173,6 +173,41 @@ class YouTubeRSSService:
         # Fall back to first channel language
         return channel_languages[0] if channel_languages else 'Hindi'
     
+    def _detect_video_category(self, title: str, description: str) -> str:
+        """Detect video category from title and description
+        
+        Categories: Trailer, Teaser, Song, Movie, Event, Interview, Press Meet, 
+                   Behind The Scenes, Review, Promo, First Look, Glimpse, Other
+        """
+        text = f"{title} {description}".lower()
+        
+        # Category detection patterns (ordered by priority)
+        category_patterns = {
+            'Trailer': [r'\btrailer\b', r'\bofficial trailer\b', r'\bmovie trailer\b'],
+            'Teaser': [r'\bteaser\b', r'\bofficial teaser\b'],
+            'First Look': [r'\bfirst look\b', r'\b1st look\b'],
+            'Glimpse': [r'\bglimpse\b'],
+            'Motion Poster': [r'\bmotion poster\b'],
+            'Song': [r'\bsong\b', r'\blyrical\b', r'\bvideo song\b', r'\bfull song\b', r'\bmusic video\b', r'\bjukebox\b'],
+            'Interview': [r'\binterview\b', r'\bexclusive interview\b', r'\bchit chat\b', r'\bconversation\b'],
+            'Press Meet': [r'\bpress meet\b', r'\bpressmeet\b', r'\bpress conference\b', r'\bmedia interaction\b'],
+            'Event': [r'\bevent\b', r'\blaunch\b', r'\bpre-release\b', r'\bprerelease\b', r'\baudio launch\b', 
+                     r'\bsuccess meet\b', r'\bcelebration\b', r'\bpromotion\b', r'\bpromo event\b'],
+            'Speech': [r'\bspeech\b', r'\baddress\b'],
+            'Behind The Scenes': [r'\bbehind the scenes\b', r'\bbts\b', r'\bmaking\b', r'\bon set\b', r'\bmaking of\b'],
+            'Review': [r'\breview\b', r'\bpublic talk\b', r'\bpublic response\b', r'\breaction\b'],
+            'Promo': [r'\bpromo\b', r'\bdialogue promo\b', r'\bscene\b'],
+            'Short': [r'#shorts', r'\bshort\b', r'\breels\b'],
+            'Full Movie': [r'\bfull movie\b', r'\bcomplete movie\b']
+        }
+        
+        for category, patterns in category_patterns.items():
+            for pattern in patterns:
+                if re.search(pattern, text, re.IGNORECASE):
+                    return category
+        
+        return 'Other'
+    
     async def fetch_all_channels(self) -> Dict:
         """Fetch videos from all active YouTube channels
         
