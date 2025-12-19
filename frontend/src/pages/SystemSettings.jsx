@@ -857,39 +857,38 @@ const SystemSettings = () => {
       await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/${channelId}`, {
         method: 'DELETE'
       });
-      setMessage({ type: 'success', text: 'Channel deleted successfully!' });
       fetchYoutubeChannels();
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to delete channel' });
+      setFetchError('Failed to delete channel');
     }
   };
 
   const fetchChannelVideos = async (channel) => {
     if (!channel.channel_id) {
-      setMessage({ type: 'error', text: 'Channel has no YouTube ID configured' });
+      setFetchError('Channel has no YouTube ID configured');
       return;
     }
     
     setFetchingChannelId(channel.id);
+    setFetchingChannelName(channel.channel_name);
+    setFetchError('');
+    
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-rss/fetch-channel/${channel.id}`, {
         method: 'POST'
       });
       
       if (response.ok) {
-        const data = await response.json();
-        setMessage({ 
-          type: 'success', 
-          text: `Fetched ${data.new_videos} new videos from ${data.channel_name}` 
-        });
+        // Success - just close the loading modal, no message needed
       } else {
         const error = await response.json();
-        setMessage({ type: 'error', text: error.detail || 'Failed to fetch videos' });
+        setFetchError(error.detail || 'Failed to fetch videos');
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to fetch videos' });
+      setFetchError('Failed to fetch videos');
     } finally {
       setFetchingChannelId(null);
+      setFetchingChannelName('');
     }
   };
 
