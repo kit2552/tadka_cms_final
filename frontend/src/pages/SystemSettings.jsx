@@ -2508,17 +2508,20 @@ const SystemSettings = () => {
                         onClick={() => {
                           setShowYoutubeChannelModal(false);
                           setEditingYoutubeChannel(null);
+                          setChannelModalError('');
                         }}
                         className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                        disabled={savingChannel}
                       >
                         Cancel
                       </button>
                       <button
                         type="button"
                         onClick={handleYoutubeChannelSubmit}
-                        className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                        disabled={savingChannel}
+                        className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {editingYoutubeChannel ? 'Update Channel' : 'Add Channel'}
+                        {savingChannel ? 'Saving...' : (editingYoutubeChannel ? 'Update Channel' : 'Add Channel')}
                       </button>
                     </div>
                   </form>
