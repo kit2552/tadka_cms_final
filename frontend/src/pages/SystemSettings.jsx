@@ -837,6 +837,44 @@ const SystemSettings = () => {
     }
   };
 
+  // Extract channel details for refresh flow in edit modal
+  const extractEditChannelDetails = async () => {
+    if (!editRefreshUrlInput.trim()) {
+      setEditRefreshError('Please enter a YouTube channel URL');
+      return;
+    }
+    
+    setEditRefreshError('');
+    setExtractingEditChannel(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/extract-details`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: editRefreshUrlInput })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Update form with new channel_id and rss_url but keep other settings
+        setYoutubeChannelForm(prev => ({
+          ...prev,
+          channel_name: data.channel_name,
+          channel_id: data.channel_id,
+          rss_url: data.rss_url
+        }));
+        setShowEditRefreshModal(false);
+        setEditRefreshUrlInput('');
+      } else {
+        const error = await response.json();
+        setEditRefreshError(error.detail || 'Failed to extract channel details');
+      }
+    } catch (error) {
+      setEditRefreshError('Failed to extract channel details');
+    } finally {
+      setExtractingEditChannel(false);
+    }
+  };
+
   const deleteYoutubeChannel = async (channelId) => {
     if (!window.confirm('Are you sure you want to delete this channel?')) return;
     try {
