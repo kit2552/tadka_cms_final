@@ -3410,8 +3410,8 @@ const Dashboard = () => {
                           </div>
                         </div>
                         
-                        {/* Details Column */}
-                        <div className="col-span-5">
+                        {/* Details Column - 30% */}
+                        <div className="col-span-3">
                           <div className="space-y-1 text-left">
                             <div className="flex flex-wrap gap-2 text-xs">
                               <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-100 text-gray-700 border border-gray-200">
@@ -3431,8 +3431,8 @@ const Dashboard = () => {
                           </div>
                         </div>
                         
-                        {/* Actions Column - 3 dots menu */}
-                        <div className="col-span-2 text-right">
+                        {/* Actions Column - 10% */}
+                        <div className="col-span-1 text-center">
                           <button
                             onClick={() => setActionMenu({ 
                               show: true, 
