@@ -55,16 +55,20 @@ const AIAgents = () => {
     }
   };
 
-  const handleDeleteAgent = async (agentId) => {
-    if (!window.confirm('Are you sure you want to delete this agent?')) return;
-    
+  const handleDeleteAgent = (agentId, agentName) => {
+    setDeleteConfirm({ show: true, agentId, agentName });
+  };
+
+  const confirmDelete = async () => {
     try {
-      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-agents/${agentId}`, {
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai-agents/${deleteConfirm.agentId}`, {
         method: 'DELETE'
       });
       fetchAgents();
     } catch (error) {
       console.error('Failed to delete agent:', error);
+    } finally {
+      setDeleteConfirm({ show: false, agentId: null, agentName: '' });
     }
   };
 
