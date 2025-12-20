@@ -133,6 +133,8 @@ const SystemSettings = () => {
     languages: [],
     is_active: true
   });
+  const [languageSearch, setLanguageSearch] = useState('');
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [youtubeLanguages] = useState([
     { value: 'Hindi', label: 'Hindi (Bollywood)' },
     { value: 'Telugu', label: 'Telugu (Tollywood)' },
