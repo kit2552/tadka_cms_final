@@ -254,6 +254,25 @@ async def skip_video(request: SkipVideoRequest):
         raise HTTPException(status_code=404, detail="Video not found")
 
 
+class MarkAvailableRequest(BaseModel):
+    video_id: str
+
+
+@router.post("/videos/mark-available")
+async def mark_video_available(request: MarkAvailableRequest):
+    """Mark a used video as available again"""
+    success = youtube_rss_service.mark_video_as_available(request.video_id)
+    
+    if success:
+        return {
+            "success": True,
+            "message": "Video marked as available",
+            "video_id": request.video_id
+        }
+    else:
+        raise HTTPException(status_code=404, detail="Video not found")
+
+
 @router.delete("/videos/all")
 async def delete_all_videos():
     """Delete all videos from collection (use with caution)"""
