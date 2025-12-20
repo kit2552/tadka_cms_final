@@ -234,6 +234,26 @@ async def delete_old_videos(request: DeleteOldVideosRequest):
     return result
 
 
+class SkipVideoRequest(BaseModel):
+    video_id: str
+    skipped: bool = True
+
+
+@router.post("/videos/skip")
+async def skip_video(request: SkipVideoRequest):
+    """Mark a video as skipped (won't be picked by agent)"""
+    success = youtube_rss_service.mark_video_as_skipped(request.video_id, request.skipped)
+    
+    if success:
+        return {
+            "success": True,
+            "message": f"Video {'skipped' if request.skipped else 'unskipped'} successfully",
+            "video_id": request.video_id
+        }
+    else:
+        raise HTTPException(status_code=404, detail="Video not found")
+
+
 @router.delete("/videos/all")
 async def delete_all_videos():
     """Delete all videos from collection (use with caution)"""
