@@ -2314,8 +2314,8 @@ const SystemSettings = () => {
                             <span className={`text-sm ${channel.is_active ? 'text-green-600' : 'text-red-600'}`}>
                               {channel.is_active ? 'Active' : 'Inactive'}
                             </span>
-                            {channel.video_count === 0 && (
-                              <span className="text-red-500 ml-1 font-bold" title="No videos fetched">✕</span>
+                            {(!channel.rss_url || channel.video_count === 0) && (
+                              <span className="text-red-500 ml-1 font-bold" title={!channel.rss_url ? "No RSS URL" : "No videos fetched"}>✕</span>
                             )}
                           </td>
                           <td className="px-4 py-3 text-right">
