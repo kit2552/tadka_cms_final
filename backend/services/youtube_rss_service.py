@@ -437,13 +437,12 @@ class YouTubeRSSService:
             # Convert all languages to DB format
             db_languages = [lang_map.get(lang.lower(), lang) for lang in languages]
             
-            # Build OR conditions for each language
-            language_conditions = []
-            for db_lang in db_languages:
-                language_conditions.append({'languages': db_lang})
-                language_conditions.append({'detected_language': db_lang})
-            
-            query['$or'] = language_conditions
+            # Use $in for array field 'languages' and $in for 'detected_language'
+            # This ensures we match if ANY of the channel's languages matches ANY of the state's languages
+            query['$or'] = [
+                {'languages': {'$in': db_languages}},  # Match if channel languages array contains any of the state languages
+                {'detected_language': {'$in': db_languages}}  # Or if detected_language matches
+            ]
             print(f"   🔍 Filtering videos for languages: {db_languages}")
         
         # Fetch videos
