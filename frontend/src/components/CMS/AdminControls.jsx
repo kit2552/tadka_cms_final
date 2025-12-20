@@ -126,7 +126,7 @@ const AdminControls = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-5xl-plus mx-auto px-8 py-8">
         {/* Header */}
         <div className="mb-6 text-left">
           <h1 className="text-xl font-semibold text-gray-900 text-left">Admin Controls</h1>
