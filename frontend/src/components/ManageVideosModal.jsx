@@ -161,15 +161,38 @@ const ManageVideosModal = ({ onClose }) => {
     }
   };
 
-  const handleShowVideos = async (channel) => {
+  const handleShowVideos = async (channel, tab = 'available') => {
     setSelectedChannel(channel);
     setShowVideoList(true);
     setVideosLoading(true);
     setVideosCategoryFilter('all');
+    setVideosTab(tab);
     
     try {
+      const isUsed = tab === 'used' ? 'true' : 'false';
       const res = await fetch(
-        `${BACKEND_URL}/api/youtube-rss/videos?channel_id=${channel.channel_id}&is_used=false&limit=100`
+        `${BACKEND_URL}/api/youtube-rss/videos?channel_id=${channel.channel_id}&is_used=${isUsed}&limit=100`
+      );
+      const data = await res.json();
+      setChannelVideosList(data.videos || []);
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+      setChannelVideosList([]);
+    } finally {
+      setVideosLoading(false);
+    }
+  };
+
+  const switchVideosTab = async (tab) => {
+    if (!selectedChannel || tab === videosTab) return;
+    setVideosTab(tab);
+    setVideosLoading(true);
+    setVideosCategoryFilter('all');
+    
+    try {
+      const isUsed = tab === 'used' ? 'true' : 'false';
+      const res = await fetch(
+        `${BACKEND_URL}/api/youtube-rss/videos?channel_id=${selectedChannel.channel_id}&is_used=${isUsed}&limit=100`
       );
       const data = await res.json();
       setChannelVideosList(data.videos || []);
