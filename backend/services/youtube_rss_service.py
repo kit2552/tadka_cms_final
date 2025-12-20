@@ -472,6 +472,14 @@ class YouTubeRSSService:
         )
         return result.modified_count > 0
     
+    def mark_video_as_skipped(self, video_id: str, skipped: bool = True) -> bool:
+        """Mark a video as skipped (won't be picked by agent)"""
+        result = db.youtube_videos.update_one(
+            {'video_id': video_id},
+            {'$set': {'is_skipped': skipped, 'skipped_at': datetime.now(timezone.utc) if skipped else None}}
+        )
+        return result.modified_count > 0
+    
     def get_video_counts_by_channel(self) -> List[Dict]:
         """Get video count per channel"""
         pipeline = [
