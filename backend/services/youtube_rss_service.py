@@ -166,6 +166,7 @@ class YouTubeRSSService:
                             'detected_category': detected_category,  # New field
                             'fetched_at': datetime.now(timezone.utc),
                             'is_used': False,  # Track if used by video agent
+                            'is_skipped': False,  # Track if manually skipped
                             'source': 'rss'
                         }
                         
