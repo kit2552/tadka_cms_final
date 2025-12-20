@@ -495,6 +495,11 @@ class VideoAgentService:
                 
                 clean_title = self._clean_video_title(video['title'])
                 original_youtube_title = video['title']  # Full YouTube title
+                
+                # Apply title case to both titles
+                title_cased_youtube = self._to_title_case(original_youtube_title)
+                title_cased_display = self._to_title_case(clean_title)
+                
                 slug = self._generate_slug(clean_title)
                 current_time = datetime.now(timezone.utc)
                 
@@ -504,8 +509,8 @@ class VideoAgentService:
                 channel_name = video.get('channel_name', '') or video.get('channel', '')
                 
                 article_data = {
-                    "title": original_youtube_title,  # Store full YouTube title as main title
-                    "display_title": clean_title,  # Store extracted movie name for home page display
+                    "title": title_cased_youtube,  # Store full YouTube title as main title (title case)
+                    "display_title": title_cased_display,  # Store extracted movie name for home page display (title case)
                     "slug": slug,
                     "author": "AI Agent",
                     "agent_name": agent_name,
