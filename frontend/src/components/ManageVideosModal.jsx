@@ -544,9 +544,9 @@ const ManageVideosModal = ({ onClose }) => {
             <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="text-left">
-                  <h3 className="text-lg font-bold text-gray-900">Available Videos</h3>
+                  <h3 className="text-lg font-bold text-gray-900">{selectedChannel.channel_name}</h3>
                   <p className="text-sm text-gray-600 mt-1">
-                    {selectedChannel.channel_name} - {filteredVideosList.length} videos
+                    {filteredVideosList.length} {videosTab === 'used' ? 'used' : 'available'} videos
                   </p>
                 </div>
                 <button
@@ -560,6 +560,30 @@ const ManageVideosModal = ({ onClose }) => {
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
+                </button>
+              </div>
+              
+              {/* Tabs for Available/Used */}
+              <div className="mt-3 flex items-center gap-2 border-b border-gray-200">
+                <button
+                  onClick={() => switchVideosTab('available')}
+                  className={`px-3 py-2 text-sm font-medium border-b-2 transition-colors ${
+                    videosTab === 'available'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Available
+                </button>
+                <button
+                  onClick={() => switchVideosTab('used')}
+                  className={`px-3 py-2 text-sm font-medium border-b-2 transition-colors ${
+                    videosTab === 'used'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Used
                 </button>
               </div>
               
