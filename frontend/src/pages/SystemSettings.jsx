@@ -116,6 +116,9 @@ const SystemSettings = () => {
   const [fetchingChannelId, setFetchingChannelId] = useState(null);
   const [fetchingChannelName, setFetchingChannelName] = useState('');
   const [fetchError, setFetchError] = useState('');
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [channelToDelete, setChannelToDelete] = useState(null);
+  const [deletingChannel, setDeletingChannel] = useState(false);
   const [editingYoutubeChannel, setEditingYoutubeChannel] = useState(null);
   const [showEditRefreshModal, setShowEditRefreshModal] = useState(false);
   const [editRefreshUrlInput, setEditRefreshUrlInput] = useState('');
