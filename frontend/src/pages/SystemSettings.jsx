@@ -1930,24 +1930,6 @@ const SystemSettings = () => {
             {/* Other Settings Tab */}
             {activeTab === 'other' && (
               <div className="space-y-6">
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">Category-Prompt Mapping</h3>
-                  <p className="text-sm text-gray-600 text-left">Configure AI prompts for each category. These prompts are used as defaults when AI agents generate content for specific categories.</p>
-                </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                  <p className="text-sm text-blue-800">
-                    <strong>Available Placeholders:</strong> Use these in your prompts and they will be replaced dynamically:
-                  </p>
-                  <ul className="text-xs text-blue-700 mt-2 space-y-1">
-                    <li>• <code className="bg-blue-100 px-1 rounded">{'{target_state_context}'}</code> - State-specific context</li>
-                    <li>• <code className="bg-blue-100 px-1 rounded">{'{target_audience}'}</code> - Target audience</li>
-                    <li>• <code className="bg-blue-100 px-1 rounded">{'{word_count}'}</code> - Configured word count</li>
-                    <li>• <code className="bg-blue-100 px-1 rounded">{'{state_language}'}</code> - Regional language</li>
-                    <li>• <code className="bg-blue-100 px-1 rounded">{'{reference_content_section}'}</code> - Fetched reference content</li>
-                  </ul>
-                </div>
-
                 <div className="space-y-3">
                   {categories
                     .filter(cat => cat.slug !== 'latest-news')
