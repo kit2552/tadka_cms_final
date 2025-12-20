@@ -421,10 +421,12 @@ class VideoAgentService:
         
         # Get state-language mapping
         self.state_language_map = await self._get_state_language_mapping()
-        search_language = self._get_language_for_state(target_state)
+        state_languages = self._get_languages_for_state(target_state)
+        search_language = state_languages[0] if state_languages else 'Hindi'
         
         print(f"📌 Target State: {target_state}")
-        print(f"📌 Search Language: {search_language}")
+        print(f"📌 State Languages: {state_languages}")
+        print(f"📌 Primary Search Language: {search_language}")
         print(f"📌 Video Category: {video_category}")
         print(f"📌 Channel Types: {channel_types}")
         print(f"📌 Article Language: {agent_article_language}")
@@ -433,9 +435,10 @@ class VideoAgentService:
         # Check if RSS collection has videos (preferred method - no API quota)
         from services.youtube_rss_service import youtube_rss_service
         
+        # Pass all state languages to filter videos
         rss_videos = youtube_rss_service.get_videos_for_agent(
             channel_types=channel_types,
-            language=search_language,
+            languages=state_languages,  # Pass all languages for the state
             video_category=video_category,
             max_videos=max_videos * 2,  # Get extra for filtering
             days_ago=7
