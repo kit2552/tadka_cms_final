@@ -494,6 +494,7 @@ class VideoAgentService:
                     continue
                 
                 clean_title = self._clean_video_title(video['title'])
+                original_youtube_title = video['title']  # Store original YouTube title
                 slug = self._generate_slug(clean_title)
                 current_time = datetime.now(timezone.utc)
                 
@@ -504,6 +505,7 @@ class VideoAgentService:
                 
                 article_data = {
                     "title": clean_title,
+                    "youtube_title": original_youtube_title,  # Store original YouTube title
                     "slug": slug,
                     "author": "AI Agent",
                     "agent_name": agent_name,
