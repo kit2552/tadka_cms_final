@@ -764,12 +764,6 @@ class VideoAgentService:
                     break
         
         return self._to_title_case(result) if result else "Video"
-                match = re.search(pattern, result, re.IGNORECASE)
-                if match:
-                    result = result[:match.start()].strip()
-                    break
-        
-        return self._to_title_case(result) if result else "Video"
     
     def _clean_video_title(self, title: str) -> str:
         """Legacy method - calls _extract_display_title for backward compatibility"""
