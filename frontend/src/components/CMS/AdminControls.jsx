@@ -181,8 +181,6 @@ const AdminControls = () => {
             {activeTab === 'scheduler' && (
               <div className="space-y-6">
                 <div className="text-left">
-                  <h2 className="text-lg font-semibold text-gray-900 text-left mb-4">Post Scheduler Configuration</h2>
-                  
                   <div className="space-y-6">
                     {/* Enable Toggle */}
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
