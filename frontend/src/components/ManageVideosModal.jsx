@@ -706,17 +706,29 @@ const ManageVideosModal = ({ onClose }) => {
                               {formatShortDate(video.published_at)}
                             </span>
                             
-                            {/* Skip/Unskip Button */}
-                            <button
-                              onClick={() => handleSkipVideo(video.video_id, !video.is_skipped)}
-                              className={`text-xs px-2 py-0.5 rounded ${
-                                video.is_skipped 
-                                  ? 'bg-green-100 text-green-700 hover:bg-green-200' 
-                                  : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                              }`}
-                            >
-                              {video.is_skipped ? 'Unskip' : 'Skip'}
-                            </button>
+                            {/* Skip/Unskip Button - only show for available videos */}
+                            {videosTab === 'available' && (
+                              <button
+                                onClick={() => handleSkipVideo(video.video_id, !video.is_skipped)}
+                                className={`text-xs px-2 py-0.5 rounded ${
+                                  video.is_skipped 
+                                    ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                                    : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                                }`}
+                              >
+                                {video.is_skipped ? 'Unskip' : 'Skip'}
+                              </button>
+                            )}
+                            
+                            {/* Make Available Button - only show for used videos */}
+                            {videosTab === 'used' && (
+                              <button
+                                onClick={() => handleMakeAvailable(video.video_id)}
+                                className="text-xs px-2 py-0.5 rounded bg-blue-100 text-blue-700 hover:bg-blue-200"
+                              >
+                                Make Available
+                              </button>
+                            )}
                             
                             {/* Skipped Badge */}
                             {video.is_skipped && (
