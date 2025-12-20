@@ -2214,9 +2214,32 @@ const SystemSettings = () => {
             )}
 
             {activeTab === 'youtube-channels' && (
-              <div className="space-y-6">
-                {/* Header with actions */}
-                <div className="flex items-center justify-end">
+              <div className="space-y-4">
+                {/* Header with filters and actions */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <select
+                      value={youtubeLanguageFilter}
+                      onChange={(e) => setYoutubeLanguageFilter(e.target.value)}
+                      className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+                    >
+                      <option value="">All Languages</option>
+                      {youtubeLanguages.map(lang => (
+                        <option key={lang.value} value={lang.value}>{lang.label}</option>
+                      ))}
+                    </select>
+                    <select
+                      value={youtubeTypeFilter}
+                      onChange={(e) => setYoutubeTypeFilter(e.target.value)}
+                      className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+                    >
+                      <option value="">All Types</option>
+                      {youtubeChannelTypes.map(type => (
+                        <option key={type.value} value={type.value}>{type.label}</option>
+                      ))}
+                    </select>
+                    <span className="text-sm text-gray-500">{youtubeChannels.length} channels</span>
+                  </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => {
@@ -2230,46 +2253,11 @@ const SystemSettings = () => {
                     </button>
                     <button
                       onClick={() => setShowManageVideosModal(true)}
-                      className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 flex items-center gap-2"
+                      className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
                     >
                       Manage Videos
                     </button>
                   </div>
-                </div>
-
-                {/* Filters */}
-                <div className="flex gap-4 bg-gray-50 p-4 rounded-lg">
-                  <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-700 mb-1 text-left">Filter by Language</label>
-                    <select
-                      value={youtubeLanguageFilter}
-                      onChange={(e) => setYoutubeLanguageFilter(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">All Languages</option>
-                      {youtubeLanguages.map(lang => (
-                        <option key={lang.value} value={lang.value}>{lang.label}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-700 mb-1 text-left">Filter by Type</label>
-                    <select
-                      value={youtubeTypeFilter}
-                      onChange={(e) => setYoutubeTypeFilter(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">All Types</option>
-                      {youtubeChannelTypes.map(type => (
-                        <option key={type.value} value={type.value}>{type.label}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Channels count */}
-                <div className="text-sm text-gray-600 text-left">
-                  Showing {youtubeChannels.length} channels
                 </div>
 
                 {/* Channels list */}
