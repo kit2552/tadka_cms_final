@@ -16,6 +16,7 @@ const ManageVideosModal = ({ onClose }) => {
     by_type: {}
   });
   const [channelVideos, setChannelVideos] = useState([]);
+  const [totalChannels, setTotalChannels] = useState(0);
   const [filterType, setFilterType] = useState('all');
   const [deleteOption, setDeleteOption] = useState(30);
   const [loading, setLoading] = useState(true);
