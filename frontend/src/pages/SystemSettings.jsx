@@ -947,16 +947,9 @@ const SystemSettings = () => {
       languages: channel.languages,
       is_active: channel.is_active
     });
+    setLanguageSearch('');
+    setShowLanguageDropdown(false);
     setShowYoutubeChannelModal(true);
-  };
-
-  const toggleYoutubeLanguage = (lang) => {
-    setYoutubeChannelForm(prev => ({
-      ...prev,
-      languages: prev.languages.includes(lang)
-        ? prev.languages.filter(l => l !== lang)
-        : [...prev.languages, lang]
-    }));
   };
 
   // Refetch when filters change
