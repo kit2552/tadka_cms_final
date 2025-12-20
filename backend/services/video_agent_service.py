@@ -525,14 +525,13 @@ class VideoAgentService:
                     skipped_duplicates += 1
                     continue
                 
-                clean_title = self._clean_video_title(video['title'])
                 original_youtube_title = video['title']  # Full YouTube title
+                display_title = self._extract_display_title(original_youtube_title)  # Extract display title (before first pipe)
                 
-                # Apply title case to both titles
+                # Apply title case to main title
                 title_cased_youtube = self._to_title_case(original_youtube_title)
-                title_cased_display = self._to_title_case(clean_title)
                 
-                slug = self._generate_slug(clean_title)
+                slug = self._generate_slug(display_title)
                 current_time = datetime.now(timezone.utc)
                 
                 # Handle both RSS and API video formats
@@ -542,12 +541,12 @@ class VideoAgentService:
                 
                 article_data = {
                     "title": title_cased_youtube,  # Store full YouTube title as main title (title case)
-                    "display_title": title_cased_display,  # Store extracted movie name for home page display (title case)
+                    "display_title": display_title,  # Store text before first pipe for home page display
                     "slug": slug,
                     "author": "AI Agent",
                     "agent_name": agent_name,
-                    "content": f"<p>{description[:500] if description else clean_title}</p>",
-                    "summary": description[:200] if description else clean_title,
+                    "content": f"<p>{description[:500] if description else display_title}</p>",
+                    "summary": description[:200] if description else display_title,
                     "content_type": "video",
                     "youtube_url": youtube_url,
                     "image": thumbnail,
@@ -556,8 +555,8 @@ class VideoAgentService:
                     "status": content_workflow,
                     "source": "YouTube",
                     "source_url": youtube_url,
-                    "seo_title": clean_title[:60],
-                    "seo_description": description[:160] if description else clean_title[:160],
+                    "seo_title": display_title[:60],
+                    "seo_description": description[:160] if description else display_title[:160],
                     "created_by_agent": agent_id,
                     "agent_type": "video",
                     "youtube_video_id": video['video_id'],
@@ -567,13 +566,13 @@ class VideoAgentService:
                     "published_at": current_time
                 }
                 
-                print(f"📝 Creating: {clean_title[:50]}... from {channel_name or 'Unknown'}")
+                print(f"📝 Creating: {display_title[:50]}... from {channel_name or 'Unknown'}")
                 
                 created = crud.create_article(db, article_data)
                 if created:
                     created_posts.append({
                         "id": created.get('id'),
-                        "title": clean_title,
+                        "title": display_title,
                         "video_url": youtube_url,
                         "channel": channel_name
                     })
