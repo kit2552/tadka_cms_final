@@ -2292,9 +2292,12 @@ const SystemSettings = () => {
                             </div>
                           </td>
                           <td className="px-4 py-3 text-left">
-                            <span className={`text-sm ${channel.is_active ? 'text-green-600' : 'text-red-600'} ${channel.rss_url ? 'border-b-2 border-blue-500 pb-0.5' : ''}`}>
+                            <span className={`text-sm ${channel.is_active ? 'text-green-600' : 'text-red-600'}`}>
                               {channel.is_active ? 'Active' : 'Inactive'}
                             </span>
+                            {!channel.rss_url && (
+                              <span className="text-red-500 ml-1 font-bold">✕</span>
+                            )}
                           </td>
                           <td className="px-4 py-3 text-right">
                             {channel.channel_id && (
