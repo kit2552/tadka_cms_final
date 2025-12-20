@@ -2495,21 +2495,74 @@ const SystemSettings = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1 text-left">Languages *</label>
-                      <div className="flex flex-wrap gap-2">
-                        {youtubeLanguages.map(lang => (
-                          <button
-                            key={lang.value}
-                            type="button"
-                            onClick={() => toggleYoutubeLanguage(lang.value)}
-                            className={`px-3 py-1 text-xs rounded-full border transition-colors ${
-                              youtubeChannelForm.languages.includes(lang.value)
-                                ? 'bg-blue-600 text-white border-blue-600'
-                                : 'bg-white text-gray-700 border-gray-300 hover:border-blue-300'
-                            }`}
-                          >
-                            {lang.label}
-                          </button>
-                        ))}
+                      
+                      {/* Selected Languages Tags */}
+                      {youtubeChannelForm.languages.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          {youtubeChannelForm.languages.map(lang => (
+                            <span key={lang} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                              {youtubeLanguages.find(l => l.value === lang)?.label || lang}
+                              <button
+                                type="button"
+                                onClick={() => setYoutubeChannelForm(prev => ({
+                                  ...prev,
+                                  languages: prev.languages.filter(l => l !== lang)
+                                }))}
+                                className="text-blue-600 hover:text-blue-800 font-bold"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Search Input */}
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Search and select languages..."
+                          value={languageSearch}
+                          onChange={(e) => {
+                            setLanguageSearch(e.target.value);
+                            setShowLanguageDropdown(true);
+                          }}
+                          onFocus={() => setShowLanguageDropdown(true)}
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                        
+                        {/* Dropdown */}
+                        {showLanguageDropdown && (
+                          <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                            {youtubeLanguages
+                              .filter(lang => 
+                                !youtubeChannelForm.languages.includes(lang.value) &&
+                                lang.label.toLowerCase().includes(languageSearch.toLowerCase())
+                              )
+                              .map(lang => (
+                                <div
+                                  key={lang.value}
+                                  onClick={() => {
+                                    setYoutubeChannelForm(prev => ({
+                                      ...prev,
+                                      languages: [...prev.languages, lang.value]
+                                    }));
+                                    setLanguageSearch('');
+                                    setShowLanguageDropdown(false);
+                                  }}
+                                  className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-gray-900"
+                                >
+                                  {lang.label}
+                                </div>
+                              ))}
+                            {youtubeLanguages.filter(lang => 
+                              !youtubeChannelForm.languages.includes(lang.value) &&
+                              lang.label.toLowerCase().includes(languageSearch.toLowerCase())
+                            ).length === 0 && (
+                              <div className="px-3 py-2 text-sm text-gray-500">No languages found</div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center">
