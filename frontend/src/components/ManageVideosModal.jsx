@@ -49,6 +49,11 @@ const ManageVideosModal = ({ onClose }) => {
       const channelsRes = await fetch(`${BACKEND_URL}/api/youtube-rss/videos/by-channel`);
       const channelsData = await channelsRes.json();
       setChannelVideos(channelsData.channels || []);
+
+      // Fetch total registered channels count
+      const totalChannelsRes = await fetch(`${BACKEND_URL}/api/youtube-channels`);
+      const totalChannelsData = await totalChannelsRes.json();
+      setTotalChannels(Array.isArray(totalChannelsData) ? totalChannelsData.length : 0);
     } catch (error) {
       console.error('Error fetching data:', error);
       setMessage({ type: 'error', text: 'Failed to load data' });
