@@ -477,10 +477,7 @@ const VideoView = () => {
               <div className="pl-0 pr-4 pt-4" style={{ paddingBottom: '1rem' }}>
                 <div className="flex items-center gap-3 mb-1">
                   <h1 className="text-base font-bold text-black text-left leading-tight font-sans">
-                    {/* Show youtube_title for trailers-teasers categories, otherwise show title */}
-                    {(article.category === 'trailers-teasers' || article.category === 'trailers-teasers-bollywood') && article.youtube_title 
-                      ? article.youtube_title 
-                      : article.title}
+                    {article.title}
                   </h1>
                 </div>
                 <p className="text-xs text-gray-900 opacity-75 text-left">
