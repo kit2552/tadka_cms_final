@@ -566,6 +566,15 @@ class VideoAgentService:
             "posts": created_posts
         }
     
+    def _to_title_case(self, text: str) -> str:
+        """Convert text to title case (first letter of each word capitalized, rest lowercase)"""
+        if not text:
+            return text
+        # Split by spaces, capitalize first letter of each word, lowercase the rest
+        words = text.split()
+        title_cased = ' '.join(word.capitalize() for word in words)
+        return title_cased
+    
     def _clean_video_title(self, title: str) -> str:
         """Extract clean title from video title"""
         # Remove hashtags
