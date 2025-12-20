@@ -778,6 +778,8 @@ const SystemSettings = () => {
         setShowYoutubeChannelModal(false);
         setEditingYoutubeChannel(null);
         setChannelRefreshed(false);
+        setLanguageSearch('');
+        setShowLanguageDropdown(false);
         setYoutubeChannelForm({ channel_name: '', channel_id: '', rss_url: '', channel_type: 'production_house', languages: [], is_active: true });
         fetchYoutubeChannels();
         
