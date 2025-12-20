@@ -531,7 +531,7 @@ const TrailersTeasers = () => {
                         </div>
                         <div className="flex-1 min-w-0 text-left">
                           <h4 className={`font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200 leading-tight mb-2 text-left line-clamp-2`} style={{ fontSize: '0.9rem' }}>
-                            {article.title}
+                            {article.display_title || article.title}
                           </h4>
                           <p className={`text-xs text-gray-600 text-left`}>
                             {formatDate(article.publishedAt)}
