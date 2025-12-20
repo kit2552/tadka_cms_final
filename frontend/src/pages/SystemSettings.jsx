@@ -2416,7 +2416,7 @@ const SystemSettings = () => {
                               Edit
                             </button>
                             <button
-                              onClick={() => deleteYoutubeChannel(channel.id)}
+                              onClick={() => confirmDeleteChannel(channel)}
                               className="text-gray-600 hover:text-gray-800 text-sm"
                             >
                               Delete
