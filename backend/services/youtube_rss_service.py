@@ -370,8 +370,9 @@ class YouTubeRSSService:
     def get_videos_for_agent(
         self,
         channel_types: List[str],
-        language: str,
-        video_category: str,
+        languages: List[str] = None,
+        language: str = None,  # Keep for backward compatibility
+        video_category: str = None,
         max_videos: int = 10,
         days_ago: int = 7
     ) -> List[Dict]:
@@ -379,7 +380,8 @@ class YouTubeRSSService:
         
         Args:
             channel_types: List of channel types to filter
-            language: Language to filter
+            languages: List of languages to filter (preferred)
+            language: Single language to filter (backward compatibility)
             video_category: Category for keyword filtering
             max_videos: Maximum videos to return
             days_ago: How many days back to look
@@ -387,6 +389,12 @@ class YouTubeRSSService:
         Returns:
             List of matching videos
         """
+        # Handle backward compatibility - convert single language to list
+        if languages is None and language:
+            languages = [language]
+        elif languages is None:
+            languages = []
+        
         # Category keywords for filtering
         category_keywords = {
             'trailers_teasers': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster', 'promo'],
