@@ -340,6 +340,7 @@ const CreateArticle = () => {
           image: article.image || article.main_image_url || '',
           image_gallery: article.image_gallery ? JSON.parse(article.image_gallery) : [], // Load image gallery safely
           youtube_url: article.youtube_url || '',
+          display_title: article.display_title || '', // Load display title
           tags: article.tags || '',
           movie_rating: article.movie_rating || '', // Load movie rating
           is_featured: article.is_featured || false,
