@@ -651,19 +651,19 @@ class VideoAgentService:
         - "Pushpa 2 Official Trailer | Allu Arjun | Rashmika" -> "Pushpa 2"
         - "Akhanda 2 Kumbha Mela Sequence MAKING | Balakrishna" -> "Akhanda 2"
         - "Sahana Sahana Song (Hindi) - The RajaSaab | Prabhas" -> "The RajaSaab"
-        - "SVC59 Title Date announcement | Vijay Deverakonda" -> "SVC59"
+        - "#SVC59 Title Date announcement | Vijay Deverakonda" -> "Svc59"
         - "MADHAM Trailer | Harsha | Anuroop" -> "Madham"
         - "Jajikaya Jajikaya Song | Akhanda 2 | NBK" -> "Akhanda 2"
         """
         if not title:
             return "Video"
         
-        # Remove hashtags
-        clean = re.sub(r'#\w+', '', title).strip()
+        # Remove hashtags but keep the text after #
+        clean = re.sub(r'#(\w+)', r'\1', title).strip()
         
         # Pattern 1: "Song Name Song | Movie Name | Artist" - extract Movie Name
         # e.g., "Jajikaya Jajikaya Song | Akhanda 2 | NBK"
-        song_then_movie = re.match(r'^[^|]+(?:Song|Lyrical|Video)\s*\|\s*([^|]+)', clean, re.IGNORECASE)
+        song_then_movie = re.match(r'^[^|]+(?:Song|Lyrical)\s*\|\s*([^|]+)', clean, re.IGNORECASE)
         if song_then_movie:
             movie = song_then_movie.group(1).strip()
             if movie and len(movie) > 2:
@@ -671,7 +671,7 @@ class VideoAgentService:
         
         # Pattern 2: "Song Name (Language) - Movie Name | Artist"
         # e.g., "Sahana Sahana Song (Hindi) - The RajaSaab | Prabhas"
-        song_lang_movie = re.match(r'^.+?(?:Song|Lyrical|Video)\s*\([^)]+\)\s*[-|:]\s*([^|]+)', clean, re.IGNORECASE)
+        song_lang_movie = re.match(r'^.+?(?:Song|Lyrical)\s*\([^)]+\)\s*[-|:]\s*([^|]+)', clean, re.IGNORECASE)
         if song_lang_movie:
             movie = song_lang_movie.group(1).strip()
             if movie and len(movie) > 2:
@@ -679,16 +679,24 @@ class VideoAgentService:
         
         # Pattern 3: "Movie Name: Song Name (Type) | Artist"
         # e.g., "Single Papa: Tu Hi Saahiba (Song) | Kunal Kemmu"
-        movie_colon_song = re.match(r'^([^:]+):\s*[^|]+(?:Song|Lyrical|Video|\([^)]+\))', clean, re.IGNORECASE)
+        movie_colon_song = re.match(r'^([^:]+):\s*[^|]+(?:Song|Lyrical|\([^)]+\))', clean, re.IGNORECASE)
         if movie_colon_song:
             movie = movie_colon_song.group(1).strip()
             if movie and len(movie) > 2:
                 return self._to_title_case(movie)
         
-        # Pattern 4: Standard format - split by common markers
+        # Pattern 4: "Name Lyrical | Movie | Artist" - extract Movie after Lyrical
+        # e.g., "Cute Cute Hebah Lyrical | Mario | Hebah Patel"
+        lyrical_movie = re.match(r'^[^|]+Lyrical\s*\|\s*([^|]+)', clean, re.IGNORECASE)
+        if lyrical_movie:
+            movie = lyrical_movie.group(1).strip()
+            if movie and len(movie) > 2:
+                return self._to_title_case(movie.rstrip('|-:,'))
+        
+        # Pattern 5: Standard format - split by common markers
         result = clean
         
-        # Words that indicate the movie name has ended
+        # Words that indicate the movie name has ended (ordered by priority)
         end_markers = [
             r'\s+Official\s+Trailer',
             r'\s+Official\s+Teaser',
@@ -702,12 +710,17 @@ class VideoAgentService:
             r'\s+Making\b',
             r'\s+Behind\s+The\s+Scenes',
             r'\s+BTS\b',
+            r'\s+Title\s+(?:Date\s+)?Announcement',
+            r'\s+Announcement\b',
+            r'\s+Sequence\b',
+            r'\s+Scene\b',
             r'\s+Song\b',
             r'\s+Lyrical\b',
             r'\s+Lyrics\b',
             r'\s+Video\s+Song',
             r'\s+Full\s+Song',
             r'\s+Full\s+Video',
+            r'\s+Full\s+Episode',
             r'\s+Audio\b',
             r'\s+Press\s+Meet',
             r'\s+Interview\b',
@@ -715,9 +728,6 @@ class VideoAgentService:
             r'\s+Launch\b',
             r'\s+Celebration',
             r'\s+Success\s+Meet',
-            r'\s+Announcement',
-            r'\s+Sequence\b',
-            r'\s+Scene\b',
             r'\s*\|\s*',  # Pipe separator
             r'\s+-\s+',   # Dash with spaces
         ]
@@ -735,8 +745,8 @@ class VideoAgentService:
         for suffix in suffixes:
             result = re.sub(suffix, '', result, flags=re.IGNORECASE).strip()
         
-        # Remove parenthetical language/format markers
-        result = re.sub(r'\s*\([^)]*(?:Hindi|Telugu|Tamil|Kannada|Malayalam|Official|HD|4K|8K|Video)[^)]*\)\s*$', '', result, flags=re.IGNORECASE).strip()
+        # Remove parenthetical markers like (Video Song), (Hindi), etc.
+        result = re.sub(r'\s*\([^)]*(?:Hindi|Telugu|Tamil|Kannada|Malayalam|Official|HD|4K|8K|Video|Song)[^)]*\)\s*$', '', result, flags=re.IGNORECASE).strip()
         
         # Clean up
         result = re.sub(r'\s+', ' ', result)
@@ -747,7 +757,13 @@ class VideoAgentService:
             parts = clean.split('|')
             result = parts[0].strip() if parts else clean
             # Try to clean this part too
-            for pattern in end_markers[:10]:  # Use main markers
+            for pattern in end_markers[:15]:  # Use main markers
+                match = re.search(pattern, result, re.IGNORECASE)
+                if match:
+                    result = result[:match.start()].strip()
+                    break
+        
+        return self._to_title_case(result) if result else "Video"
                 match = re.search(pattern, result, re.IGNORECASE)
                 if match:
                     result = result[:match.start()].strip()
