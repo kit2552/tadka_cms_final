@@ -2292,7 +2292,7 @@ const SystemSettings = () => {
                             </div>
                           </td>
                           <td className="px-4 py-3 text-left">
-                            <span className={`text-sm ${channel.is_active ? 'text-green-600' : 'text-red-600'}`}>
+                            <span className={`text-sm ${channel.is_active ? 'text-green-600' : 'text-red-600'} ${channel.rss_url ? 'border-b-2 border-blue-500 pb-0.5' : ''}`}>
                               {channel.is_active ? 'Active' : 'Inactive'}
                             </span>
                           </td>
