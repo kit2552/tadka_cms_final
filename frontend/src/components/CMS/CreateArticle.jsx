@@ -2444,6 +2444,22 @@ const CreateArticle = () => {
                             />
                           </div>
                           
+                          {/* Display Title */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                              Display Title (Movie Name)
+                            </label>
+                            <input
+                              type="text"
+                              name="display_title"
+                              value={formData.display_title}
+                              onChange={handleInputChange}
+                              className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="e.g., Champion, Pushpa 2"
+                            />
+                            <p className="text-xs text-gray-500 mt-1 text-left">Short title shown on home page. Main title shows on video page.</p>
+                          </div>
+                          
                           {/* Enable Comments Checkbox */}
                           <div className="bg-white border-2 border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-all">
                             <label className="flex items-center space-x-3 cursor-pointer">
