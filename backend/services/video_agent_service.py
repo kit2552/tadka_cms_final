@@ -644,26 +644,119 @@ class VideoAgentService:
         
         return ' '.join(result)
     
-    def _clean_video_title(self, title: str) -> str:
-        """Extract clean title from video title"""
+    def _extract_display_title(self, title: str, video_category: str = None) -> str:
+        """Extract movie/show/event name from YouTube video title for display on homepage
+        
+        Examples:
+        - "Pushpa 2 Official Trailer | Allu Arjun | Rashmika" -> "Pushpa 2"
+        - "Akhanda 2 Kumbha Mela Sequence MAKING | Balakrishna" -> "Akhanda 2"
+        - "Sahana Sahana Song (Hindi) - The RajaSaab | Prabhas" -> "The RajaSaab"
+        - "SVC59 Title Date announcement | Vijay Deverakonda" -> "SVC59"
+        - "MADHAM Trailer | Harsha | Anuroop" -> "MADHAM"
+        """
+        if not title:
+            return "Video"
+        
         # Remove hashtags
-        title = re.sub(r'#\w+', '', title)
+        clean = re.sub(r'#\w+', '', title).strip()
         
-        # Split by common separators
-        separators = ['|', ' - ', 'Official', 'OFFICIAL', 'Trailer', 'TRAILER', 
-                      'Teaser', 'TEASER', 'First Look', 'Glimpse', 'Motion Poster', 
-                      'Promo', 'Review', 'Song', 'Full Video']
+        # Common patterns to identify where movie name ends
+        # These words/phrases typically come AFTER the movie name
+        end_markers = [
+            # Video type markers
+            r'\s*[-|:]\s*Official\s+Trailer',
+            r'\s*[-|:]\s*Official\s+Teaser', 
+            r'\s*[-|:]\s*Trailer',
+            r'\s*[-|:]\s*Teaser',
+            r'\s*[-|:]\s*First\s+Look',
+            r'\s*[-|:]\s*Glimpse',
+            r'\s*[-|:]\s*Motion\s+Poster',
+            r'\s*[-|:]\s*Promo',
+            r'\s*[-|:]\s*Making',
+            r'\s*[-|:]\s*Behind\s+The\s+Scenes',
+            r'\s*[-|:]\s*BTS',
+            # Song markers
+            r'\s+Song\s*[-|:\(]',
+            r'\s+Lyrical',
+            r'\s+Lyrics',
+            r'\s+Video\s+Song',
+            r'\s+Full\s+Song',
+            r'\s+Full\s+Video',
+            r'\s+Audio',
+            # Event markers
+            r'\s+Press\s+Meet',
+            r'\s+Interview',
+            r'\s+Event',
+            r'\s+Launch',
+            r'\s+Celebration',
+            r'\s+Success\s+Meet',
+            # Generic separators (process last)
+            r'\s*\|\s*',  # Pipe separator
+            r'\s+-\s+',   # Dash with spaces
+            r'\s*:\s+',   # Colon with space after
+        ]
         
-        clean_title = title
-        for sep in separators:
-            if sep in clean_title:
-                clean_title = clean_title.split(sep)[0]
+        result = clean
         
-        clean_title = clean_title.strip()
-        clean_title = re.sub(r'\s+', ' ', clean_title)
-        clean_title = clean_title.rstrip('|-:').strip()
+        # Try to find movie name before common markers
+        for pattern in end_markers:
+            match = re.search(pattern, result, re.IGNORECASE)
+            if match:
+                result = result[:match.start()].strip()
+                break
         
-        return clean_title if clean_title else title.split()[0] if title.split() else "Video"
+        # Handle special cases where song name comes first
+        # Pattern: "Song Name (Type) - Movie Name | Artist"
+        # e.g., "Sahana Sahana Song (Hindi) - The RajaSaab | Prabhas"
+        song_movie_pattern = r'^(.+?)\s+(?:Song|Lyrical|Video)\s*\([^)]+\)\s*[-|:]\s*(.+?)(?:\s*\||$)'
+        match = re.match(song_movie_pattern, clean, re.IGNORECASE)
+        if match:
+            # Return the movie name (second group), not the song name
+            movie_name = match.group(2).strip()
+            # Clean up any trailing artist names after pipe
+            if '|' in movie_name:
+                movie_name = movie_name.split('|')[0].strip()
+            if movie_name:
+                result = movie_name
+        
+        # Remove common suffixes that aren't part of the name
+        suffixes_to_remove = [
+            r'\s*Official$',
+            r'\s*OFFICIAL$', 
+            r'\s*\(Official\)$',
+            r'\s*\(OFFICIAL\)$',
+            r'\s*HD$',
+            r'\s*4K$',
+            r'\s*8K$',
+            r'\s*Full\s*Movie$',
+            r'\s*Announcement$',
+            r'\s*Update$',
+            r'\s*Title\s*Date\s*Announcement$',
+            r'\s*MAKING$',
+            r'\s*Making$',
+        ]
+        
+        for suffix in suffixes_to_remove:
+            result = re.sub(suffix, '', result, flags=re.IGNORECASE).strip()
+        
+        # Clean up extra whitespace and trailing punctuation
+        result = re.sub(r'\s+', ' ', result)
+        result = result.rstrip('|-:,').strip()
+        
+        # If result is too short or empty, try to get first meaningful part
+        if len(result) < 2:
+            # Fall back to first part before any separator
+            parts = re.split(r'[-|:]', clean)
+            result = parts[0].strip() if parts else clean
+        
+        # Final cleanup - remove any remaining parenthetical suffixes
+        result = re.sub(r'\s*\([^)]*(?:Hindi|Telugu|Tamil|Official|HD|4K)[^)]*\)\s*$', '', result, flags=re.IGNORECASE).strip()
+        
+        return result if result else "Video"
+    
+    def _clean_video_title(self, title: str) -> str:
+        """Legacy method - calls _extract_display_title for backward compatibility"""
+        return self._extract_display_title(title)
     
     def _generate_slug(self, title: str) -> str:
         """Generate URL-friendly slug from title"""
