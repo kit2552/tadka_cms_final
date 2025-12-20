@@ -265,6 +265,25 @@ async def update_youtube_channel(channel_id: str, channel: YouTubeChannelUpdate)
     
     db[YOUTUBE_CHANNELS].update_one({"id": channel_id}, {"$set": update_data})
     
+    # Also update channel_type and languages in youtube_videos collection if changed
+    video_update_data = {}
+    if 'channel_type' in update_data:
+        video_update_data['channel_type'] = update_data['channel_type']
+    if 'languages' in update_data:
+        video_update_data['languages'] = update_data['languages']
+    if 'channel_name' in update_data:
+        video_update_data['channel_name'] = update_data['channel_name']
+    
+    if video_update_data:
+        # Get the YouTube channel_id to update videos
+        yt_channel_id = update_data.get('channel_id') or existing.get('channel_id')
+        if yt_channel_id:
+            db.youtube_videos.update_many(
+                {"channel_id": yt_channel_id},
+                {"$set": video_update_data}
+            )
+            print(f"Updated {video_update_data} for videos with channel_id: {yt_channel_id}")
+    
     updated = db[YOUTUBE_CHANNELS].find_one({"id": channel_id}, {"_id": 0})
     return updated
 
