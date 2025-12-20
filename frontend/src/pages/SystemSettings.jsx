@@ -1313,11 +1313,6 @@ const SystemSettings = () => {
             {/* API Keys Tab */}
             {activeTab === 'apikeys' && (
               <div className="space-y-8">
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">AI API Keys Management</h3>
-                  <p className="text-sm text-gray-600 text-left">Configure API keys for AI content generation. These keys will be used for generating articles and content.</p>
-                </div>
-
                 <form onSubmit={saveAIAPIKeys} className="space-y-8">
                   {/* OpenAI Section */}
                   <div className="bg-white border border-gray-200 rounded-lg p-6">
