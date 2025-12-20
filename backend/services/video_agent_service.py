@@ -101,9 +101,22 @@ class VideoAgentService:
         return self.DEFAULT_STATE_LANGUAGE_MAP
     
     def _get_language_for_state(self, state: str) -> str:
-        """Get language for a given state"""
+        """Get primary language for a given state"""
         state_lower = state.lower().replace(' ', '-')
-        return self.state_language_map.get(state_lower, 'Hindi')
+        languages = self.state_language_map.get(state_lower, 'Hindi')
+        # Handle both array and string formats
+        if isinstance(languages, list):
+            return languages[0] if languages else 'Hindi'
+        return languages
+    
+    def _get_languages_for_state(self, state: str) -> List[str]:
+        """Get all languages for a given state (returns list)"""
+        state_lower = state.lower().replace(' ', '-')
+        languages = self.state_language_map.get(state_lower, ['Hindi'])
+        # Handle both array and string formats
+        if isinstance(languages, list):
+            return languages if languages else ['Hindi']
+        return [languages]
     
     def _get_db_language(self, language: str) -> str:
         """Map common language names to database values"""
