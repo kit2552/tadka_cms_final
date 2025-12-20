@@ -884,15 +884,25 @@ const SystemSettings = () => {
     }
   };
 
-  const deleteYoutubeChannel = async (channelId) => {
-    if (!window.confirm('Are you sure you want to delete this channel?')) return;
+  const confirmDeleteChannel = (channel) => {
+    setChannelToDelete(channel);
+    setShowDeleteConfirmModal(true);
+  };
+
+  const deleteYoutubeChannel = async () => {
+    if (!channelToDelete) return;
+    setDeletingChannel(true);
     try {
-      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/${channelId}`, {
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels/${channelToDelete.id}`, {
         method: 'DELETE'
       });
       fetchYoutubeChannels();
+      setShowDeleteConfirmModal(false);
+      setChannelToDelete(null);
     } catch (error) {
       setFetchError('Failed to delete channel');
+    } finally {
+      setDeletingChannel(false);
     }
   };
 
