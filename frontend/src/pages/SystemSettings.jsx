@@ -745,9 +745,28 @@ const SystemSettings = () => {
       if (youtubeTypeFilter) params.append('channel_type', youtubeTypeFilter);
       if (params.toString()) url += `?${params.toString()}`;
       
-      const response = await fetch(url);
-      const data = await response.json();
-      setYoutubeChannels(data);
+      // Fetch channels and video counts in parallel
+      const [channelsResponse, videoCountsResponse] = await Promise.all([
+        fetch(url),
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-rss/videos/by-channel`)
+      ]);
+      
+      const channelsData = await channelsResponse.json();
+      const videoCountsData = await videoCountsResponse.json();
+      
+      // Create a map of channel_id to video count
+      const videoCountMap = {};
+      (videoCountsData.channels || []).forEach(ch => {
+        videoCountMap[ch.channel_id] = ch.video_count || 0;
+      });
+      
+      // Merge video counts into channels data
+      const channelsWithCounts = channelsData.map(channel => ({
+        ...channel,
+        video_count: videoCountMap[channel.channel_id] || 0
+      }));
+      
+      setYoutubeChannels(channelsWithCounts);
     } catch (error) {
       console.error('Error fetching YouTube channels:', error);
     } finally {
