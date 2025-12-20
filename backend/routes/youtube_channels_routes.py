@@ -148,19 +148,28 @@ async def _get_channel_id_from_handle(handle_path: str) -> Optional[str]:
             
             html = response.text
             
-            # Look for channel ID in the page
-            # Pattern 1: "channelId":"UC..."
-            match = re.search(r'"channelId":"(UC[a-zA-Z0-9_-]{22})"', html)
+            # Pattern 1: "browseId":"UC..." - Most reliable for the actual channel
+            match = re.search(r'"browseId":"(UC[a-zA-Z0-9_-]{22})"', html)
             if match:
                 return match.group(1)
             
-            # Pattern 2: "externalId":"UC..."
+            # Pattern 2: canonical link with /channel/UC...
+            match = re.search(r'<link rel="canonical" href="https://www\.youtube\.com/channel/(UC[a-zA-Z0-9_-]{22})"', html)
+            if match:
+                return match.group(1)
+            
+            # Pattern 3: "externalId":"UC..." (for the main channel)
             match = re.search(r'"externalId":"(UC[a-zA-Z0-9_-]{22})"', html)
             if match:
                 return match.group(1)
             
-            # Pattern 3: /channel/UC... in canonical URL
-            match = re.search(r'/channel/(UC[a-zA-Z0-9_-]{22})', html)
+            # Pattern 4: /channel/UC... in canonical URL meta tag
+            match = re.search(r'content="https://www\.youtube\.com/channel/(UC[a-zA-Z0-9_-]{22})"', html)
+            if match:
+                return match.group(1)
+            
+            # Pattern 5: "channelId":"UC..." - Less reliable as it may match recommended channels
+            match = re.search(r'"channelId":"(UC[a-zA-Z0-9_-]{22})"', html)
             if match:
                 return match.group(1)
             
