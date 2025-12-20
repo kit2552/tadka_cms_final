@@ -42,6 +42,7 @@ class Category(CategoryBase):
 class ArticleBase(BaseModel):
     title: str
     short_title: Optional[str] = None
+    youtube_title: Optional[str] = None  # Original YouTube video title
     content: str
     content_secondary: Optional[str] = None
     summary: str
