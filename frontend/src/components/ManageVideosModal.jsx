@@ -480,8 +480,9 @@ const ManageVideosModal = ({ onClose }) => {
                           <tr>
                             <th className="text-left px-4 py-2 font-medium text-gray-700">Channel</th>
                             <th className="text-left px-4 py-2 font-medium text-gray-700">Type</th>
-                            <th className="text-left px-4 py-2 font-medium text-gray-700">Videos</th>
+                            <th className="text-left px-4 py-2 font-medium text-gray-700">Total</th>
                             <th className="text-left px-4 py-2 font-medium text-gray-700">Available</th>
+                            <th className="text-left px-4 py-2 font-medium text-gray-700">Used</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -501,11 +502,20 @@ const ManageVideosModal = ({ onClose }) => {
                               </td>
                               <td className="px-4 py-2 text-left">
                                 <button
-                                  onClick={() => handleShowVideos(channel)}
+                                  onClick={() => handleShowVideos(channel, 'available')}
                                   className="text-green-600 font-medium hover:text-green-800 hover:underline cursor-pointer"
                                   title="Click to view available videos"
                                 >
                                   {channel.unused_count}
+                                </button>
+                              </td>
+                              <td className="px-4 py-2 text-left">
+                                <button
+                                  onClick={() => handleShowVideos(channel, 'used')}
+                                  className="text-purple-600 font-medium hover:text-purple-800 hover:underline cursor-pointer"
+                                  title="Click to view used videos"
+                                >
+                                  {channel.video_count - channel.unused_count}
                                 </button>
                               </td>
                             </tr>
