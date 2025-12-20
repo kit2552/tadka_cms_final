@@ -2447,7 +2447,7 @@ const CreateArticle = () => {
                           {/* Display Title */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                              Display Title (Movie Name)
+                              Display Title
                             </label>
                             <input
                               type="text"
@@ -2455,7 +2455,7 @@ const CreateArticle = () => {
                               value={formData.display_title}
                               onChange={handleInputChange}
                               className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="e.g., Champion, Pushpa 2"
+                              placeholder="Short title for home page display"
                             />
                             <p className="text-xs text-gray-500 mt-1 text-left">Short title shown on home page. Main title shows on video page.</p>
                           </div>
