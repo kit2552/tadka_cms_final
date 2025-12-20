@@ -223,6 +223,23 @@ const ManageVideosModal = ({ onClose }) => {
     }
   };
 
+  const handleMakeAvailable = async (videoId) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/youtube-rss/videos/mark-available`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_id: videoId })
+      });
+      
+      if (res.ok) {
+        // Remove from used list since it's now available
+        setChannelVideosList(prev => prev.filter(v => v.video_id !== videoId));
+      }
+    } catch (error) {
+      console.error('Error marking video as available:', error);
+    }
+  };
+
   const filteredChannels = filterType === 'all' 
     ? channelVideos 
     : channelVideos.filter(ch => ch.channel_type === filterType);
