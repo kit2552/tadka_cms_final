@@ -250,12 +250,9 @@ const AdminControls = () => {
             {activeTab === 'articles' && (
               <div className="space-y-4">
                 {scheduledArticles.length === 0 ? (
-                  <div className="text-center py-16">
-                    <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No Scheduled Articles</h3>
-                    <p className="text-gray-600">No articles are currently scheduled for publishing.</p>
+                  <div className="text-center py-12">
+                    <p className="text-sm text-gray-400">No Scheduled Articles</p>
+                    <p className="text-xs text-gray-400 mt-1">No articles are currently scheduled for publishing.</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto border border-gray-200 rounded-lg">
