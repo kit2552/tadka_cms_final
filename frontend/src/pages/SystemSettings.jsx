@@ -136,14 +136,14 @@ const SystemSettings = () => {
   const [languageSearch, setLanguageSearch] = useState('');
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [youtubeLanguages] = useState([
-    { value: 'Hindi', label: 'Hindi (Bollywood)' },
-    { value: 'Telugu', label: 'Telugu (Tollywood)' },
-    { value: 'Tamil', label: 'Tamil (Kollywood)' },
-    { value: 'Kannada', label: 'Kannada (Sandalwood)' },
-    { value: 'Malayalam', label: 'Malayalam (Mollywood)' },
+    { value: 'Hindi', label: 'Hindi' },
+    { value: 'Telugu', label: 'Telugu' },
+    { value: 'Tamil', label: 'Tamil' },
+    { value: 'Kannada', label: 'Kannada' },
+    { value: 'Malayalam', label: 'Malayalam' },
     { value: 'Marathi', label: 'Marathi' },
     { value: 'Bengali', label: 'Bengali' },
-    { value: 'Punjabi', label: 'Punjabi (Pollywood)' },
+    { value: 'Punjabi', label: 'Punjabi' },
     { value: 'Gujarati', label: 'Gujarati' },
     { value: 'Bhojpuri', label: 'Bhojpuri' },
     { value: 'Multi', label: 'Multi-language' }
