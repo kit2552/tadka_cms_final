@@ -423,9 +423,9 @@ class YouTubeRSSService:
         if channel_types:
             query['channel_type'] = {'$in': channel_types}
         
-        # Filter by language
-        if language:
-            # Map language names
+        # Filter by languages (now supports multiple languages)
+        if languages and len(languages) > 0:
+            # Map language names to database values
             lang_map = {
                 'hindi': 'Hindi', 'bollywood': 'Hindi',
                 'telugu': 'Telugu', 'tollywood': 'Telugu',
@@ -434,11 +434,17 @@ class YouTubeRSSService:
                 'bengali': 'Bengali', 'marathi': 'Marathi',
                 'punjabi': 'Punjabi'
             }
-            db_language = lang_map.get(language.lower(), language)
-            query['$or'] = [
-                {'languages': db_language},
-                {'detected_language': db_language}
-            ]
+            # Convert all languages to DB format
+            db_languages = [lang_map.get(lang.lower(), lang) for lang in languages]
+            
+            # Build OR conditions for each language
+            language_conditions = []
+            for db_lang in db_languages:
+                language_conditions.append({'languages': db_lang})
+                language_conditions.append({'detected_language': db_lang})
+            
+            query['$or'] = language_conditions
+            print(f"   🔍 Filtering videos for languages: {db_languages}")
         
         # Fetch videos
         videos = list(
