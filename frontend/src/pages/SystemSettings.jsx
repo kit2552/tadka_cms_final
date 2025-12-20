@@ -2051,11 +2051,6 @@ const SystemSettings = () => {
             {/* State-Language Tab */}
             {activeTab === 'state-language' && (
               <div className="space-y-6">
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">State-Language Mapping</h3>
-                  <p className="text-sm text-gray-600 text-left">Configure languages for each Indian state. Click on languages to add or remove them. First language is the primary language.</p>
-                </div>
-
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
