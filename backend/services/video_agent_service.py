@@ -447,7 +447,8 @@ class VideoAgentService:
         # Check if RSS collection has videos (preferred method - no API quota)
         from services.youtube_rss_service import youtube_rss_service
         
-        # Pass all state languages to filter videos
+        # Pass all state languages to filter videos (uses channel's assigned languages only)
+        print(f"🔎 Fetching videos for languages: {state_languages}, channel_types: {channel_types}")
         rss_videos = youtube_rss_service.get_videos_for_agent(
             channel_types=channel_types,
             languages=state_languages,  # Pass all languages for the state
@@ -458,6 +459,9 @@ class VideoAgentService:
         
         if rss_videos:
             print(f"📺 Using {len(rss_videos)} videos from RSS collection (no API calls)")
+            # Log channels represented to verify correct filtering
+            channels_found = set(v.get('channel_name', 'Unknown') for v in rss_videos[:10])
+            print(f"   Channels in results: {', '.join(channels_found)}")
             videos = rss_videos
             source_method = "rss_collection"
         else:
