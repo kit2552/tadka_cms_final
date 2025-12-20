@@ -367,8 +367,8 @@ const ManageVideosModal = ({ onClose }) => {
                   <div className="text-xs text-purple-600">Used</div>
                 </div>
                 <div className="bg-orange-50 rounded-lg p-4 text-left">
-                  <div className="text-2xl font-bold text-orange-600">{channelVideos.length}</div>
-                  <div className="text-xs text-orange-600">Channels</div>
+                  <div className="text-2xl font-bold text-orange-600">{channelVideos.length}<span className="text-sm font-normal text-orange-400">/{totalChannels}</span></div>
+                  <div className="text-xs text-orange-600">Channels with Videos</div>
                 </div>
               </div>
 
