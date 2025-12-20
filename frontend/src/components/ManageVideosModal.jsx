@@ -180,6 +180,25 @@ const ManageVideosModal = ({ onClose }) => {
     }
   };
 
+  const handleSkipVideo = async (videoId, skipped) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/youtube-rss/videos/skip`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_id: videoId, skipped })
+      });
+      
+      if (res.ok) {
+        // Update local state
+        setChannelVideosList(prev => 
+          prev.map(v => v.video_id === videoId ? { ...v, is_skipped: skipped } : v)
+        );
+      }
+    } catch (error) {
+      console.error('Error skipping video:', error);
+    }
+  };
+
   const filteredChannels = filterType === 'all' 
     ? channelVideos 
     : channelVideos.filter(ch => ch.channel_type === filterType);
