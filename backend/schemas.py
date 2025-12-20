@@ -121,6 +121,7 @@ class ArticleCreate(ArticleBase):
 class ArticleUpdate(BaseModel):
     title: Optional[str] = None
     short_title: Optional[str] = None
+    youtube_title: Optional[str] = None  # Original YouTube video title
     content: Optional[str] = None
     content_secondary: Optional[str] = None
     summary: Optional[str] = None
