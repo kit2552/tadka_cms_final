@@ -985,93 +985,72 @@ const SystemSettings = () => {
             <nav className="flex space-x-1 px-6" aria-label="Tabs">
               <button
                 onClick={() => setActiveTab('google')}
-                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                className={`py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
                   activeTab === 'google'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2.033 16.01c-.564-1.789-1.632-3.932-1.821-4.474-.273-.787-.396-1.547-.396-2.442 0-1.279.366-2.164 1.027-2.783.575-.54 1.366-.866 2.223-.866.857 0 1.648.326 2.223.866.661.619 1.027 1.504 1.027 2.783 0 .895-.123 1.655-.396 2.442-.189.542-1.257 2.685-1.821 4.474h-2.066z"/>
-                </svg>
                 Google
               </button>
               <button
                 onClick={() => setActiveTab('aws')}
-                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                className={`py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
                   activeTab === 'aws'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335c-.072.048-.144.071-.208.071-.08 0-.16-.04-.239-.112-.112-.12-.208-.248-.288-.384-.08-.144-.16-.304-.256-.488-.64.755-1.44 1.135-2.4 1.135-.687 0-1.231-.191-1.64-.583-.408-.392-.616-.911-.616-1.559 0-.695.247-1.255.744-1.695.496-.44 1.151-.664 1.983-.664.272 0 .552.024.855.064.304.04.616.104.936.168v-.559c0-.583-.12-1-.36-1.271-.248-.272-.671-.408-1.279-.408-.28 0-.568.032-.863.104-.296.072-.576.144-.84.24-.128.047-.216.08-.264.095-.048.016-.088.024-.104.024-.096 0-.144-.072-.144-.216v-.336c0-.112.016-.2.056-.256s.112-.104.216-.16c.28-.143.615-.263 1.008-.36s.791-.151 1.199-.151c.911 0 1.575.2 2.007.616.424.416.64 1.047.64 1.903v2.496zm-3.311 1.239c.263 0 .536-.048.823-.143.288-.096.543-.271.768-.512.128-.144.224-.304.272-.488.048-.184.08-.392.08-.631v-.304c-.24-.047-.496-.087-.767-.112-.272-.024-.536-.04-.792-.04-.559 0-.968.111-1.239.335-.272.224-.408.543-.408.968 0 .408.104.712.32.92.216.2.52.296.943.296zm6.455.863c-.12 0-.199-.024-.256-.064-.056-.048-.104-.151-.151-.28l-1.735-5.735c-.048-.16-.072-.264-.072-.32 0-.128.064-.2.191-.2h.783c.128 0 .215.023.263.063.056.048.096.152.144.28l1.247 4.904 1.159-4.904c.04-.16.088-.256.144-.28.056-.04.143-.063.271-.063h.64c.128 0 .215.023.271.063.056.048.104.152.144.28l1.175 4.968 1.279-4.968c.048-.16.096-.256.151-.28.056-.04.143-.063.264-.063h.743c.127 0 .199.063.199.2 0 .047-.008.096-.016.151-.008.056-.024.12-.048.2l-1.783 5.735c-.048.16-.096.256-.151.28-.056.04-.136.063-.256.063h-.688c-.128 0-.215-.023-.271-.071-.056-.048-.104-.144-.144-.28l-1.151-4.783-1.143 4.775c-.04.16-.088.256-.144.28-.056.048-.143.071-.271.071h-.688zm10.295.215c-.415 0-.831-.048-1.239-.143-.407-.096-.719-.2-.927-.304-.128-.063-.215-.136-.247-.2-.032-.063-.048-.136-.048-.2v-.351c0-.144.056-.216.16-.216.04 0 .08.008.12.024.04.016.104.04.168.072.336.16.695.28 1.08.36s.775.12 1.167.12c.615 0 1.095-.104 1.431-.32.336-.215.512-.536.512-.959 0-.28-.088-.52-.271-.711-.184-.2-.559-.384-1.111-.568l-1.599-.504c-.815-.264-1.415-.655-1.775-1.167-.36-.512-.543-1.08-.543-1.695 0-.488.104-.92.32-1.287.215-.368.504-.68.864-.936.359-.256.767-.44 1.247-.568.48-.127.983-.191 1.511-.191.183 0 .375.008.567.032.2.024.383.056.567.088.175.04.343.08.504.127.16.048.295.096.4.144.104.048.183.104.231.151.048.048.088.104.12.176.024.071.04.151.04.247v.328c0 .144-.056.224-.16.224-.064 0-.167-.04-.312-.104-.671-.312-1.423-.472-2.247-.472-.56 0-.999.088-1.327.272-.329.184-.488.456-.488.823 0 .272.095.504.287.688.191.184.583.376 1.167.568l1.567.496c.807.256 1.391.623 1.743 1.111.353.488.527 1.04.527 1.647 0 .504-.104.96-.32 1.343-.215.384-.504.711-.88.976-.368.264-.791.464-1.279.607-.495.136-1.023.2-1.591.2z"/>
-                </svg>
                 AWS
               </button>
               <button
                 onClick={() => setActiveTab('apikeys')}
-                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                className={`py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
                   activeTab === 'apikeys'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                </svg>
                 API Keys
               </button>
               <button
                 onClick={() => setActiveTab('ads')}
-                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                className={`py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
                   activeTab === 'ads'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
                 Ads
               </button>
               <button
                 onClick={() => setActiveTab('other')}
-                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                className={`py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
                   activeTab === 'other'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
                 Category - Prompt
               </button>
               <button
                 onClick={() => setActiveTab('state-language')}
-                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                className={`py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
                   activeTab === 'state-language'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-                </svg>
                 State-Language
               </button>
               <button
                 onClick={() => setActiveTab('youtube-channels')}
-                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                className={`py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
                   activeTab === 'youtube-channels'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
                 YouTube Channels
               </button>
             </nav>
