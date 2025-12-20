@@ -1771,11 +1771,6 @@ const SystemSettings = () => {
 
                     {/* Google Ads Section */}
                     <div className="mb-8">
-                      <div className="mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2 text-left">Google Ads Placements</h3>
-                        <p className="text-sm text-gray-600 text-left">Enable or disable Google Ads at different locations across your site. Changes are saved automatically.</p>
-                      </div>
-
                       {/* Google Ad Placements Grid */}
                       <div className="space-y-2">
                       {adPlacements.map((placement) => (
