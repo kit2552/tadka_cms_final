@@ -155,7 +155,8 @@ const SystemSettings = () => {
     { value: 'movie_channel', label: 'Movie Channel' },
     { value: 'news_channel', label: 'News Channel' },
     { value: 'tv_channel', label: 'TV Channel' },
-    { value: 'reality_show', label: 'Reality Show' }
+    { value: 'reality_show', label: 'Reality Show' },
+    { value: 'ott_channel', label: 'OTT Channel' }
   ]);
 
   useEffect(() => {
