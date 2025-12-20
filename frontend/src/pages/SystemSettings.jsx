@@ -2697,6 +2697,43 @@ const SystemSettings = () => {
               </div>
             )}
 
+            {/* Delete Channel Confirmation Modal */}
+            {showDeleteConfirmModal && channelToDelete && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+                <div className="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4">
+                  <div className="p-4 border-b border-gray-200">
+                    <h3 className="text-base font-semibold text-gray-900 text-left">Delete Channel</h3>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-sm text-gray-600 text-left">
+                      Are you sure you want to delete <span className="font-medium text-gray-900">{channelToDelete.channel_name}</span>? This action cannot be undone.
+                    </p>
+                  </div>
+                  <div className="p-4 border-t border-gray-200 flex justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowDeleteConfirmModal(false);
+                        setChannelToDelete(null);
+                      }}
+                      className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                      disabled={deletingChannel}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={deleteYoutubeChannel}
+                      disabled={deletingChannel}
+                      className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50"
+                    >
+                      {deletingChannel ? 'Deleting...' : 'Delete'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
