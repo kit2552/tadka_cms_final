@@ -249,11 +249,6 @@ const AdminControls = () => {
             {/* Scheduled Articles Tab */}
             {activeTab === 'articles' && (
               <div className="space-y-4">
-                <div className="text-left mb-4">
-                  <h2 className="text-lg font-semibold text-gray-900 text-left">Scheduled Articles List</h2>
-                  <p className="text-sm text-gray-600 mt-1">View all articles scheduled for automatic publishing</p>
-                </div>
-                
                 {scheduledArticles.length === 0 ? (
                   <div className="text-center py-16">
                     <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
