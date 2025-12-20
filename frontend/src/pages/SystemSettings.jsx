@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { INDIAN_STATES, getStateNameByCode } from '../utils/statesConfig';
-import { DEFAULT_STATE_LANGUAGE_MAPPING } from '../utils/stateLanguageMapping';
+import { DEFAULT_STATE_LANGUAGE_MAPPING, AVAILABLE_LANGUAGES } from '../utils/stateLanguageMapping';
 import ManageVideosModal from '../components/ManageVideosModal';
 
 const SystemSettings = () => {
