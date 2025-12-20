@@ -969,7 +969,7 @@ const SystemSettings = () => {
       <div className="max-w-5xl-plus mx-auto px-8 py-8">
         {/* Header */}
         <div className="mb-6 text-left">
-          <h1 className="text-xl font-semibold text-gray-900 text-left">CMS Settings</h1>
+          <h1 className="text-xl font-semibold text-gray-900 text-left">System Settings</h1>
         </div>
 
         {/* Message */}
