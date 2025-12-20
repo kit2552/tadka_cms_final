@@ -652,7 +652,8 @@ class VideoAgentService:
         - "Akhanda 2 Kumbha Mela Sequence MAKING | Balakrishna" -> "Akhanda 2"
         - "Sahana Sahana Song (Hindi) - The RajaSaab | Prabhas" -> "The RajaSaab"
         - "SVC59 Title Date announcement | Vijay Deverakonda" -> "SVC59"
-        - "MADHAM Trailer | Harsha | Anuroop" -> "MADHAM"
+        - "MADHAM Trailer | Harsha | Anuroop" -> "Madham"
+        - "Jajikaya Jajikaya Song | Akhanda 2 | NBK" -> "Akhanda 2"
         """
         if not title:
             return "Video"
@@ -660,99 +661,99 @@ class VideoAgentService:
         # Remove hashtags
         clean = re.sub(r'#\w+', '', title).strip()
         
-        # Common patterns to identify where movie name ends
-        # These words/phrases typically come AFTER the movie name
+        # Pattern 1: "Song Name Song | Movie Name | Artist" - extract Movie Name
+        # e.g., "Jajikaya Jajikaya Song | Akhanda 2 | NBK"
+        song_then_movie = re.match(r'^[^|]+(?:Song|Lyrical|Video)\s*\|\s*([^|]+)', clean, re.IGNORECASE)
+        if song_then_movie:
+            movie = song_then_movie.group(1).strip()
+            if movie and len(movie) > 2:
+                return self._to_title_case(movie.rstrip('|-:,'))
+        
+        # Pattern 2: "Song Name (Language) - Movie Name | Artist"
+        # e.g., "Sahana Sahana Song (Hindi) - The RajaSaab | Prabhas"
+        song_lang_movie = re.match(r'^.+?(?:Song|Lyrical|Video)\s*\([^)]+\)\s*[-|:]\s*([^|]+)', clean, re.IGNORECASE)
+        if song_lang_movie:
+            movie = song_lang_movie.group(1).strip()
+            if movie and len(movie) > 2:
+                return self._to_title_case(movie.rstrip('|-:,'))
+        
+        # Pattern 3: "Movie Name: Song Name (Type) | Artist"
+        # e.g., "Single Papa: Tu Hi Saahiba (Song) | Kunal Kemmu"
+        movie_colon_song = re.match(r'^([^:]+):\s*[^|]+(?:Song|Lyrical|Video|\([^)]+\))', clean, re.IGNORECASE)
+        if movie_colon_song:
+            movie = movie_colon_song.group(1).strip()
+            if movie and len(movie) > 2:
+                return self._to_title_case(movie)
+        
+        # Pattern 4: Standard format - split by common markers
+        result = clean
+        
+        # Words that indicate the movie name has ended
         end_markers = [
-            # Video type markers
-            r'\s*[-|:]\s*Official\s+Trailer',
-            r'\s*[-|:]\s*Official\s+Teaser', 
-            r'\s*[-|:]\s*Trailer',
-            r'\s*[-|:]\s*Teaser',
-            r'\s*[-|:]\s*First\s+Look',
-            r'\s*[-|:]\s*Glimpse',
-            r'\s*[-|:]\s*Motion\s+Poster',
-            r'\s*[-|:]\s*Promo',
-            r'\s*[-|:]\s*Making',
-            r'\s*[-|:]\s*Behind\s+The\s+Scenes',
-            r'\s*[-|:]\s*BTS',
-            # Song markers
-            r'\s+Song\s*[-|:\(]',
-            r'\s+Lyrical',
-            r'\s+Lyrics',
+            r'\s+Official\s+Trailer',
+            r'\s+Official\s+Teaser',
+            r'\s+Trailer\b',
+            r'\s+Teaser\b',
+            r'\s+First\s+Look',
+            r'\s+Glimpse\b',
+            r'\s+Motion\s+Poster',
+            r'\s+Promo\b',
+            r'\s+MAKING\b',
+            r'\s+Making\b',
+            r'\s+Behind\s+The\s+Scenes',
+            r'\s+BTS\b',
+            r'\s+Song\b',
+            r'\s+Lyrical\b',
+            r'\s+Lyrics\b',
             r'\s+Video\s+Song',
             r'\s+Full\s+Song',
             r'\s+Full\s+Video',
-            r'\s+Audio',
-            # Event markers
+            r'\s+Audio\b',
             r'\s+Press\s+Meet',
-            r'\s+Interview',
-            r'\s+Event',
-            r'\s+Launch',
+            r'\s+Interview\b',
+            r'\s+Event\b',
+            r'\s+Launch\b',
             r'\s+Celebration',
             r'\s+Success\s+Meet',
-            # Generic separators (process last)
+            r'\s+Announcement',
+            r'\s+Sequence\b',
+            r'\s+Scene\b',
             r'\s*\|\s*',  # Pipe separator
             r'\s+-\s+',   # Dash with spaces
-            r'\s*:\s+',   # Colon with space after
         ]
         
-        result = clean
-        
-        # Try to find movie name before common markers
         for pattern in end_markers:
             match = re.search(pattern, result, re.IGNORECASE)
             if match:
                 result = result[:match.start()].strip()
                 break
         
-        # Handle special cases where song name comes first
-        # Pattern: "Song Name (Type) - Movie Name | Artist"
-        # e.g., "Sahana Sahana Song (Hindi) - The RajaSaab | Prabhas"
-        song_movie_pattern = r'^(.+?)\s+(?:Song|Lyrical|Video)\s*\([^)]+\)\s*[-|:]\s*(.+?)(?:\s*\||$)'
-        match = re.match(song_movie_pattern, clean, re.IGNORECASE)
-        if match:
-            # Return the movie name (second group), not the song name
-            movie_name = match.group(2).strip()
-            # Clean up any trailing artist names after pipe
-            if '|' in movie_name:
-                movie_name = movie_name.split('|')[0].strip()
-            if movie_name:
-                result = movie_name
-        
-        # Remove common suffixes that aren't part of the name
-        suffixes_to_remove = [
-            r'\s*Official$',
-            r'\s*OFFICIAL$', 
-            r'\s*\(Official\)$',
-            r'\s*\(OFFICIAL\)$',
-            r'\s*HD$',
-            r'\s*4K$',
-            r'\s*8K$',
-            r'\s*Full\s*Movie$',
-            r'\s*Announcement$',
-            r'\s*Update$',
-            r'\s*Title\s*Date\s*Announcement$',
-            r'\s*MAKING$',
-            r'\s*Making$',
+        # Remove common suffixes
+        suffixes = [
+            r'\s*Official$', r'\s*\(Official\)$', r'\s*HD$', r'\s*4K$', r'\s*8K$',
         ]
-        
-        for suffix in suffixes_to_remove:
+        for suffix in suffixes:
             result = re.sub(suffix, '', result, flags=re.IGNORECASE).strip()
         
-        # Clean up extra whitespace and trailing punctuation
+        # Remove parenthetical language/format markers
+        result = re.sub(r'\s*\([^)]*(?:Hindi|Telugu|Tamil|Kannada|Malayalam|Official|HD|4K|8K|Video)[^)]*\)\s*$', '', result, flags=re.IGNORECASE).strip()
+        
+        # Clean up
         result = re.sub(r'\s+', ' ', result)
         result = result.rstrip('|-:,').strip()
         
-        # If result is too short or empty, try to get first meaningful part
+        # If result is too short, use first part before pipe
         if len(result) < 2:
-            # Fall back to first part before any separator
-            parts = re.split(r'[-|:]', clean)
+            parts = clean.split('|')
             result = parts[0].strip() if parts else clean
+            # Try to clean this part too
+            for pattern in end_markers[:10]:  # Use main markers
+                match = re.search(pattern, result, re.IGNORECASE)
+                if match:
+                    result = result[:match.start()].strip()
+                    break
         
-        # Final cleanup - remove any remaining parenthetical suffixes
-        result = re.sub(r'\s*\([^)]*(?:Hindi|Telugu|Tamil|Official|HD|4K)[^)]*\)\s*$', '', result, flags=re.IGNORECASE).strip()
-        
-        return result if result else "Video"
+        return self._to_title_case(result) if result else "Video"
     
     def _clean_video_title(self, title: str) -> str:
         """Legacy method - calls _extract_display_title for backward compatibility"""
