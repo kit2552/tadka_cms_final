@@ -515,8 +515,9 @@ class YouTubeRSSService:
     def get_total_video_count(self) -> Dict:
         """Get total video statistics"""
         total = db.youtube_videos.count_documents({})
-        unused = db.youtube_videos.count_documents({'is_used': False})
+        unused = db.youtube_videos.count_documents({'is_used': False, 'is_skipped': {'$ne': True}})
         used = db.youtube_videos.count_documents({'is_used': True})
+        skipped = db.youtube_videos.count_documents({'is_skipped': True})
         
         # Count by channel type
         by_type = {}
@@ -527,6 +528,7 @@ class YouTubeRSSService:
             'total': total,
             'unused': unused,
             'used': used,
+            'skipped': skipped,
             'by_type': by_type
         }
     
