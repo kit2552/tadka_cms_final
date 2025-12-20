@@ -13,7 +13,7 @@ from datetime import datetime
 import os
 
 # Get backend URL from environment
-BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://video-curator-4.preview.emergentagent.com')
+BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://rss-content-engine.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
 def test_topics_with_multiple_articles():
