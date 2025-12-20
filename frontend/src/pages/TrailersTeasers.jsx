@@ -460,7 +460,7 @@ const TrailersTeasers = () => {
                     <div className="relative">
                       <img
                         src={article.youtube_url ? getYouTubeThumbnail(article.youtube_url) : (article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
-                        alt={article.title}
+                        alt={article.display_title || article.title}
                         className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
                         style={{ aspectRatio: '16/9' }}
                         onError={(e) => {
@@ -479,7 +479,7 @@ const TrailersTeasers = () => {
                             </svg>
                           )}
                           <h3 className="text-white font-bold text-xs leading-tight line-clamp-2 text-center">
-                            {article.title}
+                            {article.display_title || article.title}
                           </h3>
                         </div>
                       </div>
