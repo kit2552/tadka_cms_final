@@ -473,6 +473,14 @@ class YouTubeRSSService:
         )
         return result.modified_count > 0
     
+    def mark_video_as_available(self, video_id: str) -> bool:
+        """Mark a used video as available again"""
+        result = db.youtube_videos.update_one(
+            {'video_id': video_id},
+            {'$set': {'is_used': False, 'used_at': None}}
+        )
+        return result.modified_count > 0
+    
     def mark_video_as_skipped(self, video_id: str, skipped: bool = True) -> bool:
         """Mark a video as skipped (won't be picked by agent)"""
         result = db.youtube_videos.update_one(
