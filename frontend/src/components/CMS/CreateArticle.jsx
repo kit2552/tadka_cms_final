@@ -154,6 +154,7 @@ const CreateArticle = () => {
     image: '',
     image_gallery: [], // New field for image gallery
     youtube_url: '',
+    display_title: '', // Display title for video content (movie name)
     tags: '',
     artists: [], // New field for artists
     movie_rating: '', // New field for movie rating
