@@ -421,6 +421,7 @@ def create_article(db, article: dict):
     article_doc = {
         "id": new_id,
         "title": article.get("title"),
+        "display_title": article.get("display_title"),  # Short title for home page display
         "short_title": article.get("short_title"),
         "slug": article.get("slug"),
         "content": article.get("content"),
