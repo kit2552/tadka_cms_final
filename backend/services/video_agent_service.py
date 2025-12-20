@@ -45,16 +45,28 @@ class VideoAgentService:
     
     # State to language mapping (will be fetched from DB)
     DEFAULT_STATE_LANGUAGE_MAP = {
-        'andhra-pradesh': 'Telugu',
-        'telangana': 'Telugu',
-        'tamil-nadu': 'Tamil',
-        'karnataka': 'Kannada',
-        'kerala': 'Malayalam',
-        'maharashtra': 'Marathi',
-        'west-bengal': 'Bengali',
-        'bollywood': 'Hindi',
-        'gujarat': 'Gujarati',
-        'punjab': 'Punjabi'
+        'andhra-pradesh': ['Telugu'],
+        'ap': ['Telugu'],
+        'telangana': ['Telugu'],
+        'ts': ['Telugu'],
+        'tamil-nadu': ['Tamil'],
+        'tn': ['Tamil'],
+        'karnataka': ['Kannada'],
+        'ka': ['Kannada'],
+        'kerala': ['Malayalam'],
+        'kl': ['Malayalam'],
+        'maharashtra': ['Marathi', 'Hindi'],
+        'mh': ['Marathi', 'Hindi'],
+        'west-bengal': ['Bengali'],
+        'wb': ['Bengali'],
+        'bollywood': ['Hindi'],
+        'all': ['Hindi'],
+        'gujarat': ['Gujarati', 'Hindi'],
+        'gj': ['Gujarati', 'Hindi'],
+        'punjab': ['Punjabi', 'Hindi'],
+        'pb': ['Punjabi', 'Hindi'],
+        'delhi': ['Hindi', 'Punjabi', 'Urdu'],
+        'dl': ['Hindi', 'Punjabi', 'Urdu']
     }
     
     # Language name to code mapping for article_language field
