@@ -693,7 +693,15 @@ class VideoAgentService:
             if movie and len(movie) > 2:
                 return self._to_title_case(movie.rstrip('|-:,'))
         
-        # Pattern 5: Standard format - split by common markers
+        # Pattern 5: "Name (Video Song) | Artist" - extract Name before (Video Song)
+        # e.g., "Stardom (Video Song) | Yo Yo Honey Singh"
+        video_song_pattern = re.match(r'^([^(]+)\s*\((?:Video\s*Song|Video|Song)\)', clean, re.IGNORECASE)
+        if video_song_pattern:
+            name = video_song_pattern.group(1).strip()
+            if name and len(name) > 2:
+                return self._to_title_case(name.rstrip('|-:,'))
+        
+        # Pattern 6: Standard format - split by common markers
         result = clean
         
         # Words that indicate the movie name has ended (ordered by priority)
@@ -706,6 +714,7 @@ class VideoAgentService:
             r'\s+Glimpse\b',
             r'\s+Motion\s+Poster',
             r'\s+Promo\b',
+            r'\s+Kumbha\s+Mela',  # Specific event sequence
             r'\s+MAKING\b',
             r'\s+Making\b',
             r'\s+Behind\s+The\s+Scenes',
