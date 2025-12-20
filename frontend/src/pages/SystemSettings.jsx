@@ -1036,19 +1036,6 @@ const SystemSettings = () => {
                 Ads
               </button>
               <button
-                onClick={() => setActiveTab('appearance')}
-                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
-                  activeTab === 'appearance'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                </svg>
-                Appearance
-              </button>
-              <button
                 onClick={() => setActiveTab('other')}
                 className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
                   activeTab === 'other'
@@ -1073,19 +1060,6 @@ const SystemSettings = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
                 </svg>
                 State-Language
-              </button>
-              <button
-                onClick={() => setActiveTab('notifications')}
-                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
-                  activeTab === 'notifications'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                Notifications
               </button>
               <button
                 onClick={() => setActiveTab('youtube-channels')}
