@@ -30,6 +30,7 @@ const ManageVideosModal = ({ onClose }) => {
   const [channelVideosList, setChannelVideosList] = useState([]);
   const [videosLoading, setVideosLoading] = useState(false);
   const [videosCategoryFilter, setVideosCategoryFilter] = useState('all');
+  const [videosTab, setVideosTab] = useState('available'); // 'available' or 'used'
 
   useEffect(() => {
     fetchData();
