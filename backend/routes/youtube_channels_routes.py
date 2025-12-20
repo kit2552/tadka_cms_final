@@ -295,6 +295,37 @@ async def delete_youtube_channel(channel_id: str):
         raise HTTPException(status_code=404, detail="Channel not found")
     return {"message": "Channel deleted successfully"}
 
+
+@router.post("/sync-video-metadata")
+async def sync_video_metadata():
+    """Sync channel metadata (type, languages, name) from youtube_channels to youtube_videos"""
+    channels = list(db[YOUTUBE_CHANNELS].find({}, {"_id": 0}))
+    updated_count = 0
+    
+    for channel in channels:
+        yt_channel_id = channel.get('channel_id')
+        if not yt_channel_id:
+            continue
+        
+        update_data = {
+            'channel_type': channel.get('channel_type'),
+            'languages': channel.get('languages', []),
+            'channel_name': channel.get('channel_name')
+        }
+        
+        result = db.youtube_videos.update_many(
+            {"channel_id": yt_channel_id},
+            {"$set": update_data}
+        )
+        updated_count += result.modified_count
+    
+    return {
+        "message": f"Synced metadata for {updated_count} videos from {len(channels)} channels",
+        "channels_processed": len(channels),
+        "videos_updated": updated_count
+    }
+
+
 @router.post("/bulk-create")
 async def bulk_create_channels(channels: List[YouTubeChannelCreate]):
     """Bulk create YouTube channels (for initial setup)"""
