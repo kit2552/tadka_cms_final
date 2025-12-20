@@ -588,13 +588,45 @@ class VideoAgentService:
         }
     
     def _to_title_case(self, text: str) -> str:
-        """Convert text to title case (first letter of each word capitalized, rest lowercase)"""
+        """Convert text to title case (first letter of each word capitalized, rest lowercase)
+        Handles special cases like words in brackets: (Hindi) -> (Hindi)
+        """
         if not text:
             return text
-        # Split by spaces, capitalize first letter of each word, lowercase the rest
+        
+        result = []
         words = text.split()
-        title_cased = ' '.join(word.capitalize() for word in words)
-        return title_cased
+        
+        for word in words:
+            if not word:
+                continue
+            
+            # Handle words with leading special characters like (word) or [word]
+            leading_chars = ''
+            trailing_chars = ''
+            core_word = word
+            
+            # Extract leading special characters
+            i = 0
+            while i < len(core_word) and not core_word[i].isalnum():
+                leading_chars += core_word[i]
+                i += 1
+            core_word = core_word[i:]
+            
+            # Extract trailing special characters
+            j = len(core_word) - 1
+            while j >= 0 and not core_word[j].isalnum():
+                trailing_chars = core_word[j] + trailing_chars
+                j -= 1
+            core_word = core_word[:j+1] if j >= 0 else ''
+            
+            # Capitalize the core word
+            if core_word:
+                core_word = core_word[0].upper() + core_word[1:].lower() if len(core_word) > 1 else core_word.upper()
+            
+            result.append(leading_chars + core_word + trailing_chars)
+        
+        return ' '.join(result)
     
     def _clean_video_title(self, title: str) -> str:
         """Extract clean title from video title"""
