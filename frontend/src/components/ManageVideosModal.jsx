@@ -591,7 +591,7 @@ const ManageVideosModal = ({ onClose }) => {
                             href={video.video_url || `https://www.youtube.com/watch?v=${video.video_id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm font-medium text-gray-900 hover:text-red-600 line-clamp-2"
+                            className={`text-sm font-medium hover:text-red-600 line-clamp-2 ${video.is_skipped ? 'text-gray-400 line-through' : 'text-gray-900'}`}
                           >
                             {video.title}
                           </a>
@@ -611,6 +611,25 @@ const ManageVideosModal = ({ onClose }) => {
                             <span className="text-xs text-gray-500">
                               {formatShortDate(video.published_at)}
                             </span>
+                            
+                            {/* Skip/Unskip Button */}
+                            <button
+                              onClick={() => handleSkipVideo(video.video_id, !video.is_skipped)}
+                              className={`text-xs px-2 py-0.5 rounded ${
+                                video.is_skipped 
+                                  ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                                  : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                              }`}
+                            >
+                              {video.is_skipped ? 'Unskip' : 'Skip'}
+                            </button>
+                            
+                            {/* Skipped Badge */}
+                            {video.is_skipped && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-600">
+                                Skipped
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
