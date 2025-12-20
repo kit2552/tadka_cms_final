@@ -407,6 +407,7 @@ class YouTubeRSSService:
         
         query = {
             'is_used': False,
+            'is_skipped': {'$ne': True},  # Exclude skipped videos
             'published_at': {'$gte': cutoff_date}
         }
         
