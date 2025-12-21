@@ -1190,7 +1190,16 @@ Instructions:
                   <select
                     name="video_category"
                     value={formData.video_category}
-                    onChange={handleInputChange}
+                    onChange={(e) => {
+                      const newCategory = e.target.value;
+                      const defaults = defaultFilterSettings[newCategory] || { include: [], exclude: [] };
+                      setFormData(prev => ({
+                        ...prev,
+                        video_category: newCategory,
+                        include_keywords: defaults.include.join(', '),
+                        exclude_keywords: defaults.exclude.join(', ')
+                      }));
+                    }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   >
                     <option value="trailers_teasers">Trailers & Teasers</option>
@@ -1221,6 +1230,60 @@ Instructions:
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
                     Filter content from YouTube channels by type
+                  </p>
+                </div>
+                
+                {/* Filter Settings */}
+                <div className="text-left border border-gray-200 rounded-lg p-4 bg-gray-50">
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="block text-sm font-medium text-gray-700">Filter Settings</label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const defaults = defaultFilterSettings[formData.video_category] || { include: [], exclude: [] };
+                        setFormData(prev => ({
+                          ...prev,
+                          include_keywords: defaults.include.join(', '),
+                          exclude_keywords: defaults.exclude.join(', ')
+                        }));
+                      }}
+                      className="text-xs text-blue-600 hover:text-blue-800"
+                    >
+                      Reset to Defaults
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">
+                        Include Keywords <span className="text-gray-400">(video title must contain at least one)</span>
+                      </label>
+                      <textarea
+                        name="include_keywords"
+                        value={formData.include_keywords || ''}
+                        onChange={handleInputChange}
+                        placeholder="trailer, teaser, first look..."
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-xs focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">
+                        Exclude Keywords <span className="text-gray-400">(skip videos containing these)</span>
+                      </label>
+                      <textarea
+                        name="exclude_keywords"
+                        value={formData.exclude_keywords || ''}
+                        onChange={handleInputChange}
+                        placeholder="reaction, review, behind the scenes..."
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-xs focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Comma-separated keywords used to filter videos from RSS feed
                   </p>
                 </div>
                 
