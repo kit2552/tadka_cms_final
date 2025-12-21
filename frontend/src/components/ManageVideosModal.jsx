@@ -310,9 +310,43 @@ const ManageVideosModal = ({ onClose }) => {
     }
   };
 
-  const filteredChannels = filterType === 'all' 
-    ? channelVideos 
-    : channelVideos.filter(ch => ch.channel_type === filterType);
+  // Handle sorting
+  const handleSort = (key) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return '↕';
+    return sortConfig.direction === 'asc' ? '↑' : '↓';
+  };
+
+  // Filter and sort channels
+  const filteredChannels = channelVideos
+    .filter(ch => {
+      // Type filter
+      if (filterType !== 'all' && ch.channel_type !== filterType) return false;
+      // Search filter
+      if (searchQuery && !ch.channel_name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      const { key, direction } = sortConfig;
+      let aVal = a[key];
+      let bVal = b[key];
+      
+      // Handle string vs number sorting
+      if (typeof aVal === 'string') {
+        aVal = aVal.toLowerCase();
+        bVal = bVal.toLowerCase();
+      }
+      
+      if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+      return 0;
+    });
 
   const videoCategories = [...new Set(channelVideosList.map(v => v.detected_category || 'Other'))].sort();
   
