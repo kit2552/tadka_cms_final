@@ -802,7 +802,7 @@ const SystemSettings = () => {
         setChannelRefreshed(false);
         setLanguageSearch('');
         setShowLanguageDropdown(false);
-        setYoutubeChannelForm({ channel_name: '', channel_id: '', rss_url: '', channel_type: 'production_house', languages: [], is_active: true });
+        setYoutubeChannelForm({ channel_name: '', channel_id: '', rss_url: '', channel_type: 'production_house', languages: [], is_active: true, fetch_videos: true, fetch_shorts: false });
         fetchYoutubeChannels();
         
         // Auto-fetch RSS videos for newly created channel OR when channel was refreshed (refresh flow)
