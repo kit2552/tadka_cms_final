@@ -22,7 +22,7 @@ class VideoAgentService:
     CATEGORIES = {
         'trailers_teasers': {
             'name': 'Trailers & Teasers',
-            'keywords': ['trailer', 'teaser', 'first look', 'glimpse'],
+            'keywords': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
             'exclude_keywords': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song']
         },
         'trending_videos': {

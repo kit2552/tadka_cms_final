@@ -439,7 +439,7 @@ class YouTubeRSSService:
         
         # Category keywords for filtering
         category_keywords = {
-            'trailers_teasers': ['trailer', 'teaser', 'first look', 'glimpse'],
+            'trailers_teasers': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
             'trending_videos': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
             'events_interviews': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
             'tadka_shorts': ['shorts', 'reels', 'hot', 'photoshoot']
