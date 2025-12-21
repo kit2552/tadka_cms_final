@@ -188,28 +188,48 @@ class YouTubeRSSService:
     def _detect_language(self, title: str, description: str, channel_languages: List[str]) -> str:
         """Try to detect video language from title/description
         
-        Falls back to first channel language if detection fails
+        Priority:
+        1. Explicit language tags in title like [Telugu], (Tamil), - Hindi, etc.
+        2. Language keywords in title/description
+        3. Fall back to first channel language
         """
+        title_lower = title.lower()
         text = f"{title} {description}".lower()
         
-        # Language detection patterns (basic)
-        language_patterns = {
-            'Telugu': [r'తెలుగు', r'telugu', r'tollywood'],
-            'Tamil': [r'தமிழ்', r'tamil', r'kollywood'],
-            'Hindi': [r'हिंदी', r'hindi', r'bollywood'],
-            'Kannada': [r'ಕನ್ನಡ', r'kannada', r'sandalwood'],
-            'Malayalam': [r'മലയാളം', r'malayalam', r'mollywood'],
-            'Bengali': [r'বাংলা', r'bengali', r'bangla'],
-            'Marathi': [r'मराठी', r'marathi'],
-            'Punjabi': [r'ਪੰਜਾਬੀ', r'punjabi', r'pollywood']
+        # First priority: Check for explicit language tags in title
+        # Common formats: [Telugu], (Tamil), - Hindi, | Telugu, Telugu Song, etc.
+        explicit_patterns = {
+            'Telugu': [r'\[telugu\]', r'\(telugu\)', r'- telugu', r'\| telugu', r'telugu song', r'telugu lyric', r'telugu video', r'తెలుగు'],
+            'Tamil': [r'\[tamil\]', r'\(tamil\)', r'- tamil', r'\| tamil', r'tamil song', r'tamil lyric', r'tamil video', r'தமிழ்'],
+            'Hindi': [r'\[hindi\]', r'\(hindi\)', r'- hindi', r'\| hindi', r'hindi song', r'hindi lyric', r'hindi video', r'हिंदी'],
+            'Kannada': [r'\[kannada\]', r'\(kannada\)', r'- kannada', r'\| kannada', r'kannada song', r'kannada lyric', r'kannada video', r'ಕನ್ನಡ'],
+            'Malayalam': [r'\[malayalam\]', r'\(malayalam\)', r'- malayalam', r'\| malayalam', r'malayalam song', r'malayalam lyric', r'malayalam video', r'മലയാളം'],
+            'Bengali': [r'\[bengali\]', r'\(bengali\)', r'- bengali', r'\| bengali', r'bengali song', r'বাংলা', r'bangla'],
+            'Marathi': [r'\[marathi\]', r'\(marathi\)', r'- marathi', r'\| marathi', r'marathi song', r'मराठी'],
+            'Punjabi': [r'\[punjabi\]', r'\(punjabi\)', r'- punjabi', r'\| punjabi', r'punjabi song', r'ਪੰਜਾਬੀ']
         }
         
-        for lang, patterns in language_patterns.items():
+        # Check title first for explicit tags (most reliable)
+        for lang, patterns in explicit_patterns.items():
+            for pattern in patterns:
+                if re.search(pattern, title_lower, re.IGNORECASE):
+                    return lang
+        
+        # Second priority: Check for industry terms in full text
+        industry_patterns = {
+            'Telugu': [r'tollywood', r'telugu film', r'telugu movie'],
+            'Tamil': [r'kollywood', r'tamil film', r'tamil movie'],
+            'Hindi': [r'bollywood', r'hindi film', r'hindi movie'],
+            'Kannada': [r'sandalwood', r'kannada film', r'kannada movie'],
+            'Malayalam': [r'mollywood', r'malayalam film', r'malayalam movie']
+        }
+        
+        for lang, patterns in industry_patterns.items():
             for pattern in patterns:
                 if re.search(pattern, text, re.IGNORECASE):
                     return lang
         
-        # Fall back to first channel language
+        # Fall back to first channel language (least reliable for multi-lang channels)
         return channel_languages[0] if channel_languages else 'Hindi'
     
     def _detect_video_category(self, title: str, description: str, video_url: str = "") -> str:
