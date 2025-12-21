@@ -846,6 +846,105 @@ const ManageVideosModal = ({ onClose }) => {
           </div>
         </div>
       )}
+      
+      {/* Identify Language Modal */}
+      {showIdentifyModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
+          <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[85vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between bg-yellow-50">
+              <div className="text-left">
+                <h3 className="text-lg font-bold text-gray-900">Identify Video Languages</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Assign languages to videos from multi-language channels
+                </p>
+              </div>
+              <button
+                onClick={() => setShowIdentifyModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {identifyLoading ? (
+                <div className="flex justify-center py-12">
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-yellow-600"></div>
+                </div>
+              ) : videosNeedingId.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  <p>No videos need language identification</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {videosNeedingId.map((video) => (
+                    <div key={video.video_id} className="bg-gray-50 rounded-lg p-4 flex items-start gap-4">
+                      <img
+                        src={video.thumbnail || 'https://via.placeholder.com/120x90'}
+                        alt={video.title}
+                        className="w-28 h-20 object-cover rounded flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0 text-left">
+                        <h4 className="font-medium text-gray-900 text-sm line-clamp-2 mb-1">
+                          {video.title}
+                        </h4>
+                        <p className="text-xs text-gray-500 mb-2">
+                          {video.channel_name}
+                        </p>
+                        <select
+                          value={languageSelections[video.video_id] || ''}
+                          onChange={(e) => handleLanguageSelect(video.video_id, e.target.value)}
+                          className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                        >
+                          <option value="">Select Language</option>
+                          <option value="Telugu">Telugu</option>
+                          <option value="Tamil">Tamil</option>
+                          <option value="Hindi">Hindi</option>
+                          <option value="Kannada">Kannada</option>
+                          <option value="Malayalam">Malayalam</option>
+                          <option value="Bengali">Bengali</option>
+                          <option value="Marathi">Marathi</option>
+                          <option value="Punjabi">Punjabi</option>
+                        </select>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {/* Footer */}
+            <div className="border-t border-gray-200 px-6 py-3 bg-gray-50 flex justify-between items-center">
+              <span className="text-sm text-gray-500">
+                {Object.values(languageSelections).filter(Boolean).length} of {videosNeedingId.length} selected
+              </span>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowIdentifyModal(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveLanguages}
+                  disabled={Object.values(languageSelections).filter(Boolean).length === 0}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    Object.values(languageSelections).filter(Boolean).length > 0
+                      ? 'bg-yellow-600 text-white hover:bg-yellow-700'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  Save Languages
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
