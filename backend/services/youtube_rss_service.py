@@ -424,7 +424,8 @@ class YouTubeRSSService:
             query['channel_type'] = {'$in': channel_types}
         
         # Filter by languages (now supports multiple languages)
-        # Uses only the 'languages' field which is copied from the channel's configured languages
+        # For single-language channels: match channel's languages field
+        # For multi-language channels: also check detected_language field on each video
         if languages and len(languages) > 0:
             # Map language names to database values
             lang_map = {
@@ -438,7 +439,7 @@ class YouTubeRSSService:
             # Convert all languages to DB format
             db_languages = [lang_map.get(lang.lower(), lang) for lang in languages]
             
-            # Filter by channel's assigned languages only (not detected_language which is unreliable)
+            # Filter by channel's assigned languages (at least one must match)
             query['languages'] = {'$in': db_languages}
             print(f"   🔍 Filtering videos by channel languages: {db_languages}")
         
@@ -446,16 +447,28 @@ class YouTubeRSSService:
         videos = list(
             db.youtube_videos.find(query)
             .sort('published_at', -1)
-            .limit(max_videos * 3)  # Fetch more for filtering
+            .limit(max_videos * 5)  # Fetch more for filtering (multi-lang channels need more)
         )
         
-        # Apply category keyword filtering
+        # Apply category keyword filtering AND multi-language channel filtering
         keywords = category_keywords.get(video_category, [])
         excludes = exclude_keywords.get(video_category, [])
+        
+        # Convert db_languages to set for faster lookup
+        target_languages_set = set(db_languages) if languages and len(languages) > 0 else set()
         
         filtered_videos = []
         for video in videos:
             title_lower = video.get('title', '').lower()
+            
+            # For multi-language channels, check detected_language matches target languages
+            channel_languages = video.get('languages', [])
+            if len(channel_languages) > 1 and target_languages_set:
+                # This is a multi-language channel - check detected_language
+                detected_lang = video.get('detected_language', '')
+                if detected_lang and detected_lang not in target_languages_set:
+                    # Skip this video - it's in a different language
+                    continue
             
             # Skip if contains exclude keywords
             if any(excl in title_lower for excl in excludes):
