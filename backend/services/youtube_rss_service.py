@@ -522,9 +522,9 @@ class YouTubeRSSService:
             .limit(max_videos * 5)  # Fetch more for filtering (multi-lang channels need more)
         )
         
-        # Apply category keyword filtering AND multi-language channel filtering
-        keywords = category_keywords.get(video_category, [])
-        excludes = exclude_keywords.get(video_category, [])
+        # Log filter settings being used
+        print(f"   🔍 Include keywords: {category_keywords}")
+        print(f"   🔍 Exclude keywords: {exclude_keywords}")
         
         # Convert db_languages to set for faster lookup
         target_languages_set = set(db_languages) if languages and len(languages) > 0 else set()
