@@ -635,9 +635,18 @@ class YouTubeRSSService:
     
     def mark_video_as_skipped(self, video_id: str, skipped: bool = True) -> bool:
         """Mark a video as skipped (won't be picked by agent)"""
+        update_fields = {
+            'is_skipped': skipped, 
+            'skipped_at': datetime.now(timezone.utc) if skipped else None
+        }
+        
+        # If skipping, also clear the needs_language_identification flag
+        if skipped:
+            update_fields['needs_language_identification'] = False
+        
         result = db.youtube_videos.update_one(
             {'video_id': video_id},
-            {'$set': {'is_skipped': skipped, 'skipped_at': datetime.now(timezone.utc) if skipped else None}}
+            {'$set': update_fields}
         )
         return result.modified_count > 0
     
