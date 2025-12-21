@@ -31,6 +31,13 @@ const ManageVideosModal = ({ onClose }) => {
   const [videosLoading, setVideosLoading] = useState(false);
   const [videosCategoryFilter, setVideosCategoryFilter] = useState('all');
   const [videosTab, setVideosTab] = useState('available'); // 'available' or 'used'
+  
+  // Language identification state
+  const [showIdentifyModal, setShowIdentifyModal] = useState(false);
+  const [videosNeedingId, setVideosNeedingId] = useState([]);
+  const [identifyLoading, setIdentifyLoading] = useState(false);
+  const [identifyCount, setIdentifyCount] = useState(0);
+  const [languageSelections, setLanguageSelections] = useState({});
 
   useEffect(() => {
     fetchData();
@@ -55,11 +62,72 @@ const ManageVideosModal = ({ onClose }) => {
       const totalChannelsRes = await fetch(`${BACKEND_URL}/api/youtube-channels`);
       const totalChannelsData = await totalChannelsRes.json();
       setTotalChannels(Array.isArray(totalChannelsData) ? totalChannelsData.length : 0);
+      
+      // Fetch count of videos needing language identification
+      const identifyCountRes = await fetch(`${BACKEND_URL}/api/youtube-rss/videos/needs-identification/count`);
+      const identifyCountData = await identifyCountRes.json();
+      setIdentifyCount(identifyCountData.count || 0);
     } catch (error) {
       console.error('Error fetching data:', error);
       setMessage({ type: 'error', text: 'Failed to load data' });
     } finally {
       setLoading(false);
+    }
+  };
+  
+  const fetchVideosNeedingIdentification = async () => {
+    setIdentifyLoading(true);
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/youtube-rss/videos/needs-identification`);
+      const data = await res.json();
+      setVideosNeedingId(data.videos || []);
+      setLanguageSelections({});
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+      setMessage({ type: 'error', text: 'Failed to load videos' });
+    } finally {
+      setIdentifyLoading(false);
+    }
+  };
+  
+  const handleOpenIdentifyModal = () => {
+    setShowIdentifyModal(true);
+    fetchVideosNeedingIdentification();
+  };
+  
+  const handleLanguageSelect = (videoId, language) => {
+    setLanguageSelections(prev => ({
+      ...prev,
+      [videoId]: language
+    }));
+  };
+  
+  const handleSaveLanguages = async () => {
+    const updates = Object.entries(languageSelections)
+      .filter(([_, lang]) => lang)
+      .map(([videoId, language]) => ({ video_id: videoId, language }));
+    
+    if (updates.length === 0) {
+      setMessage({ type: 'error', text: 'Please select languages for at least one video' });
+      return;
+    }
+    
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/youtube-rss/videos/update-language/bulk`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+      
+      const data = await res.json();
+      setMessage({ type: 'success', text: `Updated ${data.updated_count} videos` });
+      
+      // Refresh the list
+      fetchVideosNeedingIdentification();
+      fetchData();
+    } catch (error) {
+      console.error('Error updating languages:', error);
+      setMessage({ type: 'error', text: 'Failed to update languages' });
     }
   };
 
