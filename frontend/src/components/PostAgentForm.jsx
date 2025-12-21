@@ -77,6 +77,10 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     events_interviews_bollywood: {
       include: ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
       exclude: ['trailer', 'teaser', 'song']
+    },
+    tadka_shorts_bollywood: {
+      include: ['shorts', 'reels', 'hot', 'photoshoot'],
+      exclude: []
     }
   };
   
