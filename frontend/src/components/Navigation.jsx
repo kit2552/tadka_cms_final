@@ -213,7 +213,7 @@ const Navigation = ({ onLayoutModeChange }) => {
     { name: t('nav.movies', 'Movies'), path: '/movies' },
     { name: t('nav.sports', 'Sports'), path: '/sports' },
     { name: t('nav.travel', 'Tadka Pics'), path: '/tadka-pics' },
-    { name: t('nav.trending_videos', 'Trending Videos'), path: '/trending-videos' },
+    { name: t('nav.trending_videos', 'Latest Video Songs'), path: '/trending-videos' },
     { name: t('nav.movie_reviews', 'Movie Reviews'), path: '/movie-reviews' },
     { name: t('nav.trailers_teasers', 'Trailers & Teasers'), path: '/trailers-teasers' },
     { name: t('nav.box_office', 'Box Office'), path: '/box-office' },

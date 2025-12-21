@@ -261,7 +261,7 @@ const TrendingVideos = () => {
       <div className={`min-h-screen ${themeClasses.pageBackground} flex items-center justify-center`}>
         <div className="text-center max-w-md mx-auto p-6">
           <div className="text-6xl mb-4">📹</div>
-          <h2 className={`text-2xl font-bold ${themeClasses.textPrimary} mb-2`}>Unable to Load Trending Videos</h2>
+          <h2 className={`text-2xl font-bold ${themeClasses.textPrimary} mb-2`}>Unable to Load Latest Video Songs</h2>
           <p className={`${themeClasses.textSecondary} mb-6`}>{error}</p>
           <button
             onClick={() => window.location.reload()}
@@ -295,9 +295,9 @@ const TrendingVideos = () => {
         {/* Two Section Layout with Gap - 70%/30% split */}
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
           
-          {/* Trending Videos Section - 70% width */}
+          {/* Latest Video Songs Section - 70% width */}
           <div className="lg:col-span-7 -mt-1">
-            {/* Trending Videos Section Header - Sticky with filter and bottom border */}
+            {/* Latest Video Songs Section Header - Sticky with filter and bottom border */}
             <div className={`sticky top-16 z-40 border-b-2 border-gray-300 mb-3`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 py-4">
                 <div className="mb-2">
@@ -311,7 +311,7 @@ const TrendingVideos = () => {
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
                     >
-                      Trending Videos
+                      Latest Video Songs
                     </button>
                     <button
                       onClick={() => setActiveTab('bollywood')}

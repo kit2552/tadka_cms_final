@@ -64,7 +64,7 @@ const TrendingVideos = ({ trendingVideosData = {}, onImageClick }) => {
             }`}
             style={{fontSize: '14px', fontWeight: '500'}}
           >
-            {t('sections.trending_videos', 'Trending Videos')}
+            {t('sections.trending_videos', 'Latest Video Songs')}
           </button>
           <button
             onClick={() => setActiveTab('bollywood')}

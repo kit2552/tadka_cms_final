@@ -1170,7 +1170,7 @@ Instructions:
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   >
                     <option value="trailers_teasers">Trailers & Teasers</option>
-                    <option value="trending_videos">Trending Videos</option>
+                    <option value="trending_videos">Latest Video Songs</option>
                     <option value="events_interviews">Events & Interviews</option>
                     <option value="tadka_shorts">Tadka Shorts</option>
                   </select>

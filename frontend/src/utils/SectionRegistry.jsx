@@ -68,7 +68,7 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
     },
     'trending-videos': {
       id: 'trending-videos',
-      name: 'Trending Videos',
+      name: 'Latest Video Songs',
       component: (
         <div className="pt-2 pb-2">
           <TrendingVideos 
