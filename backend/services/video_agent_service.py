@@ -445,6 +445,7 @@ class VideoAgentService:
         agent_article_language = agent.get('article_language', 'en')
         content_workflow = agent.get('content_workflow', 'draft')
         agent_category = agent.get('category', '')
+        content_filter = agent.get('content_filter', 'videos')  # 'videos', 'shorts', or 'both'
         
         # Get channel types from agent config (NEW FIELD)
         channel_types = agent.get('channel_types', [])
@@ -462,6 +463,7 @@ class VideoAgentService:
         print(f"📌 Primary Search Language: {search_language}")
         print(f"📌 Video Category: {video_category}")
         print(f"📌 Channel Types: {channel_types}")
+        print(f"📌 Content Filter: {content_filter}")
         print(f"📌 Article Language: {agent_article_language}")
         print(f"📌 Content Workflow: {content_workflow}")
         
@@ -475,7 +477,8 @@ class VideoAgentService:
             languages=state_languages,  # Pass all languages for the state
             video_category=video_category,
             max_videos=max_videos * 2,  # Get extra for filtering
-            days_ago=7
+            days_ago=7,
+            content_filter=content_filter  # Pass content filter
         )
         
         if rss_videos:
