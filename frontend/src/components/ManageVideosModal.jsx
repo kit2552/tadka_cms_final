@@ -421,7 +421,8 @@ const ManageVideosModal = ({ onClose }) => {
       movie_channel: 'Movie Channel',
       news_channel: 'News Channel',
       tv_channel: 'TV Channel',
-      reality_show: 'Reality Show'
+      reality_show: 'Reality Show',
+      ott_channel: 'OTT Channel'
     };
     return labels[type] || type;
   };
@@ -434,7 +435,8 @@ const ManageVideosModal = ({ onClose }) => {
       movie_channel: 'bg-red-100 text-red-700',
       news_channel: 'bg-orange-100 text-orange-700',
       tv_channel: 'bg-cyan-100 text-cyan-700',
-      reality_show: 'bg-pink-100 text-pink-700'
+      reality_show: 'bg-pink-100 text-pink-700',
+      ott_channel: 'bg-indigo-100 text-indigo-700'
     };
     return colors[type] || 'bg-gray-100 text-gray-700';
   };
