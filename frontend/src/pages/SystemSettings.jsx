@@ -2233,6 +2233,13 @@ const SystemSettings = () => {
                 {/* Header with filters and actions */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
+                    <input
+                      type="text"
+                      placeholder="Search channels..."
+                      value={youtubeSearchFilter}
+                      onChange={(e) => setYoutubeSearchFilter(e.target.value)}
+                      className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 w-48"
+                    />
                     <select
                       value={youtubeLanguageFilter}
                       onChange={(e) => setYoutubeLanguageFilter(e.target.value)}
@@ -2253,7 +2260,11 @@ const SystemSettings = () => {
                         <option key={type.value} value={type.value}>{type.label}</option>
                       ))}
                     </select>
-                    <span className="text-sm text-gray-500">{youtubeChannels.length} channels</span>
+                    <span className="text-sm text-gray-500">
+                      {youtubeChannels.filter(ch => 
+                        !youtubeSearchFilter || ch.channel_name.toLowerCase().includes(youtubeSearchFilter.toLowerCase())
+                      ).length} channels
+                    </span>
                   </div>
                   <div className="flex gap-2">
                     <button
