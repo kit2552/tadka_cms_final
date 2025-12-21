@@ -461,8 +461,8 @@ class YouTubeRSSService:
             if any(excl in title_lower for excl in excludes):
                 continue
             
-            # For trailers/teasers, must have keyword
-            if video_category == 'trailers_teasers':
+            # For trailers/teasers and trending_videos (songs), must have keyword
+            if video_category in ['trailers_teasers', 'trending_videos']:
                 if not any(kw in title_lower for kw in keywords):
                     continue
             
