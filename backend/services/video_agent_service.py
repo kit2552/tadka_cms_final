@@ -112,15 +112,7 @@ class VideoAgentService:
     ]
     
     def __init__(self):
-        self.youtube_api_key = None
         self.state_language_map = {}
-    
-    async def _get_youtube_api_key(self) -> Optional[str]:
-        """Get YouTube API key from system settings"""
-        config = crud.get_ai_api_keys(db)
-        if config:
-            return config.get('youtube_api_key')
-        return None
     
     async def _get_state_language_mapping(self) -> Dict[str, str]:
         """Get state-language mapping from system settings"""
