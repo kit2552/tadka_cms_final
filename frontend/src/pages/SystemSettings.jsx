@@ -2309,7 +2309,9 @@ const SystemSettings = () => {
                             No channels found. Click &quot;Add Channel&quot; to add YouTube channels.
                           </td>
                         </tr>
-                      ) : youtubeChannels.map(channel => (
+                      ) : youtubeChannels
+                        .filter(channel => !youtubeSearchFilter || channel.channel_name.toLowerCase().includes(youtubeSearchFilter.toLowerCase()))
+                        .map(channel => (
                         <tr key={channel.id} className="hover:bg-gray-50">
                           <td className="px-4 py-3">
                             <div className="text-sm text-gray-900 text-left">{channel.channel_name}</div>
