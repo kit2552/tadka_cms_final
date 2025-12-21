@@ -533,6 +533,23 @@ const ManageVideosModal = ({ onClose }) => {
                 </div>
               </div>
 
+              {/* Identify Language Section */}
+              {identifyCount > 0 && (
+                <div className="bg-yellow-50 rounded-lg p-4 space-y-3 text-left">
+                  <h3 className="font-semibold text-yellow-900">Videos Needing Language Identification</h3>
+                  <p className="text-xs text-yellow-700">
+                    {identifyCount} videos from multi-language channels need manual language assignment.
+                    These videos don't have language tags in their titles.
+                  </p>
+                  <button
+                    onClick={handleOpenIdentifyModal}
+                    className="px-4 py-2 rounded-lg text-sm font-medium bg-yellow-600 text-white hover:bg-yellow-700 transition-colors"
+                  >
+                    Identify Videos ({identifyCount})
+                  </button>
+                </div>
+              )}
+
               {/* Channel Video Counts */}
               <div className="space-y-3 text-left">
                 <div className="flex items-center justify-between">
