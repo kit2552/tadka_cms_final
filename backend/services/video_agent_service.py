@@ -28,7 +28,7 @@ class VideoAgentService:
         'trending_videos': {
             'name': 'Latest Video Songs',
             'keywords': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
-            'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'trailer', 'teaser', 'first look', 'glimpse']
+            'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'trailer', 'teaser', 'first look', 'glimpse', 'audio']
         },
         'events_interviews': {
             'name': 'Events & Interviews',
