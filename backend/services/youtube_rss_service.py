@@ -578,7 +578,7 @@ class YouTubeRSSService:
             # 'both' allows all content
             
             # For trailers/teasers and trending_videos (songs), must have keyword
-            if video_category in ['trailers_teasers', 'trending_videos']:
+            if video_category in ['trailers_teasers', 'trending_videos', 'trailers_teasers_bollywood', 'trending_videos_bollywood']:
                 if not any(kw in title_lower for kw in category_keywords):
                     continue
             
