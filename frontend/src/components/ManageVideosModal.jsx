@@ -43,6 +43,12 @@ const ManageVideosModal = ({ onClose }) => {
   const [identifyLoading, setIdentifyLoading] = useState(false);
   const [identifyCount, setIdentifyCount] = useState(0);
   const [languageSelections, setLanguageSelections] = useState({});
+  
+  // Logs state
+  const [rssLogs, setRssLogs] = useState([]);
+  const [logsLoading, setLogsLoading] = useState(false);
+  const [showLogDetails, setShowLogDetails] = useState(false);
+  const [selectedLog, setSelectedLog] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -72,6 +78,11 @@ const ManageVideosModal = ({ onClose }) => {
       const identifyCountRes = await fetch(`${BACKEND_URL}/api/youtube-rss/videos/needs-identification/count`);
       const identifyCountData = await identifyCountRes.json();
       setIdentifyCount(identifyCountData.count || 0);
+      
+      // Fetch RSS logs
+      const logsRes = await fetch(`${BACKEND_URL}/api/youtube-rss/logs`);
+      const logsData = await logsRes.json();
+      setRssLogs(logsData.logs || []);
     } catch (error) {
       console.error('Error fetching data:', error);
       setMessage({ type: 'error', text: 'Failed to load data' });
