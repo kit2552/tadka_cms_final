@@ -69,6 +69,27 @@ class VideoAgentService:
         'dl': ['Hindi', 'Punjabi', 'Urdu']
     }
     
+    # State name to code mapping for articles states field
+    STATE_NAME_TO_CODE = {
+        'Andhra Pradesh': 'ap',
+        'Telangana': 'ts',
+        'Tamil Nadu': 'tn',
+        'Karnataka': 'ka',
+        'Kerala': 'kl',
+        'Maharashtra': 'mh',
+        'West Bengal': 'wb',
+        'Gujarat': 'gj',
+        'Punjab': 'pb',
+        'Delhi': 'dl',
+        'Rajasthan': 'rj',
+        'Uttar Pradesh': 'up',
+        'Bihar': 'bh',
+        'Odisha': 'od',
+        'Madhya Pradesh': 'mp',
+        'Bollywood': 'bollywood',
+        'All': 'all'
+    }
+    
     # Language name to code mapping for article_language field
     LANGUAGE_CODE_MAP = {
         'Telugu': 'te',
