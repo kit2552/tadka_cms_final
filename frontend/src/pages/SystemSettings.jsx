@@ -105,6 +105,7 @@ const SystemSettings = () => {
   const [youtubeChannelsLoading, setYoutubeChannelsLoading] = useState(false);
   const [youtubeLanguageFilter, setYoutubeLanguageFilter] = useState('');
   const [youtubeTypeFilter, setYoutubeTypeFilter] = useState('');
+  const [youtubeSearchFilter, setYoutubeSearchFilter] = useState('');
   const [showYoutubeChannelModal, setShowYoutubeChannelModal] = useState(false);
   const [showManageVideosModal, setShowManageVideosModal] = useState(false);
   const [showChannelUrlModal, setShowChannelUrlModal] = useState(false);
