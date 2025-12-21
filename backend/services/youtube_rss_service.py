@@ -460,6 +460,15 @@ class YouTubeRSSService:
             query['languages'] = {'$in': db_languages}
             print(f"   🔍 Filtering videos by channel languages: {db_languages}")
         
+        # Also include videos from multi-language channels
+        if languages and len(languages) > 0:
+            # Modify query to include multi-language channels
+            query['$or'] = [
+                {'languages': {'$in': db_languages}},  # Single-language channels matching target
+                {'detected_language': 'Multi Language'}  # Multi-language channels (we'll filter by title)
+            ]
+            del query['languages']  # Remove the simple filter since we're using $or
+        
         # Fetch videos
         videos = list(
             db.youtube_videos.find(query)
@@ -475,17 +484,36 @@ class YouTubeRSSService:
         target_languages_set = set(db_languages) if languages and len(languages) > 0 else set()
         
         filtered_videos = []
+        videos_needing_identification = []
+        
         for video in videos:
-            title_lower = video.get('title', '').lower()
+            title = video.get('title', '')
+            title_lower = title.lower()
+            detected_lang = video.get('detected_language', '')
             
-            # For multi-language channels, check detected_language matches target languages
-            channel_languages = video.get('languages', [])
-            if len(channel_languages) > 1 and target_languages_set:
-                # This is a multi-language channel - check detected_language
-                detected_lang = video.get('detected_language', '')
-                if detected_lang and detected_lang not in target_languages_set:
-                    # Skip this video - it's in a different language
+            # Handle multi-language channel videos
+            if detected_lang == 'Multi Language' and target_languages_set:
+                # Try to detect language from title
+                lang_from_title = self.detect_language_from_title(title)
+                
+                if lang_from_title:
+                    # Language found in title - check if it matches target
+                    if lang_from_title not in target_languages_set:
+                        continue  # Skip - different language
+                    # Update the detected_language for this video in memory
+                    video['detected_language'] = lang_from_title
+                else:
+                    # No language in title - mark for identification and skip
+                    if not video.get('needs_language_identification'):
+                        videos_needing_identification.append(video.get('video_id'))
                     continue
+            
+            # For single-language channels, check if it matches target
+            elif target_languages_set:
+                channel_languages = video.get('languages', [])
+                if len(channel_languages) == 1:
+                    if channel_languages[0] not in target_languages_set:
+                        continue
             
             # Skip if contains exclude keywords
             if any(excl in title_lower for excl in excludes):
@@ -502,6 +530,14 @@ class YouTubeRSSService:
             
             if len(filtered_videos) >= max_videos:
                 break
+        
+        # Mark videos that need language identification
+        if videos_needing_identification:
+            db.youtube_videos.update_many(
+                {'video_id': {'$in': videos_needing_identification}},
+                {'$set': {'needs_language_identification': True}}
+            )
+            print(f"   ⚠️ Marked {len(videos_needing_identification)} videos for language identification")
         
         return filtered_videos
     
