@@ -1239,6 +1239,7 @@ Instructions:
                       <option value="trailers_teasers_bollywood">Trailers & Teasers Bollywood</option>
                       <option value="trending_videos_bollywood">Latest Video Songs Bollywood</option>
                       <option value="events_interviews_bollywood">Events & Interviews Bollywood</option>
+                      <option value="tadka_shorts_bollywood">Tadka Shorts Bollywood</option>
                     </optgroup>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
@@ -1249,6 +1250,7 @@ Instructions:
                     {formData.video_category === 'trailers_teasers_bollywood' && 'Find Bollywood movie trailers, teasers, first looks'}
                     {formData.video_category === 'trending_videos_bollywood' && 'Find trending Bollywood music videos'}
                     {formData.video_category === 'events_interviews_bollywood' && 'Find Bollywood celebrity events, interviews'}
+                    {formData.video_category === 'tadka_shorts_bollywood' && 'Find hot & trending Bollywood YouTube Shorts'}
                   </p>
                 </div>
                 
