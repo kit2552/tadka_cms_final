@@ -161,58 +161,6 @@ class VideoAgentService:
         }
         return lang_map.get(language.lower(), language)
     
-    def _get_published_after(self, days_ago: int = 7) -> str:
-        """Get the publishedAfter parameter for YouTube API (RFC 3339 format)"""
-        now_ist = datetime.now(IST)
-        start_date = now_ist - timedelta(days=days_ago)
-        start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
-        return start_date.strftime('%Y-%m-%dT%H:%M:%SZ')
-    
-    def _get_channels_by_types_and_language(
-        self, 
-        channel_types: List[str], 
-        language: str,
-        limit: int = 20
-    ) -> List[Dict]:
-        """Get YouTube channels from DB filtered by channel types and language
-        
-        Args:
-            channel_types: List of channel types (production_house, music_label, popular_channel)
-            language: Language to filter by (Telugu, Hindi, Tamil, etc.)
-            limit: Maximum number of channels to return
-        
-        Returns:
-            List of channel documents with channel_id, channel_name, etc.
-        """
-        try:
-            db_language = self._get_db_language(language)
-            
-            query = {
-                "is_active": True,
-                "channel_id": {"$ne": None, "$exists": True},  # Must have channel_id
-                "languages": db_language
-            }
-            
-            # Filter by channel types if provided
-            if channel_types and len(channel_types) > 0:
-                query["channel_type"] = {"$in": channel_types}
-            
-            channels = list(
-                db.youtube_channels.find(query, {"_id": 0})
-                .sort("priority", -1)
-                .limit(limit)
-            )
-            
-            print(f"📺 Found {len(channels)} channels for {db_language} with types {channel_types}")
-            for ch in channels[:5]:
-                print(f"   - {ch.get('channel_name')} ({ch.get('channel_type')}) ID: {ch.get('channel_id', 'NO ID')}")
-            
-            return channels
-            
-        except Exception as e:
-            print(f"❌ Error fetching channels from DB: {e}")
-            return []
-    
     async def run_video_agent(self, agent_id: str) -> Dict:
         """Run the Video Agent to find and create video posts
         
