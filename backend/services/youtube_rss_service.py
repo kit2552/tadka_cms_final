@@ -459,14 +459,22 @@ class YouTubeRSSService:
             'trailers_teasers': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
             'trending_videos': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
             'events_interviews': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
-            'tadka_shorts': ['shorts', 'reels', 'hot', 'photoshoot']
+            'tadka_shorts': ['shorts', 'reels', 'hot', 'photoshoot'],
+            # Bollywood categories (same keywords, different target language)
+            'trailers_teasers_bollywood': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
+            'trending_videos_bollywood': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
+            'events_interviews_bollywood': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech']
         }
         
         default_exclude_keywords = {
             'trailers_teasers': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song'],
             'trending_videos': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored'],
             'events_interviews': ['trailer', 'teaser', 'song'],
-            'tadka_shorts': []
+            'tadka_shorts': [],
+            # Bollywood categories
+            'trailers_teasers_bollywood': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song'],
+            'trending_videos_bollywood': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored'],
+            'events_interviews_bollywood': ['trailer', 'teaser', 'song']
         }
         
         # Use custom keywords if provided, otherwise use defaults
