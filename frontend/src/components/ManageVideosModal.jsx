@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const ManageVideosModal = ({ onClose }) => {
+  // Main tab state
+  const [activeTab, setActiveTab] = useState('reports'); // 'reports', 'channel-videos', 'logs'
+  
   const [config, setConfig] = useState({
     enabled: false,
     frequency_hours: 1,
