@@ -650,7 +650,12 @@ const ManageVideosModal = ({ onClose }) => {
                             >
                               Available {getSortIcon('unused_count')}
                             </th>
-                            <th className="text-left px-4 py-2 font-medium text-gray-700">Used</th>
+                            <th 
+                              className="text-left px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => handleSort('used_count')}
+                            >
+                              Used {getSortIcon('used_count')}
+                            </th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -658,7 +663,6 @@ const ManageVideosModal = ({ onClose }) => {
                             <tr key={idx} className="hover:bg-gray-50">
                               <td className="px-4 py-2 text-left">
                                 <div className="font-medium text-gray-900">{channel.channel_name}</div>
-                                <div className="text-xs text-gray-500 font-mono">{channel.channel_id}</div>
                               </td>
                               <td className="px-4 py-2 text-left">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getTypeBadgeColor(channel.channel_type)}`}>
