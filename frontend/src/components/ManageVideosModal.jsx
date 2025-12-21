@@ -662,7 +662,7 @@ const ManageVideosModal = ({ onClose }) => {
                   <h3 className="font-semibold text-yellow-900">Videos Needing Language Identification</h3>
                   <p className="text-xs text-yellow-700">
                     {identifyCount} videos from multi-language channels need manual language assignment.
-                    These videos don't have language tags in their titles.
+                    These videos don&apos;t have language tags in their titles.
                   </p>
                   <button
                     onClick={handleOpenIdentifyModal}
