@@ -317,7 +317,8 @@ class VideoAgentService:
         video_category: str,
         search_query: str = "",
         max_videos_per_channel: int = 5,
-        days_ago: int = 7
+        days_ago: int = 7,
+        content_filter: str = 'videos'  # 'videos', 'shorts', or 'both'
     ) -> List[Dict]:
         """Search for videos from multiple channels in parallel
         
@@ -327,6 +328,7 @@ class VideoAgentService:
             search_query: Optional specific search query
             max_videos_per_channel: Max videos to fetch per channel
             days_ago: How many days back to search
+            content_filter: Filter by 'videos', 'shorts', or 'both'
         
         Returns:
             Combined list of videos from all channels
