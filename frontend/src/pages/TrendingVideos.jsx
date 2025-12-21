@@ -411,7 +411,7 @@ const TrendingVideos = () => {
                             </svg>
                           )}
                           <h3 className="text-white font-bold text-xs leading-tight line-clamp-2 text-center">
-                            {article.title}
+                            {article.display_title || article.title}
                           </h3>
                         </div>
                       </div>
