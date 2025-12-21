@@ -971,7 +971,9 @@ const SystemSettings = () => {
       rss_url: channel.rss_url || '',
       channel_type: channel.channel_type,
       languages: channel.languages,
-      is_active: channel.is_active
+      is_active: channel.is_active,
+      fetch_videos: channel.fetch_videos !== false,  // Default to true if not set
+      fetch_shorts: channel.fetch_shorts || false
     });
     setLanguageSearch('');
     setShowLanguageDropdown(false);
