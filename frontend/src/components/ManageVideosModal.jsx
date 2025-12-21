@@ -459,6 +459,42 @@ const ManageVideosModal = ({ onClose }) => {
           </div>
         )}
 
+        {/* Tabs */}
+        <div className="border-b border-gray-200 px-6">
+          <nav className="flex space-x-4" aria-label="Tabs">
+            <button
+              onClick={() => setActiveTab('reports')}
+              className={`py-3 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'reports'
+                  ? 'border-red-500 text-red-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Reports
+            </button>
+            <button
+              onClick={() => setActiveTab('channel-videos')}
+              className={`py-3 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'channel-videos'
+                  ? 'border-red-500 text-red-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Channel Videos
+            </button>
+            <button
+              onClick={() => setActiveTab('logs')}
+              className={`py-3 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'logs'
+                  ? 'border-red-500 text-red-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Logs
+            </button>
+          </nav>
+        </div>
+
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {loading ? (
@@ -467,6 +503,9 @@ const ManageVideosModal = ({ onClose }) => {
             </div>
           ) : (
             <>
+              {/* REPORTS TAB */}
+              {activeTab === 'reports' && (
+                <>
               {/* RSS Scheduler Config */}
               <div className="bg-gray-50 rounded-lg p-4 space-y-4 text-left">
                 <h3 className="font-semibold text-gray-900">RSS Feed Scheduler</h3>
