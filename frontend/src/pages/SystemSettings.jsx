@@ -2500,7 +2500,16 @@ const SystemSettings = () => {
                       <select
                         required
                         value={youtubeChannelForm.channel_type}
-                        onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, channel_type: e.target.value }))}
+                        onChange={(e) => {
+                          const newType = e.target.value;
+                          // Auto-enable Shorts for TV Channels and Music Labels
+                          const shouldEnableShorts = ['tv_channel', 'music_label'].includes(newType);
+                          setYoutubeChannelForm(prev => ({ 
+                            ...prev, 
+                            channel_type: newType,
+                            fetch_shorts: shouldEnableShorts ? true : prev.fetch_shorts
+                          }));
+                        }}
                         className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                       >
                         {youtubeChannelTypes.map(type => (
