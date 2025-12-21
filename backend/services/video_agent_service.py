@@ -572,7 +572,7 @@ class VideoAgentService:
                     "youtube_url": youtube_url,
                     "image": thumbnail,
                     "category": agent_category,
-                    "states": f'["{target_state}"]',
+                    "states": f'["{self.STATE_NAME_TO_CODE.get(target_state, target_state.lower())}"]',
                     "status": content_workflow,
                     "source": "YouTube",
                     "source_url": youtube_url,
