@@ -530,7 +530,6 @@ class YouTubeRSSService:
         target_languages_set = set(db_languages) if languages and len(languages) > 0 else set()
         
         filtered_videos = []
-        videos_needing_identification = []
         
         for video in videos:
             title = video.get('title', '')
@@ -541,40 +540,15 @@ class YouTubeRSSService:
             if video.get('is_skipped'):
                 continue
             
-            # Handle multi-language channel videos
-            if detected_lang == 'Multi Language' and target_languages_set:
-                # Try to detect language from title
-                lang_from_title = self.detect_language_from_title(title)
-                
-                if lang_from_title:
-                    # Language found in title - check if it matches target
-                    if lang_from_title not in target_languages_set:
-                        continue  # Skip - different language
-                    # Update the detected_language for this video in memory
-                    video['detected_language'] = lang_from_title
-                else:
-                    # No language in title - mark for identification and skip
-                    if not video.get('needs_language_identification'):
-                        videos_needing_identification.append(video.get('video_id'))
+            # Language filtering - use detected_language from RSS collection only
+            if target_languages_set:
+                # Skip videos marked for identification (user hasn't set language yet)
+                if detected_lang in ['Multi Language', 'Identify Language', '']:
                     continue
-            
-            # Handle videos marked for "Identify Language" - user hasn't identified yet
-            elif detected_lang == 'Identify Language':
-                # Skip these - they're waiting for user identification
-                continue
-            
-            # Handle videos where user has already identified the language
-            elif detected_lang and detected_lang not in ['Multi Language', 'Identify Language']:
-                # User has identified this video's language - check if it matches target
-                if target_languages_set and detected_lang not in target_languages_set:
+                
+                # Check if detected language matches target
+                if detected_lang not in target_languages_set:
                     continue  # Skip - different language than target
-            
-            # For single-language channels, check if it matches target
-            elif target_languages_set:
-                channel_languages = video.get('languages', [])
-                if len(channel_languages) == 1:
-                    if channel_languages[0] not in target_languages_set:
-                        continue
             
             # Skip if contains exclude keywords
             if any(excl in title_lower for excl in exclude_keywords):
