@@ -392,7 +392,7 @@ const TrendingVideos = () => {
                     <div className="relative">
                       <img
                         src={article.youtube_url ? getYouTubeThumbnail(article.youtube_url) : (article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
-                        alt={article.title}
+                        alt={article.display_title || article.title}
                         className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
                         style={{ aspectRatio: '16/9' }}
                         onError={(e) => {
@@ -460,7 +460,7 @@ const TrendingVideos = () => {
                       <div className="flex space-x-3">
                         <img
                           src={getThumbnail(index)}
-                          alt={article.title}
+                          alt={article.display_title || article.title}
                           className="w-20 h-16 object-cover rounded flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
                         />
                         <div className="flex-1 min-w-0 text-left">
