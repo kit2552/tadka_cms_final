@@ -647,36 +647,34 @@ const ManageVideosModal = ({ onClose }) => {
 
               {/* CHANNEL VIDEOS TAB */}
               {activeTab === 'channel-videos' && (
-              <div className="space-y-3 text-left">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      placeholder="Search channels..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 w-48"
-                    />
-                    <select
-                      value={filterType}
-                      onChange={(e) => setFilterType(e.target.value)}
-                      className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    >
-                      <option value="all">All Types</option>
-                      <option value="production_house">Production Houses</option>
-                      <option value="music_label">Music Labels</option>
-                      <option value="popular_channel">Popular Channels</option>
-                      <option value="movie_channel">Movie Channels</option>
-                      <option value="news_channel">News Channels</option>
-                      <option value="tv_channel">TV Channels</option>
-                      <option value="reality_show">Reality Shows</option>
-                      <option value="ott_channel">OTT Channels</option>
-                    </select>
-                  </div>
+              <div className="space-y-3 text-left h-full">
+                <div className="flex items-center justify-end gap-2">
+                  <input
+                    type="text"
+                    placeholder="Search channels..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 w-48"
+                  />
+                  <select
+                    value={filterType}
+                    onChange={(e) => setFilterType(e.target.value)}
+                    className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="production_house">Production Houses</option>
+                    <option value="music_label">Music Labels</option>
+                    <option value="popular_channel">Popular Channels</option>
+                    <option value="movie_channel">Movie Channels</option>
+                    <option value="news_channel">News Channels</option>
+                    <option value="tv_channel">TV Channels</option>
+                    <option value="reality_show">Reality Shows</option>
+                    <option value="ott_channel">OTT Channels</option>
+                  </select>
                 </div>
 
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <div className="max-h-64 overflow-y-auto">
+                  <div style={{ maxHeight: '420px' }} className="overflow-y-auto">
                     {filteredChannels.length === 0 ? (
                       <div className="p-4 text-left text-gray-500 text-sm">
                         {searchQuery ? `No channels matching "${searchQuery}"` : 'No videos in collection. Click "Fetch Now" to load videos from RSS feeds.'}
