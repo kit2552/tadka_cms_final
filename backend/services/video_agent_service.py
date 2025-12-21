@@ -55,6 +55,12 @@ class VideoAgentService:
             'name': 'Events & Interviews Bollywood',
             'keywords': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
             'exclude_keywords': ['trailer', 'teaser', 'song']
+        },
+        'tadka_shorts_bollywood': {
+            'name': 'Tadka Shorts Bollywood',
+            'keywords': ['shorts', 'reels', 'hot', 'photoshoot'],
+            'exclude_keywords': [],
+            'video_type': 'short'
         }
     }
     
