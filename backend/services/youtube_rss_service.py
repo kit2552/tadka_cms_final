@@ -119,10 +119,13 @@ class YouTubeRSSService:
                             detected_category == 'Shorts'
                         )
                         
-                        # Filter out Shorts for news, production house, music label, popular channels, reality shows
-                        if channel_type in ['news_channel', 'production_house', 'music_label', 'popular_channel', 'reality_show']:
-                            if is_short:
-                                continue  # Skip Shorts for these channel types
+                        # Apply fetch_videos and fetch_shorts filters
+                        if is_short:
+                            if not fetch_shorts:
+                                continue  # Skip shorts if fetch_shorts is disabled
+                        else:
+                            if not fetch_videos:
+                                continue  # Skip regular videos if fetch_videos is disabled
                         
                         # For movie_channel type, only keep full-length movies
                         if channel_type == 'movie_channel':
