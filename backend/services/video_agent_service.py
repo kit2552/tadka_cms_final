@@ -447,6 +447,14 @@ class VideoAgentService:
         agent_category = agent.get('category', '')
         content_filter = agent.get('content_filter', 'videos')  # 'videos', 'shorts', or 'both'
         
+        # Get custom filter keywords from agent config (comma-separated strings)
+        include_keywords_str = agent.get('include_keywords', '')
+        exclude_keywords_str = agent.get('exclude_keywords', '')
+        
+        # Parse custom keywords if provided
+        custom_include_keywords = [k.strip().lower() for k in include_keywords_str.split(',') if k.strip()] if include_keywords_str else None
+        custom_exclude_keywords = [k.strip().lower() for k in exclude_keywords_str.split(',') if k.strip()] if exclude_keywords_str else None
+        
         # Get channel types from agent config (NEW FIELD)
         channel_types = agent.get('channel_types', [])
         if not channel_types:
@@ -464,6 +472,10 @@ class VideoAgentService:
         print(f"📌 Video Category: {video_category}")
         print(f"📌 Channel Types: {channel_types}")
         print(f"📌 Content Filter: {content_filter}")
+        if custom_include_keywords:
+            print(f"📌 Custom Include Keywords: {custom_include_keywords}")
+        if custom_exclude_keywords:
+            print(f"📌 Custom Exclude Keywords: {custom_exclude_keywords}")
         print(f"📌 Article Language: {agent_article_language}")
         print(f"📌 Content Workflow: {content_workflow}")
         
@@ -478,7 +490,9 @@ class VideoAgentService:
             video_category=video_category,
             max_videos=max_videos * 2,  # Get extra for filtering
             days_ago=7,
-            content_filter=content_filter  # Pass content filter
+            content_filter=content_filter,  # Pass content filter
+            custom_include_keywords=custom_include_keywords,
+            custom_exclude_keywords=custom_exclude_keywords
         )
         
         if rss_videos:
