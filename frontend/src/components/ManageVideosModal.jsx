@@ -23,6 +23,8 @@ const ManageVideosModal = ({ onClose }) => {
   const [fetching, setFetching] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'channel_name', direction: 'asc' });
   
   // Video list popup state
   const [showVideoList, setShowVideoList] = useState(false);
