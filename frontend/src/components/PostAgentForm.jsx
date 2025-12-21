@@ -1225,16 +1225,26 @@ Instructions:
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   >
-                    <option value="trailers_teasers">Trailers & Teasers</option>
-                    <option value="trending_videos">Latest Video Songs</option>
-                    <option value="events_interviews">Events & Interviews</option>
-                    <option value="tadka_shorts">Tadka Shorts</option>
+                    <optgroup label="Regional">
+                      <option value="trailers_teasers">Trailers & Teasers</option>
+                      <option value="trending_videos">Latest Video Songs</option>
+                      <option value="events_interviews">Events & Interviews</option>
+                      <option value="tadka_shorts">Tadka Shorts</option>
+                    </optgroup>
+                    <optgroup label="Bollywood">
+                      <option value="trailers_teasers_bollywood">Trailers & Teasers Bollywood</option>
+                      <option value="trending_videos_bollywood">Latest Video Songs Bollywood</option>
+                      <option value="events_interviews_bollywood">Events & Interviews Bollywood</option>
+                    </optgroup>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
                     {formData.video_category === 'trailers_teasers' && 'Find movie trailers, teasers, first looks released today'}
                     {formData.video_category === 'trending_videos' && 'Find trending movie/music videos released today'}
                     {formData.video_category === 'events_interviews' && 'Find celebrity events, interviews, promotions'}
                     {formData.video_category === 'tadka_shorts' && 'Find hot & trending YouTube Shorts of actresses'}
+                    {formData.video_category === 'trailers_teasers_bollywood' && 'Find Bollywood movie trailers, teasers, first looks'}
+                    {formData.video_category === 'trending_videos_bollywood' && 'Find trending Bollywood music videos'}
+                    {formData.video_category === 'events_interviews_bollywood' && 'Find Bollywood celebrity events, interviews'}
                   </p>
                 </div>
                 
