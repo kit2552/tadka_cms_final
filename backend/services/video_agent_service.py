@@ -1,10 +1,9 @@
 """
 Video Agent Service
 Handles YouTube video search for trailers, teasers, trending videos, events/interviews and tadka shorts
-Now searches directly in specified YouTube channels using channel IDs
+Uses RSS feed collection only (no YouTube API calls)
 """
 
-import httpx
 import asyncio
 import re
 from datetime import datetime, timezone, timedelta
@@ -16,7 +15,7 @@ import crud
 IST = timezone(timedelta(hours=5, minutes=30))
 
 class VideoAgentService:
-    """Service for Video Agent - searches YouTube channels by channel ID"""
+    """Service for Video Agent - uses RSS feed collection only"""
     
     # Video categories with their search keywords
     CATEGORIES = {
