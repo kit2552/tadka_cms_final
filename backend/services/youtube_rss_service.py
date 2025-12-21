@@ -31,7 +31,7 @@ class YouTubeRSSService:
     def __init__(self):
         self.is_running = False
     
-    async def fetch_channel_rss(self, channel_id: str, channel_name: str, channel_type: str, languages: List[str], rss_url: Optional[str] = None) -> List[Dict]:
+    async def fetch_channel_rss(self, channel_id: str, channel_name: str, channel_type: str, languages: List[str], rss_url: Optional[str] = None, fetch_videos: bool = True, fetch_shorts: bool = False) -> List[Dict]:
         """Fetch videos from a single channel's RSS feed
         
         Args:
@@ -40,6 +40,8 @@ class YouTubeRSSService:
             channel_type: Type (production_house, music_label, popular_channel, etc.)
             languages: Languages this channel covers
             rss_url: Pre-stored RSS URL (optional, will be generated if not provided)
+            fetch_videos: Whether to fetch regular videos (default True)
+            fetch_shorts: Whether to fetch YouTube Shorts (default False)
         
         Returns:
             List of video dictionaries
