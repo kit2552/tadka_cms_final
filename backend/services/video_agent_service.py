@@ -39,6 +39,22 @@ class VideoAgentService:
             'keywords': ['shorts', 'reels', 'hot', 'photoshoot'],
             'exclude_keywords': [],
             'video_type': 'short'
+        },
+        # Bollywood categories
+        'trailers_teasers_bollywood': {
+            'name': 'Trailers & Teasers Bollywood',
+            'keywords': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
+            'exclude_keywords': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song']
+        },
+        'trending_videos_bollywood': {
+            'name': 'Latest Video Songs Bollywood',
+            'keywords': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
+            'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored']
+        },
+        'events_interviews_bollywood': {
+            'name': 'Events & Interviews Bollywood',
+            'keywords': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
+            'exclude_keywords': ['trailer', 'teaser', 'song']
         }
     }
     
