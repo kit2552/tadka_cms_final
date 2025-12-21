@@ -346,7 +346,7 @@ class VideoAgentService:
             "videos_found": len(videos),
             "posts_created": len(created_posts),
             "duplicates_skipped": skipped_duplicates,
-            "source_method": source_method if 'source_method' in dir() else "unknown",
+            "source_method": "rss_collection",
             "posts": created_posts
         }
     
