@@ -889,9 +889,14 @@ const ManageVideosModal = ({ onClose }) => {
                         className="w-28 h-20 object-cover rounded flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0 text-left">
-                        <h4 className="font-medium text-gray-900 text-sm line-clamp-2 mb-1">
+                        <a
+                          href={`https://www.youtube.com/watch?v=${video.video_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-gray-900 text-sm line-clamp-2 mb-1 hover:text-red-600 hover:underline cursor-pointer block"
+                        >
                           {video.title}
-                        </h4>
+                        </a>
                         <p className="text-xs text-gray-500 mb-2">
                           {video.channel_name}
                         </p>
