@@ -2581,6 +2581,33 @@ const SystemSettings = () => {
                         )}
                       </div>
                     </div>
+                    
+                    {/* Content Type Fetch Options */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700 text-left">Fetch Content Type</label>
+                      <div className="flex items-center gap-6">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={youtubeChannelForm.fetch_videos}
+                            onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, fetch_videos: e.target.checked }))}
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                          <span className="text-sm text-gray-700">Videos</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={youtubeChannelForm.fetch_shorts}
+                            onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, fetch_shorts: e.target.checked }))}
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                          <span className="text-sm text-gray-700">Shorts</span>
+                        </label>
+                      </div>
+                      <p className="text-xs text-gray-500 text-left">Select what type of content to fetch from this channel</p>
+                    </div>
+                    
                     <div className="flex items-center">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
