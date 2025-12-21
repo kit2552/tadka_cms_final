@@ -557,6 +557,21 @@ class YouTubeRSSService:
             if any(excl in title_lower for excl in excludes):
                 continue
             
+            # Apply content_filter (videos/shorts/both)
+            video_url = video.get('video_url', '')
+            is_short = (
+                '/shorts/' in video_url or 
+                '#shorts' in title_lower or 
+                '#short' in title_lower or
+                video.get('detected_category') == 'Shorts'
+            )
+            
+            if content_filter == 'videos' and is_short:
+                continue  # Skip shorts when only videos requested
+            elif content_filter == 'shorts' and not is_short:
+                continue  # Skip videos when only shorts requested
+            # 'both' allows all content
+            
             # For trailers/teasers and trending_videos (songs), must have keyword
             if video_category in ['trailers_teasers', 'trending_videos']:
                 if not any(kw in title_lower for kw in keywords):
