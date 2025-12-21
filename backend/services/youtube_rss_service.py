@@ -316,12 +316,16 @@ class YouTubeRSSService:
             new_videos = 0
             updated_videos = 0
             errors = 0
+            channel_breakdown = []  # Track new videos by channel
             
-            for result in results:
+            for idx, result in enumerate(results):
                 if isinstance(result, Exception):
                     print(f"   ❌ Task error: {result}")
                     errors += 1
                     continue
+                
+                channel_new_count = 0
+                channel_name = channels[idx].get('channel_name', 'Unknown') if idx < len(channels) else 'Unknown'
                 
                 for video in result:
                     total_videos += 1
@@ -347,6 +351,13 @@ class YouTubeRSSService:
                         # Insert new video
                         db.youtube_videos.insert_one(video)
                         new_videos += 1
+                        channel_new_count += 1
+                
+                if channel_new_count > 0:
+                    channel_breakdown.append({
+                        'channel_name': channel_name,
+                        'new_count': channel_new_count
+                    })
             
             # Update last fetch timestamp
             db.system_settings.update_one(
@@ -354,6 +365,20 @@ class YouTubeRSSService:
                 {"$set": {"last_fetch": datetime.now(timezone.utc)}},
                 upsert=True
             )
+            
+            # Log this fetch run
+            from uuid import uuid4
+            log_entry = {
+                'log_id': str(uuid4()),
+                'timestamp': datetime.now(timezone.utc),
+                'channels_processed': len(channels),
+                'new_videos_count': new_videos,
+                'updated_videos_count': updated_videos,
+                'errors_count': errors,
+                'channel_breakdown': channel_breakdown,
+                'status': 'success' if errors == 0 else ('partial' if new_videos > 0 else 'failed')
+            }
+            db.rss_fetch_logs.insert_one(log_entry)
             
             result = {
                 "success": True,
