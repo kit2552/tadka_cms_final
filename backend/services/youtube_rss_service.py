@@ -428,7 +428,9 @@ class YouTubeRSSService:
         video_category: str = None,
         max_videos: int = 10,
         days_ago: int = 7,
-        content_filter: str = 'videos'  # 'videos', 'shorts', or 'both'
+        content_filter: str = 'videos',  # 'videos', 'shorts', or 'both'
+        custom_include_keywords: List[str] = None,
+        custom_exclude_keywords: List[str] = None
     ) -> List[Dict]:
         """Get videos from youtube_videos collection for Video Agent
         
@@ -440,6 +442,8 @@ class YouTubeRSSService:
             max_videos: Maximum videos to return
             days_ago: How many days back to look
             content_filter: Filter by 'videos', 'shorts', or 'both'
+            custom_include_keywords: Custom include keywords (overrides defaults)
+            custom_exclude_keywords: Custom exclude keywords (overrides defaults)
         
         Returns:
             List of matching videos
@@ -450,20 +454,24 @@ class YouTubeRSSService:
         elif languages is None:
             languages = []
         
-        # Category keywords for filtering
-        category_keywords = {
+        # Default category keywords for filtering
+        default_category_keywords = {
             'trailers_teasers': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
             'trending_videos': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
             'events_interviews': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
             'tadka_shorts': ['shorts', 'reels', 'hot', 'photoshoot']
         }
         
-        exclude_keywords = {
+        default_exclude_keywords = {
             'trailers_teasers': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song'],
             'trending_videos': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored'],
             'events_interviews': ['trailer', 'teaser', 'song'],
             'tadka_shorts': []
         }
+        
+        # Use custom keywords if provided, otherwise use defaults
+        category_keywords = custom_include_keywords if custom_include_keywords else default_category_keywords.get(video_category, [])
+        exclude_keywords = custom_exclude_keywords if custom_exclude_keywords else default_exclude_keywords.get(video_category, [])
         
         # Build query
         cutoff_date = datetime.now(timezone.utc) - timedelta(days=days_ago)
