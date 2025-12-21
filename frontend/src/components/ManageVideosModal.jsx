@@ -757,6 +757,76 @@ const ManageVideosModal = ({ onClose }) => {
                   </div>
                 </div>
               </div>
+              )}
+
+              {/* LOGS TAB */}
+              {activeTab === 'logs' && (
+                <div className="space-y-4 text-left">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-900">RSS Fetch Logs</h3>
+                    <p className="text-sm text-gray-500">{rssLogs.length} recorded runs</p>
+                  </div>
+                  
+                  {rssLogs.length === 0 ? (
+                    <div className="bg-gray-50 rounded-lg p-8 text-center text-gray-500">
+                      <svg className="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <p>No RSS fetch logs yet</p>
+                      <p className="text-xs mt-1">Logs will appear here after each RSS fetch run</p>
+                    </div>
+                  ) : (
+                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                      <div className="max-h-96 overflow-y-auto">
+                        <table className="w-full text-sm">
+                          <thead className="bg-gray-50 sticky top-0">
+                            <tr>
+                              <th className="text-left px-4 py-2 font-medium text-gray-700">Date & Time</th>
+                              <th className="text-left px-4 py-2 font-medium text-gray-700">Channels</th>
+                              <th className="text-left px-4 py-2 font-medium text-gray-700">New Videos</th>
+                              <th className="text-left px-4 py-2 font-medium text-gray-700">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100">
+                            {rssLogs.map((log, idx) => (
+                              <tr key={idx} className="hover:bg-gray-50">
+                                <td className="px-4 py-3 text-gray-900">
+                                  {new Date(log.timestamp).toLocaleString()}
+                                </td>
+                                <td className="px-4 py-3 text-gray-700">
+                                  {log.channels_processed || 0}
+                                </td>
+                                <td className="px-4 py-3">
+                                  <button
+                                    onClick={() => {
+                                      setSelectedLog(log);
+                                      setShowLogDetails(true);
+                                    }}
+                                    className="text-blue-600 font-medium hover:text-blue-800 hover:underline"
+                                  >
+                                    {log.new_videos_count || 0}
+                                  </button>
+                                </td>
+                                <td className="px-4 py-3">
+                                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                    log.status === 'success' 
+                                      ? 'bg-green-100 text-green-700'
+                                      : log.status === 'partial'
+                                      ? 'bg-yellow-100 text-yellow-700'
+                                      : 'bg-red-100 text-red-700'
+                                  }`}>
+                                    {log.status || 'unknown'}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </>
           )}
         </div>
@@ -776,6 +846,70 @@ const ManageVideosModal = ({ onClose }) => {
           </div>
         </div>
       </div>
+
+      {/* Log Details Popup */}
+      {showLogDetails && selectedLog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
+          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[70vh] overflow-hidden flex flex-col">
+            <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+              <div className="text-left">
+                <h3 className="text-lg font-bold text-gray-900">RSS Fetch Details</h3>
+                <p className="text-sm text-gray-600">{new Date(selectedLog.timestamp).toLocaleString()}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowLogDetails(false);
+                  setSelectedLog(null);
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="mb-4 grid grid-cols-2 gap-4 text-sm">
+                <div className="bg-blue-50 p-3 rounded-lg text-left">
+                  <p className="text-blue-600 font-medium">{selectedLog.channels_processed || 0}</p>
+                  <p className="text-blue-500 text-xs">Channels Processed</p>
+                </div>
+                <div className="bg-green-50 p-3 rounded-lg text-left">
+                  <p className="text-green-600 font-medium">{selectedLog.new_videos_count || 0}</p>
+                  <p className="text-green-500 text-xs">New Videos Added</p>
+                </div>
+              </div>
+              
+              <h4 className="font-medium text-gray-900 mb-2 text-left">Videos by Channel</h4>
+              {selectedLog.channel_breakdown && selectedLog.channel_breakdown.length > 0 ? (
+                <div className="bg-gray-50 rounded-lg divide-y divide-gray-200">
+                  {selectedLog.channel_breakdown.map((ch, idx) => (
+                    <div key={idx} className="flex items-center justify-between px-4 py-2 text-sm">
+                      <span className="text-gray-700 text-left">{ch.channel_name}</span>
+                      <span className="font-medium text-gray-900">{ch.new_count}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-sm text-left">No channel breakdown available</p>
+              )}
+            </div>
+            
+            <div className="border-t border-gray-200 px-6 py-3 bg-gray-50 flex justify-end">
+              <button
+                onClick={() => {
+                  setShowLogDetails(false);
+                  setSelectedLog(null);
+                }}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Video List Popup */}
       {showVideoList && selectedChannel && (
