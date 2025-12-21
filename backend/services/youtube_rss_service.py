@@ -304,12 +304,18 @@ class YouTubeRSSService:
             # Create tasks for parallel fetching
             tasks = []
             for channel in channels:
+                # Get fetch preferences (default: videos=True, shorts=False)
+                fetch_videos = channel.get('fetch_videos', True)
+                fetch_shorts = channel.get('fetch_shorts', False)
+                
                 task = self.fetch_channel_rss(
                     channel_id=channel.get('channel_id'),
                     channel_name=channel.get('channel_name', 'Unknown'),
                     channel_type=channel.get('channel_type', 'unknown'),
                     languages=channel.get('languages', ['Hindi']),
-                    rss_url=channel.get('rss_url')  # Use stored RSS URL if available
+                    rss_url=channel.get('rss_url'),  # Use stored RSS URL if available
+                    fetch_videos=fetch_videos,
+                    fetch_shorts=fetch_shorts
                 )
                 tasks.append(task)
             
