@@ -642,11 +642,13 @@ const ManageVideosModal = ({ onClose }) => {
                   </button>
                 </div>
               )}
+                </>
+              )}
 
-              {/* Channel Video Counts */}
+              {/* CHANNEL VIDEOS TAB */}
+              {activeTab === 'channel-videos' && (
               <div className="space-y-3 text-left">
                 <div className="flex items-center justify-between gap-3">
-                  <h3 className="font-semibold text-gray-900">Videos by Channel</h3>
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
