@@ -938,7 +938,7 @@ const ManageVideosModal = ({ onClose }) => {
               <h4 className="font-medium text-gray-900 mb-2 text-left">Videos by Channel</h4>
               {selectedLog.channel_breakdown && selectedLog.channel_breakdown.length > 0 ? (
                 <div className="bg-gray-50 rounded-lg divide-y divide-gray-200">
-                  {selectedLog.channel_breakdown.map((ch, idx) => (
+                  {[...selectedLog.channel_breakdown].sort((a, b) => (b.new_count || 0) - (a.new_count || 0)).map((ch, idx) => (
                     <div key={idx} className="flex items-center justify-between px-4 py-2 text-sm">
                       <span className="text-gray-700 text-left">{ch.channel_name}</span>
                       <span className="font-medium text-gray-900">{ch.new_count}</span>
