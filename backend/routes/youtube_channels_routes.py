@@ -231,7 +231,7 @@ async def get_youtube_channels(
     if is_active is not None:
         query["is_active"] = is_active
     
-    channels = list(db[YOUTUBE_CHANNELS].find(query, {"_id": 0}).sort([("priority", -1), ("channel_name", 1)]))
+    channels = list(db[YOUTUBE_CHANNELS].find(query, {"_id": 0}).sort("channel_name", 1))
     return channels
 
 @router.post("", response_model=YouTubeChannelResponse)
