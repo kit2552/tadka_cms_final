@@ -398,14 +398,14 @@ class YouTubeRSSService:
         # Category keywords for filtering
         category_keywords = {
             'trailers_teasers': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster', 'promo'],
-            'trending_videos': ['song', 'video song', 'lyrical', 'full video', 'music video'],
+            'trending_videos': ['lyrical', 'video song', 'full video', 'full song', 'song'],
             'events_interviews': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
             'tadka_shorts': ['shorts', 'reels', 'hot', 'photoshoot']
         }
         
         exclude_keywords = {
-            'trailers_teasers': ['reaction', 'review', 'explained', 'scene', 'behind the scenes'],
-            'trending_videos': ['reaction', 'cover', 'karaoke', 'instrumental'],
+            'trailers_teasers': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie'],
+            'trending_videos': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup'],
             'events_interviews': ['trailer', 'teaser', 'song'],
             'tadka_shorts': []
         }
