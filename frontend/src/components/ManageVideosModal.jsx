@@ -1217,21 +1217,30 @@ const ManageVideosModal = ({ onClose }) => {
                         <p className="text-xs text-gray-500 mb-2">
                           {video.channel_name}
                         </p>
-                        <select
-                          value={languageSelections[video.video_id] || ''}
-                          onChange={(e) => handleLanguageSelect(video.video_id, e.target.value)}
-                          className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
-                        >
-                          <option value="">Select Language</option>
-                          <option value="Telugu">Telugu</option>
-                          <option value="Tamil">Tamil</option>
-                          <option value="Hindi">Hindi</option>
-                          <option value="Kannada">Kannada</option>
-                          <option value="Malayalam">Malayalam</option>
-                          <option value="Bengali">Bengali</option>
-                          <option value="Marathi">Marathi</option>
-                          <option value="Punjabi">Punjabi</option>
-                        </select>
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={languageSelections[video.video_id] || ''}
+                            onChange={(e) => handleLanguageSelect(video.video_id, e.target.value)}
+                            className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                          >
+                            <option value="">Select Language</option>
+                            <option value="Telugu">Telugu</option>
+                            <option value="Tamil">Tamil</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Kannada">Kannada</option>
+                            <option value="Malayalam">Malayalam</option>
+                            <option value="Bengali">Bengali</option>
+                            <option value="Marathi">Marathi</option>
+                            <option value="Punjabi">Punjabi</option>
+                          </select>
+                          <button
+                            onClick={() => handleSkipIdentifyVideo(video.video_id)}
+                            className="px-3 py-1.5 text-xs font-medium bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors"
+                            title="Skip this video - it will never be picked by agent"
+                          >
+                            Skip
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
