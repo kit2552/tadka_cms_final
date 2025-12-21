@@ -854,7 +854,9 @@ const SystemSettings = () => {
           rss_url: data.rss_url,
           channel_type: 'production_house',
           languages: [],
-          is_active: true
+          is_active: true,
+          fetch_videos: true,
+          fetch_shorts: false
         });
         setChannelModalError('');
         setShowChannelUrlModal(false);
