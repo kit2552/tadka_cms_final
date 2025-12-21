@@ -407,6 +407,21 @@ class VideoAgentService:
                     if any(excl in title_lower for excl in exclude_keywords):
                         continue
                     
+                    # Apply content_filter (videos/shorts/both)
+                    video_url = video.get('url', '')
+                    is_short = (
+                        '/shorts/' in video_url or 
+                        '#shorts' in title_lower or 
+                        '#short' in title_lower
+                    )
+                    
+                    if content_filter == 'videos' and is_short:
+                        print(f"   ⏭️ Skipping short: {video['title'][:50]}...")
+                        continue  # Skip shorts when only videos requested
+                    elif content_filter == 'shorts' and not is_short:
+                        continue  # Skip videos when only shorts requested
+                    # 'both' allows all content
+                    
                     # For trailers/teasers, must have at least one keyword
                     if video_category == 'trailers_teasers':
                         if not any(kw in title_lower for kw in keywords):
