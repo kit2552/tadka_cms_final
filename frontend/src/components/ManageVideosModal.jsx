@@ -327,6 +327,33 @@ const ManageVideosModal = ({ onClose }) => {
     }
   };
 
+  const handleDeleteChannel = async (channelId, channelName) => {
+    if (!window.confirm(`Delete channel "${channelName}"? This will remove the channel from the system but keep existing videos in the collection.`)) {
+      return;
+    }
+    
+    setDeletingChannelId(channelId);
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/youtube-channels/${channelId}`, {
+        method: 'DELETE'
+      });
+      
+      if (res.ok) {
+        setMessage({ type: 'success', text: `Channel "${channelName}" deleted successfully` });
+        // Refresh data to update the channel list
+        fetchData();
+      } else {
+        const data = await res.json();
+        setMessage({ type: 'error', text: data.detail || 'Failed to delete channel' });
+      }
+    } catch (error) {
+      console.error('Error deleting channel:', error);
+      setMessage({ type: 'error', text: 'Failed to delete channel' });
+    } finally {
+      setDeletingChannelId(null);
+    }
+  };
+
   // Handle sorting
   const handleSort = (key) => {
     setSortConfig(prev => ({
