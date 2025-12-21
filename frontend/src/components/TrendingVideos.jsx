@@ -122,7 +122,7 @@ const TrendingVideos = ({ trendingVideosData = {}, onImageClick }) => {
                       <div className="flex items-center justify-center gap-1.5">
                         <CirclePlay className="w-4 h-4 text-white flex-shrink-0" />
                         <h3 className="text-white font-bold text-xs text-center leading-tight">
-                          {item.title}
+                          {item.display_title || item.title}
                         </h3>
                       </div>
                     </div>
