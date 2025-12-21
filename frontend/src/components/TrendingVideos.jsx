@@ -109,7 +109,7 @@ const TrendingVideos = ({ trendingVideosData = {}, onImageClick }) => {
                   <div className="relative">
                     <img
                       src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
-                      alt={item.title}
+                      alt={item.display_title || item.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       style={{ width: '266px', height: '150px' }}
                       onError={(e) => {
