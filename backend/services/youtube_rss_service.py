@@ -581,14 +581,6 @@ class YouTubeRSSService:
             if len(filtered_videos) >= max_videos:
                 break
         
-        # Mark videos that need language identification
-        if videos_needing_identification:
-            db.youtube_videos.update_many(
-                {'video_id': {'$in': videos_needing_identification}},
-                {'$set': {'needs_language_identification': True}}
-            )
-            print(f"   ⚠️ Marked {len(videos_needing_identification)} videos for language identification")
-        
         return filtered_videos
     
     def mark_video_as_used(self, video_id: str) -> bool:
