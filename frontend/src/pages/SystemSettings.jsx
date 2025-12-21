@@ -131,7 +131,9 @@ const SystemSettings = () => {
     rss_url: '',
     channel_type: 'production_house',
     languages: [],
-    is_active: true
+    is_active: true,
+    fetch_videos: true,
+    fetch_shorts: false
   });
   const [languageSearch, setLanguageSearch] = useState('');
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
