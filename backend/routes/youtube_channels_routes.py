@@ -247,6 +247,11 @@ async def create_youtube_channel(channel: YouTubeChannelCreate):
     if not rss_url and channel.channel_id:
         rss_url = RSS_URL_TEMPLATE.format(channel_id=channel.channel_id)
     
+    # Determine default fetch_shorts based on channel type
+    fetch_shorts = channel.fetch_shorts
+    if channel.channel_type in ['tv_channel', 'music_label']:
+        fetch_shorts = True  # Enable shorts by default for TV and Music channels
+    
     now = datetime.utcnow()
     channel_doc = {
         "id": str(uuid.uuid4()),
@@ -256,6 +261,8 @@ async def create_youtube_channel(channel: YouTubeChannelCreate):
         "channel_type": channel.channel_type,
         "languages": channel.languages,
         "is_active": channel.is_active,
+        "fetch_videos": channel.fetch_videos,
+        "fetch_shorts": fetch_shorts,
         "created_at": now,
         "updated_at": now
     }
