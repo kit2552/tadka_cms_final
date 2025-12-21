@@ -537,6 +537,10 @@ class YouTubeRSSService:
             title_lower = title.lower()
             detected_lang = video.get('detected_language', '')
             
+            # Skip if video is marked as skipped by user
+            if video.get('is_skipped'):
+                continue
+            
             # Handle multi-language channel videos
             if detected_lang == 'Multi Language' and target_languages_set:
                 # Try to detect language from title
@@ -553,6 +557,17 @@ class YouTubeRSSService:
                     if not video.get('needs_language_identification'):
                         videos_needing_identification.append(video.get('video_id'))
                     continue
+            
+            # Handle videos marked for "Identify Language" - user hasn't identified yet
+            elif detected_lang == 'Identify Language':
+                # Skip these - they're waiting for user identification
+                continue
+            
+            # Handle videos where user has already identified the language
+            elif detected_lang and detected_lang not in ['Multi Language', 'Identify Language']:
+                # User has identified this video's language - check if it matches target
+                if target_languages_set and detected_lang not in target_languages_set:
+                    continue  # Skip - different language than target
             
             # For single-language channels, check if it matches target
             elif target_languages_set:
