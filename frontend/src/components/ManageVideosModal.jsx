@@ -780,6 +780,28 @@ const ManageVideosModal = ({ onClose }) => {
                                   {channel.video_count - channel.unused_count}
                                 </button>
                               </td>
+                              <td className="px-4 py-2 text-center">
+                                <button
+                                  onClick={() => handleDeleteChannel(channel.internal_id, channel.channel_name)}
+                                  disabled={deletingChannelId === channel.internal_id || !channel.internal_id}
+                                  className={`p-1 rounded transition-colors ${
+                                    deletingChannelId === channel.internal_id
+                                      ? 'text-gray-400 cursor-not-allowed'
+                                      : channel.internal_id
+                                      ? 'text-red-500 hover:text-red-700 hover:bg-red-50'
+                                      : 'text-gray-300 cursor-not-allowed'
+                                  }`}
+                                  title={channel.internal_id ? 'Delete channel' : 'Channel not found in system'}
+                                >
+                                  {deletingChannelId === channel.internal_id ? (
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-500"></div>
+                                  ) : (
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                  )}
+                                </button>
+                              </td>
                             </tr>
                           ))}
                         </tbody>
