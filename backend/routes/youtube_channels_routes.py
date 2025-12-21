@@ -24,6 +24,8 @@ class YouTubeChannelCreate(BaseModel):
     channel_type: str  # production_house, music_label, popular_channel, movie_channel, news_channel, tv_channel, reality_show
     languages: List[str] = []  # Languages this channel covers
     is_active: bool = True
+    fetch_videos: bool = True  # Fetch regular videos
+    fetch_shorts: bool = False  # Fetch YouTube Shorts
 
 class YouTubeChannelUpdate(BaseModel):
     channel_name: Optional[str] = None
@@ -32,6 +34,8 @@ class YouTubeChannelUpdate(BaseModel):
     channel_type: Optional[str] = None
     languages: Optional[List[str]] = None
     is_active: Optional[bool] = None
+    fetch_videos: Optional[bool] = None
+    fetch_shorts: Optional[bool] = None
 
 class YouTubeChannelResponse(BaseModel):
     id: str
@@ -41,6 +45,8 @@ class YouTubeChannelResponse(BaseModel):
     channel_type: str
     languages: List[str]
     is_active: bool
+    fetch_videos: bool = True
+    fetch_shorts: bool = False
     created_at: datetime
     updated_at: datetime
 
