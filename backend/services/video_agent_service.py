@@ -527,7 +527,8 @@ class VideoAgentService:
                 video_category=video_category,
                 search_query=search_query,
                 max_videos_per_channel=3,
-                days_ago=7
+                days_ago=7,
+                content_filter=content_filter  # Pass content filter to API search
             )
             source_method = "youtube_api"
         
