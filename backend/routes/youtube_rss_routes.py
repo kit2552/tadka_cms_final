@@ -371,3 +371,29 @@ async def update_video_language_bulk(updates: List[UpdateVideoLanguageRequest]):
         "message": f"Updated {updated_count} videos"
     }
 
+
+# === RSS Fetch Logs Endpoints ===
+
+@router.get("/logs")
+async def get_rss_logs(limit: int = 50):
+    """Get RSS fetch logs"""
+    logs = list(
+        db.rss_fetch_logs.find(
+            {},
+            {'_id': 0}
+        ).sort('timestamp', -1).limit(limit)
+    )
+    
+    return {"logs": logs}
+
+
+@router.get("/logs/{log_id}")
+async def get_rss_log_detail(log_id: str):
+    """Get details of a specific RSS fetch log"""
+    log = db.rss_fetch_logs.find_one({'log_id': log_id}, {'_id': 0})
+    
+    if not log:
+        raise HTTPException(status_code=404, detail="Log not found")
+    
+    return log
+
