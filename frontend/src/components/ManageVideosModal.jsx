@@ -49,6 +49,9 @@ const ManageVideosModal = ({ onClose }) => {
   const [logsLoading, setLogsLoading] = useState(false);
   const [showLogDetails, setShowLogDetails] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
+  
+  // Delete channel state
+  const [deletingChannelId, setDeletingChannelId] = useState(null);
 
   useEffect(() => {
     fetchData();
