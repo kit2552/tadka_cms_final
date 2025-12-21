@@ -223,7 +223,7 @@ const RelatedVideosManagement = ({ article, onClose, onSave }) => {
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             >
               <option value="all">All Video Types</option>
-              <option value="trending">Trending Videos</option>
+              <option value="trending">Latest Video Songs</option>
               <option value="viral-shorts">Viral Shorts</option>
             </select>
           </div>
