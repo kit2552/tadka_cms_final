@@ -23,12 +23,12 @@ class VideoAgentService:
         'trailers_teasers': {
             'name': 'Trailers & Teasers',
             'keywords': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster', 'promo'],
-            'exclude_keywords': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making']
+            'exclude_keywords': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie']
         },
         'trending_videos': {
-            'name': 'Trending Videos',
-            'keywords': ['song', 'video song', 'lyrical', 'full video'],
-            'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental']
+            'name': 'Latest Video Songs',
+            'keywords': ['lyrical', 'video song', 'full video', 'full song', 'song'],
+            'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy']
         },
         'events_interviews': {
             'name': 'Events & Interviews',
