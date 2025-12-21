@@ -332,6 +332,10 @@ const ManageVideosModal = ({ onClose }) => {
       if (searchQuery && !ch.channel_name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
       return true;
     })
+    .map(ch => ({
+      ...ch,
+      used_count: ch.video_count - ch.unused_count // Add computed used_count for sorting
+    }))
     .sort((a, b) => {
       const { key, direction } = sortConfig;
       let aVal = a[key];
