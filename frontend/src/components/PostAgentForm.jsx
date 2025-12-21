@@ -81,6 +81,13 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   useEffect(() => {
     if (editingAgent) {
       const agentType = editingAgent.agent_type || 'post';
+      const videoCategory = editingAgent.video_category || 'trailers_teasers';
+      
+      // Get default filter settings for the category if not provided
+      const defaults = defaultFilterSettings[videoCategory] || { include: [], exclude: [] };
+      const includeKw = editingAgent.include_keywords || defaults.include.join(', ');
+      const excludeKw = editingAgent.exclude_keywords || defaults.exclude.join(', ');
+      
       setFormData(prev => ({
         ...prev,
         ...editingAgent,
@@ -90,7 +97,10 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
         // Pre-select category based on agent type
         category: editingAgent.category || (agentType === 'photo_gallery' ? 'photoshoots' : agentType === 'video' ? 'trailers-teasers' : prev.category),
         // Set content_type to video for video agents
-        content_type: agentType === 'video' ? 'video' : (editingAgent.content_type || prev.content_type)
+        content_type: agentType === 'video' ? 'video' : (editingAgent.content_type || prev.content_type),
+        // Set filter keywords
+        include_keywords: includeKw,
+        exclude_keywords: excludeKw
       }));
       setActiveTab(editingAgent.mode || 'recurring');
     }
