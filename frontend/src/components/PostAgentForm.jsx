@@ -1183,6 +1183,24 @@ Instructions:
                   </p>
                 </div>
                 
+                {/* Content Filter - Videos/Shorts */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Content Type Filter</label>
+                  <select
+                    name="content_filter"
+                    value={formData.content_filter || 'videos'}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  >
+                    <option value="videos">Only Videos</option>
+                    <option value="shorts">Only Shorts</option>
+                    <option value="both">Both Videos & Shorts</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Filter content from YouTube channels by type
+                  </p>
+                </div>
+                
                 {/* Search Query */}
                 <div className="text-left">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
