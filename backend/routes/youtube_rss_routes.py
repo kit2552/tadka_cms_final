@@ -292,3 +292,82 @@ async def get_fetch_status():
     return {
         "is_running": youtube_rss_service.is_running
     }
+
+
+# === Language Identification Endpoints ===
+
+class UpdateVideoLanguageRequest(BaseModel):
+    video_id: str
+    language: str
+
+
+@router.get("/videos/needs-identification")
+async def get_videos_needing_identification():
+    """Get videos that need manual language identification"""
+    videos = list(
+        db.youtube_videos.find(
+            {'needs_language_identification': True},
+            {'_id': 0, 'video_id': 1, 'title': 1, 'channel_name': 1, 'thumbnail': 1, 'detected_language': 1, 'languages': 1}
+        ).sort('published_at', -1).limit(100)
+    )
+    
+    return {
+        "videos": videos,
+        "count": len(videos)
+    }
+
+
+@router.get("/videos/needs-identification/count")
+async def get_videos_needing_identification_count():
+    """Get count of videos that need manual language identification"""
+    count = db.youtube_videos.count_documents({'needs_language_identification': True})
+    return {"count": count}
+
+
+@router.post("/videos/update-language")
+async def update_video_language(request: UpdateVideoLanguageRequest):
+    """Update a video's detected language and clear the identification flag"""
+    result = db.youtube_videos.update_one(
+        {'video_id': request.video_id},
+        {
+            '$set': {
+                'detected_language': request.language,
+                'needs_language_identification': False
+            }
+        }
+    )
+    
+    if result.modified_count > 0:
+        return {
+            "success": True,
+            "message": f"Video language updated to {request.language}",
+            "video_id": request.video_id
+        }
+    else:
+        raise HTTPException(status_code=404, detail="Video not found")
+
+
+@router.post("/videos/update-language/bulk")
+async def update_video_language_bulk(updates: List[UpdateVideoLanguageRequest]):
+    """Update multiple videos' languages at once"""
+    updated_count = 0
+    
+    for update in updates:
+        result = db.youtube_videos.update_one(
+            {'video_id': update.video_id},
+            {
+                '$set': {
+                    'detected_language': update.language,
+                    'needs_language_identification': False
+                }
+            }
+        )
+        if result.modified_count > 0:
+            updated_count += 1
+    
+    return {
+        "success": True,
+        "updated_count": updated_count,
+        "message": f"Updated {updated_count} videos"
+    }
+
