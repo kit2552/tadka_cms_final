@@ -743,6 +743,9 @@ const ManageVideosModal = ({ onClose }) => {
                             >
                               Used {getSortIcon('used_count')}
                             </th>
+                            <th className="text-left px-4 py-2 font-medium text-gray-700 w-16">
+                              
+                            </th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
