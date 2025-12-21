@@ -180,6 +180,14 @@ async def get_videos_by_channel(channel_type: Optional[str] = None):
     if channel_type:
         counts = [c for c in counts if c.get('channel_type') == channel_type]
     
+    # Lookup internal channel IDs from youtube_channels collection
+    for channel_data in counts:
+        yt_channel_id = channel_data.get('channel_id')
+        if yt_channel_id:
+            channel_doc = db.youtube_channels.find_one({'channel_id': yt_channel_id}, {'_id': 0, 'id': 1})
+            if channel_doc:
+                channel_data['internal_id'] = channel_doc.get('id')
+    
     return {"channels": counts}
 
 
