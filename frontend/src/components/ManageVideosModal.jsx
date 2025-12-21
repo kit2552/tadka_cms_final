@@ -588,38 +588,68 @@ const ManageVideosModal = ({ onClose }) => {
 
               {/* Channel Video Counts */}
               <div className="space-y-3 text-left">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <h3 className="font-semibold text-gray-900">Videos by Channel</h3>
-                  <select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value)}
-                    className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                  >
-                    <option value="all">All Types</option>
-                    <option value="production_house">Production Houses</option>
-                    <option value="music_label">Music Labels</option>
-                    <option value="popular_channel">Popular Channels</option>
-                    <option value="movie_channel">Movie Channels</option>
-                    <option value="news_channel">News Channels</option>
-                    <option value="tv_channel">TV Channels</option>
-                    <option value="reality_show">Reality Shows</option>
-                  </select>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Search channels..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 w-48"
+                    />
+                    <select
+                      value={filterType}
+                      onChange={(e) => setFilterType(e.target.value)}
+                      className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    >
+                      <option value="all">All Types</option>
+                      <option value="production_house">Production Houses</option>
+                      <option value="music_label">Music Labels</option>
+                      <option value="popular_channel">Popular Channels</option>
+                      <option value="movie_channel">Movie Channels</option>
+                      <option value="news_channel">News Channels</option>
+                      <option value="tv_channel">TV Channels</option>
+                      <option value="reality_show">Reality Shows</option>
+                      <option value="ott_channel">OTT Channels</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                   <div className="max-h-64 overflow-y-auto">
                     {filteredChannels.length === 0 ? (
                       <div className="p-4 text-left text-gray-500 text-sm">
-                        No videos in collection. Click "Fetch Now" to load videos from RSS feeds.
+                        {searchQuery ? `No channels matching "${searchQuery}"` : 'No videos in collection. Click "Fetch Now" to load videos from RSS feeds.'}
                       </div>
                     ) : (
                       <table className="w-full text-sm">
                         <thead className="bg-gray-50 sticky top-0">
                           <tr>
-                            <th className="text-left px-4 py-2 font-medium text-gray-700">Channel</th>
-                            <th className="text-left px-4 py-2 font-medium text-gray-700">Type</th>
-                            <th className="text-left px-4 py-2 font-medium text-gray-700">Total</th>
-                            <th className="text-left px-4 py-2 font-medium text-gray-700">Available</th>
+                            <th 
+                              className="text-left px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => handleSort('channel_name')}
+                            >
+                              Channel {getSortIcon('channel_name')}
+                            </th>
+                            <th 
+                              className="text-left px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => handleSort('channel_type')}
+                            >
+                              Type {getSortIcon('channel_type')}
+                            </th>
+                            <th 
+                              className="text-left px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => handleSort('video_count')}
+                            >
+                              Total {getSortIcon('video_count')}
+                            </th>
+                            <th 
+                              className="text-left px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => handleSort('unused_count')}
+                            >
+                              Available {getSortIcon('unused_count')}
+                            </th>
                             <th className="text-left px-4 py-2 font-medium text-gray-700">Used</th>
                           </tr>
                         </thead>
