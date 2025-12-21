@@ -562,7 +562,7 @@ class YouTubeRSSService:
                         continue
             
             # Skip if contains exclude keywords
-            if any(excl in title_lower for excl in excludes):
+            if any(excl in title_lower for excl in exclude_keywords):
                 continue
             
             # Apply content_filter (videos/shorts/both)
@@ -582,7 +582,7 @@ class YouTubeRSSService:
             
             # For trailers/teasers and trending_videos (songs), must have keyword
             if video_category in ['trailers_teasers', 'trending_videos']:
-                if not any(kw in title_lower for kw in keywords):
+                if not any(kw in title_lower for kw in category_keywords):
                     continue
             
             # Convert ObjectId to string for JSON serialization
