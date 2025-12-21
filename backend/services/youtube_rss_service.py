@@ -427,7 +427,8 @@ class YouTubeRSSService:
         language: str = None,  # Keep for backward compatibility
         video_category: str = None,
         max_videos: int = 10,
-        days_ago: int = 7
+        days_ago: int = 7,
+        content_filter: str = 'videos'  # 'videos', 'shorts', or 'both'
     ) -> List[Dict]:
         """Get videos from youtube_videos collection for Video Agent
         
@@ -438,6 +439,7 @@ class YouTubeRSSService:
             video_category: Category for keyword filtering
             max_videos: Maximum videos to return
             days_ago: How many days back to look
+            content_filter: Filter by 'videos', 'shorts', or 'both'
         
         Returns:
             List of matching videos
