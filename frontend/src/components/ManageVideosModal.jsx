@@ -150,6 +150,28 @@ const ManageVideosModal = ({ onClose }) => {
     }
   };
 
+  const handleSkipIdentifyVideo = async (videoId) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/youtube-rss/videos/skip`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_id: videoId, skipped: true })
+      });
+      
+      if (res.ok) {
+        // Remove from the list
+        setVideosNeedingId(prev => prev.filter(v => v.video_id !== videoId));
+        setIdentifyCount(prev => prev - 1);
+        setMessage({ type: 'success', text: 'Video skipped - it will not be picked by agent' });
+      } else {
+        setMessage({ type: 'error', text: 'Failed to skip video' });
+      }
+    } catch (error) {
+      console.error('Error skipping video:', error);
+      setMessage({ type: 'error', text: 'Failed to skip video' });
+    }
+  };
+
   const handleToggleScheduler = async () => {
     try {
       const newEnabled = !config.enabled;
