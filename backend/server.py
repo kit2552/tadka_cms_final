@@ -424,13 +424,13 @@ async def get_hot_topics_gossip_articles(limit: int = 4, db = Depends(get_db)):
 
 @api_router.get("/articles/sections/trending-videos")
 async def get_trending_videos_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
-    """Get articles for Trending Videos section with Trending Videos and Bollywood-Trending Videos tabs
+    """Get articles for Latest Video Songs section with Regional and Bollywood tabs
     
     Args:
         limit: Number of articles to fetch (default 20)
-        states: Comma-separated list of states for trending videos filtering (Bollywood tab ignores state filtering)
+        states: Comma-separated list of states for regional videos filtering (Bollywood tab ignores state filtering)
     """
-    # For trending videos tab - apply state filtering if provided
+    # For regional tab - apply state filtering if provided
     if states:
         # Convert state names to state codes (map full names to codes)
         state_name_to_code = {
@@ -446,14 +446,14 @@ async def get_trending_videos_articles(limit: int = 20, states: str = None, db =
                 state_codes.append(state_name_to_code[state_name])
         
         if state_codes:
-            trending_articles = crud.get_articles_by_states(db, category_slug="trending-videos", state_codes=state_codes, limit=limit)
+            trending_articles = crud.get_articles_by_states(db, category_slug="latest-video-songs", state_codes=state_codes, limit=limit)
         else:
-            trending_articles = crud.get_articles_by_category_slug(db, category_slug="trending-videos", limit=limit)
+            trending_articles = crud.get_articles_by_category_slug(db, category_slug="latest-video-songs", limit=limit)
     else:
-        trending_articles = crud.get_articles_by_category_slug(db, category_slug="trending-videos", limit=limit)
+        trending_articles = crud.get_articles_by_category_slug(db, category_slug="latest-video-songs", limit=limit)
     
-    # For Bollywood tab - no state filtering, show all Bollywood trending videos
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="bollywood-trending-videos", limit=limit)
+    # For Bollywood tab - no state filtering, show all Bollywood video songs
+    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="latest-video-songs-bollywood", limit=limit)
     
     return {
         "trending_videos": trending_articles,
