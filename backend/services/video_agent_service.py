@@ -304,6 +304,7 @@ class VideoAgentService:
                 description = video.get('description', '') or ''
                 thumbnail = video.get('thumbnail', '') or video.get('image', '')
                 channel_name = video.get('channel_name', '') or video.get('channel', '')
+                video_language = video.get('detected_language', target_language)  # Get language from video or use target
                 
                 article_data = {
                     "title": title_cased_youtube,  # Store full YouTube title as main title (title case)
@@ -317,7 +318,7 @@ class VideoAgentService:
                     "youtube_url": youtube_url,
                     "image": thumbnail,
                     "category": agent_category,
-                    "states": f'["{self.STATE_NAME_TO_CODE.get(target_state, target_state.lower())}"]',
+                    "video_language": video_language,  # Store the video's language for frontend filtering
                     "status": content_workflow,
                     "source": "YouTube",
                     "source_url": youtube_url,
