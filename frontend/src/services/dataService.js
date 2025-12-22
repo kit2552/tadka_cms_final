@@ -1,5 +1,6 @@
 import mockData from '../data/comprehensiveMockData';
 import { STATE_CODE_MAPPING, parseStoredStates, DEFAULT_SELECTED_STATES } from '../utils/statesConfig';
+import { getLanguagesForState } from '../utils/stateLanguageMapping';
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL 
   ? `${process.env.REACT_APP_BACKEND_URL}/api`
@@ -11,6 +12,19 @@ export const dataService = {
   parseUserStates(stateString) {
     return parseStoredStates(stateString);
   },
+  
+  // Helper function to get unique languages from user's selected states
+  getLanguagesFromStates(stateCodes) {
+    const languageSet = new Set();
+    if (stateCodes && stateCodes.length > 0) {
+      stateCodes.forEach(stateCode => {
+        const languages = getLanguagesForState(stateCode);
+        languages.forEach(lang => languageSet.add(lang));
+      });
+    }
+    return Array.from(languageSet);
+  },
+  
   // Fetch Movie Reviews data from backend - latest 20 from each category
   async getMovieReviewsData() {
     try {
