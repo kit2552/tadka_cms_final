@@ -1231,24 +1231,24 @@ Instructions:
                   >
                     <optgroup label="Regional">
                       <option value="trailers_teasers">Trailers & Teasers</option>
-                      <option value="trending_videos">Latest Video Songs</option>
+                      <option value="latest_video_songs">Latest Video Songs</option>
                       <option value="events_interviews">Events & Interviews</option>
                       <option value="tadka_shorts">Tadka Shorts</option>
                     </optgroup>
                     <optgroup label="Bollywood">
                       <option value="trailers_teasers_bollywood">Trailers & Teasers Bollywood</option>
-                      <option value="trending_videos_bollywood">Latest Video Songs Bollywood</option>
+                      <option value="latest_video_songs_bollywood">Latest Video Songs Bollywood</option>
                       <option value="events_interviews_bollywood">Events & Interviews Bollywood</option>
                       <option value="tadka_shorts_bollywood">Tadka Shorts Bollywood</option>
                     </optgroup>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
                     {formData.video_category === 'trailers_teasers' && 'Find movie trailers, teasers, first looks released today'}
-                    {formData.video_category === 'trending_videos' && 'Find trending movie/music videos released today'}
+                    {formData.video_category === 'latest_video_songs' && 'Find trending movie/music videos released today'}
                     {formData.video_category === 'events_interviews' && 'Find celebrity events, interviews, promotions'}
                     {formData.video_category === 'tadka_shorts' && 'Find hot & trending YouTube Shorts of actresses'}
                     {formData.video_category === 'trailers_teasers_bollywood' && 'Find Bollywood movie trailers, teasers, first looks'}
-                    {formData.video_category === 'trending_videos_bollywood' && 'Find trending Bollywood music videos'}
+                    {formData.video_category === 'latest_video_songs_bollywood' && 'Find trending Bollywood music videos'}
                     {formData.video_category === 'events_interviews_bollywood' && 'Find Bollywood celebrity events, interviews'}
                     {formData.video_category === 'tadka_shorts_bollywood' && 'Find hot & trending Bollywood YouTube Shorts'}
                   </p>
