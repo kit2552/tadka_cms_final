@@ -245,6 +245,7 @@ class VideoAgentService:
         print(f"📌 State Languages: {state_languages}")
         print(f"📌 Primary Search Language: {search_language}")
         print(f"📌 Video Category: {video_category}")
+        print(f"📌 Article Category: {agent_category}")
         print(f"📌 Channel Types: {channel_types}")
         print(f"📌 Content Filter: {content_filter}")
         if custom_include_keywords:
