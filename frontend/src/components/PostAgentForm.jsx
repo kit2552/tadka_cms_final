@@ -1144,70 +1144,30 @@ Instructions:
                   <h3 className="text-sm font-semibold text-red-900 text-left">Video Agent Settings</h3>
                 </div>
                 
-                {/* Target State for Video Agent */}
+                {/* Target Language for Video Agent */}
                 <div className="text-left">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Target State <span className="text-red-500">*</span>
+                    Target Language <span className="text-red-500">*</span>
                   </label>
-                  <div className="relative">
-                    {/* Selected State Tag */}
-                    {formData.target_state && (
-                      <div className="mb-2">
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
-                          {formData.target_state}
-                          <button
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, target_state: '' }))}
-                            className="text-red-600 hover:text-red-800 font-bold"
-                          >
-                            ×
-                          </button>
-                        </span>
-                      </div>
-                    )}
-                    
-                    {/* Search Input */}
-                    <input
-                      type="text"
-                      placeholder="Search and select state..."
-                      value={stateSearch}
-                      onChange={(e) => setStateSearch(e.target.value)}
-                      onFocus={() => setStateSearch('')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    />
-                    
-                    {/* Dropdown appears only when typing */}
-                    {stateSearch && (
-                      <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-48 overflow-y-auto">
-                        <div
-                          onClick={() => {
-                            setFormData(prev => ({ ...prev, target_state: 'Bollywood' }));
-                            setStateSearch('');
-                          }}
-                          className="px-3 py-2 cursor-pointer hover:bg-red-50 text-sm text-gray-900 border-b font-medium"
-                        >
-                          Bollywood (Hindi)
-                        </div>
-                        {filteredStates.map(state => (
-                          <div
-                            key={state.code}
-                            onClick={() => {
-                              setFormData(prev => ({ ...prev, target_state: state.name }));
-                              setStateSearch('');
-                            }}
-                            className="px-3 py-2 cursor-pointer hover:bg-red-50 text-sm text-gray-900"
-                          >
-                            {state.name}
-                          </div>
-                        ))}
-                        {filteredStates.length === 0 && (
-                          <div className="px-3 py-2 text-sm text-gray-500">No states found</div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                  <select
+                    name="target_language"
+                    value={formData.target_language || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, target_language: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    required
+                  >
+                    <option value="">Select Language</option>
+                    <option value="Telugu">Telugu</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Bengali">Bengali</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Punjabi">Punjabi</option>
+                  </select>
                   <p className="text-xs text-gray-500 mt-1">
-                    Videos will be searched in the language mapped to this state
+                    Videos will be filtered by this language from RSS collection
                   </p>
                 </div>
                 
