@@ -234,6 +234,35 @@ def get_articles_by_states(db, category_slug: str, state_codes: List[str], skip:
     )
     return serialize_doc(docs)
 
+def get_articles_by_video_language(db, category_slug: str, languages: List[str], skip: int = 0, limit: int = 100):
+    """Get video articles filtered by category and video_language field"""
+    # Get current time in EST (UTC-5) and convert to UTC
+    est_tz = timezone(timedelta(hours=-5))
+    current_est_time = datetime.now(est_tz)
+    current_utc_time = current_est_time.astimezone(timezone.utc)
+    
+    # MongoDB stores datetime objects (timezone-naive, assumed UTC)
+    current_utc_naive = current_utc_time.replace(tzinfo=None)
+    
+    # Articles where video_language matches any of the specified languages
+    docs = list(
+        db[ARTICLES]
+        .find({
+            "category": category_slug,
+            "is_published": True,
+            "is_top_story": {"$ne": True},
+            "video_language": {"$in": languages},
+            "$or": [
+                {"published_at": {"$lte": current_utc_naive}},
+                {"published_at": {"$exists": False}}
+            ]
+        })
+        .sort("published_at", -1)
+        .skip(skip)
+        .limit(limit)
+    )
+    return serialize_doc(docs)
+
 def get_articles_count_for_cms(
     db,
     language: str = "en",
