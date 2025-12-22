@@ -180,6 +180,8 @@ const AIAgents = () => {
       case 'post': return 'Post Agent';
       case 'photo_gallery': return 'Photo Gallery Agent';
       case 'review': return 'Review Agent';
+      case 'video': return 'Video Agent';
+      case 'tadka_pics': return 'Tadka Pics Agent';
       default: return type;
     }
   };
