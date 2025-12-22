@@ -209,18 +209,8 @@ class VideoAgentService:
         content_workflow = agent.get('content_workflow', 'draft')
         content_filter = agent.get('content_filter', 'videos')  # 'videos', 'shorts', or 'both'
         
-        # Map video_category to article category slug
-        VIDEO_CATEGORY_TO_ARTICLE_CATEGORY = {
-            'trailers_teasers': 'trailers-teasers',
-            'trending_videos': 'latest-video-songs',
-            'events_interviews': 'events-interviews',
-            'tadka_shorts': 'tadka-shorts',
-            'trailers_teasers_bollywood': 'trailers-teasers-bollywood',
-            'trending_videos_bollywood': 'latest-video-songs-bollywood',
-            'events_interviews_bollywood': 'events-interviews-bollywood',
-            'tadka_shorts_bollywood': 'tadka-shorts-bollywood'
-        }
-        agent_category = VIDEO_CATEGORY_TO_ARTICLE_CATEGORY.get(video_category, agent.get('category', 'trailers-teasers'))
+        # Use video_category as article category slug (with underscores replaced by dashes)
+        agent_category = video_category.replace('_', '-')
         
         # Get custom filter keywords from agent config (comma-separated strings)
         include_keywords_str = agent.get('include_keywords', '')
