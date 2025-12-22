@@ -44,11 +44,16 @@ export const dataService = {
   },
 
   // Fetch trending videos data from backend - regional (filtered by language) and bollywood
-  async getTrendingVideosData(userLanguages = null) {
+  async getTrendingVideosData(userStateCodes = null) {
     try {
       let url = `${API_BASE_URL}/articles/sections/trending-videos?limit=20`;
-      if (userLanguages && userLanguages.length > 0) {
-        url += `&languages=${userLanguages.join(',')}`;
+      
+      // Convert state codes to languages
+      if (userStateCodes && userStateCodes.length > 0) {
+        const userLanguages = this.getLanguagesFromStates(userStateCodes);
+        if (userLanguages.length > 0) {
+          url += `&languages=${userLanguages.join(',')}`;
+        }
       }
       
       const response = await fetch(url);
