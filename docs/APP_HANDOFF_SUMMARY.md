@@ -71,8 +71,12 @@ Tadka News is a comprehensive news and entertainment content management system w
     └── dataService.js        # API calls with state→language mapping
 ```
 
-### Database (MongoDB)
-Key Collections:
+### Database (MongoDB - Remote Production)
+**⚠️ Connected to remote production MongoDB database**
+```
+/app/backend/
+├── database.py               # MongoDB connection (uses MONGO_URL from .env)
+```
 - `articles`: News articles, video posts, galleries
 - `ai_agents`: Agent configurations
 - `youtube_channels`: Channel settings
