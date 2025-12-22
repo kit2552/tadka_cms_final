@@ -37,7 +37,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     instagram_content_type: 'photos',  // 'photos' or 'reels'
     instagram_urls: [],
     // Video Agent fields
-    video_category: 'trailers_teasers',  // trailers_teasers, trending_videos, events_interviews, tadka_shorts
+    video_category: 'trailers_teasers',  // trailers_teasers, latest_video_songs, events_interviews, tadka_shorts
+    target_language: '',  // Target language for video filtering (Telugu, Tamil, Hindi, etc.)
     search_query: '',  // Optional specific search query
     max_videos: 5,
     channel_types: ['production_house', 'music_label', 'popular_channel'],  // YouTube channel types to search
