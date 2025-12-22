@@ -53,7 +53,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
       include: ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
       exclude: ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song']
     },
-    trending_videos: {
+    latest_video_songs: {
       include: ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
       exclude: ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored']
     },
@@ -70,7 +70,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
       include: ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
       exclude: ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song']
     },
-    trending_videos_bollywood: {
+    latest_video_songs_bollywood: {
       include: ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
       exclude: ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored']
     },
