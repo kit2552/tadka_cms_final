@@ -241,11 +241,11 @@ class VideoAgentService:
         # Use RSS collection only (no YouTube API calls)
         from services.youtube_rss_service import youtube_rss_service
         
-        # Pass all state languages to filter videos (uses channel's assigned languages only)
-        print(f"🔎 Fetching videos for languages: {state_languages}, channel_types: {channel_types}")
+        # Pass target language directly to filter videos
+        print(f"🔎 Fetching videos for language: {target_language}, channel_types: {channel_types}")
         videos = youtube_rss_service.get_videos_for_agent(
             channel_types=channel_types,
-            languages=state_languages,  # Pass all languages for the state
+            languages=[target_language],  # Pass target language as list
             video_category=video_category,
             max_videos=max_videos * 2,  # Get extra for filtering
             days_ago=7,
