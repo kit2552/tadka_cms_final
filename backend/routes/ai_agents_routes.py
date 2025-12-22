@@ -61,6 +61,9 @@ class AIAgent(BaseModel):
     search_query: Optional[str] = None  # Optional specific search query (movie name, celebrity name, etc.)
     max_videos: Optional[int] = 5  # Maximum videos to fetch
     channel_types: Optional[List[str]] = None  # List of channel types: production_house, music_label, popular_channel
+    content_filter: Optional[str] = "videos"  # videos, shorts, or both
+    include_keywords: Optional[str] = None  # Comma-separated include keywords for filtering
+    exclude_keywords: Optional[str] = None  # Comma-separated exclude keywords for filtering
     
     # Adhoc mode fields
     schedule_post: Optional[bool] = False
