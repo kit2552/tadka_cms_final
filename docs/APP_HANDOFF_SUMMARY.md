@@ -3,6 +3,8 @@
 ## Application Overview
 Tadka News is a comprehensive news and entertainment content management system with AI-powered content generation. It features a React frontend, FastAPI backend, and MongoDB database.
 
+**⚠️ PRODUCTION APPLICATION** - This app is connected to a **remote production MongoDB database**. All changes to data are live and affect real users. Exercise caution when modifying or deleting data.
+
 ## Core Features
 
 ### 1. Content Management System (CMS)
