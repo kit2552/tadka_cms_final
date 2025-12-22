@@ -24,7 +24,7 @@ class VideoAgentService:
             'keywords': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
             'exclude_keywords': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song']
         },
-        'trending_videos': {
+        'latest_video_songs': {
             'name': 'Latest Video Songs',
             'keywords': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
             'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored']
@@ -46,7 +46,7 @@ class VideoAgentService:
             'keywords': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
             'exclude_keywords': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song']
         },
-        'trending_videos_bollywood': {
+        'latest_video_songs_bollywood': {
             'name': 'Latest Video Songs Bollywood',
             'keywords': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
             'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored']
