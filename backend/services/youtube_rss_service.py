@@ -457,24 +457,24 @@ class YouTubeRSSService:
         # Default category keywords for filtering
         default_category_keywords = {
             'trailers_teasers': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
-            'trending_videos': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
+            'latest_video_songs': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
             'events_interviews': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
             'tadka_shorts': ['shorts', 'reels', 'hot', 'photoshoot'],
             # Bollywood categories
             'trailers_teasers_bollywood': ['trailer', 'teaser', 'first look', 'glimpse', 'motion poster'],
-            'trending_videos_bollywood': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
+            'latest_video_songs_bollywood': ['lyrical', 'video song', 'full video', 'full song', 'song', 'promo'],
             'events_interviews_bollywood': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
             'tadka_shorts_bollywood': ['shorts', 'reels', 'hot', 'photoshoot']
         }
         
         default_exclude_keywords = {
             'trailers_teasers': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song'],
-            'trending_videos': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored'],
+            'latest_video_songs': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored'],
             'events_interviews': ['trailer', 'teaser', 'song'],
             'tadka_shorts': [],
             # Bollywood categories
             'trailers_teasers_bollywood': ['reaction', 'review', 'explained', 'scene', 'behind the scenes', 'making', 'dubbed', 'full movie', 'song promo', 'promo song'],
-            'trending_videos_bollywood': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored'],
+            'latest_video_songs_bollywood': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'best of', 'top 10', 'mashup', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored'],
             'events_interviews_bollywood': ['trailer', 'teaser', 'song'],
             'tadka_shorts_bollywood': []
         }
