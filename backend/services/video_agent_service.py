@@ -201,7 +201,7 @@ class VideoAgentService:
         print(f"\n🎬 Running Video Agent: {agent_name}")
         
         # Get configuration from agent
-        target_state = agent.get('target_state', 'bollywood')
+        target_language = agent.get('target_language', 'Hindi')  # Direct language selection
         video_category = agent.get('video_category', 'trailers_teasers')
         search_query = agent.get('search_query', '')
         max_videos = agent.get('max_videos', 5)
@@ -220,20 +220,13 @@ class VideoAgentService:
         custom_include_keywords = [k.strip().lower() for k in include_keywords_str.split(',') if k.strip()] if include_keywords_str else None
         custom_exclude_keywords = [k.strip().lower() for k in exclude_keywords_str.split(',') if k.strip()] if exclude_keywords_str else None
         
-        # Get channel types from agent config (NEW FIELD)
+        # Get channel types from agent config
         channel_types = agent.get('channel_types', [])
         if not channel_types:
             # Default to all types if not specified
             channel_types = ['production_house', 'music_label', 'popular_channel']
         
-        # Get state-language mapping
-        self.state_language_map = await self._get_state_language_mapping()
-        state_languages = self._get_languages_for_state(target_state)
-        search_language = state_languages[0] if state_languages else 'Hindi'
-        
-        print(f"📌 Target State: {target_state}")
-        print(f"📌 State Languages: {state_languages}")
-        print(f"📌 Primary Search Language: {search_language}")
+        print(f"📌 Target Language: {target_language}")
         print(f"📌 Video Category: {video_category}")
         print(f"📌 Article Category: {agent_category}")
         print(f"📌 Channel Types: {channel_types}")
