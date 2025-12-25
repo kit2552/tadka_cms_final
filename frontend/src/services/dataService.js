@@ -46,15 +46,20 @@ export const dataService = {
   // Fetch trending videos data from backend - regional (filtered by language) and bollywood
   async getTrendingVideosData(userStateCodes = null) {
     try {
+      console.log('🔍 getTrendingVideosData called with userStateCodes:', userStateCodes);
+      
       let url = `${API_BASE_URL}/articles/sections/trending-videos?limit=20`;
       
       // Convert state codes to languages
       if (userStateCodes && userStateCodes.length > 0) {
         const userLanguages = this.getLanguagesFromStates(userStateCodes);
+        console.log('🔍 Converted to languages:', userLanguages);
         if (userLanguages.length > 0) {
           url += `&languages=${userLanguages.join(',')}`;
         }
       }
+      
+      console.log('🔍 Fetching trending videos from:', url);
       
       const response = await fetch(url);
       if (!response.ok) {
@@ -73,10 +78,18 @@ export const dataService = {
     }
   },
 
-  // Fetch Trailers & Teasers data from backend
-  async getTrailersData() {
+  // Fetch Trailers & Teasers data from backend with state-based language filtering
+  async getTrailersData(userStateCodes = null) {
     try {
-      const url = `${API_BASE_URL}/articles/sections/trailers-teasers?limit=20`;
+      console.log('🔍 getTrailersData called with userStateCodes:', userStateCodes);
+      
+      let url = `${API_BASE_URL}/articles/sections/trailers-teasers?limit=20`;
+      
+      // Add states parameter if available
+      if (userStateCodes && userStateCodes.length > 0) {
+        url += `&states=${userStateCodes.join(',')}`;
+        console.log('🔍 Trailers URL with states:', url);
+      }
       
       const response = await fetch(url);
       if (!response.ok) {
@@ -241,18 +254,29 @@ export const dataService = {
     }
   },
 
-  // Fetch events & interviews data from backend
-  async getEventsInterviewsData() {
+  // Fetch events & press meets data from backend (aggregated by event name)
+  async getEventsInterviewsData(userStateCodes = null) {
     try {
-      const response = await fetch(`${API_BASE_URL}/articles/sections/events-interviews?limit=20`);
+      console.log('🔍 getEventsInterviewsData called with userStateCodes:', userStateCodes);
+      
+      // Use aggregated endpoint
+      let url = `${API_BASE_URL}/articles/sections/events-interviews-aggregated?limit=20`;
+      
+      // Add states parameter if available
+      if (userStateCodes && userStateCodes.length > 0) {
+        url += `&states=${userStateCodes.join(',')}`;
+        console.log('🔍 Events & Press Meets URL with states:', url);
+      }
+      
+      const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Failed to fetch events & interviews data');
+        throw new Error('Failed to fetch events & press meets data');
       }
       const data = await response.json();
-      console.log('Events & Interviews data:', data); // Debug log
+      console.log('Events & Press Meets data:', data); // Debug log
       return data;
     } catch (error) {
-      console.error('Error fetching events & interviews data:', error);
+      console.error('Error fetching events & press meets data:', error);
       return { events_interviews: [], bollywood: [] };
     }
   },
@@ -269,6 +293,56 @@ export const dataService = {
     } catch (error) {
       console.error('Error fetching big boss data:', error);
       return { big_boss: [], bollywood: [] };
+    }
+  },
+
+  // Fetch TV Today data from backend (aggregated by show/program name)
+  async getTVTodayData(userStateCodes = null) {
+    try {
+      console.log('🔍 getTVTodayData called with userStateCodes:', userStateCodes);
+      
+      let url = `${API_BASE_URL}/articles/sections/tv-today-aggregated?limit=20`;
+      
+      if (userStateCodes && userStateCodes.length > 0) {
+        url += `&states=${userStateCodes.join(',')}`;
+        console.log('🔍 TV Today URL with states:', url);
+      }
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch TV Today data');
+      }
+      const data = await response.json();
+      console.log('TV Today data:', data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching TV Today data:', error);
+      return { tv_today: [], hindi: [] };
+    }
+  },
+
+  // Fetch News Today data from backend (aggregated by news topic)
+  async getNewsTodayData(userStateCodes = null) {
+    try {
+      console.log('🔍 getNewsTodayData called with userStateCodes:', userStateCodes);
+      
+      let url = `${API_BASE_URL}/articles/sections/news-today-aggregated?limit=20`;
+      
+      if (userStateCodes && userStateCodes.length > 0) {
+        url += `&states=${userStateCodes.join(',')}`;
+        console.log('🔍 News Today URL with states:', url);
+      }
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch News Today data');
+      }
+      const data = await response.json();
+      console.log('News Today data:', data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching News Today data:', error);
+      return { news_today: [], hindi: [] };
     }
   },
 
@@ -318,11 +392,16 @@ export const dataService = {
   },
 
   // Fetch tadka shorts data from backend - tadka shorts and bollywood with state filtering for tadka shorts
-  async getViralShortsData(userStates = null) {
+  async getViralShortsData(userStateCodes = null) {
     try {
+      console.log('🔍 getViralShortsData (Tadka Shorts) called with userStateCodes:', userStateCodes);
+      
       let url = `${API_BASE_URL}/articles/sections/tadka-shorts?limit=20`;
-      if (userStates && userStates.length > 0) {
-        url += `&states=${userStates.join(',')}`;
+      
+      // Add states parameter if available
+      if (userStateCodes && userStateCodes.length > 0) {
+        url += `&states=${userStateCodes.join(',')}`;
+        console.log('🔍 Tadka Shorts URL with states:', url);
       }
       
       const response = await fetch(url);
@@ -330,6 +409,7 @@ export const dataService = {
         throw new Error('Failed to fetch tadka shorts data');
       }
       const data = await response.json();
+      console.log('Tadka Shorts data:', data); // Debug log
       return data;
     } catch (error) {
       console.error('Error fetching tadka shorts data:', error);
@@ -520,7 +600,11 @@ export const dataService = {
       // Get user's actual state preferences from localStorage
       const userStateString = localStorage.getItem('tadka_state') || JSON.stringify(DEFAULT_SELECTED_STATES);
       const userStates = this.parseUserStates(userStateString);
-      console.log('🏠 Loading homepage data...');
+      
+      // Convert state names to state codes
+      const userStateCodes = userStates.map(state => STATE_CODE_MAPPING[state] || state.toLowerCase());
+      
+      console.log('🏠 Loading homepage data with states:', userStates, 'codes:', userStateCodes);
 
       // Fetch all data in parallel - no caching, CDN handles it
       const [
@@ -536,6 +620,8 @@ export const dataService = {
         worldNewsData,
         viralShortsData,
         eventsInterviewsData,
+        tvTodayData,
+        newsTodayData,
         bigBossData,
         healthFoodData,
         fashionTravelData,
@@ -552,12 +638,14 @@ export const dataService = {
         this.getPoliticsData(userStates),
         this.getMoviesData(userStates),
         this.getSportsData(),
-        this.getTrendingVideosData(userStates),
-        this.getTrailersData(),
+        this.getTrendingVideosData(userStateCodes),
+        this.getTrailersData(userStateCodes),
         this.getNRINewsData(userStates),
         this.getWorldNewsData(),
-        this.getViralShortsData(userStates),
-        this.getEventsInterviewsData(),
+        this.getViralShortsData(userStateCodes),
+        this.getEventsInterviewsData(userStateCodes),
+        this.getTVTodayData(userStateCodes),
+        this.getNewsTodayData(userStateCodes),
         this.getBigBossData(),
         this.getHealthFoodData(),
         this.getFashionTravelData(),
@@ -596,6 +684,8 @@ export const dataService = {
         viralVideosData,
         viralShortsData,
         eventsInterviewsData,
+        tvTodayData,
+        newsTodayData,
         bigBossData,
         healthFoodData,
         fashionTravelData,

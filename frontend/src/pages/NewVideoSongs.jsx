@@ -22,10 +22,37 @@ const NewVideoSongs = () => {
       try {
         setLoading(true);
         
+        // Get user's state preferences from localStorage
+        const savedPreferences = localStorage.getItem('userPreferences');
+        let statesParam = '';
+        
+        console.log('🔍 [PAGE] Fetching Latest Video Songs - savedPreferences:', savedPreferences);
+        
+        if (savedPreferences) {
+          try {
+            const preferences = JSON.parse(savedPreferences);
+            console.log('🔍 [PAGE] Parsed preferences:', preferences);
+            if (preferences.states && Array.isArray(preferences.states) && preferences.states.length > 0) {
+              statesParam = preferences.states.join(',');
+              console.log('🔍 [PAGE] States parameter:', statesParam);
+            }
+          } catch (e) {
+            console.error('Error parsing preferences:', e);
+          }
+        }
+        
+        // Build URL with states parameter if available
+        const url = statesParam 
+          ? `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/new-video-songs?states=${statesParam}`
+          : `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/new-video-songs`;
+        
+        console.log('🔍 [PAGE] Fetching from URL:', url);
+        
         // Fetch from new-video-songs API endpoint
-        const newVideoSongsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/new-video-songs`);
+        const newVideoSongsResponse = await fetch(url);
         if (newVideoSongsResponse.ok) {
           const newVideoSongsData = await newVideoSongsResponse.json();
+          console.log('🔍 [PAGE] Received video songs data:', newVideoSongsData);
           setVideoSongsArticles(newVideoSongsData.video_songs || []);
           setBollywoodArticles(newVideoSongsData.bollywood || []);
         } else {

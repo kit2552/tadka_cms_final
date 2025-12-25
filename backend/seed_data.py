@@ -48,9 +48,17 @@ def seed_database(db: Session):
         {"name": "OTT Releases", "slug": "ott-releases", "description": "OTT platform releases"},
         {"name": "OTT Releases Bollywood", "slug": "ott-releases-bollywood", "description": "Bollywood OTT platform releases"},
         
-        # Events & Interviews Section
-        {"name": "Events Interviews", "slug": "events-interviews", "description": "Celebrity events and interviews"},
-        {"name": "Events Interviews Bollywood", "slug": "events-interviews-bollywood", "description": "Bollywood celebrity events and interviews"},
+        # Events & Press Meets Section
+        {"name": "Events & Press Meets", "slug": "events-interviews", "description": "Celebrity events and press meets"},
+        {"name": "Events & Press Meets Bollywood", "slug": "events-interviews-bollywood", "description": "Bollywood celebrity events and press meets"},
+        
+        # TV Today Section
+        {"name": "TV Today", "slug": "tv-today", "description": "Today's television news and updates"},
+        {"name": "TV Today Hindi", "slug": "tv-today-hindi", "description": "Hindi television news and updates"},
+        
+        # News Today Section
+        {"name": "News Today", "slug": "news-today", "description": "Breaking news and current updates"},
+        {"name": "News Today Hindi", "slug": "news-today-hindi", "description": "Hindi breaking news and current updates"},
         
         # Sports sections (Row3)
         {"name": "Sports Schedules", "slug": "sports-schedules", "description": "Sports schedules and fixtures"},

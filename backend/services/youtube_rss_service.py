@@ -37,7 +37,7 @@ class YouTubeRSSService:
         Args:
             channel_id: YouTube channel ID
             channel_name: Name of the channel
-            channel_type: Type (production_house, music_label, popular_channel, etc.)
+            channel_type: Type (production_house, music_label, movie_news_channel, movie_interviews_channel, tech_interviews_channel, etc.)
             languages: Languages this channel covers
             rss_url: Pre-stored RSS URL (optional, will be generated if not provided)
             fetch_videos: Whether to fetch regular videos (default True)
@@ -579,8 +579,8 @@ class YouTubeRSSService:
                 continue  # Skip videos when only shorts requested
             # 'both' allows all content
             
-            # For trailers/teasers and latest_video_songs, must have keyword
-            if video_category in ['trailers_teasers', 'latest_video_songs', 'trailers_teasers_bollywood', 'latest_video_songs_bollywood']:
+            # For trailers/teasers, latest_video_songs, and events_interviews - must have keyword
+            if video_category in ['trailers_teasers', 'latest_video_songs', 'events_interviews', 'trailers_teasers_bollywood', 'latest_video_songs_bollywood', 'events_interviews_bollywood']:
                 if not any(kw in title_lower for kw in category_keywords):
                     continue
             
@@ -666,7 +666,7 @@ class YouTubeRSSService:
         
         # Count by channel type
         by_type = {}
-        for ctype in ['production_house', 'music_label', 'popular_channel']:
+        for ctype in ['production_house', 'music_label', 'movie_news_channel', 'movie_interviews_channel', 'tech_interviews_channel']:
             by_type[ctype] = db.youtube_videos.count_documents({'channel_type': ctype})
         
         return {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   const [activeTab, setActiveTab] = useState('recurring');
+  const [categoryFilters, setCategoryFilters] = useState({}); // Store filters per category
   const [formData, setFormData] = useState({
     agent_name: '',
     agent_type: 'post',
@@ -41,11 +42,19 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     target_language: '',  // Target language for video filtering (Telugu, Tamil, Hindi, etc.)
     search_query: '',  // Optional specific search query
     max_videos: 5,
-    channel_types: ['production_house', 'music_label', 'popular_channel'],  // YouTube channel types to search
+    channel_types: [],  // YouTube channel types - NO DEFAULTS, user must select
     content_filter: 'videos',  // 'videos', 'shorts', or 'both'
     // Filter settings (editable keywords)
     include_keywords: '',
-    exclude_keywords: ''
+    exclude_keywords: '',
+    // Post Aggregation fields
+    enable_aggregation: false,  // Enable post grouping
+    aggregation_lookback_days: 2,  // Days to look back for grouping
+    // TV Video Agent fields
+    tv_video_category: 'tv-today',  // tv-today, tv-today-hindi, news-today, news-today-hindi
+    aggregate_by_channel: true,  // Always aggregate by channel name for TV Video Agent
+    tv_channel_types: ['tv_channel', 'news_channel'],  // Default channel types for TV Video Agent
+    lookback_days: 2  // Period to fetch videos (1-30 days)
   });
   
   // Default filter settings for each category
@@ -106,6 +115,16 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
       const includeKw = editingAgent.include_keywords || defaults.include.join(', ');
       const excludeKw = editingAgent.exclude_keywords || defaults.exclude.join(', ');
       
+      // Initialize categoryFilters with the current agent's filters
+      if (videoCategory && (editingAgent.include_keywords || editingAgent.exclude_keywords)) {
+        setCategoryFilters({
+          [videoCategory]: {
+            include: includeKw,
+            exclude: excludeKw
+          }
+        });
+      }
+      
       setFormData(prev => ({
         ...prev,
         ...editingAgent,
@@ -113,9 +132,16 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
         // Ensure agent_type is set from editingAgent
         agent_type: agentType,
         // Pre-select category based on agent type
-        category: editingAgent.category || (agentType === 'photo_gallery' ? 'photoshoots' : agentType === 'video' ? 'trailers-teasers' : prev.category),
-        // Set content_type to video for video agents
-        content_type: agentType === 'video' ? 'video' : (editingAgent.content_type || prev.content_type),
+        category: editingAgent.category || (agentType === 'photo_gallery' ? 'photoshoots' : agentType === 'video' ? 'trailers-teasers' : agentType === 'tv_video' ? 'tv-today' : prev.category),
+        // Set content_type to video for video and tv_video agents
+        content_type: (agentType === 'video' || agentType === 'tv_video') ? 'video' : (editingAgent.content_type || prev.content_type),
+        // Set channel types based on agent type
+        channel_types: agentType === 'tv_video' 
+          ? (editingAgent.tv_channel_types || editingAgent.channel_types || ['tv_channel', 'news_channel'])
+          : (editingAgent.channel_types || prev.channel_types),
+        tv_channel_types: agentType === 'tv_video'
+          ? (editingAgent.tv_channel_types || editingAgent.channel_types || ['tv_channel', 'news_channel'])
+          : undefined,
         // Set filter keywords
         include_keywords: includeKw,
         exclude_keywords: excludeKw
@@ -208,11 +234,28 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-      mode: activeTab
-    }));
+    
+    // Update form data
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+        mode: activeTab
+      };
+      
+      // If updating include/exclude keywords, also update categoryFilters
+      if ((name === 'include_keywords' || name === 'exclude_keywords') && prev.video_category) {
+        setCategoryFilters(prevFilters => ({
+          ...prevFilters,
+          [prev.video_category]: {
+            include: name === 'include_keywords' ? value : (prevFilters[prev.video_category]?.include || prev.include_keywords),
+            exclude: name === 'exclude_keywords' ? value : (prevFilters[prev.video_category]?.exclude || prev.exclude_keywords)
+          }
+        }));
+      }
+      
+      return newData;
+    });
   };
 
   const handleDayToggle = (day) => {
@@ -573,8 +616,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               </>
             )}
 
-            {/* Common Fields - Content Settings - Hide for tadka_pics and video agents */}
-            {formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && (
+            {/* Common Fields - Content Settings - Hide for tadka_pics, video, and tv_video agents */}
+            {formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Content Settings</h3>
               
@@ -1180,37 +1223,64 @@ Instructions:
                     value={formData.video_category}
                     onChange={(e) => {
                       const newCategory = e.target.value;
-                      const defaults = defaultFilterSettings[newCategory] || { include: [], exclude: [] };
-                      setFormData(prev => ({
-                        ...prev,
-                        video_category: newCategory,
-                        include_keywords: defaults.include.join(', '),
-                        exclude_keywords: defaults.exclude.join(', ')
-                      }));
+                      const currentCategory = formData.video_category;
+                      
+                      // Save current filters for the current category before switching
+                      if (currentCategory) {
+                        setCategoryFilters(prev => ({
+                          ...prev,
+                          [currentCategory]: {
+                            include: formData.include_keywords,
+                            exclude: formData.exclude_keywords
+                          }
+                        }));
+                      }
+                      
+                      // Check if we have saved filters for the new category
+                      const savedFilters = categoryFilters[newCategory];
+                      
+                      if (savedFilters) {
+                        // Restore saved filters
+                        setFormData(prev => ({
+                          ...prev,
+                          video_category: newCategory,
+                          include_keywords: savedFilters.include,
+                          exclude_keywords: savedFilters.exclude
+                        }));
+                      } else {
+                        // Use defaults only if no saved filters
+                        const defaults = defaultFilterSettings[newCategory] || { include: [], exclude: [] };
+                        setFormData(prev => ({
+                          ...prev,
+                          video_category: newCategory,
+                          include_keywords: defaults.include.join(', '),
+                          exclude_keywords: defaults.exclude.join(', ')
+                        }));
+                      }
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   >
                     <optgroup label="Regional">
                       <option value="trailers_teasers">Trailers & Teasers</option>
                       <option value="latest_video_songs">Latest Video Songs</option>
-                      <option value="events_interviews">Events & Interviews</option>
+                      <option value="events_interviews">Events & Press Meets</option>
                       <option value="tadka_shorts">Tadka Shorts</option>
                     </optgroup>
                     <optgroup label="Bollywood">
                       <option value="trailers_teasers_bollywood">Trailers & Teasers Bollywood</option>
                       <option value="latest_video_songs_bollywood">Latest Video Songs Bollywood</option>
-                      <option value="events_interviews_bollywood">Events & Interviews Bollywood</option>
+                      <option value="events_interviews_bollywood">Events & Press Meets Bollywood</option>
                       <option value="tadka_shorts_bollywood">Tadka Shorts Bollywood</option>
                     </optgroup>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
                     {formData.video_category === 'trailers_teasers' && 'Find movie trailers, teasers, first looks released today'}
                     {formData.video_category === 'latest_video_songs' && 'Find trending movie/music videos released today'}
-                    {formData.video_category === 'events_interviews' && 'Find celebrity events, interviews, promotions'}
+                    {formData.video_category === 'events_interviews' && 'Find celebrity events, press meets, promotions'}
                     {formData.video_category === 'tadka_shorts' && 'Find hot & trending YouTube Shorts of actresses'}
                     {formData.video_category === 'trailers_teasers_bollywood' && 'Find Bollywood movie trailers, teasers, first looks'}
                     {formData.video_category === 'latest_video_songs_bollywood' && 'Find trending Bollywood music videos'}
-                    {formData.video_category === 'events_interviews_bollywood' && 'Find Bollywood celebrity events, interviews'}
+                    {formData.video_category === 'events_interviews_bollywood' && 'Find Bollywood celebrity events, press meets'}
                     {formData.video_category === 'tadka_shorts_bollywood' && 'Find hot & trending Bollywood YouTube Shorts'}
                   </p>
                 </div>
@@ -1310,25 +1380,45 @@ Instructions:
                   </p>
                 </div>
                 
-                {/* Max Videos */}
-                <div className="text-left">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Maximum Videos to Fetch</label>
-                  <div className="flex items-center gap-2">
-                    {[3, 5, 10, 15].map(num => (
-                      <button
-                        key={num}
-                        type="button"
-                        onClick={() => setFormData(prev => ({ ...prev, max_videos: num }))}
-                        className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
-                          formData.max_videos === num
-                            ? 'bg-red-600 text-white'
-                            : 'bg-white border border-gray-300 text-gray-700 hover:border-red-400'
-                        }`}
-                      >
-                        {num}
-                      </button>
-                    ))}
+                {/* Post Aggregation Settings */}
+                <div className="text-left border-t border-gray-200 pt-4 mt-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <input
+                      type="checkbox"
+                      name="enable_aggregation"
+                      checked={formData.enable_aggregation || false}
+                      onChange={(e) => setFormData(prev => ({ ...prev, enable_aggregation: e.target.checked }))}
+                      className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                    />
+                    <label className="text-sm font-medium text-gray-700">
+                      Enable Post Aggregation <span className="text-gray-400">(Group by Movie/Event Name)</span>
+                    </label>
                   </div>
+                  
+                  {formData.enable_aggregation && (
+                    <div className="ml-7 mt-3">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Lookback Period for Grouping
+                      </label>
+                      <select
+                        name="aggregation_lookback_days"
+                        value={formData.aggregation_lookback_days || 2}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                      >
+                        <option value="1">1 Day</option>
+                        <option value="2">2 Days</option>
+                        <option value="3">3 Days</option>
+                        <option value="5">5 Days</option>
+                        <option value="7">7 Days</option>
+                        <option value="14">14 Days</option>
+                        <option value="30">30 Days</option>
+                      </select>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Check posts from the last N days to find matching groups
+                      </p>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Channel Types Selection */}
@@ -1339,7 +1429,9 @@ Instructions:
                     {[
                       { value: 'production_house', label: 'Production Houses' },
                       { value: 'music_label', label: 'Music Labels' },
-                      { value: 'popular_channel', label: 'Popular Channels' },
+                      { value: 'movie_news_channel', label: 'Movie News Channels' },
+                      { value: 'movie_interviews_channel', label: 'Movie Interviews Channels' },
+                      { value: 'tech_interviews_channel', label: 'Tech Interviews Channels' },
                       { value: 'movie_channel', label: 'Movie Channels' },
                       { value: 'news_channel', label: 'News Channels' },
                       { value: 'tv_channel', label: 'TV Channels' },
@@ -1396,7 +1488,7 @@ Instructions:
             )}
 
             {/* Split Content Section - Only for post agent type */}
-            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'video' && (
+            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="text-left">
@@ -1439,7 +1531,196 @@ Instructions:
                   </span>
                 </div>
               )}
-            </div>
+              </div>
+            )}
+
+            {/* TV Video Agent Settings */}
+            {formData.agent_type === 'tv_video' && (
+              <div className="bg-indigo-50 rounded-lg p-4 space-y-4 border border-indigo-200">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <h3 className="text-sm font-semibold text-indigo-900 text-left">TV Video Agent Settings</h3>
+                </div>
+                
+                {/* Target Language */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Target Language <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="target_language"
+                    value={formData.target_language || ''}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      target_language: e.target.value,
+                      content_type: 'video'  // Always set to video
+                    }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                  >
+                    <option value="">Select Language</option>
+                    <option value="Telugu">Telugu</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Bengali">Bengali</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Punjabi">Punjabi</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Videos will be filtered by this language
+                  </p>
+                </div>
+                
+                {/* TV Video Category */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Video Category</label>
+                  <select
+                    name="tv_video_category"
+                    value={formData.tv_video_category || 'tv-today'}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      tv_video_category: e.target.value,
+                      category: e.target.value,  // Set both for backend
+                      content_type: 'video'  // Always set to video
+                    }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="tv-today">TV Today</option>
+                    <option value="tv-today-hindi">TV Today Hindi</option>
+                    <option value="news-today">News Today</option>
+                    <option value="news-today-hindi">News Today Hindi</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.tv_video_category === 'tv-today' && 'Regional TV shows and programs'}
+                    {formData.tv_video_category === 'tv-today-hindi' && 'Hindi TV shows and programs'}
+                    {formData.tv_video_category === 'news-today' && 'Regional breaking news and updates'}
+                    {formData.tv_video_category === 'news-today-hindi' && 'Hindi breaking news and updates'}
+                  </p>
+                </div>
+
+                {/* Channel Types */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">YouTube Channel Types <span className="text-red-500">*</span></label>
+                  <p className="text-xs text-gray-500 mb-3">Select which types of channels to search for videos</p>
+                  <div className="flex flex-wrap gap-3">
+                    {[
+                      { value: 'tv_channel', label: 'TV Channels' },
+                      { value: 'news_channel', label: 'News Channels' },
+                      { value: 'entertainment_channel', label: 'Entertainment Channels' },
+                      { value: 'reality_show', label: 'Reality Shows' },
+                      { value: 'movie_news_channel', label: 'Movie News Channels' },
+                      { value: 'movie_interviews_channel', label: 'Movie Interviews Channels' },
+                      { value: 'tech_interviews_channel', label: 'Tech Interviews Channels' },
+                      { value: 'movie_channel', label: 'Movie Channels' },
+                      { value: 'production_house', label: 'Production Houses' },
+                      { value: 'music_label', label: 'Music Labels' },
+                      { value: 'ott_channel', label: 'OTT Channels' }
+                    ].map(type => (
+                      <label
+                        key={type.value}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-all ${
+                          (formData.tv_channel_types || formData.channel_types || []).includes(type.value)
+                            ? 'bg-indigo-50 border-indigo-400 text-indigo-700'
+                            : 'bg-white border-gray-300 text-gray-700 hover:border-indigo-300'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={(formData.tv_channel_types || formData.channel_types || []).includes(type.value)}
+                          onChange={(e) => {
+                            const currentTypes = formData.tv_channel_types || formData.channel_types || [];
+                            const newTypes = e.target.checked
+                              ? [...currentTypes, type.value]
+                              : currentTypes.filter(t => t !== type.value);
+                            
+                            setFormData(prev => ({
+                              ...prev,
+                              tv_channel_types: newTypes,
+                              channel_types: newTypes  // Update both for backend
+                            }));
+                          }}
+                          className="sr-only"
+                        />
+                        <span className="text-sm font-medium">{type.label}</span>
+                        {(formData.tv_channel_types || formData.channel_types || []).includes(type.value) && (
+                          <svg className="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </label>
+                    ))}
+                  </div>
+                  <p className="text-xs text-red-500 mt-2 font-medium">
+                    ⚠️ You must select at least one channel type. Agent will fetch ONLY from selected types.
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    For TV/News content, select TV Channels and/or News Channels only.
+                  </p>
+                </div>
+
+                {/* Content Type Filter */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Content Type Filter</label>
+                  <select
+                    name="content_filter"
+                    value={formData.content_filter || 'videos'}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="videos">Only Videos</option>
+                    <option value="shorts">Only Shorts</option>
+                    <option value="both">Both Videos & Shorts</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Choose whether to fetch regular videos, shorts, or both from the channels
+                  </p>
+                </div>
+
+                {/* Lookback Period */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Lookback Period <span className="text-red-500">*</span></label>
+                  <select
+                    name="lookback_days"
+                    value={formData.lookback_days || 2}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="1">Last 24 Hours</option>
+                    <option value="2">Last 2 Days</option>
+                    <option value="3">Last 3 Days</option>
+                    <option value="5">Last 5 Days</option>
+                    <option value="7">Last 7 Days</option>
+                    <option value="14">Last 14 Days</option>
+                    <option value="30">Last 30 Days</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Agent will fetch ALL videos published within this period
+                  </p>
+                </div>
+
+                {/* Info Box */}
+                <div className="bg-white rounded-lg border border-indigo-200 p-3">
+                  <div className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div className="text-xs text-gray-700 space-y-1">
+                      <p className="font-semibold text-indigo-900">Channel Aggregation:</p>
+                      <p>• Videos automatically grouped by <strong>YouTube channel name</strong></p>
+                      <p>• Each channel creates one card with all its videos</p>
+                      <p>• Last 48 hours content only</p>
+                      <p>• No keyword filtering - all channel videos included</p>
+                      <p className="text-indigo-700 mt-2">
+                        ✨ Simple & efficient - perfect for TV & News content!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             )}
 
             {/* Instagram URLs Section - Only for Tadka Pics with Instagram source */}
@@ -1508,8 +1789,8 @@ Instructions:
               </div>
             )}
 
-            {/* Reference Content Section - Hide for Tadka Pics with Instagram source and Video agents */}
-            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && formData.agent_type !== 'video' && (
+            {/* Reference Content Section - Hide for Tadka Pics with Instagram source, Video agents, and TV Video agents */}
+            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-gray-900 text-left">Reference Content</h3>
@@ -1577,8 +1858,8 @@ Instructions:
             </div>
             )}
 
-            {/* Image Options Section - Hide for photo_gallery, tadka_pics, and video */}
-            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && (
+            {/* Image Options Section - Hide for photo_gallery, tadka_pics, video, and tv_video */}
+            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Image Options</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">

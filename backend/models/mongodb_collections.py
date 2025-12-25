@@ -25,6 +25,7 @@ GALLERY_EVENTS = "gallery_events"
 GALLERY_POLITICS = "gallery_politics"
 GALLERY_TRAVEL = "gallery_travel"
 GALLERY_OTHERS = "gallery_others"
+GROUPED_POSTS = "grouped_posts"  # New collection for post aggregation
 
 def create_indexes(db):
     """
@@ -67,6 +68,12 @@ def create_indexes(db):
         # Theater/OTT releases indexes
         db[THEATER_RELEASES].create_index("release_date")
         db[OTT_RELEASES].create_index("release_date")
+        
+        # Grouped posts indexes
+        db[GROUPED_POSTS].create_index("group_title")
+        db[GROUPED_POSTS].create_index("category")
+        db[GROUPED_POSTS].create_index("created_at")
+        db[GROUPED_POSTS].create_index([("group_title", 1), ("category", 1)], unique=True)
         
         print("✅ MongoDB indexes created successfully")
     except Exception as e:

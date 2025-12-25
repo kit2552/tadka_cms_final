@@ -48,9 +48,11 @@ def serialize_doc(doc):
     if isinstance(doc, dict):
         result = {}
         for key, value in doc.items():
-            # Map article_language to language for API response
+            # Map article_language to language for backward compatibility
             if key == 'article_language':
-                result['language'] = value or 'en'
+                print(f"🔍 DEBUG serialize - Mapping article_language: {value} to both language and article_language")
+                result['language'] = value or 'en'  # For backward compatibility
+                result['article_language'] = value or 'en'
                 continue
             # Map image to image_url for API response
             if key == 'image':
@@ -219,6 +221,47 @@ def get_articles_by_states(db, category_slug: str, state_codes: List[str], skip:
                 {"states": {"$regex": state, "$options": "i"}} 
                 for state in (state_codes + ["all"])
             ],
+            "$and": [
+                {
+                    "$or": [
+                        {"published_at": {"$lte": current_utc_naive}},
+                        {"published_at": {"$exists": False}}
+                    ]
+                }
+            ]
+        })
+        .sort("published_at", -1)
+        .skip(skip)
+        .limit(limit)
+    )
+    return serialize_doc(docs)
+
+def get_articles_by_content_language(db, category_slug: str, language_codes: List[str], skip: int = 0, limit: int = 100):
+    """Get video articles filtered by category and content_language field
+    
+    Args:
+        db: Database connection
+        category_slug: Category slug (e.g., 'latest-video-songs')
+        language_codes: List of language codes (e.g., ['te', 'ta', 'hi'])
+        skip: Number of records to skip
+        limit: Maximum number of records to return
+    """
+    # Get current time in EST (UTC-5) and convert to UTC
+    est_tz = timezone(timedelta(hours=-5))
+    current_est_time = datetime.now(est_tz)
+    current_utc_time = current_est_time.astimezone(timezone.utc)
+    
+    # MongoDB stores datetime objects (timezone-naive, assumed UTC)
+    current_utc_naive = current_utc_time.replace(tzinfo=None)
+    
+    # Query for articles matching category and content_language
+    docs = list(
+        db[ARTICLES]
+        .find({
+            "category": category_slug,
+            "is_published": True,
+            "is_top_story": {"$ne": True},
+            "content_language": {"$in": language_codes},  # Filter by content_language codes
             "$and": [
                 {
                     "$or": [
@@ -443,6 +486,9 @@ def get_ads_for_cms(
 
 def create_article(db, article: dict):
     """Create new article"""
+    # Debug: Check content_language
+    print(f"🔍 DEBUG crud.create_article - Received content_language: {article.get('content_language')}")
+    
     # Generate new integer ID
     last_article = db[ARTICLES].find_one(sort=[("id", -1)])
     new_id = (last_article["id"] + 1) if last_article else 1
@@ -457,7 +503,9 @@ def create_article(db, article: dict):
         "summary": article.get("summary"),
         "author": article.get("author"),
         "article_language": article.get("article_language", "en"),
+        "content_language": article.get("content_language"),  # Content Language for movie/video categories
         "states": article.get("states"),
+        "category": article.get("category"),
         "category": article.get("category"),
         "content_type": article.get("content_type", "post"),
         "ad_type": article.get("ad_type"),
@@ -511,6 +559,8 @@ def create_article(db, article: dict):
         "updated_at": datetime.utcnow(),
         "published_at": article.get("published_at") or datetime.utcnow()
     }
+    
+    print(f"🔍 DEBUG crud.create_article - Saving article_doc with content_language: {article_doc.get('content_language')}")  # Debug log
     
     result = db[ARTICLES].insert_one(article_doc)
     article_doc["_id"] = result.inserted_id
@@ -2869,5 +2919,349 @@ def get_top_stories_for_states(db, states: List[str], limit: int = 4):
     ).sort('published_at', -1).limit(limit))
     
     return articles
+
+
+# ==================== Grouped Posts Operations ====================
+
+def create_or_update_grouped_post(db, group_title: str, category: str, post_id: int):
+    """Create or update a grouped post entry
+    
+    Args:
+        group_title: Movie/Event name (e.g., "Champion", "Shambhala")
+        category: Article category (e.g., "events-interviews")
+        post_id: Article ID to add to the group
+    
+    Returns:
+        Created/updated grouped post document
+    """
+    from datetime import datetime, timezone
+    
+    # Check if group already exists
+    existing = db[GROUPED_POSTS].find_one({
+        "group_title": group_title,
+        "category": category
+    })
+    
+    if existing:
+        # Update existing group
+        post_ids = existing.get('post_ids', [])
+        if post_id not in post_ids:
+            post_ids.append(post_id)
+        
+        # Update representative to latest post
+        db[GROUPED_POSTS].update_one(
+            {"_id": existing["_id"]},
+            {
+                "$set": {
+                    "post_ids": post_ids,
+                    "representative_post_id": post_id,  # Always use latest post
+                    "posts_count": len(post_ids),
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        return db[GROUPED_POSTS].find_one({"_id": existing["_id"]})
+    else:
+        # Create new group
+        group_data = {
+            "group_title": group_title,
+            "category": category,
+            "post_ids": [post_id],
+            "representative_post_id": post_id,
+            "posts_count": 1,
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc)
+        }
+        result = db[GROUPED_POSTS].insert_one(group_data)
+        group_data['_id'] = result.inserted_id
+        return group_data
+
+def get_all_grouped_posts(db, skip: int = 0, limit: int = 100):
+    """Get all grouped posts with representative article data"""
+    groups = list(
+        db[GROUPED_POSTS].find()
+        .sort("updated_at", -1)
+        .skip(skip)
+        .limit(limit)
+    )
+    
+    # Enrich with representative post data
+    for group in groups:
+        rep_id = group.get('representative_post_id')
+        if rep_id:
+            rep_article = db[ARTICLES].find_one({"id": rep_id})
+            group['representative_post'] = serialize_doc(rep_article)
+    
+    return serialize_doc(groups)
+
+def get_grouped_post_by_id(db, group_id: str):
+    """Get a specific grouped post with all articles"""
+    from bson import ObjectId
+    
+    group = db[GROUPED_POSTS].find_one({"_id": ObjectId(group_id)})
+    if not group:
+        return None
+    
+    # Get all articles in this group
+    post_ids = group.get('post_ids', [])
+    articles = list(db[ARTICLES].find({"id": {"$in": post_ids}}).sort("published_at", -1))
+    group['articles'] = serialize_doc(articles)
+    
+    return serialize_doc(group)
+
+def delete_grouped_post(db, group_id: str):
+    """Delete a grouped post and all associated articles"""
+    from bson import ObjectId
+    
+    # First, get the grouped post to find associated article IDs
+    group = db[GROUPED_POSTS].find_one({"_id": ObjectId(group_id)})
+    if not group:
+        print(f"❌ Group {group_id} not found")
+        return False
+    
+    # Get the post IDs associated with this group
+    post_ids = group.get('post_ids', [])
+    print(f"🗑️ Group has {len(post_ids)} post IDs to delete: {post_ids}")
+    print(f"🔍 Post IDs type: {[type(pid) for pid in post_ids[:3]]}")  # Check first 3 types
+    
+    # Ensure post_ids are integers (they should be, but let's be explicit)
+    post_ids_int = []
+    for pid in post_ids:
+        try:
+            post_ids_int.append(int(pid))
+        except (ValueError, TypeError) as e:
+            print(f"⚠️ Could not convert post_id {pid} to int: {e}")
+    
+    print(f"🔍 Converted to int IDs: {post_ids_int}")
+    
+    # Delete all associated articles
+    if post_ids_int:
+        # Check if articles exist before deleting
+        existing_articles = list(db[ARTICLES].find({"id": {"$in": post_ids_int}}, {"id": 1, "title": 1}))
+        print(f"🔍 Found {len(existing_articles)} articles in database matching these IDs")
+        for article in existing_articles:
+            print(f"   - ID {article.get('id')}: {article.get('title', 'No title')[:50]}")
+        
+        # Perform delete
+        delete_result = db[ARTICLES].delete_many({"id": {"$in": post_ids_int}})
+        print(f"✅ Deleted {delete_result.deleted_count} articles from database")
+        
+        if delete_result.deleted_count < len(existing_articles):
+            print(f"⚠️ Warning: Expected to delete {len(existing_articles)} but only deleted {delete_result.deleted_count}")
+        
+        if delete_result.deleted_count == 0 and len(post_ids_int) > 0:
+            print(f"❌ ERROR: No articles were deleted even though we have {len(post_ids_int)} post IDs!")
+            print(f"   This usually means a type mismatch or the articles don't exist")
+    else:
+        print(f"⚠️ No post_ids found in group or all conversions failed")
+    
+    # Delete the grouped post itself
+    result = db[GROUPED_POSTS].delete_one({"_id": ObjectId(group_id)})
+    print(f"{'✅' if result.deleted_count > 0 else '❌'} Grouped post deletion: {result.deleted_count} group deleted")
+    
+    return result.deleted_count > 0
+
+def update_grouped_post_title(db, group_id: str, group_title: str):
+    """Update a grouped post's title"""
+    from bson import ObjectId
+    from datetime import datetime, timezone
+    
+    result = db[GROUPED_POSTS].update_one(
+        {"_id": ObjectId(group_id)},
+        {
+            "$set": {
+                "group_title": group_title,
+                "updated_at": datetime.now(timezone.utc)
+            }
+        }
+    )
+    return result.modified_count > 0
+
+def find_matching_grouped_post(db, movie_name: str, category: str, lookback_days: int = 2, new_post_title: str = None):
+    """Find a matching grouped post using liberal fuzzy matching and common word detection
+    
+    Args:
+        movie_name: Extracted movie/event name
+        category: Article category
+        lookback_days: Days to look back for matches
+        new_post_title: Full title of the new post being created (for word matching)
+    
+    Returns:
+        Matching grouped post or None
+    """
+    from datetime import datetime, timedelta, timezone
+    import re
+    
+    def normalize_name(name):
+        """Normalize for comparison"""
+        normalized = ' '.join(name.lower().strip().split())
+        # Remove special characters
+        normalized = re.sub(r'[^a-z0-9\s]', '', normalized)
+        # Handle spelling variations
+        normalized = re.sub(r'shyambhala', 'shambhala', normalized)
+        normalized = re.sub(r'shyambala', 'shambhala', normalized)
+        normalized = re.sub(r'vrushabha', 'vrushabha', normalized)
+        normalized = re.sub(r'vrusshabha', 'vrushabha', normalized)
+        normalized = re.sub(r'rowdyjanardhana', 'rowdyjanardhan', normalized)
+        normalized = re.sub(r'rowdy\s*janardhana', 'rowdyjanardhan', normalized)
+        # Remove common suffixes
+        normalized = re.sub(r'\s+movie$', '', normalized)
+        normalized = re.sub(r'\s+film$', '', normalized)
+        return normalized.strip()
+    
+    def calculate_similarity(str1, str2):
+        """Calculate similarity ratio"""
+        s1 = normalize_name(str1)
+        s2 = normalize_name(str2)
+        
+        if s1 == s2:
+            return 1.0
+        
+        # Substring match
+        if s1 in s2 or s2 in s1:
+            shorter = min(len(s1), len(s2))
+            longer = max(len(s1), len(s2))
+            if shorter >= 4:
+                return shorter / longer
+        
+        # Character-level similarity
+        set1 = set(s1)
+        set2 = set(s2)
+        if not set1 or not set2:
+            return 0.0
+        
+        intersection = len(set1.intersection(set2))
+        union = len(set1.union(set2))
+        
+        return intersection / union if union > 0 else 0.0
+    
+    def extract_significant_words(title):
+        """Extract significant words from title (excluding common words)"""
+        if not title:
+            return set()
+        
+        # Normalize and lowercase
+        title_lower = title.lower()
+        # Remove special characters and emojis
+        title_clean = re.sub(r'[^\w\s]', ' ', title_lower)
+        words = title_clean.split()
+        
+        # Common words to ignore (stopwords + common video terms)
+        stopwords = {
+            'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with',
+            'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does',
+            'did', 'will', 'would', 'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that',
+            'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'what', 'which', 'who',
+            'when', 'where', 'why', 'how', 'all', 'each', 'every', 'both', 'few', 'more', 'most',
+            'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too',
+            'very', 'says', 'said', 'about', 'their', 'his', 'her', 'its', 'our', 'your',
+            # Video-specific terms
+            'video', 'full', 'official', 'movie', 'film', 'trailer', 'teaser', 'song', 'interview',
+            'event', 'press', 'meet', 'release', 'pre', 'audio', 'launch', 'success', 'team',
+            'exclusive', 'first', 'look', 'glimpse', 'motion', 'poster', 'promo', 'promotion',
+            'speech', 'talk', 'shares', 'share', 'experience', 'fun', 'emotional', 'super', 'cute'
+        }
+        
+        # Keep only significant words (3+ chars, not stopwords, not numbers)
+        significant_words = {
+            word for word in words 
+            if len(word) >= 3 and word not in stopwords and not word.isdigit()
+        }
+        
+        return significant_words
+    
+    def check_common_words_in_group(group, new_title):
+        """Check if new title has common significant words with posts in the group"""
+        if not new_title:
+            return 0
+        
+        new_words = extract_significant_words(new_title)
+        if not new_words:
+            return 0
+        
+        print(f"   🔍 New title words: {new_words}")
+        
+        # Get all post titles in this group
+        post_ids = group.get('post_ids', [])
+        if not post_ids:
+            return 0
+        
+        # Fetch articles in this group
+        articles = list(db[ARTICLES].find({"id": {"$in": post_ids}}, {"title": 1}))
+        
+        max_common_ratio = 0
+        for article in articles:
+            article_title = article.get('title', '')
+            article_words = extract_significant_words(article_title)
+            
+            if not article_words:
+                continue
+            
+            # Calculate common word ratio
+            common_words = new_words.intersection(article_words)
+            if common_words:
+                # Ratio based on the smaller set
+                smaller_set_size = min(len(new_words), len(article_words))
+                common_ratio = len(common_words) / smaller_set_size if smaller_set_size > 0 else 0
+                max_common_ratio = max(max_common_ratio, common_ratio)
+                
+                # Log for debugging
+                print(f"   🔗 Compared with: {article_title[:60]}")
+                print(f"      Article words: {article_words}")
+                print(f"      Common words: {common_words} (ratio: {common_ratio:.2f})")
+                
+                # If we find a strong match, log it prominently
+                if common_ratio >= 0.3:
+                    print(f"   ✨ Strong match found! Common words: {list(common_words)}")
+        
+        return max_common_ratio
+    
+    # Get groups from the lookback period
+    cutoff_time = datetime.now(timezone.utc) - timedelta(days=lookback_days)
+    
+    groups = list(db[GROUPED_POSTS].find({
+        "category": category,
+        "updated_at": {"$gte": cutoff_time}
+    }))
+    
+    # Find best matching group
+    best_match = None
+    best_similarity = 0.0
+    best_word_match_ratio = 0.0
+    
+    print(f"🔍 Checking {len(groups)} groups within {lookback_days} days for matches...")
+    
+    for group in groups:
+        group_title = group.get('group_title', '')
+        
+        # Check title similarity
+        similarity = calculate_similarity(movie_name, group_title)
+        
+        # Check common words if new_post_title is provided
+        word_match_ratio = 0
+        if new_post_title:
+            print(f"\n   Checking group: '{group_title}'")
+            word_match_ratio = check_common_words_in_group(group, new_post_title)
+            print(f"   Title similarity: {similarity:.2f}, Word match: {word_match_ratio:.2f}")
+        
+        # Use whichever score is higher
+        combined_score = max(similarity, word_match_ratio)
+        
+        if combined_score > best_similarity:
+            best_similarity = combined_score
+            best_word_match_ratio = word_match_ratio
+            best_match = group
+    
+    # Return if similarity is above threshold (65%) OR word match ratio is decent (30%+)
+    # Lowered from 40% to 30% for better matching
+    if best_match and (best_similarity >= 0.65 or best_word_match_ratio >= 0.30):
+        if best_word_match_ratio >= 0.30:
+            print(f"   ✅ Matched by common words (ratio: {best_word_match_ratio:.2f}) to group: '{best_match.get('group_title')}'")
+        else:
+            print(f"   ✅ Matched by title similarity (ratio: {best_similarity:.2f}) to group: '{best_match.get('group_title')}'")
+        return serialize_doc(best_match)
+    
+    print(f"   ❌ No match found. Best scores - Title: {best_similarity:.2f}, Words: {best_word_match_ratio:.2f}")
+    return None
 
 

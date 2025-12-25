@@ -48,7 +48,7 @@ export const SPECIAL_STATES = {
 // Get state name by code
 export const getStateNameByCode = (code) => {
   if (code === 'all') {
-    return 'All States (National & Bollywood)';
+    return 'All States';
   }
   const state = INDIAN_STATES.find(s => s.code === code);
   return state ? state.name : code;

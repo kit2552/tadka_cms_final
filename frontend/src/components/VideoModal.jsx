@@ -10,6 +10,7 @@ const VideoModal = ({ isOpen, onClose, video }) => {
   const [nameDisabled, setNameDisabled] = useState(false);
   const [planningToWatch, setPlanningToWatch] = useState(null); // 'yes' or 'no'
   const [watchCount, setWatchCount] = useState(0);
+  const [embedError, setEmbedError] = useState(false);
 
   // Fetch responses and watch count when modal opens
   useEffect(() => {
@@ -187,7 +188,46 @@ const VideoModal = ({ isOpen, onClose, video }) => {
             style={{ 
               backgroundColor: '#000000'
             }}
+            onError={() => setEmbedError(true)}
           />
+          
+          {/* Fallback overlay when embedding is blocked */}
+          {embedError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black">
+              <div className="text-center p-6">
+                <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <p className="text-white text-sm mb-4">This video cannot be embedded</p>
+                <a
+                  href={video.youtube_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-md transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  Watch on YouTube
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Always show "Watch on YouTube" button */}
+        <div className="bg-black text-white px-4 py-1 text-center border-t border-gray-700">
+          <a
+            href={video.youtube_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-gray-400 hover:text-white text-xs transition-colors"
+          >
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            If video doesn't play, watch on YouTube
+          </a>
         </div>
 
         {/* Black Footer with Watch Intent */}

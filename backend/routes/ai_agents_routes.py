@@ -66,6 +66,10 @@ class AIAgent(BaseModel):
     include_keywords: Optional[str] = None  # Comma-separated include keywords for filtering
     exclude_keywords: Optional[str] = None  # Comma-separated exclude keywords for filtering
     
+    # Post Aggregation fields (for Video Agent)
+    enable_aggregation: Optional[bool] = False  # Enable post grouping by movie/event name
+    aggregation_lookback_days: Optional[int] = 2  # Days to look back for grouping (1-30)
+    
     # Adhoc mode fields
     schedule_post: Optional[bool] = False
     post_date: Optional[str] = None
@@ -180,6 +184,10 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
             # Use Video Agent Service
             from services.video_agent_service import video_agent_runner
             result = await video_agent_runner.run_video_agent(agent_id)
+        elif agent_type == 'tv_video':
+            # Use TV Video Agent Service
+            from services.tv_video_agent_service import tv_video_agent_service
+            result = await tv_video_agent_service.run_tv_video_agent(agent_id)
         else:
             # Use Post Agent Service (default)
             result = await agent_runner.run_agent(agent_id)

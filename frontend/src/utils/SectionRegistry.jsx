@@ -107,10 +107,42 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
     },
     'events-interviews': {
       id: 'events-interviews',
-      name: 'Events & Interviews',
+      name: 'Events & Press Meets',
       component: (
         <EventsInterviews 
-          eventsInterviewsData={data.eventsInterviewsData} 
+          eventsInterviewsData={data.eventsInterviewsData}
+          firstTabLabel="Events & Press Meets"
+          secondTabLabel="Bollywood"
+          firstTabKey="events"
+          secondTabKey="bollywood"
+        />
+      ),
+      layout: 'full-width'
+    },
+    'tv-today': {
+      id: 'tv-today',
+      name: 'TV Today',
+      component: (
+        <EventsInterviews 
+          eventsInterviewsData={data.tvTodayData}
+          firstTabLabel="TV Today"
+          secondTabLabel="Hindi"
+          firstTabKey="tv-today"
+          secondTabKey="hindi"
+        />
+      ),
+      layout: 'full-width'
+    },
+    'news-today': {
+      id: 'news-today',
+      name: 'News Today',
+      component: (
+        <EventsInterviews 
+          eventsInterviewsData={data.newsTodayData}
+          firstTabLabel="News Today"
+          secondTabLabel="Hindi"
+          firstTabKey="news-today"
+          secondTabKey="hindi"
         />
       ),
       layout: 'full-width'

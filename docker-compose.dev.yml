@@ -1,10 +1,10 @@
 services:
-  # Backend Service - FastAPI application
+  # Backend Service - FastAPI application (Development mode)
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: tadka-backend
+    container_name: tadka-backend-dev
     ports:
       - "8000:8000"
     environment:
@@ -16,20 +16,25 @@ services:
     volumes:
       - ./backend:/code
       - backend-uploads:/code/uploads
+    command: uvicorn server:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
     networks:
       - tadka-network
 
-  # Frontend Service - React application
+  # Frontend Service - React application (Development mode)
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: tadka-frontend
+    image: node:20-alpine
+    container_name: tadka-frontend-dev
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     ports:
       - "3000:3000"
     environment:
       - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL:-http://localhost:8000}
+      - CHOKIDAR_USEPOLLING=true
+    command: sh -c "yarn install && yarn start"
     depends_on:
       - backend
     restart: unless-stopped
@@ -44,3 +49,4 @@ networks:
   tadka-network:
     driver: bridge
     name: tadka-network
+

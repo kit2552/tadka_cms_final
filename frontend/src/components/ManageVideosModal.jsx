@@ -439,7 +439,9 @@ const ManageVideosModal = ({ onClose }) => {
     const labels = {
       production_house: 'Production House',
       music_label: 'Music Label',
-      popular_channel: 'Popular Channel',
+      movie_news_channel: 'Movie News Channel',
+      movie_interviews_channel: 'Movie Interviews Channel',
+      tech_interviews_channel: 'Tech Interviews Channel',
       movie_channel: 'Movie Channel',
       news_channel: 'News Channel',
       tv_channel: 'TV Channel',
@@ -453,7 +455,9 @@ const ManageVideosModal = ({ onClose }) => {
     const colors = {
       production_house: 'bg-blue-100 text-blue-700',
       music_label: 'bg-purple-100 text-purple-700',
-      popular_channel: 'bg-green-100 text-green-700',
+      movie_news_channel: 'bg-green-100 text-green-700',
+      movie_interviews_channel: 'bg-yellow-100 text-yellow-700',
+      tech_interviews_channel: 'bg-pink-100 text-pink-700',
       movie_channel: 'bg-red-100 text-red-700',
       news_channel: 'bg-orange-100 text-orange-700',
       tv_channel: 'bg-cyan-100 text-cyan-700',
@@ -718,7 +722,9 @@ const ManageVideosModal = ({ onClose }) => {
                     <option value="all">All Types</option>
                     <option value="production_house">Production Houses</option>
                     <option value="music_label">Music Labels</option>
-                    <option value="popular_channel">Popular Channels</option>
+                    <option value="movie_news_channel">Movie News Channels</option>
+                    <option value="movie_interviews_channel">Movie Interviews Channels</option>
+                    <option value="tech_interviews_channel">Tech Interviews Channels</option>
                     <option value="movie_channel">Movie Channels</option>
                     <option value="news_channel">News Channels</option>
                     <option value="tv_channel">TV Channels</option>

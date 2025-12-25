@@ -39,7 +39,8 @@ class Article(Base):
     content = Column(Text)
     summary = Column(String)
     author = Column(String)
-    language = Column(String, default="en")  # New field for language support
+    article_language = Column(String, default="en")  # Article UI language (from Author & Targeting section)
+    content_language = Column(String)  # Content Language for movie/video categories
     states = Column(Text)  # JSON string for supported states
     category = Column(String, index=True)
     content_type = Column(String, default='post')  # New field for content type (post, photo, video, movie_review)

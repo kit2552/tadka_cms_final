@@ -154,7 +154,9 @@ const SystemSettings = () => {
   const [youtubeChannelTypes] = useState([
     { value: 'production_house', label: 'Production House' },
     { value: 'music_label', label: 'Music Label' },
-    { value: 'popular_channel', label: 'Popular YouTube Channel' },
+    { value: 'movie_news_channel', label: 'Movie News Channel' },
+    { value: 'movie_interviews_channel', label: 'Movie Interviews Channel' },
+    { value: 'tech_interviews_channel', label: 'Tech Interviews Channel' },
     { value: 'movie_channel', label: 'Movie Channel' },
     { value: 'news_channel', label: 'News Channel' },
     { value: 'tv_channel', label: 'TV Channel' },
@@ -167,6 +169,7 @@ const SystemSettings = () => {
     loadUsers();
     fetchAdSettings();
     loadAIAPIKeys();
+    loadStateLanguageMapping(); // Load state-language mapping from database
     // Don't auto-fetch models - only fetch when user clicks Refresh
     // fetchAllTextModels();
     // fetchAllImageModels();
@@ -174,6 +177,22 @@ const SystemSettings = () => {
     fetchCategoryPromptMappings();
     fetchYoutubeChannels();
   }, []);
+
+  const loadStateLanguageMapping = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/state-language-mapping`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log('📍 Loaded state-language mapping from database:', data);
+        setStateLanguageMapping(data);
+      } else {
+        console.log('📍 No saved mapping found, using defaults');
+      }
+    } catch (error) {
+      console.error('Failed to load state-language mapping:', error);
+      // Keep using DEFAULT_STATE_LANGUAGE_MAPPING if fetch fails
+    }
+  };
 
   const loadAWSConfig = async () => {
     try {
@@ -2066,6 +2085,38 @@ const SystemSettings = () => {
             {/* State-Language Tab */}
             {activeTab === 'state-language' && (
               <div className="space-y-6">
+                {/* Save Button */}
+                <div className="flex justify-end">
+                  <button
+                    onClick={async () => {
+                      try {
+                        setLoading(true);
+                        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/state-language-mapping`, {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(stateLanguageMapping)
+                        });
+                        
+                        if (response.ok) {
+                          setMessage({ type: 'success', text: 'State-language mapping saved successfully!' });
+                          setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+                        } else {
+                          setMessage({ type: 'error', text: 'Failed to save mapping' });
+                        }
+                      } catch (error) {
+                        console.error('Error saving mapping:', error);
+                        setMessage({ type: 'error', text: 'Error saving mapping' });
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                    disabled={loading}
+                    className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  >
+                    {loading ? 'Saving...' : 'Save All Changes'}
+                  </button>
+                </div>
+                
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">

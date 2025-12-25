@@ -25,6 +25,8 @@ export const DragDropProvider = ({ children }) => {
     'ott-movie-reviews',        // Full width
     'videosongs-tv-row',        // Desktop: TheaterReleases+OTTReleases+TV | iPad: TheaterReleases+OTTReleases
     'events-interviews',        // Full width
+    'tv-today',                 // Full width - TV Today section
+    'news-today',               // Full width - News Today section
     'big-boss',                 // Full width - Big Boss section
     'viral-shorts',             // Full width - New Viral Shorts section with state filtering
     'ai-fashion-row',           // Desktop: Health+StockMarket+AI | iPad: Health+StockMarket

@@ -49,6 +49,17 @@ const CreateAgentModal = ({ onClose, onSelect }) => {
       color: 'red'
     },
     {
+      type: 'tv_video',
+      name: 'TV Video Agent',
+      description: 'Find and post TV & News videos - grouped by channel name',
+      icon: (
+        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      ),
+      color: 'indigo'
+    },
+    {
       type: 'review',
       name: 'Review Agent',
       description: 'Generate movie, product, or service reviews automatically',
@@ -67,7 +78,8 @@ const CreateAgentModal = ({ onClose, onSelect }) => {
       purple: 'bg-purple-100 text-purple-600 hover:bg-purple-50 border-purple-200',
       green: 'bg-green-100 text-green-600 hover:bg-green-50 border-green-200',
       orange: 'bg-orange-100 text-orange-600 hover:bg-orange-50 border-orange-200',
-      red: 'bg-red-100 text-red-600 hover:bg-red-50 border-red-200'
+      red: 'bg-red-100 text-red-600 hover:bg-red-50 border-red-200',
+      indigo: 'bg-indigo-100 text-indigo-600 hover:bg-indigo-50 border-indigo-200'
     };
     return colors[color] || colors.blue;
   };

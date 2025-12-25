@@ -48,6 +48,7 @@ class ArticleBase(BaseModel):
     summary: str
     author: str
     article_language: str = "en"
+    content_language: Optional[str] = None  # Content Language for movie/video categories
     states: Optional[str] = None  # JSON string
     category: str
     content_type: Optional[str] = "post"  # New field for content type
@@ -127,6 +128,7 @@ class ArticleUpdate(BaseModel):
     summary: Optional[str] = None
     author: Optional[str] = None
     article_language: Optional[str] = None
+    content_language: Optional[str] = None  # Content Language for movie/video categories
     states: Optional[str] = None
     category: Optional[str] = None
     content_type: Optional[str] = None  # New field for content type
@@ -469,5 +471,30 @@ class RelatedArticlesConfigResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+    class Config:
+        from_attributes = True
+
+# Grouped Posts Schemas
+class GroupedPostBase(BaseModel):
+    group_title: str  # Movie/Event name (e.g., "Champion", "Shambhala")
+    category: str  # Article category (e.g., "events-interviews")
+    post_ids: List[int] = []  # List of article IDs in this group
+    representative_post_id: Optional[int] = None  # Latest/main post to show in home page
+    posts_count: int = 0  # Number of posts in this group
+    
+class GroupedPostCreate(GroupedPostBase):
+    pass
+
+class GroupedPostUpdate(BaseModel):
+    post_ids: Optional[List[int]] = None
+    representative_post_id: Optional[int] = None
+    posts_count: Optional[int] = None
+
+class GroupedPostResponse(GroupedPostBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    representative_post: Optional[dict] = None  # Full article data of representative post
+    
     class Config:
         from_attributes = True

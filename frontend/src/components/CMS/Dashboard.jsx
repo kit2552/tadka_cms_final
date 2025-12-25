@@ -5,6 +5,7 @@ import TopicsManagement from './TopicsManagement';
 import TopicSelector from './TopicSelector';
 import RelatedVideosManagement from './RelatedVideosManagement';
 import AdManagement from './AdManagement';
+import GroupedPosts from './GroupedPosts';
 import { getSortedStates, getStateNameByCode } from '../../utils/statesConfig';
 
 // Topic Management Modal Component
@@ -382,7 +383,7 @@ const Dashboard = () => {
   // Helper function to get all states with "All" option
   const getAllStatesWithAll = () => {
     return [
-      { code: 'all', name: 'All States (National & Bollywood)' },
+      { code: 'all', name: 'All States' },
       ...getSortedStates()
     ];
   };
@@ -516,7 +517,7 @@ const Dashboard = () => {
     { slug: 'tv-shows', name: 'TV Shows' },
     { slug: 'ott-releases', name: 'OTT Releases' },
     { slug: 'theater-releases', name: 'Theater Releases' },
-    { slug: 'events-interviews', name: 'Events & Interviews' },
+    { slug: 'events-interviews', name: 'Events & Press Meets' },
     { slug: 'trending-videos', name: 'Latest Video Songs' },
     { slug: 'tadka-pics', name: 'Tadka Pics' },
     { slug: 'travel', name: 'Travel Pics' },
@@ -3126,6 +3127,16 @@ const Dashboard = () => {
                 Topics
               </button>
               <button
+                onClick={() => setActiveTab('grouped')}
+                className={`py-3 px-6 text-sm font-medium border-b-2 ${
+                  activeTab === 'grouped'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } transition-colors duration-200`}
+              >
+                Group Posts
+              </button>
+              <button
                 onClick={() => setActiveTab('ads-list')}
                 className={`py-3 px-6 text-sm font-medium border-b-2 ${
                   activeTab === 'ads-list'
@@ -3328,8 +3339,15 @@ const Dashboard = () => {
                               </Link>
                             </h3>
                             <div className="flex flex-wrap gap-2 text-xs text-left">
-                              {/* State Badge - Show first if states exist */}
-                              {article.states && article.states !== 'null' && article.states !== '[]' && (
+                              {/* Content Language Badge - Show if content_language exists */}
+                              {article.content_language && (
+                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+                                  🌐 {article.content_language}
+                                </span>
+                              )}
+                              
+                              {/* State Badge - Show only if content_language doesn't exist */}
+                              {!article.content_language && article.states && article.states !== 'null' && article.states !== '[]' && (
                                 (() => {
                                   try {
                                     const stateCodes = typeof article.states === 'string' 
@@ -6443,6 +6461,11 @@ const Dashboard = () => {
         {/* Topics Tab */}
         {activeTab === 'topics' && (
           <TopicsManagement />
+        )}
+
+        {/* Grouped Posts Tab */}
+        {activeTab === 'grouped' && (
+          <GroupedPosts />
         )}
 
         {/* Ads List Tab - Shows all ads with filters similar to Posts */}

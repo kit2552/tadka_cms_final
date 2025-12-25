@@ -19,9 +19,36 @@ const NewVideoSongs = ({ reviews, onArticleClick }) => {
 
   const fetchVideoSongsData = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/articles/sections/new-video-songs`);
+      // Get user's state preferences from localStorage
+      const savedPreferences = localStorage.getItem('userPreferences');
+      let statesParam = '';
+      
+      console.log('🔍 Fetching Latest Video Songs - savedPreferences:', savedPreferences);
+      
+      if (savedPreferences) {
+        try {
+          const preferences = JSON.parse(savedPreferences);
+          console.log('🔍 Parsed preferences:', preferences);
+          if (preferences.states && Array.isArray(preferences.states) && preferences.states.length > 0) {
+            statesParam = preferences.states.join(',');
+            console.log('🔍 States parameter:', statesParam);
+          }
+        } catch (e) {
+          console.error('Error parsing preferences:', e);
+        }
+      }
+      
+      // Build URL with states parameter if available
+      const url = statesParam 
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/articles/sections/new-video-songs?states=${statesParam}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/articles/sections/new-video-songs`;
+      
+      console.log('🔍 Fetching from URL:', url);
+      
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
+        console.log('🔍 Received video songs data:', data);
         setVideoSongsData(data);
       }
     } catch (error) {

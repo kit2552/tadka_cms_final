@@ -222,7 +222,7 @@ const Navigation = ({ onLayoutModeChange }) => {
     { name: t('nav.tv_shows', 'TV Spotlight'), path: '/tv-spotlight' },
     { name: t('nav.ott_releases', 'OTT Releases'), path: '/ott-releases' },
     { name: t('nav.ott_reviews', 'OTT Reviews'), path: '/ott-reviews' },
-    { name: t('nav.events_interviews', 'Events & Interviews'), path: '/events-interviews' },
+    { name: t('nav.events_interviews', 'Events & Press Meets'), path: '/events-interviews' },
     { name: t('nav.health_food', 'Health & Food'), path: '/health-food-topics' },
     { name: t('nav.fashion_travel', 'Fashion & Travel'), path: '/fashion-travel-topics' },
     { name: t('nav.hot_topics_gossip', 'Hot Topics & Gossip'), path: '/hot-topics-gossip-news' },

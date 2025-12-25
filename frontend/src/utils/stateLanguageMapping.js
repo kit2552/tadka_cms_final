@@ -29,7 +29,7 @@ export const DEFAULT_STATE_LANGUAGE_MAPPING = {
   'rj': ['Hindi'],   // Rajasthan
   'sk': ['Nepali', 'English'],  // Sikkim
   'tn': ['Tamil'],   // Tamil Nadu
-  'ts': ['Telugu', 'Hindi'],  // Telangana
+  'ts': ['Telugu'],  // Telangana
   'tr': ['Bengali', 'Kokborok'], // Tripura
   'up': ['Hindi', 'Urdu'],   // Uttar Pradesh
   'uk': ['Hindi'],   // Uttarakhand

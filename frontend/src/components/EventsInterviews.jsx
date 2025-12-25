@@ -5,19 +5,28 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import dataService from '../services/dataService';
 import { CirclePlay } from 'lucide-react';
+import EventVideosModal from './EventVideosModal';
 
-const EventsInterviews = ({ eventsInterviewsData = {} }) => {
+const EventsInterviews = ({ 
+  eventsInterviewsData = {}, 
+  firstTabLabel = 'Events & Press Meets',
+  secondTabLabel = 'Bollywood',
+  firstTabKey = 'events',
+  secondTabKey = 'bollywood'
+}) => {
   const { t } = useLanguage();
   const { theme, getSectionHeaderClasses } = useTheme();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useTabState('events-interviews', 'events');
+  const [activeTab, setActiveTab] = useTabState('events-interviews', firstTabKey);
   const scrollContainerRef = useRef(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [eventModalOpen, setEventModalOpen] = useState(false);
   
   // Get data from API instead of mock data
-  const eventsVideos = eventsInterviewsData.events_interviews || [];
-  const bollywoodVideos = eventsInterviewsData.bollywood || [];
+  const eventsVideos = eventsInterviewsData.events_interviews || eventsInterviewsData.tv_today || eventsInterviewsData.news_today || [];
+  const bollywoodVideos = eventsInterviewsData.bollywood || eventsInterviewsData.hindi || [];
   
-  const currentData = activeTab === 'bollywood' ? bollywoodVideos : eventsVideos;
+  const currentData = activeTab === secondTabKey ? bollywoodVideos : eventsVideos;
 
   // Get YouTube thumbnail from video URL
   const getYouTubeThumbnail = (youtubeUrl) => {
@@ -32,15 +41,27 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
       : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
   };
 
-  // Handle article click - navigate based on content type
+  // Handle article click - open event modal if multiple videos, otherwise play directly
   const handleVideoClick = (article) => {
-    // Navigate to video view page for video content type articles
-    if (article.content_type === 'video' || article.youtube_url) {
-      navigate(`/video/${article.id}`);
+    const videoCount = article.video_count || 1;
+    
+    if (videoCount > 1) {
+      // Multiple videos - open event modal
+      setSelectedEvent(article);
+      setEventModalOpen(true);
     } else {
-      // Navigate to regular article page for non-video articles
-      navigate(`/article/${article.id}`);
+      // Single video - navigate directly to video view
+      if (article.content_type === 'video' || article.youtube_url) {
+        navigate(`/video/${article.id}`);
+      } else {
+        navigate(`/article/${article.id}`);
+      }
     }
+  };
+
+  const handleEventModalClose = () => {
+    setEventModalOpen(false);
+    setSelectedEvent(null);
   };
 
   const getCurrentData = () => {
@@ -54,26 +75,26 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
         {/* Header with tabs matching TrendingVideos style */}
         <div className={`${getSectionHeaderClasses().containerClass} border rounded-lg flex relative mb-1`}>
           <button
-            onClick={() => setActiveTab('events')}
+            onClick={() => setActiveTab(firstTabKey)}
             className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-l-lg ${
-              activeTab === 'events' 
+              activeTab === firstTabKey 
                 ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}` 
                 : getSectionHeaderClasses().unselectedTabClass
             }`}
             style={{fontSize: '14px', fontWeight: '500'}}
           >
-            {t('sections.events_interviews', 'Events & Interviews')}
+            {firstTabLabel}
           </button>
           <button
-            onClick={() => setActiveTab('bollywood')}
+            onClick={() => setActiveTab(secondTabKey)}
             className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-r-lg ${
-              activeTab === 'bollywood'
+              activeTab === secondTabKey
                 ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
                 : getSectionHeaderClasses().unselectedTabClass
             }`}
             style={{fontSize: '14px', fontWeight: '500'}}
           >
-            {t('sections.bollywood', 'Bollywood')}
+            {secondTabLabel}
           </button>
           <Link 
             to="/events-interviews" 
@@ -103,7 +124,7 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
                 style={{ width: '240px' }}
                 onClick={() => handleVideoClick(item)}
               >
-                <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group relative">
                   <div className="relative">
                     <img
                       src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || item.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
@@ -114,6 +135,12 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
                         e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
                       }}
                     />
+                    {/* Video count badge - show if more than 1 video */}
+                    {item.video_count && item.video_count > 1 && (
+                      <div className="absolute top-2 right-2 bg-black bg-opacity-80 text-white px-2 py-1 rounded text-xs font-bold">
+                        {item.video_count} videos
+                      </div>
+                    )}
                   </div>
                   <div className="p-3 text-left" style={{ width: '240px' }}>
                     <div className="flex items-center gap-1.5">
@@ -122,7 +149,7 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
                         <path d="M10 8l6 4-6 4V8z" fill="#000000"/>
                       </svg>
                       <h3 style={{fontSize: '13px', fontWeight: '600', lineHeight: '1.4', wordWrap: 'break-word'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
-                        {item.title}
+                        {item.event_name || item.title}
                       </h3>
                     </div>
                   </div>
@@ -140,6 +167,12 @@ const EventsInterviews = ({ eventsInterviewsData = {} }) => {
         `}</style>
       </div>
 
+      {/* Event Videos Modal */}
+      <EventVideosModal
+        isOpen={eventModalOpen}
+        onClose={handleEventModalClose}
+        event={selectedEvent}
+      />
     </div>
   );
 };

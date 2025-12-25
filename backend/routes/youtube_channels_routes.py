@@ -21,7 +21,7 @@ class YouTubeChannelCreate(BaseModel):
     channel_name: str
     channel_id: Optional[str] = None  # YouTube channel ID
     rss_url: Optional[str] = None  # RSS feed URL
-    channel_type: str  # production_house, music_label, popular_channel, movie_channel, news_channel, tv_channel, reality_show
+    channel_type: str  # production_house, music_label, movie_news_channel, movie_interviews_channel, tech_interviews_channel, movie_channel, news_channel, tv_channel, reality_show
     languages: List[str] = []  # Languages this channel covers
     is_active: bool = True
     fetch_videos: bool = True  # Fetch regular videos
@@ -384,7 +384,9 @@ async def get_channel_types():
         "channel_types": [
             {"value": "production_house", "label": "Production House"},
             {"value": "music_label", "label": "Music Label"},
-            {"value": "popular_channel", "label": "Popular YouTube Channel"},
+            {"value": "movie_news_channel", "label": "Movie News Channel"},
+            {"value": "movie_interviews_channel", "label": "Movie Interviews Channel"},
+            {"value": "tech_interviews_channel", "label": "Tech Interviews Channel"},
             {"value": "movie_channel", "label": "Movie Channel"},
             {"value": "news_channel", "label": "News Channel"},
             {"value": "tv_channel", "label": "TV Channel"},

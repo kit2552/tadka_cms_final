@@ -148,6 +148,7 @@ const CreateArticle = () => {
     summary: '',
     author: 'Tadka Team', // Default author
     article_language: 'en',
+    content_language: '', // Content Language field for movie/video categories
     states: 'all',
     category: '',
     content_type: 'post', // New field for content type
@@ -334,6 +335,7 @@ const CreateArticle = () => {
           summary: article.summary || '',
           author: article.author || '',
           article_language: article.article_language || 'en',
+          content_language: article.content_language || '', // Load content_language for movie/video categories
           states: article.states || 'all',
           category: article.category || '',
           content_type: article.content_type || 'post', // Load content type
@@ -1850,114 +1852,6 @@ const CreateArticle = () => {
                         ))}
                     </select>
                   </div>
-
-                  <div className="relative">
-                    <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Target States *</label>
-                    
-                    {/* Display Selected States */}
-                    {selectedStates.length > 0 && (
-                      <div className="mb-2 text-left flex flex-wrap gap-2">
-                        {selectedStates.map((stateCode) => (
-                          <span 
-                            key={stateCode}
-                            className="inline-flex items-center gap-1 px-3 py-1 rounded text-sm font-medium bg-blue-100 text-blue-800"
-                          >
-                            {states.find(s => s.code === stateCode)?.name || stateCode}
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                const newStates = selectedStates.filter(s => s !== stateCode);
-                                setSelectedStates(newStates.length === 0 ? ['all'] : newStates);
-                              }}
-                              className="ml-1 hover:text-blue-600"
-                            >
-                              ×
-                            </button>
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    
-                    {/* Searchable Input for Multiple State Selection */}
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={stateSearchQuery}
-                        onChange={(e) => {
-                          setStateSearchQuery(e.target.value);
-                          setShowStateDropdown(true);
-                        }}
-                        onFocus={() => {
-                          setStateSearchQuery('');
-                          setShowStateDropdown(true);
-                        }}
-                        onBlur={() => {
-                          // Small delay to allow click on dropdown items
-                          setTimeout(() => {
-                            setStateSearchQuery('');
-                          }, 200);
-                        }}
-                        placeholder="Search and select states..."
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
-                      />
-                      {showStateDropdown && (
-                        <>
-                          <div 
-                            className="fixed inset-0 z-10" 
-                            onClick={() => {
-                              setShowStateDropdown(false);
-                              setStateSearchQuery('');
-                            }}
-                          />
-                          <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
-                            {/* All States and Individual States with Checkboxes */}
-                            {states
-                              .filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase()))
-                              .sort((a, b) => {
-                                // Keep 'all' at the top, then sort alphabetically
-                                if (a.code === 'all') return -1;
-                                if (b.code === 'all') return 1;
-                                return a.name.localeCompare(b.name);
-                              })
-                              .map(state => (
-                                <div
-                                  key={state.code}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (state.code === 'all') {
-                                      // If selecting 'all', clear all other states
-                                      setSelectedStates(['all']);
-                                    } else {
-                                      // If selecting a specific state, remove 'all' and toggle this state
-                                      if (selectedStates.includes(state.code)) {
-                                        const newStates = selectedStates.filter(s => s !== state.code);
-                                        setSelectedStates(newStates.length === 0 ? ['all'] : newStates);
-                                      } else {
-                                        const newStates = selectedStates.filter(s => s !== 'all');
-                                        setSelectedStates([...newStates, state.code]);
-                                      }
-                                    }
-                                  }}
-                                  className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left text-gray-900 flex items-center gap-2"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={selectedStates.includes(state.code)}
-                                    onChange={() => {}} // Handled by parent div onClick
-                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                  />
-                                  <span>{state.name}</span>
-                                </div>
-                              ))}
-                            {states.filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase())).length === 0 && (
-                              <div className="px-3 py-2 text-sm text-gray-500 text-left">No states found</div>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
                 </div>
               )}
             </div>
@@ -2081,6 +1975,196 @@ const CreateArticle = () => {
                     {['movie-reviews', 'movie-reviews-bollywood', 'ott-reviews', 'ott-reviews-bollywood'].includes(formData.category) && (
                       <p className="text-xs text-gray-500 mt-1">Content type automatically set to Movie Review for this category</p>
                     )}
+                  </div>
+
+                  <div>
+                  {/* Language Field - Show for movie/video categories */}
+                  {[
+                    'movie-news',
+                    'movie-news-bollywood', 
+                    'movie-reviews',
+                    'movie-reviews-bollywood',
+                    'ott-releases',
+                    'theater-releases',
+                    'ott-reviews',
+                    'theater-reviews',
+                    'tadka-shorts',
+                    'tadka-shorts-bollywood',
+                    'trailers-teasers',
+                    'trailers-teasers-bollywood',
+                    'tv-reality-shows',
+                    'tv-reality-shows-hindi',
+                    'tv-spotlight',
+                    'tv-spotlight-hindi',
+                    'latest-video-songs',
+                    'latest-video-songs-bollywood',
+                    'box-office',
+                    'box-office-bollywood',
+                    'events-interviews',
+                    'events-interviews-bollywood',
+                    'tv-today',
+                    'tv-today-hindi',
+                    'news-today',
+                    'news-today-hindi'
+                  ].includes(formData.category) && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                        Content Language *
+                      </label>
+                      <select
+                        name="content_language"
+                        value={formData.content_language || ''}
+                        onChange={handleInputChange}
+                        className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      >
+                        <option value="">Select Language</option>
+                        {languages.map((lang, index) => (
+                          <option key={index} value={lang.code}>
+                            {lang.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Target States Field - Show for non-movie/video categories */}
+                  {![
+                    'movie-news',
+                    'movie-news-bollywood', 
+                    'movie-reviews',
+                    'movie-reviews-bollywood',
+                    'ott-releases',
+                    'theater-releases',
+                    'ott-reviews',
+                    'theater-reviews',
+                    'tadka-shorts',
+                    'tadka-shorts-bollywood',
+                    'trailers-teasers',
+                    'trailers-teasers-bollywood',
+                    'tv-reality-shows',
+                    'tv-reality-shows-hindi',
+                    'tv-spotlight',
+                    'tv-spotlight-hindi',
+                    'latest-video-songs',
+                    'latest-video-songs-bollywood',
+                    'box-office',
+                    'box-office-bollywood',
+                    'events-interviews',
+                    'events-interviews-bollywood',
+                    'tv-today',
+                    'tv-today-hindi',
+                    'news-today',
+                    'news-today-hindi'
+                  ].includes(formData.category) && formData.category && (
+                    <div className="relative">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Target States *</label>
+                      
+                      {/* Display Selected States */}
+                      {selectedStates.length > 0 && (
+                        <div className="mb-2 text-left flex flex-wrap gap-2">
+                          {selectedStates.map((stateCode) => (
+                            <span 
+                              key={stateCode}
+                              className="inline-flex items-center gap-1 px-3 py-1 rounded text-sm font-medium bg-blue-100 text-blue-800"
+                            >
+                              {states.find(s => s.code === stateCode)?.name || stateCode}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  const newStates = selectedStates.filter(s => s !== stateCode);
+                                  setSelectedStates(newStates.length === 0 ? ['all'] : newStates);
+                                }}
+                                className="ml-1 hover:text-blue-600"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Searchable Input for Multiple State Selection */}
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={stateSearchQuery}
+                          onChange={(e) => {
+                            setStateSearchQuery(e.target.value);
+                            setShowStateDropdown(true);
+                          }}
+                          onFocus={() => {
+                            setStateSearchQuery('');
+                            setShowStateDropdown(true);
+                          }}
+                          onBlur={() => {
+                            // Small delay to allow click on dropdown items
+                            setTimeout(() => {
+                              setStateSearchQuery('');
+                            }, 200);
+                          }}
+                          placeholder="Search and select states..."
+                          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
+                        />
+                        {showStateDropdown && (
+                          <>
+                            <div 
+                              className="fixed inset-0 z-10" 
+                              onClick={() => {
+                                setShowStateDropdown(false);
+                                setStateSearchQuery('');
+                              }}
+                            />
+                            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto text-left">
+                              {/* All States and Individual States with Checkboxes */}
+                              {states
+                                .filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase()))
+                                .sort((a, b) => {
+                                  // Keep 'all' at the top, then sort alphabetically
+                                  if (a.code === 'all') return -1;
+                                  if (b.code === 'all') return 1;
+                                  return a.name.localeCompare(b.name);
+                                })
+                                .map(state => (
+                                  <div
+                                    key={state.code}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (state.code === 'all') {
+                                        // If selecting 'all', clear all other states
+                                        setSelectedStates(['all']);
+                                      } else {
+                                        // If selecting a specific state, remove 'all' and toggle this state
+                                        if (selectedStates.includes(state.code)) {
+                                          const newStates = selectedStates.filter(s => s !== state.code);
+                                          setSelectedStates(newStates.length === 0 ? ['all'] : newStates);
+                                        } else {
+                                          const newStates = selectedStates.filter(s => s !== 'all');
+                                          setSelectedStates([...newStates, state.code]);
+                                        }
+                                      }
+                                    }}
+                                    className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm text-left text-gray-900 flex items-center gap-2"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={selectedStates.includes(state.code)}
+                                      onChange={() => {}} // Handled by parent div onClick
+                                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span>{state.name}</span>
+                                  </div>
+                                ))}
+                              {states.filter(state => state.name.toLowerCase().includes(stateSearchQuery.toLowerCase())).length === 0 && (
+                                <div className="px-3 py-2 text-sm text-gray-500 text-left">No states found</div>
+                              )}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   </div>
                 </div>
               )}

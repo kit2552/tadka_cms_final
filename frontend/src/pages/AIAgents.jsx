@@ -16,6 +16,8 @@ const AIAgents = () => {
   const [deleteConfirm, setDeleteConfirm] = useState({ show: false, agentId: null, agentName: '' });
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
     fetchAgents();
   }, []);
 
@@ -95,7 +97,15 @@ const AIAgents = () => {
       if (response.ok && data.success) {
         // Handle different agent types
         let message = '';
-        if (data.posts_created !== undefined) {
+        if (data.groups_created !== undefined || data.groups_updated !== undefined) {
+          // TV Video agent response
+          const articlesCreated = data.articles_created || 0;
+          const articlesExisting = data.articles_existing || 0;
+          const groupsCreated = data.groups_created || 0;
+          const groupsUpdated = data.groups_updated || 0;
+          
+          message = `${articlesCreated} new videos added! (${groupsCreated} new groups, ${groupsUpdated} updated)`;
+        } else if (data.posts_created !== undefined) {
           // Video agent response
           message = `${data.posts_created} video post(s) created successfully!`;
         } else if (data.gallery_id !== undefined) {
@@ -361,8 +371,8 @@ const AIAgents = () => {
         />
       )}
 
-      {/* Agent Form Modal - Show for post, photo_gallery, and tadka_pics agents */}
-      {showAgentForm && (selectedAgentType === 'post' || selectedAgentType === 'photo_gallery' || selectedAgentType === 'tadka_pics' || selectedAgentType === 'video') && (
+      {/* Agent Form Modal - Show for post, photo_gallery, tadka_pics, video, and tv_video agents */}
+      {showAgentForm && (selectedAgentType === 'post' || selectedAgentType === 'photo_gallery' || selectedAgentType === 'tadka_pics' || selectedAgentType === 'video' || selectedAgentType === 'tv_video') && (
         <PostAgentForm
           onClose={() => {
             setShowAgentForm(false);

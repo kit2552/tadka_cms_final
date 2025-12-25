@@ -30,7 +30,7 @@ class VideoAgentService:
             'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored']
         },
         'events_interviews': {
-            'name': 'Events & Interviews',
+            'name': 'Events & Press Meets',
             'keywords': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
             'exclude_keywords': ['trailer', 'teaser', 'song']
         },
@@ -52,7 +52,7 @@ class VideoAgentService:
             'exclude_keywords': ['reaction', 'cover', 'karaoke', 'instrumental', 'scene', 'making', 'behind', 'dubbed', 'full movie', 'jukebox', 'scenes', 'comedy', 'trailer', 'teaser', 'first look', 'glimpse', 'audio', '8k', 'remastered', 'restored']
         },
         'events_interviews_bollywood': {
-            'name': 'Events & Interviews Bollywood',
+            'name': 'Events & Press Meets Bollywood',
             'keywords': ['interview', 'press meet', 'event', 'promotion', 'launch', 'speech'],
             'exclude_keywords': ['trailer', 'teaser', 'song']
         },
@@ -183,6 +183,25 @@ class VideoAgentService:
         }
         return lang_map.get(language.lower(), language)
     
+    def get_language_code(self, language_name: str) -> str:
+        """Convert language name to language code for content_language field"""
+        lang_code_map = {
+            'Hindi': 'hi',
+            'Telugu': 'te',
+            'Tamil': 'ta',
+            'Kannada': 'kn',
+            'Malayalam': 'ml',
+            'Bengali': 'bn',
+            'Marathi': 'mr',
+            'Punjabi': 'pa',
+            'Gujarati': 'gu',
+            'Odia': 'or',
+            'Assamese': 'as',
+            'Urdu': 'ur',
+            'English': 'en'
+        }
+        return lang_code_map.get(language_name, language_name.lower()[:2])
+    
     async def run_video_agent(self, agent_id: str) -> Dict:
         """Run the Video Agent to find and create video posts
         
@@ -209,6 +228,10 @@ class VideoAgentService:
         content_workflow = agent.get('content_workflow', 'draft')
         content_filter = agent.get('content_filter', 'videos')  # 'videos', 'shorts', or 'both'
         
+        # Get aggregation settings
+        enable_aggregation = agent.get('enable_aggregation', False)
+        aggregation_lookback_days = agent.get('aggregation_lookback_days', 2)
+        
         # Use video_category as article category slug (with underscores replaced by dashes)
         agent_category = video_category.replace('_', '-')
         
@@ -220,17 +243,22 @@ class VideoAgentService:
         custom_include_keywords = [k.strip().lower() for k in include_keywords_str.split(',') if k.strip()] if include_keywords_str else None
         custom_exclude_keywords = [k.strip().lower() for k in exclude_keywords_str.split(',') if k.strip()] if exclude_keywords_str else None
         
-        # Get channel types from agent config
-        channel_types = agent.get('channel_types', [])
-        if not channel_types:
-            # Default to all types if not specified
-            channel_types = ['production_house', 'music_label', 'popular_channel']
+        # Get channel types from agent config - NO DEFAULTS
+        channel_types = agent.get('channel_types')
+        if not channel_types or len(channel_types) == 0:
+            print("❌ No channel types selected in agent configuration")
+            return {
+                'success': False,
+                'error': 'No channel types selected. Please select at least one channel type in agent settings.'
+            }
         
         print(f"📌 Target Language: {target_language}")
         print(f"📌 Video Category: {video_category}")
         print(f"📌 Article Category: {agent_category}")
         print(f"📌 Channel Types: {channel_types}")
         print(f"📌 Content Filter: {content_filter}")
+        if enable_aggregation:
+            print(f"📌 Post Aggregation: ENABLED (Lookback: {aggregation_lookback_days} days)")
         if custom_include_keywords:
             print(f"📌 Custom Include Keywords: {custom_include_keywords}")
         if custom_exclude_keywords:
@@ -241,37 +269,106 @@ class VideoAgentService:
         # Use RSS collection only (no YouTube API calls)
         from services.youtube_rss_service import youtube_rss_service
         
-        # Pass target language directly to filter videos
-        print(f"🔎 Fetching videos for language: {target_language}, channel_types: {channel_types}")
-        videos = youtube_rss_service.get_videos_for_agent(
-            channel_types=channel_types,
-            languages=[target_language],  # Pass target language as list
-            video_category=video_category,
-            max_videos=max_videos * 2,  # Get extra for filtering
-            days_ago=7,
-            content_filter=content_filter,  # Pass content filter
-            custom_include_keywords=custom_include_keywords,
-            custom_exclude_keywords=custom_exclude_keywords
-        )
+        # IMPORTANT: Filter channels by language FIRST, then get videos from those channels
+        print(f"🔎 Finding channels: type={channel_types}, language={target_language}")
         
-        if videos:
-            print(f"📺 Found {len(videos)} videos from RSS collection")
-            # Log channels represented to verify correct filtering
-            channels_found = set(v.get('channel_name', 'Unknown') for v in videos[:10])
-            print(f"   Channels in results: {', '.join(channels_found)}")
+        matching_channels = list(db.youtube_channels.find({
+            "channel_type": {"$in": channel_types},
+            "languages": target_language,
+            "is_active": True
+        }))
         
-        if not videos:
+        if not matching_channels:
+            print(f"❌ No channels found with type {channel_types} and language {target_language}")
             return {
                 "success": False,
-                "message": f"No videos found in RSS collection for the given criteria. Please ensure RSS feed is running and channels are configured.",
+                "message": f"No {channel_types} channels found for {target_language} language. Please add channels in Settings.",
                 "videos_found": 0,
                 "posts_created": 0
             }
         
-        # Limit to max_videos
-        videos = videos[:max_videos]
+        # Get channel IDs
+        channel_ids = [ch.get('channel_id') for ch in matching_channels if ch.get('channel_id')]
         
-        # Create video posts
+        print(f"✅ Found {len(matching_channels)} matching channels:")
+        for ch in matching_channels:
+            print(f"   - {ch.get('channel_name')} ({ch.get('channel_type')})")
+        
+        # Fetch videos directly from youtube_videos collection
+        from datetime import datetime, timedelta, timezone
+        cutoff_time = datetime.now(timezone.utc) - timedelta(days=7)
+        
+        # Build query
+        query = {
+            "channel_id": {"$in": channel_ids},
+            "published_at": {"$gte": cutoff_time.replace(tzinfo=None)}
+        }
+        
+        # Apply content filter
+        if content_filter == 'videos':
+            query["$or"] = [
+                {"video_type": {"$ne": "short"}},
+                {"video_type": {"$exists": False}},
+                {"video_type": None}
+            ]
+        elif content_filter == 'shorts':
+            query["video_type"] = "short"
+        
+        # Fetch ALL videos (no limit)
+        all_videos = list(db.youtube_videos.find(query).sort("published_at", -1))
+        
+        print(f"📺 Found {len(all_videos)} total videos from RSS collection")
+        
+        if not all_videos:
+            return {
+                "success": False,
+                "message": f"No videos found in the last 7 days from selected channels. Try increasing the period or check RSS feed.",
+                "videos_found": 0,
+                "posts_created": 0
+            }
+        
+        # Apply keyword filtering if provided
+        if video_category:
+            category_config = self.CATEGORIES.get(video_category, {})
+            include_kw = custom_include_keywords if custom_include_keywords else category_config.get('keywords', [])
+            exclude_kw = custom_exclude_keywords if custom_exclude_keywords else category_config.get('exclude_keywords', [])
+            
+            filtered_videos = []
+            for video in all_videos:
+                title_lower = video.get('title', '').lower()
+                
+                # Check include keywords
+                if include_kw:
+                    has_include = any(kw in title_lower for kw in include_kw)
+                    if not has_include:
+                        continue
+                
+                # Check exclude keywords
+                if exclude_kw:
+                    has_exclude = any(kw in title_lower for kw in exclude_kw)
+                    if has_exclude:
+                        continue
+                
+                filtered_videos.append(video)
+            
+            videos = filtered_videos
+            print(f"📋 After keyword filtering: {len(videos)} videos")
+        else:
+            videos = all_videos
+        
+        if not videos:
+            return {
+                "success": False,
+                "message": f"No videos matched the keyword criteria. Found {len(all_videos)} videos but none matched filters.",
+                "videos_found": 0,
+                "posts_created": 0
+            }
+        
+        # Log channels in results
+        channels_found = set(v.get('channel_name', 'Unknown') for v in videos[:10])
+        print(f"   Channels in results: {', '.join(channels_found)}")
+        
+        # Create video posts - NO LIMIT, process all matched videos
         created_posts = []
         skipped_duplicates = 0
         
@@ -306,6 +403,10 @@ class VideoAgentService:
                 channel_name = video.get('channel_name', '') or video.get('channel', '')
                 video_language = video.get('detected_language', target_language)  # Get language from video or use target
                 
+                # Convert target_language name to language code for content_language
+                content_language_code = self.get_language_code(target_language)
+                print(f"🔍 DEBUG - Setting content_language: {target_language} -> code: {content_language_code}")  # Debug log
+                
                 article_data = {
                     "title": title_cased_youtube,  # Store full YouTube title as main title (title case)
                     "display_title": display_title,  # Store text before first pipe for home page display
@@ -319,6 +420,7 @@ class VideoAgentService:
                     "image": thumbnail,
                     "category": agent_category,
                     "video_language": video_language,  # Store the video's language for frontend filtering
+                    "content_language": content_language_code,  # Set content_language code from agent's target_language
                     "status": content_workflow,
                     "source": "YouTube",
                     "source_url": youtube_url,
@@ -333,17 +435,51 @@ class VideoAgentService:
                     "published_at": current_time
                 }
                 
+                print(f"🔍 DEBUG - article_data content_language: {article_data.get('content_language')}")  # Debug log
+                
                 print(f"📝 Creating: {display_title[:50]}... from {channel_name or 'Unknown'}")
                 
                 created = crud.create_article(db, article_data)
                 if created:
+                    post_id = created.get('id')
                     created_posts.append({
-                        "id": created.get('id'),
+                        "id": post_id,
                         "title": display_title,
                         "video_url": youtube_url,
                         "channel": channel_name
                     })
-                    print(f"   ✅ Created successfully")
+                    print(f"   ✅ Created successfully (ID: {post_id})")
+                    
+                    # Handle post aggregation if enabled
+                    if enable_aggregation and post_id:
+                        try:
+                            # Extract movie/event name from title
+                            movie_name = self._extract_movie_name_for_grouping(title_cased_youtube)
+                            print(f"   🔗 Grouping: Extracted movie name '{movie_name}' from title")
+                            
+                            # Find or create grouped post (pass full title for word matching)
+                            matching_group = crud.find_matching_grouped_post(
+                                db, 
+                                movie_name, 
+                                agent_category, 
+                                aggregation_lookback_days,
+                                new_post_title=title_cased_youtube  # Pass full title for common word detection
+                            )
+                            
+                            if matching_group:
+                                print(f"   ✅ Added to existing group '{matching_group.get('group_title')}'")
+                            else:
+                                print(f"   ✨ Created new group '{movie_name}'")
+                            
+                            # Create or update the grouped post
+                            crud.create_or_update_grouped_post(
+                                db,
+                                movie_name,
+                                agent_category,
+                                post_id
+                            )
+                        except Exception as e:
+                            print(f"   ⚠️ Aggregation error (continuing anyway): {e}")
                     
                     # Mark video as used in RSS collection (if from RSS)
                     if video.get('source') == 'rss':
@@ -451,6 +587,95 @@ class VideoAgentService:
         slug = slug.strip('-')
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         return f"{slug}-{timestamp}"
+    
+    def _extract_movie_name_for_grouping(self, title: str) -> str:
+        """Extract movie/event name from video title for aggregation
+        
+        Priority:
+        1. Extract hashtags (e.g., #Rowdyjanardhana, #SVC59, #Dhandoraa)
+        2. Look for @ symbol and extract movie name
+        3. Look for pattern "MovieName Pre Release Event" after |
+        4. Search for other patterns
+        
+        All matching is case-insensitive
+        """
+        if not title:
+            return "Other Events"
+        
+        # Work with lowercase for consistent matching
+        title_lower = title.lower()
+        
+        # Priority 1: Look for hashtags first
+        hashtag_match = re.search(r'#([A-Za-z0-9]+)', title)
+        if hashtag_match:
+            hashtag_name = hashtag_match.group(1)
+            if len(hashtag_name) >= 4:
+                return hashtag_name.title()
+        
+        # Priority 2: Look for @ symbol
+        if '@' in title_lower:
+            after_at = title_lower.split('@', 1)[1].strip()
+            
+            words = re.split(r'[\s]+', after_at)
+            movie_name_parts = []
+            event_keywords = ['movie', 'pre', 'press', 'trailer', 'teaser', 'audio', 'success', 
+                             'interview', 'event', 'launch', 'promotion', 'in', 'at', 'exclusive',
+                             'official', 'first', 'glimpse', 'motion', 'poster', 'release', 'meet',
+                             'team', 'says', 'super', 'fun', 'emotional', 'cute', 'superb', 'about']
+            
+            for word in words:
+                word_lower = word.lower()
+                if word_lower in event_keywords:
+                    break
+                movie_name_parts.append(word)
+                if len(movie_name_parts) >= 3:
+                    break
+            
+            if movie_name_parts:
+                movie_name = ' '.join(movie_name_parts).strip()
+                if movie_name:
+                    return movie_name.title()  # Return with proper case
+        
+        # Priority 3: Look for "MovieName Pre Release Event" or "MovieName Press Meet" after | or -
+        # Example: "... | Eesha Pre Release Event" -> "Eesha"
+        # Use case-insensitive matching and capture from lowercase string
+        event_pattern = r'[\|\-]\s*([a-z][a-z]+(?:\s+[a-z][a-z]+)?)\s+(?:pre\s+release(?:\s+event)?|press\s+meet|audio\s+launch|teaser\s+launch|trailer\s+launch|success\s+meet|event)'
+        event_match = re.search(event_pattern, title_lower)
+        if event_match:
+            movie_name = event_match.group(1).strip()
+            # Avoid names that are clearly people (common first names)
+            person_names = ['sree', 'vishnu', 'ram', 'bunny', 'vasu', 'kumar', 'reddy']
+            if movie_name not in person_names:
+                return movie_name.title()  # Return with proper case
+        
+        # Priority 4: Search for patterns
+        patterns = [
+            r'(?:with|about)\s+([a-z][a-z]+(?:\s+[a-z][a-z]+)?)\s+(?:team|movie|event|pre|press)',
+            r'([a-z][a-z]+(?:\s+[a-z][a-z]+)?)\s+(?:movie|team|event|pre-release|press\s+meet)',
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, title_lower)
+            if match:
+                candidate = match.group(1).strip()
+                person_keywords = ['actress', 'actor', 'hero', 'heroine', 'director', 'music', 
+                                  'producer', 'comedian']
+                if candidate.lower() not in person_keywords:
+                    return candidate.title()  # Return with proper case
+        
+        # Fallback: Use full title (better than partial sentence)
+        # Remove emojis and extra spaces
+        title_clean = re.sub(r'[\U0001F300-\U0001F9FF]', '', title)  # Remove emojis
+        title_clean = ' '.join(title_clean.split()).strip()  # Normalize spaces
+        
+        # Limit length and add ... if truncated
+        max_length = 80
+        if len(title_clean) > max_length:
+            # Truncate at word boundary and add ...
+            truncated = title_clean[:max_length].rsplit(' ', 1)[0]
+            return truncated + '...'
+        
+        return title_clean if title_clean else "Other Events"
 
 
 # Singleton instance

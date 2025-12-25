@@ -28,6 +28,7 @@ from routes.ad_settings_routes import router as ad_settings_router
 from routes.artists_routes import router as artists_router
 from routes.youtube_channels_routes import router as youtube_channels_router
 from routes.youtube_rss_routes import router as youtube_rss_router
+from routes.grouped_posts_routes import router as grouped_posts_router
 from auth import create_default_admin
 from scheduler_service import article_scheduler
 from s3_service import s3_service
@@ -428,13 +429,29 @@ async def get_trending_videos_articles(limit: int = 20, languages: str = None, d
     
     Args:
         limit: Number of articles to fetch (default 20)
-        languages: Comma-separated list of languages for filtering (e.g., Telugu,Tamil)
+        languages: Comma-separated list of language names for filtering (e.g., Telugu,Tamil)
     """
-    # For regional tab - filter by video_language if provided
+    # For regional tab - filter by content_language if provided
     if languages:
         language_list = [lang.strip() for lang in languages.split(',') if lang.strip()]
-        if language_list:
-            trending_articles = crud.get_articles_by_video_language(db, category_slug="latest-video-songs", languages=language_list, limit=limit)
+        
+        # Convert language names to codes
+        lang_name_to_code = {
+            'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+            'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+            'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+        }
+        language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in language_list]
+        
+        print(f"🔍 Trending Videos (Latest Video Songs) - Languages: {language_list}, Codes: {language_codes}")
+        
+        if language_codes:
+            trending_articles = crud.get_articles_by_content_language(
+                db, 
+                category_slug="latest-video-songs", 
+                language_codes=language_codes, 
+                limit=limit
+            )
         else:
             trending_articles = crud.get_articles_by_category_slug(db, category_slug="latest-video-songs", limit=limit)
     else:
@@ -462,69 +479,57 @@ async def get_usa_row_videos_sections(limit: int = 20, db = Depends(get_db)):
 
 @api_router.get("/articles/sections/tadka-shorts")
 async def get_tadka_shorts_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
-    """Get articles for Tadka Shorts section with Tadka Shorts and Bollywood tabs
+    """Get articles for Tadka Shorts section with state-based language filtering
     
     Args:
         limit: Number of articles to fetch (default 20)
-        states: Comma-separated list of states for tadka shorts filtering (Bollywood tab ignores state filtering)
+        states: Comma-separated list of state codes for language filtering
     """
-    # For tadka shorts tab - apply state filtering if provided
-    if states:
-        # Convert state names to state codes (map full names to codes)
-        state_name_to_code = {
-            'Andhra Pradesh': 'ap',
-            'Telangana': 'ts',
-            'Karnataka': 'ka',
-            'Tamil Nadu': 'tn',
-            'Kerala': 'kl',
-            'Maharashtra': 'mh',
-            'Gujarat': 'gj',
-            'Rajasthan': 'rj',
-            'Uttar Pradesh': 'up',
-            'West Bengal': 'wb',
-            'Bihar': 'br',
-            'Madhya Pradesh': 'mp',
-            'Odisha': 'or',
-            'Punjab': 'pb',
-            'Haryana': 'hr',
-            'Assam': 'as',
-            'Jharkhand': 'jh',
-            'Chhattisgarh': 'cg',
-            'Himachal Pradesh': 'hp',
-            'Uttarakhand': 'uk',
-            'Jammu and Kashmir': 'jk',
-            'Delhi': 'dl',
-            'Goa': 'ga',
-            'Manipur': 'mn',
-            'Meghalaya': 'ml',
-            'Mizoram': 'mz',
-            'Nagaland': 'nl',
-            'Sikkim': 'sk',
-            'Tripura': 'tr',
-            'Arunachal Pradesh': 'ar',
-            'Ladakh': 'ld'
-        }
+    try:
+        from state_language_mapping import get_languages_for_states
         
-        state_list = [state.strip() for state in states.split(',') if state.strip()]
-        state_codes = []
-        for state_name in state_list:
-            if state_name in state_name_to_code:
-                state_codes.append(state_name_to_code[state_name])
-        
-        if state_codes:
-            tadka_shorts_articles = crud.get_articles_by_states(db, category_slug="tadka-shorts", state_codes=state_codes, limit=limit)
+        # For Tadka Shorts tab - apply language filtering based on states
+        if states:
+            # Get languages for the selected states
+            state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+            user_languages = get_languages_for_states(state_list)
+            
+            # Convert language names to codes for filtering
+            lang_name_to_code = {
+                'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+                'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+                'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+            }
+            language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+            
+            print(f"🔍 Tadka Shorts - States: {state_list}, Languages: {user_languages}, Codes: {language_codes}")
+            
+            # Filter articles by content_language matching user's state-based languages
+            tadka_shorts_articles = crud.get_articles_by_content_language(
+                db, 
+                category_slug="tadka-shorts", 
+                language_codes=language_codes, 
+                limit=limit
+            )
         else:
+            # No state preference - show all tadka shorts
             tadka_shorts_articles = crud.get_articles_by_category_slug(db, category_slug="tadka-shorts", limit=limit)
-    else:
-        tadka_shorts_articles = crud.get_articles_by_category_slug(db, category_slug="tadka-shorts", limit=limit)
-    
-    # For Bollywood tab - no state filtering, show all Tadka Shorts Bollywood videos
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="tadka-shorts-bollywood", limit=limit)
-    
-    return {
-        "tadka_shorts": tadka_shorts_articles,
-        "bollywood": bollywood_articles
-    }
+        
+        # For Bollywood tab - always show all Bollywood content (no filtering)
+        bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="tadka-shorts-bollywood", limit=limit)
+        
+        return {
+            "tadka_shorts": tadka_shorts_articles or [],
+            "bollywood": bollywood_articles or []
+        }
+    except Exception as e:
+        print(f"❌ Error in get_tadka_shorts_articles: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "tadka_shorts": [],
+            "bollywood": []
+        }
 
 @api_router.get("/articles/sections/ott-movie-reviews")
 async def get_ott_movie_reviews_articles(limit: int = 4, db = Depends(get_db)):
@@ -537,16 +542,60 @@ async def get_ott_movie_reviews_articles(limit: int = 4, db = Depends(get_db)):
         "web_series": bollywood_articles
     }
 
-@api_router.get("/articles/sections/new-video-songs", response_model=dict)
-async def get_new_video_songs_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for New Video Songs section with Video Songs and Bollywood tabs"""
-    video_songs_articles = crud.get_articles_by_category_slug(db, category_slug="new-video-songs", limit=limit)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="new-video-songs-bollywood", limit=limit)
+@api_router.get("/articles/sections/new-video-songs")
+async def get_new_video_songs_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
+    """Get articles for Latest Video Songs section with state-based language filtering
     
-    return {
-        "video_songs": video_songs_articles,
-        "bollywood": bollywood_articles
-    }
+    Args:
+        limit: Number of articles to fetch (default 20)
+        states: Comma-separated list of state codes for language filtering
+    """
+    try:
+        from state_language_mapping import get_languages_for_states
+        
+        # For Latest Video Songs tab - apply language filtering based on states
+        if states:
+            # Get languages for the selected states
+            state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+            user_languages = get_languages_for_states(state_list)
+            
+            # Convert language names to codes for filtering
+            lang_name_to_code = {
+                'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+                'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+                'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+            }
+            language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+            
+            print(f"🔍 Latest Video Songs - States: {state_list}, Languages: {user_languages}, Codes: {language_codes}")
+            
+            # Filter articles by content_language matching user's state-based languages
+            video_songs_articles = crud.get_articles_by_content_language(
+                db, 
+                category_slug="latest-video-songs", 
+                language_codes=language_codes, 
+                limit=limit
+            )
+        else:
+            # No state preference - show all latest video songs
+            video_songs_articles = crud.get_articles_by_category_slug(db, category_slug="latest-video-songs", limit=limit)
+        
+        # For Bollywood tab - always show all Bollywood videos (no filtering)
+        bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="latest-video-songs-bollywood", limit=limit)
+        
+        return {
+            "video_songs": video_songs_articles or [],
+            "bollywood": bollywood_articles or []
+        }
+    except Exception as e:
+        print(f"❌ Error in get_new_video_songs_articles: {e}")
+        import traceback
+        traceback.print_exc()
+        # Return empty lists on error
+        return {
+            "video_songs": [],
+            "bollywood": []
+        }
 
 @api_router.get("/articles/sections/movie-reviews")
 def get_movie_reviews_articles(limit: int = 20, db = Depends(get_db)):
@@ -560,15 +609,59 @@ def get_movie_reviews_articles(limit: int = 20, db = Depends(get_db)):
     }
 
 @api_router.get("/articles/sections/trailers-teasers")
-async def get_trailers_teasers_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for Trailers & Teasers section with Trailers & Teasers and Bollywood tabs"""
-    trailers_articles = crud.get_articles_by_category_slug(db, category_slug="trailers-teasers", limit=limit)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="trailers-teasers-bollywood", limit=limit)
+async def get_trailers_teasers_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
+    """Get articles for Trailers & Teasers section with state-based language filtering
     
-    return {
-        "trailers": trailers_articles,
-        "bollywood": bollywood_articles
-    }
+    Args:
+        limit: Number of articles to fetch (default 20)
+        states: Comma-separated list of state codes for language filtering
+    """
+    try:
+        from state_language_mapping import get_languages_for_states
+        
+        # For Trailers & Teasers tab - apply language filtering based on states
+        if states:
+            # Get languages for the selected states
+            state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+            user_languages = get_languages_for_states(state_list)
+            
+            # Convert language names to codes for filtering
+            lang_name_to_code = {
+                'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+                'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+                'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+            }
+            language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+            
+            print(f"🔍 Trailers & Teasers - States: {state_list}, Languages: {user_languages}, Codes: {language_codes}")
+            
+            # Filter articles by content_language matching user's state-based languages
+            trailers_articles = crud.get_articles_by_content_language(
+                db, 
+                category_slug="trailers-teasers", 
+                language_codes=language_codes, 
+                limit=limit
+            )
+        else:
+            # No state preference - show all trailers & teasers
+            trailers_articles = crud.get_articles_by_category_slug(db, category_slug="trailers-teasers", limit=limit)
+        
+        # For Bollywood tab - always show all Bollywood content (no filtering)
+        bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="trailers-teasers-bollywood", limit=limit)
+        
+        return {
+            "trailers": trailers_articles or [],
+            "bollywood": bollywood_articles or []
+        }
+    except Exception as e:
+        print(f"❌ Error in get_trailers_teasers_articles: {e}")
+        import traceback
+        traceback.print_exc()
+        # Return empty lists on error
+        return {
+            "trailers": [],
+            "bollywood": []
+        }
 
 @api_router.get("/articles/sections/box-office")
 async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
@@ -582,15 +675,334 @@ async def get_box_office_articles(limit: int = 4, db = Depends(get_db)):
     }
 
 @api_router.get("/articles/sections/events-interviews")
-async def get_events_interviews_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for Events & Interviews section with Events and Bollywood tabs"""
-    events_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews", limit=limit)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews-bollywood", limit=limit)
+async def get_events_interviews_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
+    """Get articles for Events & Press Meets section with state-based language filtering
     
-    return {
-        "events_interviews": events_articles,
-        "bollywood": bollywood_articles
-    }
+    Args:
+        limit: Number of articles to fetch (default 20)
+        states: Comma-separated list of state codes for language filtering
+    """
+    try:
+        from state_language_mapping import get_languages_for_states
+        
+        # For Events & Press Meets tab - apply language filtering based on states
+        if states:
+            # Get languages for the selected states
+            state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+            user_languages = get_languages_for_states(state_list)
+            
+            # Convert language names to codes for filtering
+            lang_name_to_code = {
+                'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+                'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+                'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+            }
+            language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+            
+            print(f"🔍 Events & Press Meets - States: {state_list}, Languages: {user_languages}, Codes: {language_codes}")
+            
+            # Filter articles by content_language matching user's state-based languages
+            events_articles = crud.get_articles_by_content_language(
+                db, 
+                category_slug="events-interviews", 
+                language_codes=language_codes, 
+                limit=limit
+            )
+        else:
+            # No state preference - show all events & press meets
+            events_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews", limit=limit)
+        
+        # For Bollywood tab - always show all Bollywood content (no filtering)
+        bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="events-interviews-bollywood", limit=limit)
+        
+        return {
+            "events_interviews": events_articles or [],
+            "bollywood": bollywood_articles or []
+        }
+    except Exception as e:
+        print(f"❌ Error in get_events_interviews_articles: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "events_interviews": [],
+            "bollywood": []
+        }
+
+@api_router.get("/articles/sections/events-interviews-aggregated")
+async def get_events_interviews_aggregated(limit: int = 20, states: str = None, db = Depends(get_db)):
+    """Get aggregated events & press meets - group videos by movie/event name from last 48 hours
+    Only fetches from events-interviews and events-interviews-bollywood categories
+    
+    Args:
+        limit: Number of groups to return (default 20)
+        states: Comma-separated list of state codes for language filtering
+    """
+    try:
+        from state_language_mapping import get_languages_for_states
+        import re
+        from collections import defaultdict
+        from datetime import datetime, timedelta, timezone
+        
+        # Get articles from last 48 hours - ONLY from events-interviews categories
+        cutoff_time = datetime.now(timezone.utc) - timedelta(hours=48)
+        cutoff_time_naive = cutoff_time.replace(tzinfo=None)
+        
+        # Build base query for events-interviews categories only
+        regional_query = {
+            "category": "events-interviews",  # Only events-interviews category
+            "content_type": "video",
+            "is_published": True,
+            "published_at": {"$gte": cutoff_time_naive}
+        }
+        
+        bollywood_query = {
+            "category": "events-interviews-bollywood",  # Only bollywood events-interviews
+            "content_type": "video",
+            "is_published": True,
+            "published_at": {"$gte": cutoff_time_naive}
+        }
+        
+        # Apply language filtering if states provided (only for regional)
+        if states:
+            state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+            if state_list:
+                user_languages = get_languages_for_states(state_list)
+                
+                lang_name_to_code = {
+                    'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+                    'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+                    'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+                }
+                language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+                regional_query["content_language"] = {"$in": language_codes}
+        
+        # Fetch articles from events-interviews categories only
+        regional_articles = list(
+            db.articles.find(regional_query)
+            .sort("published_at", -1)
+            .limit(100)
+        )
+        
+        bollywood_articles = list(
+            db.articles.find(bollywood_query)
+            .sort("published_at", -1)
+            .limit(100)
+        )
+        
+        # Serialize articles
+        regional_articles = crud.serialize_doc(regional_articles)
+        bollywood_articles = crud.serialize_doc(bollywood_articles)
+        
+        print(f"🔍 Found {len(regional_articles)} regional and {len(bollywood_articles)} bollywood events videos from last 48 hours")
+        
+        def normalize_movie_name(name):
+            """Normalize movie name for comparison"""
+            if not name:
+                return ""
+            
+            normalized = ' '.join(name.lower().strip().split())
+            normalized = re.sub(r'[^a-z0-9\s]', '', normalized)
+            
+            # Movie codes and names equivalence - normalize to same string
+            normalized = re.sub(r'svc\s*59', 'rowdyjanardhan', normalized)
+            normalized = re.sub(r'svc59', 'rowdyjanardhan', normalized)
+            normalized = re.sub(r'rowdyjanardhana', 'rowdyjanardhan', normalized)
+            normalized = re.sub(r'rowdy\s+janardhana', 'rowdyjanardhan', normalized)
+            normalized = re.sub(r'rowdy\s+janardhan', 'rowdyjanardhan', normalized)
+            
+            # Spelling variations
+            normalized = re.sub(r'shyambhala', 'shambhala', normalized)
+            normalized = re.sub(r'shyambala', 'shambhala', normalized)
+            normalized = re.sub(r'vrusshabha', 'vrushabha', normalized)
+            
+            # Remove common prefixes/suffixes
+            normalized = re.sub(r'^and\s+', '', normalized)
+            normalized = re.sub(r'\s+movie$', '', normalized)
+            normalized = re.sub(r'\s+film$', '', normalized)
+            normalized = re.sub(r'\s+and$', '', normalized)
+            
+            return normalized.strip()
+        
+        def calculate_similarity(str1, str2):
+            """Calculate similarity ratio between two strings"""
+            if not str1 or not str2:
+                return 0.0
+            
+            # Normalize both strings
+            s1 = normalize_movie_name(str1)
+            s2 = normalize_movie_name(str2)
+            
+            if s1 == s2:
+                return 1.0
+            
+            # Check substring match
+            if s1 in s2 or s2 in s1:
+                shorter = min(len(s1), len(s2))
+                longer = max(len(s1), len(s2))
+                if shorter >= 4:  # At least 4 chars
+                    return shorter / longer
+            
+            # Calculate character-level similarity
+            set1 = set(s1)
+            set2 = set(s2)
+            if not set1 or not set2:
+                return 0.0
+            
+            intersection = len(set1.intersection(set2))
+            union = len(set1.union(set2))
+            
+            return intersection / union if union > 0 else 0.0
+        
+        def are_similar_movie_names(name1, name2, threshold=0.65):
+            """Check if two movie names are similar - liberal threshold"""
+            similarity = calculate_similarity(name1, name2)
+            return similarity >= threshold
+        
+        def extract_movie_event_name(title):
+            """Extract movie/event name from video title
+            
+            Priority:
+            1. Extract ALL hashtags and find the movie-like one
+            2. Look for @ symbol and extract movie name
+            3. Search for movie name patterns
+            
+            Examples:
+            - "About #Rowdyjanardhana | #SVC59" -> "Rowdyjanardhana" (prefer full name over code)
+            - "#SVC59 Title Launch" -> "SVC59"
+            - "Actress @ Champion Movie" -> "Champion"
+            """
+            if not title:
+                return "Other Events"
+            
+            # Priority 1: Look for hashtags
+            hashtags = re.findall(r'#([A-Za-z0-9]+)', title)
+            if hashtags:
+                # Prefer longer, more descriptive hashtags (likely movie names vs codes)
+                hashtags.sort(key=len, reverse=True)
+                for hashtag in hashtags:
+                    if len(hashtag) >= 4:
+                        # Prefer full names (Rowdyjanardhana) over codes (SVC59)
+                        if not re.match(r'^[A-Z]{3,5}\d{1,3}$', hashtag):  # Not a code like SVC59
+                            return hashtag.title()
+                # If only codes found, use the first one
+                if hashtags[0] and len(hashtags[0]) >= 3:
+                    return hashtags[0].upper()
+            
+            # Priority 2: Look for @ symbol
+            if '@' in title:
+                after_at = title.split('@', 1)[1].strip()
+                
+                words = re.split(r'[\s]+', after_at)
+                movie_name_parts = []
+                event_keywords = ['movie', 'pre', 'press', 'trailer', 'teaser', 'audio', 'success', 
+                                 'interview', 'event', 'launch', 'promotion', 'in', 'at', 'exclusive',
+                                 'official', 'first', 'glimpse', 'motion', 'poster', 'release', 'meet',
+                                 'team', 'says', 'super', 'fun', 'emotional', 'cute', 'superb', 'about']
+                
+                for word in words:
+                    word_lower = word.lower()
+                    if word_lower in event_keywords:
+                        break
+                    movie_name_parts.append(word)
+                    if len(movie_name_parts) >= 3:
+                        break
+                
+                if movie_name_parts:
+                    movie_name = ' '.join(movie_name_parts).strip()
+                    if movie_name:
+                        return movie_name
+            
+            # Priority 3: Search for movie name patterns
+            patterns = [
+                r'(?:with|about)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\s+(?:team|movie|event|pre|press)',
+                r'([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\s+(?:movie|team|event|pre-release|press\s+meet)',
+            ]
+            
+            for pattern in patterns:
+                match = re.search(pattern, title, re.IGNORECASE)
+                if match:
+                    candidate = match.group(1).strip()
+                    person_keywords = ['actress', 'actor', 'hero', 'heroine', 'director', 'music', 
+                                      'producer', 'comedian']
+                    if candidate.lower() not in person_keywords:
+                        return candidate
+            
+            # Priority 4: Look for celebrity names (last resort)
+            celeb_match = re.search(r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\b', title)
+            if celeb_match:
+                return celeb_match.group(1)
+            
+            # Fallback
+            title_clean = re.split(r'\s+[\|\-]\s+', title)[0].strip()
+            title_clean = re.sub(r'^.*?\s+(Speech|Talk|Interview)\s+@\s+', '', title_clean, flags=re.IGNORECASE)
+            
+            movie_name = ' '.join(title_clean.split()).strip()
+            return movie_name[:50] if movie_name else "Other Events"
+        
+        def group_by_movie_event(articles):
+            """Group videos by movie/event name with liberal fuzzy matching"""
+            groups = {}  # Maps canonical name to list of articles
+            name_to_canonical = {}  # Maps all variations to canonical name
+            
+            for article in articles:
+                movie_name = extract_movie_event_name(article.get('title', ''))
+                
+                # Find the best matching existing group
+                best_match = None
+                best_similarity = 0.0
+                
+                for canonical_name in groups.keys():
+                    similarity = calculate_similarity(movie_name, canonical_name)
+                    if similarity > best_similarity:
+                        best_similarity = similarity
+                        best_match = canonical_name
+                
+                # Use existing group if similar enough (50% match - VERY liberal)
+                if best_match and best_similarity >= 0.50:
+                    canonical_name = best_match
+                else:
+                    # Create new group with this name as canonical
+                    canonical_name = movie_name
+                    groups[canonical_name] = []
+                
+                # Add article to group
+                groups[canonical_name].append(article)
+            
+            # Create aggregated posts
+            aggregated = []
+            for movie_name, videos in groups.items():
+                # Sort by published date (most recent first)
+                videos.sort(key=lambda x: x.get('published_at', ''), reverse=True)
+                
+                # Use the most recent video as the representative
+                representative = videos[0].copy()
+                representative['event_name'] = movie_name
+                representative['video_count'] = len(videos)
+                representative['all_videos'] = videos
+                aggregated.append(representative)
+            
+            # Sort aggregated groups by most recent video
+            aggregated.sort(key=lambda x: x.get('published_at', ''), reverse=True)
+            
+            return aggregated[:limit]
+        
+        result = {
+            "events_interviews": group_by_movie_event(regional_articles),
+            "bollywood": group_by_movie_event(bollywood_articles)
+        }
+        
+        print(f"✅ Aggregated into {len(result['events_interviews'])} regional groups and {len(result['bollywood'])} bollywood groups")
+        
+        return result
+        
+    except Exception as e:
+        print(f"❌ Error in get_events_interviews_aggregated: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "events_interviews": [],
+            "bollywood": []
+        }
 
 @api_router.get("/articles/sections/big-boss")
 async def get_big_boss_articles(limit: int = 4, db = Depends(get_db)):
@@ -602,6 +1014,224 @@ async def get_big_boss_articles(limit: int = 4, db = Depends(get_db)):
         "big_boss": big_boss_articles,
         "bollywood": bollywood_articles
     }
+
+@api_router.get("/articles/sections/tv-today-aggregated")
+async def get_tv_today_aggregated(limit: int = 20, states: str = None, db = Depends(get_db)):
+    """Get aggregated TV Today content - fetches from grouped_posts collection
+    Returns grouped posts by channel name from tv-today and tv-today-hindi categories
+    
+    Args:
+        limit: Number of groups to return (default 20)
+        states: Comma-separated list of state codes for language filtering
+    """
+    try:
+        from state_language_mapping import get_languages_for_states
+        
+        # Build queries for grouped posts
+        regional_query = {"category": "tv-today"}
+        hindi_query = {"category": "tv-today-hindi"}
+        
+        # Apply language filtering for regional if states provided
+        if states:
+            state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+            if state_list:
+                user_languages = get_languages_for_states(state_list)
+                lang_name_to_code = {
+                    'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+                    'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+                    'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+                }
+                language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+                
+                # For grouped posts, we need to check the representative post's language
+                # Get groups and filter by checking representative post
+                regional_groups = list(db.grouped_posts.find(regional_query).sort("updated_at", -1).limit(limit * 2))
+                filtered_regional = []
+                
+                for group in regional_groups:
+                    rep_id = group.get('representative_post_id')
+                    if rep_id:
+                        rep_article = db.articles.find_one({"id": rep_id})
+                        if rep_article and rep_article.get('content_language') in language_codes:
+                            # Attach articles to group
+                            post_ids = group.get('post_ids', [])
+                            articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+                            group['articles'] = crud.serialize_doc(articles)
+                            # Add representative article data
+                            group['representative_post'] = crud.serialize_doc(rep_article)
+                            filtered_regional.append(group)
+                            if len(filtered_regional) >= limit:
+                                break
+                
+                regional_groups = crud.serialize_doc(filtered_regional)
+            else:
+                regional_groups = []
+        else:
+            # No filtering - get all regional groups
+            regional_groups = list(db.grouped_posts.find(regional_query).sort("updated_at", -1).limit(limit))
+            
+            # Enrich with articles
+            for group in regional_groups:
+                post_ids = group.get('post_ids', [])
+                articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+                group['articles'] = crud.serialize_doc(articles)
+                
+                rep_id = group.get('representative_post_id')
+                if rep_id:
+                    rep_article = db.articles.find_one({"id": rep_id})
+                    group['representative_post'] = crud.serialize_doc(rep_article)
+            
+            regional_groups = crud.serialize_doc(regional_groups)
+        
+        # Get Hindi groups (no filtering)
+        hindi_groups = list(db.grouped_posts.find(hindi_query).sort("updated_at", -1).limit(limit))
+        
+        # Enrich with articles
+        for group in hindi_groups:
+            post_ids = group.get('post_ids', [])
+            articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+            group['articles'] = crud.serialize_doc(articles)
+            
+            rep_id = group.get('representative_post_id')
+            if rep_id:
+                rep_article = db.articles.find_one({"id": rep_id})
+                group['representative_post'] = crud.serialize_doc(rep_article)
+        
+        hindi_groups = crud.serialize_doc(hindi_groups)
+        
+        # Transform grouped_posts format to match events-interviews format
+        def transform_to_events_format(groups):
+            result = []
+            for group in groups:
+                if group.get('articles') and len(group['articles']) > 0:
+                    # Use first article as representative
+                    representative = group['articles'][0].copy()
+                    # Add event/channel name and video info
+                    representative['event_name'] = group.get('group_title', 'Unknown')
+                    representative['video_count'] = group.get('posts_count', len(group['articles']))
+                    representative['all_videos'] = group['articles']
+                    result.append(representative)
+            return result
+        
+        regional_formatted = transform_to_events_format(regional_groups)
+        hindi_formatted = transform_to_events_format(hindi_groups)
+        
+        print(f"✅ TV Today: {len(regional_formatted)} regional groups, {len(hindi_formatted)} hindi groups")
+        
+        return {
+            "tv_today": regional_formatted,
+            "hindi": hindi_formatted
+        }
+        
+    except Exception as e:
+        print(f"❌ Error in get_tv_today_aggregated: {e}")
+        import traceback
+        traceback.print_exc()
+        return {"tv_today": [], "hindi": []}
+
+@api_router.get("/articles/sections/news-today-aggregated")
+async def get_news_today_aggregated(limit: int = 20, states: str = None, db = Depends(get_db)):
+    """Get aggregated News Today content - fetches from grouped_posts collection
+    Returns grouped posts by channel name from news-today and news-today-hindi categories
+    
+    Args:
+        limit: Number of groups to return (default 20)
+        states: Comma-separated list of state codes for language filtering
+    """
+    try:
+        from state_language_mapping import get_languages_for_states
+        
+        # Build queries for grouped posts
+        regional_query = {"category": "news-today"}
+        hindi_query = {"category": "news-today-hindi"}
+        
+        # Apply language filtering for regional if states provided
+        if states:
+            state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+            if state_list:
+                user_languages = get_languages_for_states(state_list)
+                lang_name_to_code = {
+                    'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+                    'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+                    'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+                }
+                language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+                
+                regional_groups = list(db.grouped_posts.find(regional_query).sort("updated_at", -1).limit(limit * 2))
+                filtered_regional = []
+                
+                for group in regional_groups:
+                    rep_id = group.get('representative_post_id')
+                    if rep_id:
+                        rep_article = db.articles.find_one({"id": rep_id})
+                        if rep_article and rep_article.get('content_language') in language_codes:
+                            post_ids = group.get('post_ids', [])
+                            articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+                            group['articles'] = crud.serialize_doc(articles)
+                            group['representative_post'] = crud.serialize_doc(rep_article)
+                            filtered_regional.append(group)
+                            if len(filtered_regional) >= limit:
+                                break
+                
+                regional_groups = crud.serialize_doc(filtered_regional)
+            else:
+                regional_groups = []
+        else:
+            regional_groups = list(db.grouped_posts.find(regional_query).sort("updated_at", -1).limit(limit))
+            
+            for group in regional_groups:
+                post_ids = group.get('post_ids', [])
+                articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+                group['articles'] = crud.serialize_doc(articles)
+                
+                rep_id = group.get('representative_post_id')
+                if rep_id:
+                    rep_article = db.articles.find_one({"id": rep_id})
+                    group['representative_post'] = crud.serialize_doc(rep_article)
+            
+            regional_groups = crud.serialize_doc(regional_groups)
+        
+        hindi_groups = list(db.grouped_posts.find(hindi_query).sort("updated_at", -1).limit(limit))
+        
+        for group in hindi_groups:
+            post_ids = group.get('post_ids', [])
+            articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+            group['articles'] = crud.serialize_doc(articles)
+            
+            rep_id = group.get('representative_post_id')
+            if rep_id:
+                rep_article = db.articles.find_one({"id": rep_id})
+                group['representative_post'] = crud.serialize_doc(rep_article)
+        
+        hindi_groups = crud.serialize_doc(hindi_groups)
+        
+        # Transform grouped_posts format to match events-interviews format
+        def transform_to_events_format(groups):
+            result = []
+            for group in groups:
+                if group.get('articles') and len(group['articles']) > 0:
+                    representative = group['articles'][0].copy()
+                    representative['event_name'] = group.get('group_title', 'Unknown')
+                    representative['video_count'] = group.get('posts_count', len(group['articles']))
+                    representative['all_videos'] = group['articles']
+                    result.append(representative)
+            return result
+        
+        regional_formatted = transform_to_events_format(regional_groups)
+        hindi_formatted = transform_to_events_format(hindi_groups)
+        
+        print(f"✅ News Today: {len(regional_formatted)} regional groups, {len(hindi_formatted)} hindi groups")
+        
+        return {
+            "news_today": regional_formatted,
+            "hindi": hindi_formatted
+        }
+        
+    except Exception as e:
+        print(f"❌ Error in get_news_today_aggregated: {e}")
+        import traceback
+        traceback.print_exc()
+        return {"news_today": [], "hindi": []}
 
 @api_router.get("/articles/sections/health-food")
 async def get_health_food_articles(limit: int = 4, db = Depends(get_db)):
@@ -2219,6 +2849,7 @@ app.include_router(artists_router, prefix="/api")  # Add artists routes
 app.include_router(ai_agents_router, prefix="/api")  # Add AI agents routes
 app.include_router(youtube_channels_router, prefix="/api")  # Add YouTube channels routes
 app.include_router(youtube_rss_router, prefix="/api")  # Add YouTube RSS routes
+app.include_router(grouped_posts_router, prefix="/api")  # Add grouped posts routes
 
 app.add_middleware(
     CORSMiddleware,
