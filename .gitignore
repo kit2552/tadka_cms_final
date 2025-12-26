@@ -90,7 +90,7 @@ coverage/
 .tern-port
 
 # Docker
-*.dockerignore
+# (dockerignore files should be committed)
 
 # Backup files
 *.bak
