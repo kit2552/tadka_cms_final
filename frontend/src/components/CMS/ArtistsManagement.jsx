@@ -15,7 +15,7 @@ const ArtistsManagement = () => {
   const fetchArtists = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/artists`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/artists`);
       if (response.ok) {
         const data = await response.json();
         setArtists(data);
@@ -32,7 +32,7 @@ const ArtistsManagement = () => {
     if (!newArtistName.trim()) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/artists`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/artists`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newArtistName.trim() })
@@ -55,7 +55,7 @@ const ArtistsManagement = () => {
     if (!editName.trim()) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/artists/${artistId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/artists/${artistId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: editName.trim() })
@@ -81,7 +81,7 @@ const ArtistsManagement = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/artists/${artistId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/artists/${artistId}`, {
         method: 'DELETE'
       });
 

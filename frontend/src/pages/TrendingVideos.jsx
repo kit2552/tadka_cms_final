@@ -24,13 +24,13 @@ const TrendingVideos = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using trending-videos and bollywood categories
-        const trendingVideosResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/trending-videos?limit=50`);
+        const trendingVideosResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/trending-videos?limit=50`);
         if (trendingVideosResponse.ok) {
           const trendingVideosData = await trendingVideosResponse.json();
           setTrendingVideosArticles(trendingVideosData);
         }
 
-        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood?limit=50`);
+        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/bollywood?limit=50`);
         if (bollywoodResponse.ok) {
           const bollywoodData = await bollywoodResponse.json();
           setBollywoodArticles(bollywoodData);
@@ -42,13 +42,13 @@ const TrendingVideos = () => {
         
         // Get related articles from configured categories for trending videos page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/trending-videos`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/trending-videos`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

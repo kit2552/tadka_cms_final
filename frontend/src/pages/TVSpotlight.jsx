@@ -41,20 +41,20 @@ const TVSpotlight = () => {
         setLoading(true);
         
         // Fetch from tv-shows API endpoint
-        const tvShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/tv-shows`);
+        const tvShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/tv-shows`);
         if (tvShowsResponse.ok) {
           const tvShowsData = await tvShowsResponse.json();
           setTvArticles(tvShowsData.tv || []);
           setBollywoodArticles(tvShowsData.bollywood || []);
         } else {
           // Fallback: try individual category endpoints
-          const tvResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/tv-shows?limit=20`);
+          const tvResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/tv-shows?limit=20`);
           if (tvResponse.ok) {
             const tvData = await tvResponse.json();
             setTvArticles(tvData);
           }
 
-          const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood?limit=20`);
+          const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/bollywood?limit=20`);
           if (bollywoodResponse.ok) {
             const bollywoodData = await bollywoodResponse.json();
             setBollywoodArticles(bollywoodData);
@@ -63,13 +63,13 @@ const TVSpotlight = () => {
         
         // Get related articles for tv-shows page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/tv-shows`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/tv-shows`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

@@ -333,7 +333,7 @@ const translations = {
       trending_videos: 'Latest Video Songs',
       travel_pics: 'Travel Pictures',
       photoshoots: 'Photoshoots',
-      events_interviews: 'Events & Press Meets',
+      events_interviews: 'Filmy Focus Today',
       events_interviews_bollywood: 'Bollywood',
       sponsored_ads: 'Sponsored Ads',
       fashion: 'Hot Topics',

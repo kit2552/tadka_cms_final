@@ -22,7 +22,7 @@ const GalleryPost = () => {
         setLoading(true);
         
         // Fetch the specific article by ID
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/${id}`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/${id}`);
         if (!response.ok) {
           throw new Error('Gallery post not found');
         }
@@ -37,7 +37,7 @@ const GalleryPost = () => {
         setGalleryPost(article);
         
         // Fetch related posts from the same category
-        const relatedResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/${article.category}?limit=6`);
+        const relatedResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/${article.category}?limit=6`);
         if (relatedResponse.ok) {
           const relatedData = await relatedResponse.json();
           // Filter out current post and only show posts with galleries

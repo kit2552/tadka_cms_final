@@ -23,14 +23,14 @@ const ViralVideos = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using viral video categories
-        const viralVideosResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/viral-videos?limit=50`);
+        const viralVideosResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/viral-videos?limit=50`);
         let viralVideosData = [];
         if (viralVideosResponse.ok) {
           viralVideosData = await viralVideosResponse.json();
           setViralVideosArticles(viralVideosData);
         }
 
-        const viralShortsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/viral-shorts?limit=50`);
+        const viralShortsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/viral-shorts?limit=50`);
         if (viralShortsResponse.ok) {
           const viralShortsData = await viralShortsResponse.json();
           setViralShortsArticles(viralShortsData);
@@ -41,13 +41,13 @@ const ViralVideos = () => {
         
         // Get related articles from configured categories for viral videos page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/viral-videos`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/viral-videos`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

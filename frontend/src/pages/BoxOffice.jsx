@@ -42,7 +42,7 @@ const BoxOffice = () => {
         console.log('Fetching box office data...');
         
         // Fetch articles from the backend API using box office categories
-        const boxOfficeResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/box-office?limit=20`);
+        const boxOfficeResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/box-office?limit=20`);
         console.log('Box Office response status:', boxOfficeResponse.status);
         
         if (boxOfficeResponse.ok) {
@@ -54,7 +54,7 @@ const BoxOffice = () => {
           setBoxOfficeArticles([]);
         }
 
-        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood-box-office?limit=20`);
+        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/bollywood-box-office?limit=20`);
         console.log('Bollywood response status:', bollywoodResponse.status);
         
         if (bollywoodResponse.ok) {
@@ -68,13 +68,13 @@ const BoxOffice = () => {
         
         // Get related articles from configured categories for box office page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/box-office`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/box-office`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to movies reviews if box office related articles not configured
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/movies`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/movies`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

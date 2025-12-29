@@ -25,26 +25,26 @@ const MovieReviews = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using movie-reviews categories
-        const movieReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/movie-reviews?limit=50`);
+        const movieReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/movie-reviews?limit=50`);
         if (movieReviewsResponse.ok) {
           const movieReviewsData = await movieReviewsResponse.json();
           setMovieReviewsArticles(movieReviewsData);
         } else {
           // Fallback to movies category
-          const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/movies?limit=25`);
+          const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/movies?limit=25`);
           if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
             setMovieReviewsArticles(fallbackData);
           }
         }
 
-        const bollywoodMovieReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/movie-reviews-bollywood?limit=50`);
+        const bollywoodMovieReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/movie-reviews-bollywood?limit=50`);
         if (bollywoodMovieReviewsResponse.ok) {
           const bollywoodMovieReviewsData = await bollywoodMovieReviewsResponse.json();
           setBollywoodMovieReviewsArticles(bollywoodMovieReviewsData);
         } else {
           // Fallback: use movie reviews articles for Bollywood movie reviews if not available
-          const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/movies?limit=25`);
+          const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/movies?limit=25`);
           if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
             setBollywoodMovieReviewsArticles(fallbackData);
@@ -53,13 +53,13 @@ const MovieReviews = () => {
         
         // Get related articles from configured categories for movie reviews page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/movie-reviews`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/movie-reviews`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

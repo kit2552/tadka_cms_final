@@ -41,13 +41,13 @@ const HealthFoodTopics = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using health and food categories
-        const healthResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/health?limit=20`);
+        const healthResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/health?limit=20`);
         if (healthResponse.ok) {
           const healthData = await healthResponse.json();
           setHealthArticles(healthData);
         }
 
-        const foodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/food?limit=20`);
+        const foodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/food?limit=20`);
         if (foodResponse.ok) {
           const foodData = await foodResponse.json();
           setFoodArticles(foodData);
@@ -61,13 +61,13 @@ const HealthFoodTopics = () => {
         
         // Get related articles from configured categories for health food topics page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/health-food-topics`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/health-food-topics`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

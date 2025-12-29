@@ -41,7 +41,7 @@ const TVRealityShows = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using big-boss and big-boss-bollywood categories (same as home page)
-        const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/big-boss?limit=20`);
+        const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/big-boss?limit=20`);
         console.log('TV Reality Shows response status:', realityShowsResponse.status);
         
         if (realityShowsResponse.ok) {
@@ -53,7 +53,7 @@ const TVRealityShows = () => {
           setRealityShowsArticles([]);
         }
 
-        const hindiResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/big-boss-bollywood?limit=20`);
+        const hindiResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/big-boss-bollywood?limit=20`);
         console.log('Hindi Reality Shows response status:', hindiResponse.status);
         
         if (hindiResponse.ok) {
@@ -67,13 +67,13 @@ const TVRealityShows = () => {
         
         // Get related articles from configured categories for reality shows page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/reality-shows`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/reality-shows`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

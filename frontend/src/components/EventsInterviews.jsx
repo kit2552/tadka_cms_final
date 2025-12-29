@@ -9,7 +9,7 @@ import EventVideosModal from './EventVideosModal';
 
 const EventsInterviews = ({ 
   eventsInterviewsData = {}, 
-  firstTabLabel = 'Events & Press Meets',
+  firstTabLabel = 'Filmy Focus Today',
   secondTabLabel = 'Bollywood',
   firstTabKey = 'events',
   secondTabKey = 'bollywood'

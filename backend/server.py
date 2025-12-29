@@ -38,12 +38,14 @@ import os
 from pathlib import Path
 
 # Create MongoDB indexes on startup
-try:
-    create_indexes(db)
-    print("✅ MongoDB indexes created successfully")
-except Exception as e:
-    print(f"⚠️ Warning: Could not create some MongoDB indexes: {e}")
-    # Continue anyway - app can work without text search index
+# DISABLED: Using remote database as-is without creating indexes
+# try:
+#     create_indexes(db)
+#     print("✅ MongoDB indexes created successfully")
+# except Exception as e:
+#     print(f"⚠️ Warning: Could not create some MongoDB indexes: {e}")
+#     # Continue anyway - app can work without text search index
+print("ℹ️ Skipping index creation - using remote database as-is")
 
 ROOT_DIR = Path(__file__).parent
 UPLOAD_DIR = ROOT_DIR / "uploads"
@@ -92,12 +94,14 @@ async def lifespan(app: FastAPI):
     
     try:
         logger.info("Step 1: Creating default admin user...")
-        try:
-            await create_default_admin()
-            logger.info("✅ Admin user ready")
-        except Exception as e:
-            logger.error(f"❌ Admin user creation failed: {e}")
-            # Don't raise - continue startup
+        # DISABLED: Using remote database as-is without creating admin user
+        # try:
+        #     await create_default_admin()
+        #     logger.info("✅ Admin user ready")
+        # except Exception as e:
+        #     logger.error(f"❌ Admin user creation failed: {e}")
+        #     # Don't raise - continue startup
+        logger.info("ℹ️ Skipping admin user creation - using remote database as-is")
         
         logger.info("Step 2: Initializing S3 service...")
         try:
@@ -111,11 +115,13 @@ async def lifespan(app: FastAPI):
             logger.warning(f"⚠️ S3 initialization failed: {e}. Using local storage.")
         
         logger.info("Step 3: Initializing OTT platforms...")
-        try:
-            initialize_ott_platforms()
-            logger.info("✅ OTT platforms ready")
-        except Exception as e:
-            logger.warning(f"⚠️ OTT initialization failed: {e}")
+        # DISABLED: Using remote database as-is without initializing OTT platforms
+        # try:
+        #     initialize_ott_platforms()
+        #     logger.info("✅ OTT platforms ready")
+        # except Exception as e:
+        #     logger.warning(f"⚠️ OTT initialization failed: {e}")
+        logger.info("ℹ️ Skipping OTT platform initialization - using remote database as-is")
         
         logger.info("Step 4: Initializing article scheduler...")
         try:
@@ -243,6 +249,23 @@ async def create_category(category: schemas.CategoryCreate, db = Depends(get_db)
     if db_category:
         raise HTTPException(status_code=400, detail="Category with this slug already exists")
     return crud.create_category(db=db, category=category)
+
+@api_router.put("/categories/{category_id}")
+async def update_category(category_id: str, category_update: dict, db = Depends(get_db)):
+    """Update a category"""
+    from models.mongodb_collections import CATEGORIES
+    
+    # Update using the id field
+    result = db[CATEGORIES].update_one(
+        {"id": category_id},
+        {"$set": category_update}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    updated_category = db[CATEGORIES].find_one({"id": category_id}, {"_id": 0})
+    return crud.serialize_doc(updated_category)
 
 # Article endpoints
 @api_router.get("/articles", response_model=List[schemas.ArticleListResponse])
@@ -730,8 +753,8 @@ async def get_events_interviews_articles(limit: int = 20, states: str = None, db
 
 @api_router.get("/articles/sections/events-interviews-aggregated")
 async def get_events_interviews_aggregated(limit: int = 20, states: str = None, db = Depends(get_db)):
-    """Get aggregated events & press meets - group videos by movie/event name from last 48 hours
-    Only fetches from events-interviews and events-interviews-bollywood categories
+    """Get aggregated events & press meets - fetches from grouped_posts collection (grouped by channel name)
+    Falls back to on-the-fly grouping if no grouped posts exist
     
     Args:
         limit: Number of groups to return (default 20)
@@ -739,6 +762,112 @@ async def get_events_interviews_aggregated(limit: int = 20, states: str = None, 
     """
     try:
         from state_language_mapping import get_languages_for_states
+        
+        # Try to fetch from grouped_posts collection first (TV Video Agent creates these)
+        regional_groups_query = {"category": "events-interviews"}
+        bollywood_groups_query = {"category": "events-interviews-bollywood"}
+        
+        # Check if grouped posts exist
+        regional_groups_count = db.grouped_posts.count_documents(regional_groups_query)
+        bollywood_groups_count = db.grouped_posts.count_documents(bollywood_groups_query)
+        
+        print(f"🔍 Found {regional_groups_count} regional groups and {bollywood_groups_count} bollywood groups in grouped_posts")
+        
+        # If grouped posts exist, use them (grouped by channel name from TV Video Agent)
+        if regional_groups_count > 0 or bollywood_groups_count > 0:
+            print("✅ Using grouped_posts collection (channel-based grouping)")
+            
+            # Apply language filtering for regional if states provided
+            if states:
+                state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+                if state_list:
+                    user_languages = get_languages_for_states(state_list)
+                    
+                    lang_name_to_code = {
+                        'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+                        'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+                        'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+                    }
+                    language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+                    
+                    # Fetch regional groups and filter by language
+                    regional_groups = list(db.grouped_posts.find(regional_groups_query).sort("updated_at", -1).limit(limit * 2))
+                    filtered_regional = []
+                    
+                    for group in regional_groups:
+                        rep_id = group.get('representative_post_id')
+                        if rep_id:
+                            rep_article = db.articles.find_one({"id": rep_id})
+                            if rep_article and rep_article.get('content_language') in language_codes:
+                                post_ids = group.get('post_ids', [])
+                                articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+                                group['articles'] = crud.serialize_doc(articles)
+                                group['representative_post'] = crud.serialize_doc(rep_article)
+                                filtered_regional.append(group)
+                                if len(filtered_regional) >= limit:
+                                    break
+                    
+                    regional_groups = crud.serialize_doc(filtered_regional)
+                else:
+                    regional_groups = []
+            else:
+                # No state filter - show all regional groups
+                regional_groups = list(db.grouped_posts.find(regional_groups_query).sort("updated_at", -1).limit(limit))
+                
+                for group in regional_groups:
+                    post_ids = group.get('post_ids', [])
+                    articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+                    group['articles'] = crud.serialize_doc(articles)
+                    
+                    rep_id = group.get('representative_post_id')
+                    if rep_id:
+                        rep_article = db.articles.find_one({"id": rep_id})
+                        group['representative_post'] = crud.serialize_doc(rep_article)
+                
+                regional_groups = crud.serialize_doc(regional_groups)
+            
+            # Get Bollywood groups (no language filtering)
+            bollywood_groups = list(db.grouped_posts.find(bollywood_groups_query).sort("updated_at", -1).limit(limit))
+            
+            for group in bollywood_groups:
+                post_ids = group.get('post_ids', [])
+                articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+                group['articles'] = crud.serialize_doc(articles)
+                
+                rep_id = group.get('representative_post_id')
+                if rep_id:
+                    rep_article = db.articles.find_one({"id": rep_id})
+                    group['representative_post'] = crud.serialize_doc(rep_article)
+            
+            bollywood_groups = crud.serialize_doc(bollywood_groups)
+            
+            # Transform grouped_posts format to match events-interviews format
+            def transform_to_events_format(groups):
+                result = []
+                for group in groups:
+                    if group.get('articles') and len(group['articles']) > 0:
+                        # Use first article as representative
+                        representative = group['articles'][0].copy()
+                        # Add event/channel name and video info
+                        representative['event_name'] = group.get('group_title', 'Unknown')
+                        representative['video_count'] = group.get('posts_count', len(group['articles']))
+                        representative['all_videos'] = group['articles']
+                        result.append(representative)
+                return result
+            
+            regional_formatted = transform_to_events_format(regional_groups)
+            bollywood_formatted = transform_to_events_format(bollywood_groups)
+            
+            print(f"✅ Returning {len(regional_formatted)} regional groups and {len(bollywood_formatted)} bollywood groups")
+            
+            return {
+                "events_interviews": regional_formatted,
+                "bollywood": bollywood_formatted
+            }
+        
+        # FALLBACK: If no grouped posts exist, use old on-the-fly grouping logic
+        print("⚠️ No grouped_posts found, falling back to on-the-fly grouping")
+        
         import re
         from collections import defaultdict
         from datetime import datetime, timedelta, timezone

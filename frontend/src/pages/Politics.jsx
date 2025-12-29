@@ -41,7 +41,7 @@ const Politics = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using politics endpoint (fetch more articles for dedicated page)
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/politics?limit=20`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/politics?limit=20`);
         if (response.ok) {
           const data = await response.json();
           setStateArticles(data.state_politics || []);
@@ -52,13 +52,13 @@ const Politics = () => {
         
         // Get related articles from configured categories for politics page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/politics`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/politics`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);
@@ -67,7 +67,7 @@ const Politics = () => {
         } catch (err) {
           console.warn('Error fetching configured related articles, using fallback:', err);
           // Fallback to entertainment category
-          const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+          const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
           if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
             setRelatedArticles(fallbackData);

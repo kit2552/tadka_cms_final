@@ -107,11 +107,11 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
     },
     'events-interviews': {
       id: 'events-interviews',
-      name: 'Events & Press Meets',
+      name: 'Filmy Focus Today',
       component: (
         <EventsInterviews 
           eventsInterviewsData={data.eventsInterviewsData}
-          firstTabLabel="Events & Press Meets"
+          firstTabLabel="Filmy Focus Today"
           secondTabLabel="Bollywood"
           firstTabKey="events"
           secondTabKey="bollywood"

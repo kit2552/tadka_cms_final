@@ -4,7 +4,7 @@ import { getLanguagesForState } from '../utils/stateLanguageMapping';
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL 
   ? `${process.env.REACT_APP_BACKEND_URL}/api`
-  : 'http://localhost:8001/api';
+  : 'http://localhost:8000/api';
 
 export const dataService = {
 
@@ -561,19 +561,33 @@ export const dataService = {
   // Fetch Movie Schedules (Theater & OTT Releases) data from backend
   async getMovieSchedulesData() {
     try {
-      const response = await fetch(`${API_BASE_URL}/releases`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch Movie Schedules data');
-      }
-      const data = await response.json();
-      // Format data for MovieSchedules component
+      // Get user's state preferences for filtering
+      const userStateString = localStorage.getItem('tadka_state') || JSON.stringify(DEFAULT_SELECTED_STATES);
+      const userStates = this.parseUserStates(userStateString);
+      const userStateCodes = userStates.map(state => STATE_CODE_MAPPING[state] || state.toLowerCase());
+      const statesParam = userStateCodes.length > 0 ? `?user_states=${userStateCodes.join(',')}` : '';
+      
+      // Fetch both theater and OTT releases
+      const [theaterData, ottData] = await Promise.all([
+        fetch(`${API_BASE_URL}/releases/theater-bollywood${statesParam}`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/releases/ott-bollywood${statesParam}`).then(r => r.json())
+      ]);
+      
+      // Combine data for MovieSchedules component
       return {
-        theater: data.theater || { this_week: [], coming_soon: [] },
-        ott: data.ott || { this_week: [], coming_soon: [] }
+        theater: theaterData.theater || { this_week: [], coming_soon: [] },
+        ott: theaterData.ott || { this_week: [], coming_soon: [] },
+        ottReleases: ottData.ott || { this_week: [], coming_soon: [] },
+        bollywoodOtt: ottData.bollywood || { this_week: [], coming_soon: [] }
       };
     } catch (error) {
       console.error('Error fetching Movie Schedules data:', error);
-      return { theater: { this_week: [], coming_soon: [] }, ott: { this_week: [], coming_soon: [] } };
+      return { 
+        theater: { this_week: [], coming_soon: [] }, 
+        ott: { this_week: [], coming_soon: [] },
+        ottReleases: { this_week: [], coming_soon: [] },
+        bollywoodOtt: { this_week: [], coming_soon: [] }
+      };
     }
   },
 

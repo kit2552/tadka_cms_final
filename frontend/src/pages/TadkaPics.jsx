@@ -50,7 +50,7 @@ const TadkaPics = () => {
         setLoading(true);
         
         // Fetch galleries from the backend API
-        const galleriesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/galleries/tadka-pics?limit=100`);
+        const galleriesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/galleries/tadka-pics?limit=100`);
         console.log('Tadka Pics galleries response status:', galleriesResponse.status);
         
         if (galleriesResponse.ok) {
@@ -63,7 +63,7 @@ const TadkaPics = () => {
         }
 
         // Fetch Tadka Shorts for sidebar
-        const shortsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/tadka-shorts?limit=20`);
+        const shortsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/tadka-shorts?limit=20`);
         if (shortsResponse.ok) {
           const shortsData = await shortsResponse.json();
           // Combine tadka_shorts and bollywood for sidebar

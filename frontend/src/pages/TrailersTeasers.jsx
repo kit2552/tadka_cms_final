@@ -141,7 +141,7 @@ const TrailersTeasers = () => {
         console.log('Fetching trailers data...');
         
         // Fetch articles from the backend API using trailers categories
-        const trailersResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/trailers-teasers?limit=20`);
+        const trailersResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/trailers-teasers?limit=20`);
         console.log('Trailers response status:', trailersResponse.status);
         
         if (trailersResponse.ok) {
@@ -153,7 +153,7 @@ const TrailersTeasers = () => {
           setTrailersArticles(sampleTrailersArticles);
         }
 
-        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/trailers-teasers-bollywood?limit=20`);
+        const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/trailers-teasers-bollywood?limit=20`);
         console.log('Bollywood response status:', bollywoodResponse.status);
         
         if (bollywoodResponse.ok) {
@@ -167,13 +167,13 @@ const TrailersTeasers = () => {
         
         // Get related articles from configured categories for trailers page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/trailers-teasers`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/trailers-teasers`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to movies reviews if trailers related articles not configured
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/movies`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/movies`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

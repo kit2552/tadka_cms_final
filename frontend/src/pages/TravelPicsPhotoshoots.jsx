@@ -41,7 +41,7 @@ const TravelPicsPhotoshoots = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using Travel Pics and Photoshoots sections (includes gallery data)
-        const travelPicsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/travel-pics?skip=0&limit=20`);
+        const travelPicsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/travel-pics?skip=0&limit=20`);
         if (travelPicsResponse.ok) {
           const travelPicsData = await travelPicsResponse.json();
           console.log('Travel Pics API response:', travelPicsData);
@@ -53,7 +53,7 @@ const TravelPicsPhotoshoots = () => {
           setTravelPicsArticles(travelPicsData);
         }
 
-        const photoshootsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/photoshoots?skip=0&limit=20`);
+        const photoshootsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/photoshoots?skip=0&limit=20`);
         if (photoshootsResponse.ok) {
           const photoshootsData = await photoshootsResponse.json();
           console.log('Photoshoots data with galleries:', photoshootsData);
@@ -66,13 +66,13 @@ const TravelPicsPhotoshoots = () => {
         
         // Get related articles from configured categories for travel-pics-photoshoots page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/travel-pics-photoshoots`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/travel-pics-photoshoots`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to fashion category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/fashion?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/fashion?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

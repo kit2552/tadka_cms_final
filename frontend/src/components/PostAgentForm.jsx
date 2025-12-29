@@ -54,7 +54,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     tv_video_category: 'tv-today',  // tv-today, tv-today-hindi, news-today, news-today-hindi
     aggregate_by_channel: true,  // Always aggregate by channel name for TV Video Agent
     tv_channel_types: ['tv_channel', 'news_channel'],  // Default channel types for TV Video Agent
-    lookback_days: 2  // Period to fetch videos (1-30 days)
+    lookback_days: 2,  // Period to fetch videos (1-30 days)
+    // Reality Shows Agent fields
+    reality_show_category: 'tv-reality-shows',  // tv-reality-shows, tv-reality-shows-hindi
+    reality_show_name: '',  // Specific reality show to fetch from (e.g., "Bigg Boss", "Indian Idol")
+    reality_show_lookback_days: 2  // Days to look back for videos
   });
   
   // Default filter settings for each category
@@ -104,6 +108,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   const [categorySearch, setCategorySearch] = useState('');
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [categoryPromptMappings, setCategoryPromptMappings] = useState({});
+  const [realityShows, setRealityShows] = useState([]);
 
   useEffect(() => {
     if (editingAgent) {
@@ -151,6 +156,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     fetchCategories();
     fetchStates();
     fetchCategoryPromptMappings();
+    fetchRealityShows();
   }, [editingAgent]);
 
   const fetchCategories = async () => {
@@ -170,6 +176,17 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
       setStates(data.states || []);
     } catch (error) {
       console.error('Failed to fetch states:', error);
+    }
+  };
+
+  const fetchRealityShows = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels?channel_type=reality_show`);
+      const data = await response.json();
+      setRealityShows(data || []);
+      console.log('✅ Loaded reality shows:', data);
+    } catch (error) {
+      console.error('Failed to fetch reality shows:', error);
     }
   };
 
@@ -616,8 +633,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               </>
             )}
 
-            {/* Common Fields - Content Settings - Hide for tadka_pics, video, and tv_video agents */}
-            {formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && (
+            {/* Common Fields - Content Settings - Hide for tadka_pics, video, tv_video, and reality_show agents */}
+            {formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Content Settings</h3>
               
@@ -1263,24 +1280,20 @@ Instructions:
                     <optgroup label="Regional">
                       <option value="trailers_teasers">Trailers & Teasers</option>
                       <option value="latest_video_songs">Latest Video Songs</option>
-                      <option value="events_interviews">Events & Press Meets</option>
                       <option value="tadka_shorts">Tadka Shorts</option>
                     </optgroup>
                     <optgroup label="Bollywood">
                       <option value="trailers_teasers_bollywood">Trailers & Teasers Bollywood</option>
                       <option value="latest_video_songs_bollywood">Latest Video Songs Bollywood</option>
-                      <option value="events_interviews_bollywood">Events & Press Meets Bollywood</option>
                       <option value="tadka_shorts_bollywood">Tadka Shorts Bollywood</option>
                     </optgroup>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
                     {formData.video_category === 'trailers_teasers' && 'Find movie trailers, teasers, first looks released today'}
                     {formData.video_category === 'latest_video_songs' && 'Find trending movie/music videos released today'}
-                    {formData.video_category === 'events_interviews' && 'Find celebrity events, press meets, promotions'}
                     {formData.video_category === 'tadka_shorts' && 'Find hot & trending YouTube Shorts of actresses'}
                     {formData.video_category === 'trailers_teasers_bollywood' && 'Find Bollywood movie trailers, teasers, first looks'}
                     {formData.video_category === 'latest_video_songs_bollywood' && 'Find trending Bollywood music videos'}
-                    {formData.video_category === 'events_interviews_bollywood' && 'Find Bollywood celebrity events, press meets'}
                     {formData.video_category === 'tadka_shorts_bollywood' && 'Find hot & trending Bollywood YouTube Shorts'}
                   </p>
                 </div>
@@ -1488,7 +1501,7 @@ Instructions:
             )}
 
             {/* Split Content Section - Only for post agent type */}
-            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && (
+            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="text-left">
@@ -1589,16 +1602,24 @@ Instructions:
                     }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   >
-                    <option value="tv-today">TV Today</option>
-                    <option value="tv-today-hindi">TV Today Hindi</option>
-                    <option value="news-today">News Today</option>
-                    <option value="news-today-hindi">News Today Hindi</option>
+                    <optgroup label="TV & News">
+                      <option value="tv-today">TV Today</option>
+                      <option value="tv-today-hindi">TV Today Hindi</option>
+                      <option value="news-today">News Today</option>
+                      <option value="news-today-hindi">News Today Hindi</option>
+                    </optgroup>
+                    <optgroup label="Events & Celebrity">
+                      <option value="events-interviews">Filmy Focus Today</option>
+                      <option value="events-interviews-bollywood">Filmy Focus Today Bollywood</option>
+                    </optgroup>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
                     {formData.tv_video_category === 'tv-today' && 'Regional TV shows and programs'}
                     {formData.tv_video_category === 'tv-today-hindi' && 'Hindi TV shows and programs'}
                     {formData.tv_video_category === 'news-today' && 'Regional breaking news and updates'}
                     {formData.tv_video_category === 'news-today-hindi' && 'Hindi breaking news and updates'}
+                    {formData.tv_video_category === 'events-interviews' && 'Regional celebrity events, press meets, and promotions'}
+                    {formData.tv_video_category === 'events-interviews-bollywood' && 'Bollywood celebrity events and press meets'}
                   </p>
                 </div>
 
@@ -1658,7 +1679,12 @@ Instructions:
                     ⚠️ You must select at least one channel type. Agent will fetch ONLY from selected types.
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    For TV/News content, select TV Channels and/or News Channels only.
+                    {(formData.tv_video_category === 'tv-today' || formData.tv_video_category === 'tv-today-hindi') && 
+                      '💡 Recommended: TV Channels'}
+                    {(formData.tv_video_category === 'news-today' || formData.tv_video_category === 'news-today-hindi') && 
+                      '💡 Recommended: News Channels'}
+                    {(formData.tv_video_category === 'events-interviews' || formData.tv_video_category === 'events-interviews-bollywood') && 
+                      '💡 Recommended: Movie News Channels, Movie Interviews Channels, Entertainment Channels'}
                   </p>
                 </div>
 
@@ -1716,6 +1742,171 @@ Instructions:
                       <p>• No keyword filtering - all channel videos included</p>
                       <p className="text-indigo-700 mt-2">
                         ✨ Simple & efficient - perfect for TV & News content!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Reality Shows Agent Settings */}
+            {formData.agent_type === 'reality_show' && (
+              <div className="bg-pink-50 rounded-lg p-4 space-y-4 border border-pink-200">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <h3 className="text-sm font-semibold text-pink-900 text-left">Reality Shows Agent Settings</h3>
+                </div>
+
+                {/* Reality Show Category */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <select
+                    name="reality_show_category"
+                    value={formData.reality_show_category || 'tv-reality-shows'}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      reality_show_category: e.target.value,
+                      category: e.target.value,  // Set both for backend
+                      content_type: 'video'  // Always set to video
+                    }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  >
+                    <option value="tv-reality-shows">TV Reality Shows</option>
+                    <option value="tv-reality-shows-hindi">TV Reality Shows Hindi</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.reality_show_category === 'tv-reality-shows' && 'Regional reality show content'}
+                    {formData.reality_show_category === 'tv-reality-shows-hindi' && 'Hindi reality show content'}
+                  </p>
+                </div>
+
+                {/* Reality Show Selector */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Select Reality Show <span className="text-red-500">*</span></label>
+                  <select
+                    name="reality_show_name"
+                    value={formData.reality_show_name || ''}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  >
+                    <option value="">-- Select a show --</option>
+                    {realityShows.filter(show => {
+                      // Filter by language based on category
+                      const isHindi = formData.reality_show_category === 'tv-reality-shows-hindi';
+                      if (isHindi) {
+                        return show.languages && show.languages.includes('Hindi');
+                      } else {
+                        return show.languages && !show.languages.includes('Hindi');
+                      }
+                    }).map(show => (
+                      <option key={show.channel_id} value={show.channel_name}>
+                        {show.channel_name} ({show.languages ? show.languages.join(', ') : 'N/A'})
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-red-500 mt-2 font-medium">
+                    ⚠️ You must select a specific reality show. Agent will fetch ONLY from this show's channel.
+                  </p>
+                </div>
+
+                {/* Target Language */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Target Language <span className="text-red-500">*</span></label>
+                  <select
+                    name="target_language"
+                    value={formData.target_language || ''}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  >
+                    <option value="">-- Select Language --</option>
+                    <option value="Telugu">Telugu</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Bengali">Bengali</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Punjabi">Punjabi</option>
+                    <option value="Gujarati">Gujarati</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Select the primary language of the reality show content
+                  </p>
+                </div>
+
+                {/* Content Type Filter */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Content Type Filter</label>
+                  <select
+                    name="content_filter"
+                    value={formData.content_filter || 'videos'}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  >
+                    <option value="videos">Only Videos</option>
+                    <option value="shorts">Only Shorts</option>
+                    <option value="both">Both Videos & Shorts</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Choose whether to fetch regular videos, shorts, or both from the show
+                  </p>
+                </div>
+
+                {/* Lookback Period */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Lookback Period <span className="text-red-500">*</span></label>
+                  <select
+                    name="reality_show_lookback_days"
+                    value={formData.reality_show_lookback_days || 2}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  >
+                    <option value="1">Last 24 Hours</option>
+                    <option value="2">Last 2 Days</option>
+                    <option value="3">Last 3 Days</option>
+                    <option value="5">Last 5 Days</option>
+                    <option value="7">Last 7 Days</option>
+                    <option value="14">Last 14 Days</option>
+                    <option value="30">Last 30 Days</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Agent will fetch ALL videos from the selected show published within this period
+                  </p>
+                </div>
+
+                {/* Max Videos */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Maximum Videos</label>
+                  <input
+                    type="number"
+                    name="max_videos"
+                    value={formData.max_videos || 5}
+                    onChange={handleInputChange}
+                    min="1"
+                    max="50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Maximum number of videos to fetch (1-50)
+                  </p>
+                </div>
+
+                {/* Info Box */}
+                <div className="bg-white rounded-lg border border-pink-200 p-3">
+                  <div className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-pink-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div className="text-xs text-gray-700 space-y-1">
+                      <p className="font-semibold text-pink-900">How Reality Shows Agent Works:</p>
+                      <p>• Select a specific reality show from the dropdown</p>
+                      <p>• Agent fetches videos from that show's channel only</p>
+                      <p>• Videos are filtered by language and publish date</p>
+                      <p>• Each video becomes a separate post</p>
+                      <p className="text-pink-700 mt-2">
+                        ✨ Perfect for Bigg Boss, Indian Idol, KBC, and other reality shows!
                       </p>
                     </div>
                   </div>
@@ -1789,8 +1980,8 @@ Instructions:
               </div>
             )}
 
-            {/* Reference Content Section - Hide for Tadka Pics with Instagram source, Video agents, and TV Video agents */}
-            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && (
+            {/* Reference Content Section - Hide for Tadka Pics with Instagram source, Video agents, TV Video agents, and Reality Show agents */}
+            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-gray-900 text-left">Reference Content</h3>
@@ -1858,8 +2049,8 @@ Instructions:
             </div>
             )}
 
-            {/* Image Options Section - Hide for photo_gallery, tadka_pics, video, and tv_video */}
-            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && (
+            {/* Image Options Section - Hide for photo_gallery, tadka_pics, video, tv_video, and reality_show */}
+            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Image Options</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">

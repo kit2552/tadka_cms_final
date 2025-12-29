@@ -23,13 +23,13 @@ const GalleryPosts = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using travel-pics and photoshoot categories
-        const travelPicsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/travel-pics?limit=50`);
+        const travelPicsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/travel-pics?limit=50`);
         if (travelPicsResponse.ok) {
           const travelPicsData = await travelPicsResponse.json();
           setTravelPicsArticles(travelPicsData);
         }
 
-        const photoshootResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/photoshoot?limit=50`);
+        const photoshootResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/photoshoot?limit=50`);
         if (photoshootResponse.ok) {
           const photoshootData = await photoshootResponse.json();
           setPhotoshootArticles(photoshootData);
@@ -41,13 +41,13 @@ const GalleryPosts = () => {
         
         // Get related articles from configured categories for gallery posts page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/gallery-posts`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/gallery-posts`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

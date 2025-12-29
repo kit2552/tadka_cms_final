@@ -60,6 +60,17 @@ const CreateAgentModal = ({ onClose, onSelect }) => {
       color: 'indigo'
     },
     {
+      type: 'reality_show',
+      name: 'Reality Shows Agent',
+      description: 'Find and post reality show videos from specific shows',
+      icon: (
+        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+      ),
+      color: 'pink'
+    },
+    {
       type: 'review',
       name: 'Review Agent',
       description: 'Generate movie, product, or service reviews automatically',
@@ -79,7 +90,8 @@ const CreateAgentModal = ({ onClose, onSelect }) => {
       green: 'bg-green-100 text-green-600 hover:bg-green-50 border-green-200',
       orange: 'bg-orange-100 text-orange-600 hover:bg-orange-50 border-orange-200',
       red: 'bg-red-100 text-red-600 hover:bg-red-50 border-red-200',
-      indigo: 'bg-indigo-100 text-indigo-600 hover:bg-indigo-50 border-indigo-200'
+      indigo: 'bg-indigo-100 text-indigo-600 hover:bg-indigo-50 border-indigo-200',
+      pink: 'bg-pink-100 text-pink-600 hover:bg-pink-50 border-pink-200'
     };
     return colors[color] || colors.blue;
   };

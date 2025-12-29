@@ -41,33 +41,33 @@ const OTTReviews = () => {
         setLoading(true);
         
         // First try the sections API endpoint used by the homepage component
-        const ottSectionResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/ott-movie-reviews`);
+        const ottSectionResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/ott-movie-reviews`);
         if (ottSectionResponse.ok) {
           const ottSectionData = await ottSectionResponse.json();
           setOttReviewsArticles(ottSectionData.ott_movie_reviews || []);
           setBollywoodArticles(ottSectionData.web_series || []); // Use web_series as bollywood content
         } else {
           // Fallback: try individual category endpoints
-          const ottReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ott-reviews?limit=20`);
+          const ottReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/ott-reviews?limit=20`);
           if (ottReviewsResponse.ok) {
             const ottReviewsData = await ottReviewsResponse.json();
             setOttReviewsArticles(ottReviewsData);
           } else {
             // Further fallback to ott-movie-reviews category
-            const ottMovieReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ott-movie-reviews?limit=20`);
+            const ottMovieReviewsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/ott-movie-reviews?limit=20`);
             if (ottMovieReviewsResponse.ok) {
               const ottMovieReviewsData = await ottMovieReviewsResponse.json();
               setOttReviewsArticles(ottMovieReviewsData);
             }
           }
 
-          const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood?limit=20`);
+          const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/bollywood?limit=20`);
           if (bollywoodResponse.ok) {
             const bollywoodData = await bollywoodResponse.json();
             setBollywoodArticles(bollywoodData);
           } else {
             // Fallback to web series reviews
-            const webSeriesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/ott-webseries-reviews?limit=20`);
+            const webSeriesResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/ott-webseries-reviews?limit=20`);
             if (webSeriesResponse.ok) {
               const webSeriesData = await webSeriesResponse.json();
               setBollywoodArticles(webSeriesData);
@@ -77,13 +77,13 @@ const OTTReviews = () => {
         
         // Get related articles for ott-reviews page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/ott-reviews`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/ott-reviews`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

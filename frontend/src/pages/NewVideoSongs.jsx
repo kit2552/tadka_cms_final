@@ -43,8 +43,8 @@ const NewVideoSongs = () => {
         
         // Build URL with states parameter if available
         const url = statesParam 
-          ? `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/new-video-songs?states=${statesParam}`
-          : `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/new-video-songs`;
+          ? `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/new-video-songs?states=${statesParam}`
+          : `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/new-video-songs`;
         
         console.log('🔍 [PAGE] Fetching from URL:', url);
         
@@ -57,13 +57,13 @@ const NewVideoSongs = () => {
           setBollywoodArticles(newVideoSongsData.bollywood || []);
         } else {
           // Fallback: try individual category endpoints
-          const videoSongsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/new-video-songs?limit=50`);
+          const videoSongsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/new-video-songs?limit=50`);
           if (videoSongsResponse.ok) {
             const videoSongsData = await videoSongsResponse.json();
             setVideoSongsArticles(videoSongsData);
           }
 
-          const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/bollywood?limit=50`);
+          const bollywoodResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/bollywood?limit=50`);
           if (bollywoodResponse.ok) {
             const bollywoodData = await bollywoodResponse.json();
             setBollywoodArticles(bollywoodData);
@@ -72,13 +72,13 @@ const NewVideoSongs = () => {
         
         // Get related articles for new-video-songs page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/new-video-songs`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/new-video-songs`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

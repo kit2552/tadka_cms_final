@@ -24,13 +24,13 @@ const HotTopicsGossipNews = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using hot-topics and gossip categories
-        const hotTopicsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/hot-topics?limit=50`);
+        const hotTopicsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/hot-topics?limit=50`);
         if (hotTopicsResponse.ok) {
           const hotTopicsData = await hotTopicsResponse.json();
           setHotTopicsArticles(hotTopicsData);
         }
 
-        const gossipResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/gossip?limit=50`);
+        const gossipResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/gossip?limit=50`);
         if (gossipResponse.ok) {
           const gossipData = await gossipResponse.json();
           setGossipArticles(gossipData);
@@ -42,13 +42,13 @@ const HotTopicsGossipNews = () => {
         
         // Get related articles from configured categories for hot topics gossip page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/hot-topics-gossip`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/hot-topics-gossip`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

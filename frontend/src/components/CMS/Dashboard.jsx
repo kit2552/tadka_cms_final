@@ -517,7 +517,7 @@ const Dashboard = () => {
     { slug: 'tv-shows', name: 'TV Shows' },
     { slug: 'ott-releases', name: 'OTT Releases' },
     { slug: 'theater-releases', name: 'Theater Releases' },
-    { slug: 'events-interviews', name: 'Events & Press Meets' },
+    { slug: 'events-interviews', name: 'Filmy Focus Today' },
     { slug: 'trending-videos', name: 'Latest Video Songs' },
     { slug: 'tadka-pics', name: 'Tadka Pics' },
     { slug: 'travel', name: 'Travel Pics' },

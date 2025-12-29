@@ -23,13 +23,13 @@ const TravelPics = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using travel categories
-        const destinationsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/travel?limit=50`);
+        const destinationsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/travel?limit=50`);
         if (destinationsResponse.ok) {
           const destinationsData = await destinationsResponse.json();
           setDestinationsArticles(destinationsData);
         }
 
-        const adventuresResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/adventures?limit=50`);
+        const adventuresResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/adventures?limit=50`);
         if (adventuresResponse.ok) {
           const adventuresData = await adventuresResponse.json();
           setAdventuresArticles(adventuresData);
@@ -41,13 +41,13 @@ const TravelPics = () => {
         
         // Get related articles from configured categories for travel pics page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/travel-pics`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/travel-pics`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to entertainment category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/entertainment?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

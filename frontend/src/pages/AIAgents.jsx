@@ -371,8 +371,8 @@ const AIAgents = () => {
         />
       )}
 
-      {/* Agent Form Modal - Show for post, photo_gallery, tadka_pics, video, and tv_video agents */}
-      {showAgentForm && (selectedAgentType === 'post' || selectedAgentType === 'photo_gallery' || selectedAgentType === 'tadka_pics' || selectedAgentType === 'video' || selectedAgentType === 'tv_video') && (
+      {/* Agent Form Modal - Show for post, photo_gallery, tadka_pics, video, tv_video, and reality_show agents */}
+      {showAgentForm && (selectedAgentType === 'post' || selectedAgentType === 'photo_gallery' || selectedAgentType === 'tadka_pics' || selectedAgentType === 'video' || selectedAgentType === 'tv_video' || selectedAgentType === 'reality_show') && (
         <PostAgentForm
           onClose={() => {
             setShowAgentForm(false);

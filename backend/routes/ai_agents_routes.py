@@ -66,6 +66,16 @@ class AIAgent(BaseModel):
     include_keywords: Optional[str] = None  # Comma-separated include keywords for filtering
     exclude_keywords: Optional[str] = None  # Comma-separated exclude keywords for filtering
     
+    # TV Video Agent fields
+    tv_video_category: Optional[str] = None  # Category for TV video posts (tv-today, news-today, etc.)
+    tv_channel_types: Optional[List[str]] = None  # List of channel types: tv_channel, news_channel
+    lookback_days: Optional[int] = 2  # Days to look back for videos
+    
+    # Reality Show Agent fields
+    reality_show_category: Optional[str] = None  # Category for reality show posts (big-boss, big-boss-bollywood)
+    reality_show_name: Optional[str] = None  # Specific reality show name (e.g., "Bigg Boss", "Indian Idol")
+    reality_show_lookback_days: Optional[int] = 2  # Days to look back for videos
+    
     # Post Aggregation fields (for Video Agent)
     enable_aggregation: Optional[bool] = False  # Enable post grouping by movie/event name
     aggregation_lookback_days: Optional[int] = 2  # Days to look back for grouping (1-30)
@@ -188,6 +198,10 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
             # Use TV Video Agent Service
             from services.tv_video_agent_service import tv_video_agent_service
             result = await tv_video_agent_service.run_tv_video_agent(agent_id)
+        elif agent_type == 'reality_show':
+            # Use Reality Show Agent Service
+            from services.reality_show_agent_service import reality_show_agent_service
+            result = await reality_show_agent_service.run_reality_show_agent(agent_id)
         else:
             # Use Post Agent Service (default)
             result = await agent_runner.run_agent(agent_id)

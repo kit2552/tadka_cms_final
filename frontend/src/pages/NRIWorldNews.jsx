@@ -41,13 +41,13 @@ const NRIWorldNews = () => {
         setLoading(true);
         
         // Fetch articles from the backend API using NRI and World News categories
-        const nriResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/nri-news?limit=20`);
+        const nriResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/nri-news?limit=20`);
         if (nriResponse.ok) {
           const nriData = await nriResponse.json();
           setNriNewsArticles(nriData);
         }
 
-        const worldResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/world-news?limit=20`);
+        const worldResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/world-news?limit=20`);
         if (worldResponse.ok) {
           const worldData = await worldResponse.json();
           setWorldNewsArticles(worldData);
@@ -59,13 +59,13 @@ const NRIWorldNews = () => {
         
         // Get related articles from configured categories for nri-world-news page
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/related-articles/nri-world-news`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/nri-world-news`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
             // Fallback to politics category if no configuration found
-            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/politics?limit=20`);
+            const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/politics?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
               setRelatedArticles(fallbackData);

@@ -65,7 +65,7 @@ const VideoView = () => {
         
         // Fetch the article
         const articleResponse = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/${id}`
+          `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/${id}`
         );
         
         if (articleResponse.ok) {
@@ -136,7 +136,7 @@ const VideoView = () => {
           return STATE_CODE_MAPPING[state] || state.toLowerCase();
         });
         
-        let url = `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/trending-videos?limit=20`;
+        let url = `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/trending-videos?limit=20`;
         if (userStateCodes && userStateCodes.length > 0) {
           url += `&states=${userStateCodes.join(',')}`;
         }
@@ -162,7 +162,7 @@ const VideoView = () => {
           return STATE_CODE_MAPPING[state] || state.toLowerCase();
         });
         
-        let url = `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/viral-shorts?limit=20`;
+        let url = `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/viral-shorts?limit=20`;
         if (userStateCodes && userStateCodes.length > 0) {
           url += `&states=${userStateCodes.join(',')}`;
         }
@@ -187,7 +187,7 @@ const VideoView = () => {
         console.log('🎬 Category matches events-interviews - using events-interviews endpoint');
         
         // For events-interviews videos, use events-interviews endpoint
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/events-interviews?limit=20`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/events-interviews?limit=20`);
         if (response.ok) {
           const data = await response.json();
           console.log('🎬 Events-interviews API response:', data);
@@ -205,7 +205,7 @@ const VideoView = () => {
         console.log('🎬 Category matches USA/ROW videos - using USA/ROW videos endpoint');
         
         // For USA/ROW videos, use USA/ROW videos endpoint
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/sections/usa-row-videos?limit=20`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/usa-row-videos?limit=20`);
         if (response.ok) {
           const data = await response.json();
           relatedVideosData = [
@@ -217,7 +217,7 @@ const VideoView = () => {
         console.log('🎬 Using fallback - fetching from same category:', currentVideo.category);
         // Fallback: fetch from the same category
         const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/${currentVideo.category}`
+          `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/${currentVideo.category}`
         );
         if (response.ok) {
           relatedVideosData = await response.json();
@@ -335,7 +335,7 @@ const VideoView = () => {
       });
       
       const relatedResponse = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/articles/category/${currentVideo.category}`
+        `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/${currentVideo.category}`
       );
       
       if (relatedResponse.ok) {

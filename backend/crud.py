@@ -969,15 +969,10 @@ def get_this_week_theater_releases(db, limit: int = 100):
     return serialize_doc(docs)
 
 def get_this_week_theater_releases_by_state(db, state: str = None, limit: int = 100):
-    """Get this week's theater releases filtered by state (excluding 'all')"""
-    from datetime import date, timedelta
+    """Get latest theater releases filtered by state (excluding 'all') - shows most recent releases regardless of date"""
     import json
-    today = date.today()
-    week_end = (today + timedelta(days=7)).isoformat()
-    today_str = today.isoformat()
     
     query = {
-        "release_date": {"$gte": today_str, "$lte": week_end},
         # Explicitly exclude 'all' states - only show state-specific releases
         "states": {"$not": {"$regex": '"all"'}}
     }
@@ -986,19 +981,15 @@ def get_this_week_theater_releases_by_state(db, state: str = None, limit: int = 
         # Match releases that include the user's state (not 'all')
         query["states"]["$regex"] = f'"{state}"'
     
-    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
+    # Sort by created_at/updated_at descending to show latest releases first
+    docs = list(db[THEATER_RELEASES].find(query).sort([("created_at", -1), ("release_date", -1)]).limit(limit))
     return serialize_doc(docs)
 
 def get_upcoming_theater_releases_by_state(db, state: str = None, limit: int = 100):
-    """Get upcoming theater releases filtered by state (excluding 'all')"""
-    from datetime import date, timedelta
+    """Get latest theater releases filtered by state (excluding 'all') - shows recent releases regardless of date"""
     import json
-    today = date.today()
-    week_start = (today + timedelta(days=8)).isoformat()
-    today_str = today.isoformat()
     
     query = {
-        "release_date": {"$gte": week_start},
         # Explicitly exclude 'all' states - only show state-specific releases
         "states": {"$not": {"$regex": '"all"'}}
     }
@@ -1007,36 +998,29 @@ def get_upcoming_theater_releases_by_state(db, state: str = None, limit: int = 1
         # Match releases that include the user's state (not 'all')
         query["states"]["$regex"] = f'"{state}"'
     
-    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
+    # Sort by created_at/updated_at descending to show latest releases first
+    # Skip the first 'limit' results since this is for "coming_soon" section
+    docs = list(db[THEATER_RELEASES].find(query).sort([("created_at", -1), ("release_date", -1)]).skip(limit).limit(limit))
     return serialize_doc(docs)
 
 def get_this_week_theater_releases_all_states(db, limit: int = 100):
-    """Get this week's theater releases with state='all' only"""
-    from datetime import date, timedelta
-    today = date.today()
-    week_end = (today + timedelta(days=7)).isoformat()
-    today_str = today.isoformat()
-    
+    """Get latest theater releases with state='all' - shows most recent releases regardless of date"""
     query = {
-        "release_date": {"$gte": today_str, "$lte": week_end},
         "states": {"$regex": '"all"'}
     }
     
-    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
+    # Sort by created_at/updated_at descending to show latest releases first
+    docs = list(db[THEATER_RELEASES].find(query).sort([("created_at", -1), ("release_date", -1)]).limit(limit))
     return serialize_doc(docs)
 
 def get_upcoming_theater_releases_all_states(db, limit: int = 100):
-    """Get upcoming theater releases with state='all' only"""
-    from datetime import date, timedelta
-    today = date.today()
-    week_start = (today + timedelta(days=8)).isoformat()
-    
+    """Get latest theater releases with state='all' - shows recent releases regardless of date"""
     query = {
-        "release_date": {"$gte": week_start},
         "states": {"$regex": '"all"'}
     }
     
-    docs = list(db[THEATER_RELEASES].find(query).sort("release_date", 1).limit(limit))
+    # Sort by created_at/updated_at descending and skip first 'limit' for "coming_soon" section
+    docs = list(db[THEATER_RELEASES].find(query).sort([("created_at", -1), ("release_date", -1)]).skip(limit).limit(limit))
     return serialize_doc(docs)
 
 def get_ott_release(db, release_id: int):
