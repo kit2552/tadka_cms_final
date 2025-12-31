@@ -6,7 +6,7 @@ import TVShows from '../components/TVShows';
 import OTTReleases from '../components/OTTReleases';
 import OTTMovieReviews from '../components/OTTMovieReviews';
 import EventsInterviews from '../components/EventsInterviews';
-import BigBoss from '../components/BigBoss';
+import TVRealityShows from '../components/TVRealityShows';
 import TrendingVideos from '../components/TrendingVideos';
 import Politics from '../components/Politics';
 import Movies from '../components/Movies';
@@ -151,7 +151,7 @@ export const createSectionRegistry = (data, handlers, isIpad = false, stateRelat
       id: 'big-boss',
       name: 'TV Reality Shows',
       component: (
-        <BigBoss 
+        <TVRealityShows 
           bigBossData={data.bigBossData} 
         />
       ),
