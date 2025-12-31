@@ -1114,6 +1114,16 @@ const SystemSettings = () => {
               >
                 YouTube Channels
               </button>
+              <button
+                onClick={() => setActiveTab('reality-shows')}
+                className={`py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                  activeTab === 'reality-shows'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                TV Reality Shows
+              </button>
             </nav>
           </div>
 
