@@ -99,8 +99,8 @@ const TVRealityShows = ({ bigBossData = {} }) => {
         </button>
       </div>
       
-      {/* Grid Layout - Same as TopStories */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-1">
+      {/* Grid Layout - Wider cards for better thumbnail display */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-1">
         {getCurrentData().map((show, index) => {
           const showName = show.event_name || show.title;
           const videoCount = show.video_count || 1;
@@ -127,7 +127,7 @@ const TVRealityShows = ({ bigBossData = {} }) => {
                 <img
                   src={youtubeThumbnail || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
                   alt={showName}
-                  className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
                     e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
                   }}
