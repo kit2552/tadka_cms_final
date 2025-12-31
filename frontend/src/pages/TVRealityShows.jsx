@@ -45,7 +45,7 @@ const TVRealityShows = () => {
         setLoading(true);
         
         // Fetch grouped reality shows data
-        const groupedResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/reality-shows-grouped?limit=20`);
+        const groupedResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/reality-shows-grouped?limit=50`);
         console.log('Grouped Reality Shows response status:', groupedResponse.status);
         
         if (groupedResponse.ok) {
