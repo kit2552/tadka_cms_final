@@ -2,21 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { CirclePlay } from 'lucide-react';
+import EventVideosModal from '../components/EventVideosModal';
 
 const TVRealityShows = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, getSectionHeaderClasses } = useTheme();
   const { t } = useLanguage();
-  const [activeTab, setActiveTab] = useState('reality-shows'); // 'reality-shows' or 'bollywood'
+  const [activeTab, setActiveTab] = useState('reality-shows'); // 'reality-shows' or 'hindi'
   const [realityShowsArticles, setRealityShowsArticles] = useState([]);
-  const [bollywoodArticles, setBollywoodArticles] = useState([]);
+  const [hindiArticles, setHindiArticles] = useState([]);
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('latest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filteredArticles, setFilteredArticles] = useState([]);
+  const [selectedShow, setSelectedShow] = useState(null);
+  const [showModalOpen, setShowModalOpen] = useState(false);
 
   // Scroll restoration logic
   useEffect(() => {
