@@ -123,6 +123,24 @@ const TVRealityShows = () => {
       : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
   };
 
+  // Handle show click - open modal if multiple videos, otherwise navigate directly
+  const handleShowClick = (article) => {
+    const videoCount = article.video_count || 1;
+    
+    if (videoCount > 1) {
+      // Multiple videos - open modal
+      setSelectedShow(article);
+      setShowModalOpen(true);
+    } else {
+      // Single video - navigate directly to video view
+      if (article.content_type === 'video' || article.youtube_url) {
+        navigate(`/video/${article.id}`);
+      } else {
+        navigate(`/article/${article.id}`);
+      }
+    }
+  };
+
   // Sample thumbnail images for related topics
   const getThumbnail = (index) => {
     const thumbnails = [
