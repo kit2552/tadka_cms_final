@@ -1145,6 +1145,75 @@ async def get_big_boss_articles(limit: int = 4, db = Depends(get_db)):
         "bollywood": bollywood_articles
     }
 
+
+
+@api_router.get("/articles/sections/reality-shows-grouped")
+async def get_reality_shows_grouped(limit: int = 20, db = Depends(get_db)):
+    """Get grouped reality shows from grouped_posts collection
+    Returns groups organized by show name for TV Reality Shows page
+    """
+    try:
+        # Fetch grouped posts for tv-reality-shows categories
+        regional_groups_query = {"category": {"$in": ["tv-reality-shows", "big-boss"]}}
+        hindi_groups_query = {"category": {"$in": ["tv-reality-shows-hindi", "big-boss-bollywood"]}}
+        
+        # Get regional groups
+        regional_groups = list(db.grouped_posts.find(regional_groups_query).sort("updated_at", -1).limit(limit))
+        
+        for group in regional_groups:
+            post_ids = group.get('post_ids', [])
+            articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+            group['articles'] = crud.serialize_doc(articles)
+            
+            rep_id = group.get('representative_post_id')
+            if rep_id:
+                rep_article = db.articles.find_one({"id": rep_id})
+                group['representative_post'] = crud.serialize_doc(rep_article)
+        
+        regional_groups = crud.serialize_doc(regional_groups)
+        
+        # Get Hindi/Bollywood groups
+        hindi_groups = list(db.grouped_posts.find(hindi_groups_query).sort("updated_at", -1).limit(limit))
+        
+        for group in hindi_groups:
+            post_ids = group.get('post_ids', [])
+            articles = list(db.articles.find({"id": {"$in": post_ids}}).sort("published_at", -1))
+            group['articles'] = crud.serialize_doc(articles)
+            
+            rep_id = group.get('representative_post_id')
+            if rep_id:
+                rep_article = db.articles.find_one({"id": rep_id})
+                group['representative_post'] = crud.serialize_doc(rep_article)
+        
+        hindi_groups = crud.serialize_doc(hindi_groups)
+        
+        # Transform to match events-interviews format for modal display
+        def transform_to_events_format(groups):
+            result = []
+            for group in groups:
+                if group.get('articles') and len(group['articles']) > 0:
+                    representative = group['articles'][0].copy()
+                    representative['event_name'] = group.get('group_title', 'Unknown Show')
+                    representative['video_count'] = group.get('posts_count', len(group['articles']))
+                    representative['all_videos'] = group['articles']
+                    result.append(representative)
+            return result
+        
+        regional_formatted = transform_to_events_format(regional_groups)
+        hindi_formatted = transform_to_events_format(hindi_groups)
+        
+        print(f"✅ Reality Shows Grouped: {len(regional_formatted)} regional, {len(hindi_formatted)} hindi")
+        
+        return {
+            "reality_shows": regional_formatted,
+            "hindi": hindi_formatted
+        }
+    except Exception as e:
+        print(f"❌ Error in get_reality_shows_grouped: {e}")
+        import traceback
+        traceback.print_exc()
+        return {"reality_shows": [], "hindi": []}
+
 @api_router.get("/articles/sections/tv-today-aggregated")
 async def get_tv_today_aggregated(limit: int = 20, states: str = None, db = Depends(get_db)):
     """Get aggregated TV Today content - fetches from grouped_posts collection
