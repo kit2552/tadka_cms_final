@@ -103,7 +103,7 @@ const TVRealityShows = () => {
     const currentArticles = activeTab === 'hindi' ? hindiArticles : realityShowsArticles;
     const filtered = filterArticlesByDate(currentArticles, selectedFilter);
     setFilteredArticles(filtered);
-  }, [realityShowsArticles, bollywoodArticles, activeTab, selectedFilter]);
+  }, [realityShowsArticles, hindiArticles, activeTab, selectedFilter]);
 
   // Auto scroll to top when page loads
   useEffect(() => {
