@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { CirclePlay } from 'lucide-react';
+import EventVideosModal from './EventVideosModal';
 import dataService from '../services/dataService';
 
 const BigBoss = ({ bigBossData = {} }) => {
@@ -11,8 +13,10 @@ const BigBoss = ({ bigBossData = {} }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useTabState('big-boss', 'big-boss');
   const scrollContainerRef = useRef(null);
+  const [selectedShow, setSelectedShow] = useState(null);
+  const [showModalOpen, setShowModalOpen] = useState(false);
   
-  // Get data from API instead of mock data
+  // Get data from API - now expects grouped format
   const bigBossVideos = bigBossData.big_boss || [];
   const bollywoodVideos = bigBossData.bollywood || [];
   
