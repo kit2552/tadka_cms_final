@@ -1941,13 +1941,14 @@ Instructions:
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div className="text-xs text-gray-700 space-y-1">
-                      <p className="font-semibold text-pink-900">How Reality Shows Agent Works:</p>
-                      <p>• Select a specific reality show from the dropdown</p>
-                      <p>• Agent fetches videos from that show's channel only</p>
-                      <p>• Videos are filtered by language and publish date</p>
-                      <p>• Each video becomes a separate post</p>
-                      <p className="text-pink-700 mt-2">
-                        ✨ Perfect for Bigg Boss, Indian Idol, KBC, and other reality shows!
+                      <p className="font-semibold text-pink-900">Reality Show Agent - Auto-Configured:</p>
+                      <p>• Fetches from YouTube channel configured in System Settings</p>
+                      <p>• Filters videos by keywords (only matching videos included)</p>
+                      <p>• Fetches ALL matching videos in lookback period (no limit)</p>
+                      <p>• Groups all videos by show name as single card</p>
+                      <p>• Videos displayed in modal (like TV Today/News Today)</p>
+                      <p className="text-blue-700 mt-2 font-medium">
+                        💡 To add/edit shows: System Settings → TV Reality Shows
                       </p>
                     </div>
                   </div>
