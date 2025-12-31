@@ -7,7 +7,7 @@ import { CirclePlay } from 'lucide-react';
 import EventVideosModal from './EventVideosModal';
 import dataService from '../services/dataService';
 
-const BigBoss = ({ bigBossData = {} }) => {
+const TVRealityShows = ({ bigBossData = {} }) => {
   const { t } = useLanguage();
   const { theme, getSectionHeaderClasses } = useTheme();
   const navigate = useNavigate();
@@ -173,4 +173,4 @@ const BigBoss = ({ bigBossData = {} }) => {
   );
 };
 
-export default BigBoss;
+export default TVRealityShows;
