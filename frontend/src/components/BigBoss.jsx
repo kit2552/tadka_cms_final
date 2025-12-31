@@ -101,30 +101,73 @@ const BigBoss = ({ bigBossData = {} }) => {
       
       {/* Grid Layout - Same as TopStories */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-1">
-        {getCurrentData().map((item, index) => (
-          <div
-            key={item.id}
-            className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer"
-            onClick={() => handleVideoClick(item)}
-          >
-            <div className="relative">
-              <img
-                src={item.youtube_url ? getYouTubeThumbnail(item.youtube_url) : (item.image_url || item.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop')}
-                alt={item.title}
-                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
-                onError={(e) => {
-                  e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
-                }}
-              />
+        {getCurrentData().map((show, index) => {
+          const showName = show.event_name || show.title;
+          const videoCount = show.video_count || 1;
+          const firstVideo = show.all_videos?.[0] || show;
+          const youtubeThumbnail = firstVideo.youtube_url ? getYouTubeThumbnail(firstVideo.youtube_url) : (firstVideo.image_url || firstVideo.image);
+          const channelName = show.channel_name || 'TV Show';
+          
+          return (
+            <div
+              key={show.id || index}
+              className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group"
+              onClick={() => handleShowClick(show)}
+            >
+              <div className="relative">
+                <img
+                  src={youtubeThumbnail || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
+                  alt={showName}
+                  className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+                  }}
+                />
+                
+                {/* Channel Name Label */}
+                <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
+                  {channelName}
+                </div>
+                
+                {/* Video Count Badge */}
+                {videoCount > 1 && (
+                  <div className="absolute bottom-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
+                    <CirclePlay size={14} />
+                    <span>{videoCount}</span>
+                  </div>
+                )}
+                
+                {/* Play icon overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black bg-opacity-20">
+                  <CirclePlay size={40} className="text-white drop-shadow-lg" />
+                </div>
+              </div>
+              <div className="p-3 text-left">
+                <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300 line-clamp-2">
+                  {showName}
+                </h2>
+                {videoCount > 1 && (
+                  <p className="text-xs text-blue-600 font-medium mt-1">
+                    {videoCount} Episodes
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="p-3 text-left">
-              <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300">
-                {item.title}
-              </h2>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      {/* Videos Modal */}
+      {showModalOpen && selectedShow && (
+        <EventVideosModal
+          event={selectedShow}
+          isOpen={showModalOpen}
+          onClose={() => {
+            setShowModalOpen(false);
+            setSelectedShow(null);
+          }}
+        />
+      )}
 
     </div>
   );
