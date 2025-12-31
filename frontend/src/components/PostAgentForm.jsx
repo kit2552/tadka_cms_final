@@ -1930,24 +1930,7 @@ Instructions:
                     <option value="30">Last 30 Days</option>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
-                    Agent will fetch ALL videos from the selected show published within this period
-                  </p>
-                </div>
-
-                {/* Max Videos */}
-                <div className="text-left">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Maximum Videos</label>
-                  <input
-                    type="number"
-                    name="max_videos"
-                    value={formData.max_videos || 5}
-                    onChange={handleInputChange}
-                    min="1"
-                    max="50"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Maximum number of videos to fetch (1-50)
+                    Agent will fetch ALL videos from the selected show published within this period (no limit)
                   </p>
                 </div>
 
