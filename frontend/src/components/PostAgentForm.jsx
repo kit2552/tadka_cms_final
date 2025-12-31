@@ -183,10 +183,10 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
 
   const fetchRealityShows = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/youtube-channels?channel_type=reality_show`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/reality-shows`);
       const data = await response.json();
       setRealityShows(data || []);
-      console.log('✅ Loaded reality shows:', data);
+      console.log('✅ Loaded reality shows from system settings:', data);
     } catch (error) {
       console.error('Failed to fetch reality shows:', error);
     }
