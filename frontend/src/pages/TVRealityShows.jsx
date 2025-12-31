@@ -44,39 +44,38 @@ const TVRealityShows = () => {
       try {
         setLoading(true);
         
-        // Fetch articles from the backend API using big-boss and big-boss-bollywood categories (same as home page)
-        const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/big-boss?limit=20`);
-        console.log('TV Reality Shows response status:', realityShowsResponse.status);
+        // Fetch grouped reality shows data
+        const groupedResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/sections/reality-shows-grouped?limit=20`);
+        console.log('Grouped Reality Shows response status:', groupedResponse.status);
         
-        if (realityShowsResponse.ok) {
-          const realityShowsData = await realityShowsResponse.json();
-          console.log('TV Reality Shows data received:', realityShowsData.length);
-          setRealityShowsArticles(realityShowsData);
+        if (groupedResponse.ok) {
+          const groupedData = await groupedResponse.json();
+          console.log('Grouped Reality Shows data received:', groupedData);
+          setRealityShowsArticles(groupedData.reality_shows || []);
+          setHindiArticles(groupedData.hindi || []);
         } else {
-          console.log('TV Reality Shows response not ok');
-          setRealityShowsArticles([]);
+          console.log('Grouped Reality Shows response not ok, falling back to regular articles');
+          // Fallback to regular articles if grouped not available
+          const realityShowsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/tv-reality-shows?limit=20`);
+          if (realityShowsResponse.ok) {
+            const realityShowsData = await realityShowsResponse.json();
+            setRealityShowsArticles(realityShowsData);
+          }
+          
+          const hindiResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/tv-reality-shows-hindi?limit=20`);
+          if (hindiResponse.ok) {
+            const hindiData = await hindiResponse.json();
+            setHindiArticles(hindiData);
+          }
         }
-
-        const hindiResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/big-boss-bollywood?limit=20`);
-        console.log('Hindi Reality Shows response status:', hindiResponse.status);
         
-        if (hindiResponse.ok) {
-          const hindiData = await hindiResponse.json();
-          console.log('Hindi Reality Shows data received:', hindiData.length);
-          setBollywoodArticles(hindiData);
-        } else {
-          console.log('Hindi Reality Shows response not ok');
-          setBollywoodArticles([]);
-        }
-        
-        // Get related articles from configured categories for reality shows page
+        // Get related articles
         try {
           const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/related-articles/reality-shows`);
           if (response.ok) {
             const configuredRelated = await response.json();
             setRelatedArticles(configuredRelated);
           } else {
-            // Fallback to entertainment category if no configuration found
             const fallbackResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/articles/category/entertainment?limit=20`);
             if (fallbackResponse.ok) {
               const fallbackData = await fallbackResponse.json();
