@@ -532,6 +532,18 @@ const TVRealityShows = () => {
         </div>
       </div>
       </div>
+
+      {/* Videos Modal for Grouped Reality Shows */}
+      {showModalOpen && selectedShow && (
+        <EventVideosModal
+          event={selectedShow}
+          isOpen={showModalOpen}
+          onClose={() => {
+            setShowModalOpen(false);
+            setSelectedShow(null);
+          }}
+        />
+      )}
     </>
   );
 };
