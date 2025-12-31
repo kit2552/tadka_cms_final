@@ -112,13 +112,15 @@ const TVRealityShows = () => {
 
   // Get YouTube thumbnail from video URL
   const getYouTubeThumbnail = (youtubeUrl) => {
-    if (!youtubeUrl) return null;
+    if (!youtubeUrl) return 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
     
     const videoId = youtubeUrl.includes('youtube.com/watch?v=') 
       ? youtubeUrl.split('v=')[1]?.split('&')[0]
       : youtubeUrl.split('youtu.be/')[1]?.split('?')[0];
     
-    return videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : null;
+    return videoId 
+      ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+      : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
   };
 
   // Sample thumbnail images for related topics
