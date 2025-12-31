@@ -3007,7 +3007,15 @@ def delete_grouped_post(db, group_id: str):
     from bson import ObjectId
     
     # First, get the grouped post to find associated article IDs
-    group = db[GROUPED_POSTS].find_one({"_id": ObjectId(group_id)})
+    # Try by id field first (UUID), then by _id (ObjectId)
+    group = db[GROUPED_POSTS].find_one({"id": group_id})
+    
+    if not group:
+        try:
+            group = db[GROUPED_POSTS].find_one({"_id": ObjectId(group_id)})
+        except:
+            pass
+    
     if not group:
         print(f"❌ Group {group_id} not found")
         return False
@@ -3049,7 +3057,17 @@ def delete_grouped_post(db, group_id: str):
         print(f"⚠️ No post_ids found in group or all conversions failed")
     
     # Delete the grouped post itself
-    result = db[GROUPED_POSTS].delete_one({"_id": ObjectId(group_id)})
+    if 'id' in group:
+        # UUID-based group
+        result = db[GROUPED_POSTS].delete_one({"id": group_id})
+    else:
+        # ObjectId-based group
+        try:
+            result = db[GROUPED_POSTS].delete_one({"_id": ObjectId(group_id)})
+        except:
+            print(f"❌ Failed to delete group with ObjectId: {group_id}")
+            return False
+    
     print(f"{'✅' if result.deleted_count > 0 else '❌'} Grouped post deletion: {result.deleted_count} group deleted")
     
     return result.deleted_count > 0
