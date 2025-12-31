@@ -1139,7 +1139,7 @@ async def get_big_boss_articles(limit: int = 20, db = Depends(get_db)):
     """Get grouped reality shows for Big Boss/TV Reality Shows section 
     Returns grouped format with event_name, video_count, and all_videos
     """
-    try {
+    try:
         # Use reality-shows-grouped which returns proper grouped format
         grouped_response = await get_reality_shows_grouped(limit=limit, db=db)
         
