@@ -189,61 +189,16 @@ const TVRealityShows = () => {
       return [];
     }
 
-    // Use current date for filtering
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    
-    const filtered = articles.filter((article) => {
-      // Use actual publishedAt date from article data
-      let articleDate;
-      if (article.published_at || article.publishedAt) {
-        articleDate = new Date(article.published_at || article.publishedAt);
-      } else {
-        return false; // Don't include articles without dates
-      }
-      
-      // Reset time to start of day for accurate comparison
-      const articleDateOnly = new Date(articleDate.getFullYear(), articleDate.getMonth(), articleDate.getDate());
-      const timeDiff = now - articleDate;
-      const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-      switch (filter) {
-        case 'latest':
-          return true; // Show all articles for "Latest" filter
-        case 'thisWeek':
-          // This week means current week (Monday to Sunday)
-          const currentWeekStart = new Date(today);
-          const dayOfWeek = today.getDay();
-          const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-          currentWeekStart.setDate(today.getDate() - daysToMonday);
-          
-          // Calculate week end (Sunday)
-          const currentWeekEnd = new Date(currentWeekStart);
-          currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
-          
-          return articleDateOnly >= currentWeekStart && articleDateOnly <= currentWeekEnd;
-        case 'today':
-          return articleDateOnly.getTime() === today.getTime();
-        case 'yesterday':
-          const yesterday = new Date(today);
-          yesterday.setDate(yesterday.getDate() - 1);
-          return articleDateOnly.getTime() === yesterday.getTime();
-        case 'week':
-          return daysDiff >= 0 && daysDiff <= 7;
-        case 'month':
-          return daysDiff >= 0 && daysDiff <= 30;
-        case 'quarter':
-          return daysDiff >= 0 && daysDiff <= 90;
-        case 'halfYear':
-          return daysDiff >= 0 && daysDiff <= 180;
-        case 'year':
-          return daysDiff >= 0 && daysDiff <= 365;
-        default:
-          return false;
-      }
+    // For reality shows, always show latest posts regardless of date
+    // Just return all articles sorted by published date (newest first)
+    const sorted = [...articles].sort((a, b) => {
+      const dateA = new Date(a.published_at || a.publishedAt || 0);
+      const dateB = new Date(b.published_at || b.publishedAt || 0);
+      return dateB - dateA; // Descending order (newest first)
     });
     
-    return filtered;
+    // Return max 50 articles
+    return sorted.slice(0, 50);
   };
 
   // Handle filter change
