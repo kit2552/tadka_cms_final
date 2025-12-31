@@ -53,6 +53,15 @@ const TVRealityShows = () => {
           console.log('✅ Grouped Reality Shows data received:', groupedData);
           console.log('✅ Reality shows count:', groupedData.reality_shows?.length || 0);
           console.log('✅ Hindi shows count:', groupedData.hindi?.length || 0);
+          
+          // Log the actual data being set
+          if (groupedData.hindi && groupedData.hindi.length > 0) {
+            console.log('✅ Setting hindiArticles with:', groupedData.hindi);
+            console.log('✅ First Hindi show:', groupedData.hindi[0].event_name, 'with', groupedData.hindi[0].video_count, 'videos');
+          } else {
+            console.warn('⚠️ No Hindi shows found in response');
+          }
+          
           setRealityShowsArticles(groupedData.reality_shows || []);
           setHindiArticles(groupedData.hindi || []);
         } else {
