@@ -106,7 +106,16 @@ const TVRealityShows = ({ bigBossData = {} }) => {
           const videoCount = show.video_count || 1;
           const firstVideo = show.all_videos?.[0] || show;
           const youtubeThumbnail = firstVideo.youtube_url ? getYouTubeThumbnail(firstVideo.youtube_url) : (firstVideo.image_url || firstVideo.image);
-          const channelName = show.channel_name || firstVideo.channel_name || 'Colors TV';
+          
+          // Extract channel name from title (format: "Title | | Channel Name")
+          let channelName = show.channel_name || firstVideo.channel_name;
+          if (!channelName && firstVideo.title) {
+            const parts = firstVideo.title.split('|');
+            if (parts.length >= 3) {
+              channelName = parts[parts.length - 1].trim();
+            }
+          }
+          channelName = channelName || 'Colors TV';
           
           return (
             <div
