@@ -99,60 +99,66 @@ const TVRealityShows = ({ bigBossData = {} }) => {
         </button>
       </div>
       
-      {/* Grid Layout - Wider cards for better thumbnail display */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-1">
-        {getCurrentData().map((show, index) => {
-          const showName = show.event_name || show.title;
-          const videoCount = show.video_count || 1;
-          const firstVideo = show.all_videos?.[0] || show;
-          const youtubeThumbnail = firstVideo.youtube_url ? getYouTubeThumbnail(firstVideo.youtube_url) : (firstVideo.image_url || firstVideo.image);
-          
-          // Extract channel name from title (format: "Title | | Channel Name")
-          let channelName = show.channel_name || firstVideo.channel_name;
-          if (!channelName && firstVideo.title) {
-            const parts = firstVideo.title.split('|');
-            if (parts.length >= 3) {
-              channelName = parts[parts.length - 1].trim();
+      {/* Horizontal Scroll Layout - Same as TV Today/Events Interviews */}
+      <div className="relative overflow-x-auto">
+        <div className="flex space-x-3 pt-1 pb-0 scrollbar-hide">
+          {getCurrentData().map((show, index) => {
+            const showName = show.event_name || show.title;
+            const videoCount = show.video_count || 1;
+            const firstVideo = show.all_videos?.[0] || show;
+            const youtubeThumbnail = firstVideo.youtube_url ? getYouTubeThumbnail(firstVideo.youtube_url) : (firstVideo.image_url || firstVideo.image);
+            
+            // Extract channel name from title (format: "Title | | Channel Name")
+            let channelName = show.channel_name || firstVideo.channel_name;
+            if (!channelName && firstVideo.title) {
+              const parts = firstVideo.title.split('|');
+              if (parts.length >= 3) {
+                channelName = parts[parts.length - 1].trim();
+              }
             }
-          }
-          channelName = channelName || 'Colors TV';
-          
-          return (
-            <div
-              key={show.id || index}
-              className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group"
-              onClick={() => handleShowClick(show)}
-            >
-              <div className="relative">
-                <img
-                  src={youtubeThumbnail || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
-                  alt={showName}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
-                  }}
-                />
-                
-                {/* Video Count Label - Right side */}
-                {videoCount > 1 && (
-                  <div className="absolute top-2 right-2 bg-black bg-opacity-80 text-white text-xs font-semibold px-2 py-1 rounded">
-                    {videoCount} Videos
+            channelName = channelName || 'Colors TV';
+            
+            return (
+              <div
+                key={show.id || index}
+                className="flex-shrink-0 cursor-pointer"
+                style={{ width: '240px' }}
+                onClick={() => handleShowClick(show)}
+              >
+                <div className="bg-white border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group relative">
+                  <div className="relative">
+                    <img
+                      src={youtubeThumbnail || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop'}
+                      alt={showName}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      style={{ width: '240px', height: '135px' }}
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
+                      }}
+                    />
+                    
+                    {/* Video Count Label - Right side */}
+                    {videoCount > 1 && (
+                      <div className="absolute top-2 right-2 bg-black bg-opacity-80 text-white text-xs font-bold px-2 py-1 rounded">
+                        {videoCount} videos
+                      </div>
+                    )}
+                    
+                    {/* Play icon overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black bg-opacity-20">
+                      <CirclePlay size={40} className="text-white drop-shadow-lg" />
+                    </div>
                   </div>
-                )}
-                
-                {/* Play icon overlay */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black bg-opacity-20">
-                  <CirclePlay size={40} className="text-white drop-shadow-lg" />
+                  <div className="p-3 text-left" style={{ width: '240px' }}>
+                    <h2 style={{fontSize: '13px', fontWeight: '600', lineHeight: '1.4', wordWrap: 'break-word'}} className="text-gray-900 hover:text-gray-700 transition-colors duration-300">
+                      {showName} | {channelName}
+                    </h2>
+                  </div>
                 </div>
               </div>
-              <div className="p-3 text-left">
-                <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300 line-clamp-2">
-                  {showName} | {channelName}
-                </h2>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* Videos Modal */}
