@@ -1136,35 +1136,16 @@ async def get_events_interviews_aggregated(limit: int = 20, states: str = None, 
 
 @api_router.get("/articles/sections/big-boss")
 async def get_big_boss_articles(limit: int = 20, db = Depends(get_db)):
-    """Get articles for Big Boss/TV Reality Shows section 
-    Now uses reality-shows-grouped endpoint to show grouped posts
+    """Get grouped reality shows for Big Boss/TV Reality Shows section 
+    Returns grouped format with event_name, video_count, and all_videos
     """
-    try:
-        # Fetch from reality-shows-grouped (which includes all statuses)
+    try {
+        # Use reality-shows-grouped which returns proper grouped format
         grouped_response = await get_reality_shows_grouped(limit=limit, db=db)
         
-        # Transform grouped format to regular article list format for BigBoss component
-        regional_articles = []
-        hindi_articles = []
-        
-        # Extract articles from grouped posts
-        if grouped_response.get('reality_shows'):
-            for group in grouped_response['reality_shows']:
-                all_videos = group.get('all_videos', [])
-                regional_articles.extend(all_videos)
-        
-        if grouped_response.get('hindi'):
-            for group in grouped_response['hindi']:
-                all_videos = group.get('all_videos', [])
-                hindi_articles.extend(all_videos)
-        
-        # Limit to requested number
-        regional_articles = regional_articles[:limit]
-        hindi_articles = hindi_articles[:limit]
-        
         return {
-            "big_boss": regional_articles,
-            "bollywood": hindi_articles
+            "big_boss": grouped_response.get('reality_shows', []),
+            "bollywood": grouped_response.get('hindi', [])
         }
     except Exception as e:
         print(f"❌ Error in get_big_boss_articles: {e}")
