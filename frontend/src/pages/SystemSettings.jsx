@@ -1023,7 +1023,97 @@ const SystemSettings = () => {
     if (activeTab === 'youtube-channels') {
       fetchYoutubeChannels();
     }
+    if (activeTab === 'reality-shows') {
+      fetchRealityShows();
+    }
   }, [youtubeLanguageFilter, youtubeTypeFilter, activeTab]);
+
+  // Fetch Reality Shows function
+  const fetchRealityShows = async () => {
+    try {
+      setRealityShowsLoading(true);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/reality-shows`);
+      if (response.ok) {
+        const data = await response.json();
+        setRealityShows(data || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch reality shows:', error);
+    } finally {
+      setRealityShowsLoading(false);
+    }
+  };
+
+  const handleSaveRealityShow = async (e) => {
+    e.preventDefault();
+    setSavingRealityShow(true);
+    setRealityShowMessage({ type: '', text: '' });
+
+    try {
+      const url = editingRealityShow
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/reality-shows/${editingRealityShow.id}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/reality-shows`;
+      
+      const method = editingRealityShow ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(realityShowForm)
+      });
+
+      if (response.ok) {
+        setRealityShowMessage({
+          type: 'success',
+          text: `Reality show ${editingRealityShow ? 'updated' : 'added'} successfully!`
+        });
+        setShowRealityShowModal(false);
+        setEditingRealityShow(null);
+        setRealityShowForm({
+          show_name: '',
+          youtube_channel_id: '',
+          youtube_channel_name: '',
+          filter_keywords: '',
+          language: 'Telugu'
+        });
+        fetchRealityShows();
+        setTimeout(() => setRealityShowMessage({ type: '', text: '' }), 3000);
+      } else {
+        const error = await response.json();
+        setRealityShowMessage({ type: 'error', text: error.detail || 'Failed to save reality show' });
+      }
+    } catch (error) {
+      setRealityShowMessage({ type: 'error', text: 'Network error. Please try again.' });
+    } finally {
+      setSavingRealityShow(false);
+    }
+  };
+
+  const handleDeleteRealityShow = async () => {
+    if (!realityShowToDelete) return;
+    
+    setDeletingRealityShow(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/reality-shows/${realityShowToDelete.id}`,
+        { method: 'DELETE' }
+      );
+
+      if (response.ok) {
+        setRealityShowMessage({ type: 'success', text: 'Reality show deleted successfully!' });
+        fetchRealityShows();
+        setTimeout(() => setRealityShowMessage({ type: '', text: '' }), 3000);
+      } else {
+        setRealityShowMessage({ type: 'error', text: 'Failed to delete reality show' });
+      }
+    } catch (error) {
+      setRealityShowMessage({ type: 'error', text: 'Network error. Please try again.' });
+    } finally {
+      setDeletingRealityShow(false);
+      setShowDeleteRealityShowModal(false);
+      setRealityShowToDelete(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
