@@ -106,7 +106,7 @@ const TVRealityShows = ({ bigBossData = {} }) => {
           const videoCount = show.video_count || 1;
           const firstVideo = show.all_videos?.[0] || show;
           const youtubeThumbnail = firstVideo.youtube_url ? getYouTubeThumbnail(firstVideo.youtube_url) : (firstVideo.image_url || firstVideo.image);
-          const channelName = show.channel_name || 'TV Show';
+          const channelName = show.channel_name || firstVideo.channel_name || 'Colors TV';
           
           return (
             <div
@@ -124,16 +124,10 @@ const TVRealityShows = ({ bigBossData = {} }) => {
                   }}
                 />
                 
-                {/* Channel Name Label */}
-                <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
-                  {channelName}
-                </div>
-                
-                {/* Video Count Badge */}
+                {/* Video Count Label - Right side */}
                 {videoCount > 1 && (
-                  <div className="absolute bottom-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
-                    <CirclePlay size={14} />
-                    <span>{videoCount}</span>
+                  <div className="absolute top-2 right-2 bg-black bg-opacity-80 text-white text-xs font-semibold px-2 py-1 rounded">
+                    {videoCount} Videos
                   </div>
                 )}
                 
@@ -144,13 +138,8 @@ const TVRealityShows = ({ bigBossData = {} }) => {
               </div>
               <div className="p-3 text-left">
                 <h2 style={{fontSize: '14px', fontWeight: '600'}} className="text-gray-900 leading-tight hover:text-gray-700 transition-colors duration-300 line-clamp-2">
-                  {showName}
+                  {showName} | {channelName}
                 </h2>
-                {videoCount > 1 && (
-                  <p className="text-xs text-blue-600 font-medium mt-1">
-                    {videoCount} Episodes
-                  </p>
-                )}
               </div>
             </div>
           );
