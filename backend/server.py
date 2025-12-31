@@ -2980,6 +2980,7 @@ app.include_router(ai_agents_router, prefix="/api")  # Add AI agents routes
 app.include_router(youtube_channels_router, prefix="/api")  # Add YouTube channels routes
 app.include_router(youtube_rss_router, prefix="/api")  # Add YouTube RSS routes
 app.include_router(grouped_posts_router, prefix="/api")  # Add grouped posts routes
+app.include_router(reality_shows_router, prefix="/api")  # Add reality shows routes
 
 app.add_middleware(
     CORSMiddleware,
