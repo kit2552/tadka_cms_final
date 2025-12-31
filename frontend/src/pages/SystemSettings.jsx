@@ -3099,6 +3099,204 @@ const SystemSettings = () => {
         </div>
       </div>
     </div>
+
+
+      {/* Reality Show Modal */}
+      {showRealityShowModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {editingRealityShow ? 'Edit Reality Show' : 'Add Reality Show'}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowRealityShowModal(false);
+                  setEditingRealityShow(null);
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <form onSubmit={handleSaveRealityShow} className="p-6 space-y-4">
+              {/* Show Name */}
+              <div className="text-left">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Reality Show Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={realityShowForm.show_name}
+                  onChange={(e) => setRealityShowForm({ ...realityShowForm, show_name: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g., Bigg Boss Telugu, Indian Idol"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">The name that will appear in agent dropdown</p>
+              </div>
+
+              {/* YouTube Channel Selector */}
+              <div className="text-left">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  YouTube Channel <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={realityShowForm.youtube_channel_id}
+                  onChange={(e) => {
+                    const selectedChannel = youtubeChannels.find(ch => ch.channel_id === e.target.value);
+                    setRealityShowForm({
+                      ...realityShowForm,
+                      youtube_channel_id: e.target.value,
+                      youtube_channel_name: selectedChannel ? selectedChannel.channel_name : ''
+                    });
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  <option value="">-- Select YouTube Channel --</option>
+                  {youtubeChannels.map((channel) => (
+                    <option key={channel.channel_id} value={channel.channel_id}>
+                      {channel.channel_name} ({channel.channel_type})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Select the YouTube channel for this reality show. If not listed, add it in YouTube Channels tab first.
+                </p>
+              </div>
+
+              {/* Language */}
+              <div className="text-left">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Language <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={realityShowForm.language}
+                  onChange={(e) => setRealityShowForm({ ...realityShowForm, language: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  <option value="Telugu">Telugu</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Kannada">Kannada</option>
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Punjabi">Punjabi</option>
+                  <option value="Gujarati">Gujarati</option>
+                  <option value="English">English</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">Primary language of the reality show content</p>
+              </div>
+
+              {/* Filter Keywords */}
+              <div className="text-left">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Include Filter Keywords <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={realityShowForm.filter_keywords}
+                  onChange={(e) => setRealityShowForm({ ...realityShowForm, filter_keywords: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g., Big Boss,Bigg Boss,Entertainment"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Comma-separated keywords that MUST be present in video titles. Videos without these keywords will be filtered out.
+                </p>
+                <p className="text-xs text-blue-600 mt-1">
+                  Example: "Big Boss,Entertainment Ki Raat" - videos must contain at least one of these keywords
+                </p>
+              </div>
+
+              {/* Info Box */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-start gap-2">
+                  <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div className="text-sm text-blue-800 text-left">
+                    <p className="font-medium mb-1">How it works:</p>
+                    <ul className="list-disc list-inside space-y-1 text-xs">
+                      <li>Agent will fetch videos from the selected YouTube channel</li>
+                      <li>Only videos with at least one of the filter keywords will be included</li>
+                      <li>All settings will auto-populate in agent form (read-only)</li>
+                      <li>Videos will be grouped by show name for easy management</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowRealityShowModal(false);
+                    setEditingRealityShow(null);
+                  }}
+                  className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  disabled={savingRealityShow}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingRealityShow}
+                  className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {savingRealityShow ? 'Saving...' : (editingRealityShow ? 'Update Show' : 'Add Show')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteRealityShowModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div className="p-6">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-red-100">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">Delete Reality Show</h3>
+              <p className="text-sm text-gray-600 text-center mb-6">
+                Are you sure you want to delete <span className="font-medium text-gray-900">"{realityShowToDelete?.show_name}"</span>? This action cannot be undone.
+              </p>
+            </div>
+            <div className="flex border-t border-gray-200">
+              <button
+                onClick={() => {
+                  setShowDeleteRealityShowModal(false);
+                  setRealityShowToDelete(null);
+                }}
+                className="flex-1 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                disabled={deletingRealityShow}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteRealityShow}
+                disabled={deletingRealityShow}
+                className="flex-1 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 border-l border-gray-200 disabled:opacity-50"
+              >
+                {deletingRealityShow ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
   );
 };
 
