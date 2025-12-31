@@ -138,6 +138,24 @@ const SystemSettings = () => {
   });
   const [languageSearch, setLanguageSearch] = useState('');
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+
+  // TV Reality Shows Mapping State
+  const [realityShows, setRealityShows] = useState([]);
+  const [realityShowsLoading, setRealityShowsLoading] = useState(false);
+  const [showRealityShowModal, setShowRealityShowModal] = useState(false);
+  const [editingRealityShow, setEditingRealityShow] = useState(null);
+  const [realityShowForm, setRealityShowForm] = useState({
+    show_name: '',
+    youtube_channel_id: '',
+    youtube_channel_name: '',
+    filter_keywords: '',
+    language: 'Telugu'
+  });
+  const [savingRealityShow, setSavingRealityShow] = useState(false);
+  const [realityShowMessage, setRealityShowMessage] = useState({ type: '', text: '' });
+  const [showDeleteRealityShowModal, setShowDeleteRealityShowModal] = useState(false);
+  const [realityShowToDelete, setRealityShowToDelete] = useState(null);
+  const [deletingRealityShow, setDeletingRealityShow] = useState(false);
   const [youtubeLanguages] = useState([
     { value: 'Hindi', label: 'Hindi' },
     { value: 'Telugu', label: 'Telugu' },
