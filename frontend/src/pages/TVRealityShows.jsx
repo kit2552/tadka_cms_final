@@ -103,7 +103,12 @@ const TVRealityShows = () => {
   // Update filtered articles when tab or filter changes
   useEffect(() => {
     const currentArticles = activeTab === 'hindi' ? hindiArticles : realityShowsArticles;
+    console.log(`📊 Filtering articles for tab: ${activeTab}`, {
+      totalArticles: currentArticles.length,
+      filter: selectedFilter
+    });
     const filtered = filterArticlesByDate(currentArticles, selectedFilter);
+    console.log(`✅ Filtered ${filtered.length} articles`);
     setFilteredArticles(filtered);
   }, [realityShowsArticles, hindiArticles, activeTab, selectedFilter]);
 
