@@ -250,3 +250,4 @@ The home page will now always show the most recently added releases, regardless 
 
 Now your users will always see the latest movie and OTT releases! 🎬🍿
 
+
