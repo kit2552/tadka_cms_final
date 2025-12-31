@@ -3077,15 +3077,35 @@ def update_grouped_post_title(db, group_id: str, group_title: str):
     from bson import ObjectId
     from datetime import datetime, timezone
     
-    result = db[GROUPED_POSTS].update_one(
-        {"_id": ObjectId(group_id)},
-        {
-            "$set": {
-                "group_title": group_title,
-                "updated_at": datetime.now(timezone.utc)
+    # Try by id field first (UUID), then by _id (ObjectId)
+    group = db[GROUPED_POSTS].find_one({"id": group_id})
+    
+    if group:
+        # UUID-based group
+        result = db[GROUPED_POSTS].update_one(
+            {"id": group_id},
+            {
+                "$set": {
+                    "group_title": group_title,
+                    "updated_at": datetime.now(timezone.utc)
+                }
             }
-        }
-    )
+        )
+    else:
+        # Try ObjectId-based group
+        try:
+            result = db[GROUPED_POSTS].update_one(
+                {"_id": ObjectId(group_id)},
+                {
+                    "$set": {
+                        "group_title": group_title,
+                        "updated_at": datetime.now(timezone.utc)
+                    }
+                }
+            )
+        except:
+            return False
+    
     return result.modified_count > 0
 
 def find_matching_grouped_post(db, movie_name: str, category: str, lookback_days: int = 2, new_post_title: str = None):
