@@ -50,7 +50,9 @@ const TVRealityShows = () => {
         
         if (groupedResponse.ok) {
           const groupedData = await groupedResponse.json();
-          console.log('Grouped Reality Shows data received:', groupedData);
+          console.log('✅ Grouped Reality Shows data received:', groupedData);
+          console.log('✅ Reality shows count:', groupedData.reality_shows?.length || 0);
+          console.log('✅ Hindi shows count:', groupedData.hindi?.length || 0);
           setRealityShowsArticles(groupedData.reality_shows || []);
           setHindiArticles(groupedData.hindi || []);
         } else {
