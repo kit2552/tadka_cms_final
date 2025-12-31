@@ -72,9 +72,11 @@ class AIAgent(BaseModel):
     lookback_days: Optional[int] = 2  # Days to look back for videos
     
     # Reality Show Agent fields
-    reality_show_category: Optional[str] = None  # Category for reality show posts (big-boss, big-boss-bollywood)
+    reality_show_category: Optional[str] = None  # Category for reality show posts (tv-reality-shows, tv-reality-shows-hindi)
     reality_show_name: Optional[str] = None  # Specific reality show name (e.g., "Bigg Boss", "Indian Idol")
+    youtube_channel_id: Optional[str] = None  # YouTube channel ID for the reality show
     reality_show_lookback_days: Optional[int] = 2  # Days to look back for videos
+    include_keywords: Optional[str] = None  # Comma-separated keywords that MUST be in title (e.g., "Big Boss,Entertainment Ki Raat")
     
     # Post Aggregation fields (for Video Agent)
     enable_aggregation: Optional[bool] = False  # Enable post grouping by movie/event name
