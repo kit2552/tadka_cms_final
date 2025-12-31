@@ -35,19 +35,27 @@ const BigBoss = ({ bigBossData = {} }) => {
       : 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=300&fit=crop';
   };
 
-  // Handle article click - navigate based on content type
-  const handleVideoClick = (article) => {
-    // Navigate to video view page for video content type articles
-    if (article.content_type === 'video' || article.youtube_url) {
-      navigate(`/video/${article.id}`);
+  // Handle show click - open modal if multiple videos, otherwise navigate directly
+  const handleShowClick = (show) => {
+    const videoCount = show.video_count || 1;
+    
+    if (videoCount > 1) {
+      // Multiple videos - open modal
+      setSelectedShow(show);
+      setShowModalOpen(true);
     } else {
-      // Navigate to regular article page for non-video articles
-      navigate(`/article/${article.id}`);
+      // Single video - navigate directly
+      const article = show.all_videos?.[0] || show;
+      if (article.content_type === 'video' || article.youtube_url) {
+        navigate(`/video/${article.id}`);
+      } else {
+        navigate(`/article/${article.id}`);
+      }
     }
   };
 
   const getCurrentData = () => {
-    return currentData; // Return all data since we removed pagination
+    return currentData;
   };
 
   return (
