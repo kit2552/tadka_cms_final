@@ -416,29 +416,49 @@ const TVRealityShows = () => {
               {filteredArticles.length > 0 ? (
                 filteredArticles.map((article) => {
                   const youtubeThumbnail = getYouTubeThumbnail(article.video_url || article.youtube_url);
+                  const videoCount = article.video_count || 1;
+                  const showName = article.event_name || article.title;
                   
                   return (
                     <div 
                       key={article.id} 
-                      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm cursor-pointer group transition-all duration-200"
+                      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md cursor-pointer group transition-all duration-200"
                       style={{ padding: '0.5rem' }}
-                      onClick={() => handleArticleClick(article)}
+                      onClick={() => handleShowClick(article)}
                     >
                       <div className="flex items-start space-x-3 text-left pr-3">
-                        <img
-                          src={youtubeThumbnail || article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=200&fit=crop'}
-                          alt={article.title}
-                          className="flex-shrink-0 w-32 h-24 object-cover rounded group-hover:scale-105 transition-transform duration-200"
-                          onError={(e) => {
-                            e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=200&fit=crop';
-                          }}
-                        />
+                        <div className="relative flex-shrink-0">
+                          <img
+                            src={youtubeThumbnail || article.image_url || article.image || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=200&fit=crop'}
+                            alt={showName}
+                            className="w-32 h-24 object-cover rounded group-hover:scale-105 transition-transform duration-200"
+                            onError={(e) => {
+                              e.target.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=200&fit=crop';
+                            }}
+                          />
+                          {/* Video count badge */}
+                          {videoCount > 1 && (
+                            <div className="absolute bottom-1 right-1 bg-black bg-opacity-75 text-white text-xs px-2 py-0.5 rounded flex items-center gap-1">
+                              <CirclePlay size={12} />
+                              <span>{videoCount}</span>
+                            </div>
+                          )}
+                          {/* Play icon overlay */}
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black bg-opacity-20">
+                            <CirclePlay size={32} className="text-white drop-shadow-lg" />
+                          </div>
+                        </div>
                         <div className="flex-1 min-w-0 text-left">
-                          <h3 className="text-sm font-semibold text-gray-900 leading-tight hover:text-blue-600 mb-2 transition-colors duration-200 text-left">
-                            {article.title}
+                          <h3 className="text-sm font-semibold text-gray-900 leading-tight group-hover:text-blue-600 mb-2 transition-colors duration-200 text-left line-clamp-2">
+                            {showName}
                           </h3>
-                          <div className="text-xs text-gray-500 text-left">
-                            <p className="mb-1">
+                          <div className="text-xs text-gray-500 text-left space-y-1">
+                            {videoCount > 1 && (
+                              <p className="text-blue-600 font-medium">
+                                {videoCount} Videos
+                              </p>
+                            )}
+                            <p>
                               {formatDate(article.published_at || article.publishedAt)}
                             </p>
                           </div>
