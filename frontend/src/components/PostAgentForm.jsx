@@ -1790,7 +1790,29 @@ Instructions:
                   <select
                     name="reality_show_name"
                     value={formData.reality_show_name || ''}
-                    onChange={handleInputChange}
+                    onChange={(e) => {
+                      const selectedShowName = e.target.value;
+                      const selectedShow = realityShows.find(show => show.show_name === selectedShowName);
+                      
+                      if (selectedShow) {
+                        // Auto-populate all fields from system settings
+                        setFormData(prev => ({
+                          ...prev,
+                          reality_show_name: selectedShow.show_name,
+                          youtube_channel_id: selectedShow.youtube_channel_id,
+                          target_language: selectedShow.language,
+                          include_keywords: selectedShow.filter_keywords
+                        }));
+                      } else {
+                        setFormData(prev => ({
+                          ...prev,
+                          reality_show_name: '',
+                          youtube_channel_id: '',
+                          target_language: '',
+                          include_keywords: ''
+                        }));
+                      }
+                    }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                   >
                     <option value="">-- Select a show --</option>
@@ -1798,45 +1820,79 @@ Instructions:
                       // Filter by language based on category
                       const isHindi = formData.reality_show_category === 'tv-reality-shows-hindi';
                       if (isHindi) {
-                        return show.languages && show.languages.includes('Hindi');
+                        return show.language && show.language.toLowerCase() === 'hindi';
                       } else {
-                        return show.languages && !show.languages.includes('Hindi');
+                        return show.language && show.language.toLowerCase() !== 'hindi';
                       }
                     }).map(show => (
-                      <option key={show.channel_id} value={show.channel_name}>
-                        {show.channel_name} ({show.languages ? show.languages.join(', ') : 'N/A'})
+                      <option key={show.id} value={show.show_name}>
+                        {show.show_name} ({show.language})
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-red-500 mt-2 font-medium">
-                    ⚠️ You must select a specific reality show. Agent will fetch ONLY from this show's channel.
+                  <p className="text-xs text-blue-600 mt-2 font-medium">
+                    ℹ️ Shows are configured in System Settings → TV Reality Shows
                   </p>
+                  {!formData.reality_show_name && (
+                    <p className="text-xs text-red-500 mt-1 font-medium">
+                      ⚠️ Please select a reality show. If no shows available, add them in System Settings first.
+                    </p>
+                  )}
                 </div>
 
-                {/* Target Language */}
-                <div className="text-left">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Target Language <span className="text-red-500">*</span></label>
-                  <select
-                    name="target_language"
-                    value={formData.target_language || ''}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                  >
-                    <option value="">-- Select Language --</option>
-                    <option value="Telugu">Telugu</option>
-                    <option value="Tamil">Tamil</option>
-                    <option value="Hindi">Hindi</option>
-                    <option value="Kannada">Kannada</option>
-                    <option value="Malayalam">Malayalam</option>
-                    <option value="Bengali">Bengali</option>
-                    <option value="Marathi">Marathi</option>
-                    <option value="Punjabi">Punjabi</option>
-                    <option value="Gujarati">Gujarati</option>
-                  </select>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Select the primary language of the reality show content
-                  </p>
-                </div>
+                {/* YouTube Channel - READ ONLY (Auto-populated) */}
+                {formData.reality_show_name && (
+                  <div className="text-left">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      YouTube Channel <span className="text-xs text-gray-500">(Auto-populated)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.youtube_channel_id || ''}
+                      disabled
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-600 cursor-not-allowed"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Configured in System Settings for this show
+                    </p>
+                  </div>
+                )}
+
+                {/* Target Language - READ ONLY (Auto-populated) */}
+                {formData.reality_show_name && (
+                  <div className="text-left">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Language <span className="text-xs text-gray-500">(Auto-populated)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.target_language || ''}
+                      disabled
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-600 cursor-not-allowed"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Configured in System Settings for this show
+                    </p>
+                  </div>
+                )}
+
+                {/* Filter Keywords - READ ONLY (Auto-populated) */}
+                {formData.reality_show_name && (
+                  <div className="text-left">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Include Filter Keywords <span className="text-xs text-gray-500">(Auto-populated)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.include_keywords || ''}
+                      disabled
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-600 cursor-not-allowed"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Only videos containing these keywords will be fetched. Configured in System Settings.
+                    </p>
+                  </div>
+                )}
 
                 {/* Content Type Filter */}
                 <div className="text-left">
