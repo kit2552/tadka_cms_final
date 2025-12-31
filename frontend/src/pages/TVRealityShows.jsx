@@ -348,9 +348,9 @@ const TVRealityShows = () => {
                       TV Reality Shows
                     </button>
                     <button
-                      onClick={() => setActiveTab('bollywood')}
+                      onClick={() => setActiveTab('hindi')}
                       className={`text-base font-bold transition-colors duration-200 ${
-                        activeTab === 'bollywood'
+                        activeTab === 'hindi'
                           ? 'text-black'
                           : 'text-gray-600 hover:text-gray-800'
                       }`}
