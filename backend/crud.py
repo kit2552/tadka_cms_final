@@ -2982,7 +2982,16 @@ def get_grouped_post_by_id(db, group_id: str):
     """Get a specific grouped post with all articles"""
     from bson import ObjectId
     
-    group = db[GROUPED_POSTS].find_one({"_id": ObjectId(group_id)})
+    # Try to find by id field first (UUID), then by _id (ObjectId)
+    group = db[GROUPED_POSTS].find_one({"id": group_id})
+    
+    if not group:
+        # Try with ObjectId format
+        try:
+            group = db[GROUPED_POSTS].find_one({"_id": ObjectId(group_id)})
+        except:
+            pass
+    
     if not group:
         return None
     
