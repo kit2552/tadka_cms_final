@@ -121,7 +121,10 @@ async def fetch_single_channel(channel_id: str):
         channel_name=channel.get('channel_name', 'Unknown'),
         channel_type=channel.get('channel_type', 'unknown'),
         languages=channel.get('languages', ['Hindi']),
-        rss_url=channel.get('rss_url')
+        rss_url=channel.get('rss_url'),
+        fetch_videos=channel.get('fetch_videos', True),
+        fetch_shorts=channel.get('fetch_shorts', False),
+        full_movies_only=channel.get('full_movies_only', False)
     )
     
     # Store videos in database
