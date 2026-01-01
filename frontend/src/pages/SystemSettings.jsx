@@ -134,7 +134,8 @@ const SystemSettings = () => {
     languages: [],
     is_active: true,
     fetch_videos: true,
-    fetch_shorts: false
+    fetch_shorts: false,
+    full_movies_only: false
   });
   const [languageSearch, setLanguageSearch] = useState('');
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
