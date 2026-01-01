@@ -127,15 +127,23 @@ class YouTubeRSSService:
                             if not fetch_videos:
                                 continue  # Skip regular videos if fetch_videos is disabled
                         
-                        # For movie_channel type, only keep full-length movies
+                        # For movie_channel type, filter based on full_movies_only flag
                         if channel_type == 'movie_channel':
                             if detected_category != 'Full Movie':
-                                # Check if title suggests it's a full movie (relaxed criteria)
-                                is_full_movie = any(kw in title_lower for kw in [
-                                    'full movie', 'full film', 'complete movie', 'hd movie',
-                                    'superhit movie', 'blockbuster movie', 'latest movie',
-                                    'movie |', '| movie', ' movie ', # Common patterns like "Title Movie | Channel"
-                                ])
+                                if full_movies_only:
+                                    # STRICT MODE: Only accept "Full Movie" keywords
+                                    is_full_movie = any(kw in title_lower for kw in [
+                                        'full movie', 'full film', 'complete movie', 'hd movie',
+                                        'superhit movie', 'blockbuster movie', 'latest movie'
+                                    ])
+                                else:
+                                    # RELAXED MODE: Accept broader movie patterns
+                                    is_full_movie = any(kw in title_lower for kw in [
+                                        'full movie', 'full film', 'complete movie', 'hd movie',
+                                        'superhit movie', 'blockbuster movie', 'latest movie',
+                                        'movie |', '| movie', ' movie ',  # Common patterns like "Title Movie | Channel"
+                                    ])
+                                
                                 # Skip shorts, trailers, promos, songs etc
                                 is_not_movie = any(kw in title_lower for kw in [
                                     'trailer', 'teaser', 'promo', 'song', 'scene', 'clip',
