@@ -26,6 +26,7 @@ class YouTubeChannelCreate(BaseModel):
     is_active: bool = True
     fetch_videos: bool = True  # Fetch regular videos
     fetch_shorts: bool = False  # Fetch YouTube Shorts
+    full_movies_only: bool = False  # For movie_channel: Only fetch videos with "Full Movie" in title
 
 class YouTubeChannelUpdate(BaseModel):
     channel_name: Optional[str] = None
@@ -36,6 +37,7 @@ class YouTubeChannelUpdate(BaseModel):
     is_active: Optional[bool] = None
     fetch_videos: Optional[bool] = None
     fetch_shorts: Optional[bool] = None
+    full_movies_only: Optional[bool] = None  # For movie_channel: Only fetch videos with "Full Movie" in title
 
 class YouTubeChannelResponse(BaseModel):
     id: str
