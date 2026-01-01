@@ -49,6 +49,7 @@ class YouTubeChannelResponse(BaseModel):
     is_active: bool
     fetch_videos: bool = True
     fetch_shorts: bool = False
+    full_movies_only: bool = False  # For movie_channel: Only fetch videos with "Full Movie" in title
     created_at: datetime
     updated_at: datetime
 
