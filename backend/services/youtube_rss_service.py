@@ -31,7 +31,7 @@ class YouTubeRSSService:
     def __init__(self):
         self.is_running = False
     
-    async def fetch_channel_rss(self, channel_id: str, channel_name: str, channel_type: str, languages: List[str], rss_url: Optional[str] = None, fetch_videos: bool = True, fetch_shorts: bool = False) -> List[Dict]:
+    async def fetch_channel_rss(self, channel_id: str, channel_name: str, channel_type: str, languages: List[str], rss_url: Optional[str] = None, fetch_videos: bool = True, fetch_shorts: bool = False, full_movies_only: bool = False) -> List[Dict]:
         """Fetch videos from a single channel's RSS feed
         
         Args:
