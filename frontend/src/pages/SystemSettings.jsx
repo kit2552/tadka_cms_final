@@ -1013,7 +1013,8 @@ const SystemSettings = () => {
       languages: channel.languages,
       is_active: channel.is_active,
       fetch_videos: channel.fetch_videos !== false,  // Default to true if not set
-      fetch_shorts: channel.fetch_shorts || false
+      fetch_shorts: channel.fetch_shorts || false,
+      full_movies_only: channel.full_movies_only || false
     });
     setLanguageSearch('');
     setShowLanguageDropdown(false);
