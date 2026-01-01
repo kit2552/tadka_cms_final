@@ -2800,6 +2800,26 @@ const SystemSettings = () => {
                       <p className="text-xs text-gray-500 text-left">Select what type of content to fetch from this channel</p>
                     </div>
                     
+                    {/* Full Movies Only - Shows only for movie_channel */}
+                    {youtubeChannelForm.channel_type === 'movie_channel' && (
+                      <div className="space-y-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={youtubeChannelForm.full_movies_only || false}
+                            onChange={(e) => setYoutubeChannelForm(prev => ({ ...prev, full_movies_only: e.target.checked }))}
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                          <span className="text-sm font-medium text-gray-900">Full Movies Only</span>
+                        </label>
+                        <p className="text-xs text-gray-600 text-left ml-6">
+                          {youtubeChannelForm.full_movies_only 
+                            ? '✅ STRICT MODE: Only fetch videos with "Full Movie", "Complete Movie" etc. in title' 
+                            : '⚡ RELAXED MODE: Fetch all movies including titles like "Movie Name | Channel"'}
+                        </p>
+                      </div>
+                    )}
+                    
                     <div className="flex items-center">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
