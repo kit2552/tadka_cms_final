@@ -186,6 +186,7 @@ async def fetch_all_sources(background_tasks: BackgroundTasks):
     """Fetch all active release sources"""
     from services.release_scraper_service import release_scraper_service
     import asyncio
+    import traceback
     
     sources = list(db[RELEASE_SOURCES].find({"is_active": True}))
     
@@ -194,10 +195,15 @@ async def fetch_all_sources(background_tasks: BackgroundTasks):
     
     # Run fetch in background - wrap async function properly
     def run_fetch_all():
+        print("🔄 Background task starting fetch_all_sources...")
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         try:
-            loop.run_until_complete(release_scraper_service.fetch_all_sources())
+            result = loop.run_until_complete(release_scraper_service.fetch_all_sources())
+            print(f"✅ fetch_all_sources completed: {result}")
+        except Exception as e:
+            print(f"❌ fetch_all_sources error: {e}")
+            traceback.print_exc()
         finally:
             loop.close()
     
