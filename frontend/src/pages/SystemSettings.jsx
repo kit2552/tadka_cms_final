@@ -904,10 +904,10 @@ const SystemSettings = () => {
         setChannelUrlInput('');
       } else {
         const error = await response.json();
-        setChannelUrlError(error.detail || 'Failed to extract channel details');
+        setChannelUrlError(error.detail || 'Failed to extract channel details. Please verify the URL by opening it in your browser first.');
       }
     } catch (error) {
-      setChannelUrlError('Failed to extract channel details');
+      setChannelUrlError('Network error. Please check your connection and try again.');
     } finally {
       setExtractingChannel(false);
     }
