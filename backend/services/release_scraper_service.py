@@ -494,37 +494,9 @@ class ReleaseScraperService:
                             print(f"   📊 Using selector '{selector}': found {len(found)} articles")
                             break
                 
-                # Filter out common non-content patterns
-                skip_patterns = [
-                    r'/contact', r'/about', r'/privacy', r'/terms', r'/disclaimer',
-                    r'/category/', r'/tag/', r'/page/\d+', r'/author/',
-                    r'#', r'/search', r'/login', r'/register', r'/cart',
-                    r'\.(jpg|png|gif|css|js)$', r'/wp-content/', r'/wp-admin/',
-                ]
-                
-                print(f"   📊 Found {len(articles)} potential articles before filtering")
-                
-                filtered_articles = []
-                for article in articles[:100]:
-                    # Get the link
-                    if article.name == 'a':
-                        link = article.get('href', '')
-                    else:
-                        link_elem = article.find('a')
-                        link = link_elem.get('href', '') if link_elem else ''
-                    
-                    # Skip if link matches skip patterns
-                    should_skip = False
-                    for pattern in skip_patterns:
-                        if re.search(pattern, link, re.I):
-                            should_skip = True
-                            break
-                    
-                    if not should_skip and link:
-                        filtered_articles.append(article)
-                
-                print(f"   📊 After filtering: {len(filtered_articles)} articles")
-                articles = filtered_articles[:50]  # Limit to 50
+                # Limit to 50 articles
+                articles = articles[:50]
+                print(f"   📊 Processing {len(articles)} articles")
                 
                 for article in articles:
                     try:
