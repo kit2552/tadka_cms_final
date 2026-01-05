@@ -454,10 +454,59 @@ class ReleaseScraperService:
                         break
                 
                 if not articles:
-                    # Fallback: Look for links with movie-like patterns
-                    articles = soup.find_all('a', href=re.compile(r'(movie|series|film|release|watch|stream)', re.I))
+                    # Fallback: Look for links with movie/series patterns in URL path
+                    # Filter to only include links that look like content (not navigation)
+                    content_patterns = [
+                        r'/web-series/[a-z0-9-]+',
+                        r'/movies?/[a-z0-9-]+',
+                        r'/films?/[a-z0-9-]+',
+                        r'/documentary/[a-z0-9-]+',
+                        r'/tv-shows?/[a-z0-9-]+',
+                        r'/ott/[a-z0-9-]+',
+                        r'/release/[a-z0-9-]+',
+                    ]
+                    
+                    all_links = soup.find_all('a', href=True)
+                    for link in all_links:
+                        href = link.get('href', '')
+                        for pattern in content_patterns:
+                            if re.search(pattern, href, re.I):
+                                articles.append(link)
+                                break
                 
-                for article in articles[:50]:  # Limit to 50 items
+                # Filter out common non-content patterns
+                skip_patterns = [
+                    r'/contact', r'/about', r'/privacy', r'/terms', r'/disclaimer',
+                    r'/category/', r'/tag/', r'/page/\d+', r'/author/',
+                    r'#', r'/search', r'/login', r'/register', r'/cart',
+                    r'\.(jpg|png|gif|css|js)$', r'/wp-content/', r'/wp-admin/',
+                ]
+                
+                print(f"   📊 Found {len(articles)} potential articles before filtering")
+                
+                filtered_articles = []
+                for article in articles[:100]:
+                    # Get the link
+                    if article.name == 'a':
+                        link = article.get('href', '')
+                    else:
+                        link_elem = article.find('a')
+                        link = link_elem.get('href', '') if link_elem else ''
+                    
+                    # Skip if link matches skip patterns
+                    should_skip = False
+                    for pattern in skip_patterns:
+                        if re.search(pattern, link, re.I):
+                            should_skip = True
+                            break
+                    
+                    if not should_skip and link:
+                        filtered_articles.append(article)
+                
+                print(f"   📊 After filtering: {len(filtered_articles)} articles")
+                articles = filtered_articles[:50]  # Limit to 50
+                
+                for article in articles:
                     try:
                         # Extract title and link
                         if article.name == 'a':
