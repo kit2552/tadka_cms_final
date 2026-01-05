@@ -3495,7 +3495,13 @@ const SystemSettings = () => {
                                 </div>
                               </td>
                               <td className="px-6 py-4">
-                                <span className="text-sm font-medium text-gray-900">{source.items_count || 0}</span>
+                                <button
+                                  onClick={() => openReleaseItemsModal(source)}
+                                  className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
+                                  disabled={!source.items_count}
+                                >
+                                  {source.items_count || 0}
+                                </button>
                               </td>
                               <td className="px-6 py-4 text-left">
                                 <div className="text-xs text-gray-500">
