@@ -455,20 +455,21 @@ class ReleaseScraperService:
                 
                 if not articles:
                     # Fallback: Look for links with movie/series patterns in URL path
-                    # Filter to only include links that look like content (not navigation)
+                    # These patterns require a slug after the category path
                     content_patterns = [
-                        r'/web-series/[a-z0-9-]+',
-                        r'/movies?/[a-z0-9-]+',
-                        r'/films?/[a-z0-9-]+',
-                        r'/documentary/[a-z0-9-]+',
-                        r'/tv-shows?/[a-z0-9-]+',
-                        r'/ott/[a-z0-9-]+',
-                        r'/release/[a-z0-9-]+',
+                        r'/web-series/[a-z0-9][a-z0-9-]+$',  # Must have a slug after /web-series/
+                        r'/movies?/[a-z0-9][a-z0-9-]+$',
+                        r'/films?/[a-z0-9][a-z0-9-]+$',
+                        r'/documentary/[a-z0-9][a-z0-9-]+$',
+                        r'/tv-shows?/[a-z0-9][a-z0-9-]+$',
+                        r'/ott/[a-z0-9][a-z0-9-]+$',
+                        r'/release/[a-z0-9][a-z0-9-]+$',
+                        r'/\d{4}/\d{2}/[a-z0-9-]+$',  # Date-based URLs like /2024/01/movie-name
                     ]
                     
                     all_links = soup.find_all('a', href=True)
                     for link in all_links:
-                        href = link.get('href', '')
+                        href = link.get('href', '').rstrip('/')  # Remove trailing slash
                         for pattern in content_patterns:
                             if re.search(pattern, href, re.I):
                                 articles.append(link)
