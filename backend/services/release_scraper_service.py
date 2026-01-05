@@ -312,19 +312,16 @@ class ReleaseScraperService:
                         if content_filter == 'auto_detect':
                             content_type = self._detect_content_type(combined_text, link)
                         else:
-                            content_type = content_filter.replace('_only', '')
+                            # Normalize content type (movies_only -> movie, tv_shows_only -> tv_show)
+                            content_type = content_filter.replace('_only', '').rstrip('s')
+                            if content_type == 'tv_show':
+                                content_type = 'tv_show'  # Keep as is
                         
                         # Detect release type
                         release_type = self._detect_release_type(combined_text, link)
                         
-                        # Apply content filter
-                        if content_filter != 'auto_detect':
-                            filter_type = content_filter.replace('_only', '')
-                            if filter_type in ['ott', 'theater']:
-                                if release_type != filter_type:
-                                    continue
-                            elif content_type != filter_type:
-                                continue
+                        # Apply content filter (skip this check if filter was applied above)
+                        # We already filtered by setting content_type from filter
                         
                         # Detect OTT platforms
                         ott_platforms = self._detect_ott_platforms(combined_text)
@@ -544,19 +541,16 @@ class ReleaseScraperService:
                         if content_filter == 'auto_detect':
                             content_type = self._detect_content_type(combined_text, link)
                         else:
-                            content_type = content_filter.replace('_only', '')
+                            # Normalize content type (movies_only -> movie, tv_shows_only -> tv_show)
+                            content_type = content_filter.replace('_only', '').rstrip('s')
+                            if content_type == 'tv_show':
+                                content_type = 'tv_show'  # Keep as is
                         
                         # Detect release type
                         release_type = self._detect_release_type(combined_text, link)
                         
-                        # Apply content filter
-                        if content_filter != 'auto_detect':
-                            filter_type = content_filter.replace('_only', '')
-                            if filter_type in ['ott', 'theater']:
-                                if release_type != filter_type:
-                                    continue
-                            elif content_type != filter_type:
-                                continue
+                        # Apply content filter (skip this check if filter was applied above)
+                        # We already filtered by setting content_type from filter
                         
                         # Detect OTT platforms
                         ott_platforms = self._detect_ott_platforms(combined_text)
