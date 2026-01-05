@@ -312,10 +312,17 @@ class ReleaseScraperService:
                         if content_filter == 'auto_detect':
                             content_type = self._detect_content_type(combined_text, link)
                         else:
-                            # Normalize content type (movies_only -> movie, tv_shows_only -> tv_show)
-                            content_type = content_filter.replace('_only', '').rstrip('s')
-                            if content_type == 'tv_show':
-                                content_type = 'tv_show'  # Keep as is
+                            # Normalize content type from filter
+                            # movies_only -> movie, tv_shows_only -> tv_show, web_series_only -> web_series
+                            filter_map = {
+                                'movies_only': 'movie',
+                                'tv_shows_only': 'tv_show',
+                                'web_series_only': 'web_series',
+                                'documentary_only': 'documentary',
+                                'ott_only': 'ott',
+                                'theater_only': 'theater',
+                            }
+                            content_type = filter_map.get(content_filter, content_filter.replace('_only', ''))
                         
                         # Detect release type
                         release_type = self._detect_release_type(combined_text, link)
@@ -541,10 +548,17 @@ class ReleaseScraperService:
                         if content_filter == 'auto_detect':
                             content_type = self._detect_content_type(combined_text, link)
                         else:
-                            # Normalize content type (movies_only -> movie, tv_shows_only -> tv_show)
-                            content_type = content_filter.replace('_only', '').rstrip('s')
-                            if content_type == 'tv_show':
-                                content_type = 'tv_show'  # Keep as is
+                            # Normalize content type from filter
+                            # movies_only -> movie, tv_shows_only -> tv_show, web_series_only -> web_series
+                            filter_map = {
+                                'movies_only': 'movie',
+                                'tv_shows_only': 'tv_show',
+                                'web_series_only': 'web_series',
+                                'documentary_only': 'documentary',
+                                'ott_only': 'ott',
+                                'theater_only': 'theater',
+                            }
+                            content_type = filter_map.get(content_filter, content_filter.replace('_only', ''))
                         
                         # Detect release type
                         release_type = self._detect_release_type(combined_text, link)
