@@ -30,6 +30,7 @@ from routes.youtube_channels_routes import router as youtube_channels_router
 from routes.youtube_rss_routes import router as youtube_rss_router
 from routes.grouped_posts_routes import router as grouped_posts_router
 from routes.reality_shows_routes import router as reality_shows_router
+from routes.release_sources_routes import router as release_sources_router
 from auth import create_default_admin
 from scheduler_service import article_scheduler
 from s3_service import s3_service
