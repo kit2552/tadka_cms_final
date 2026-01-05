@@ -3165,37 +3165,32 @@ const SystemSettings = () => {
                   YouTube Channel <span className="text-red-500">*</span>
                 </label>
                 <select
-                  value={realityShowForm.youtube_channel_id || ''}
+                  value={`${realityShowForm.youtube_channel_id}|||${realityShowForm.youtube_channel_name}`}
                   onChange={(e) => {
-                    const selectedId = e.target.value;
-                    const selectedChannel = youtubeChannels.find(ch => ch.id === selectedId);
+                    const [channelId, channelName] = e.target.value.split('|||');
                     
-                    if (selectedChannel) {
-                      setRealityShowForm({
-                        ...realityShowForm,
-                        youtube_channel_id: selectedChannel.channel_id,
-                        youtube_channel_name: selectedChannel.channel_name
-                      });
-                    }
+                    setRealityShowForm({
+                      ...realityShowForm,
+                      youtube_channel_id: channelId,
+                      youtube_channel_name: channelName
+                    });
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
                   required
                 >
                   <option value="">-- Select YouTube Channel --</option>
                   {youtubeChannels.map((channel) => (
-                    <option key={channel.id} value={channel.id}>
-                      {channel.channel_name} - ({channel.channel_type})
+                    <option 
+                      key={channel.id} 
+                      value={`${channel.channel_id}|||${channel.channel_name}`}
+                    >
+                      {channel.channel_name} ({channel.channel_type})
                     </option>
                   ))}
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  Select the YouTube channel for this reality show. Channel type shown to help distinguish duplicates.
+                  Select the YouTube channel for this reality show. Channel type shown to distinguish duplicates.
                 </p>
-                {realityShowForm.youtube_channel_id && (
-                  <p className="text-xs text-green-600 mt-1 font-medium">
-                    ✓ Selected: {realityShowForm.youtube_channel_name}
-                  </p>
-                )}
               </div>
 
               {/* Language */}
