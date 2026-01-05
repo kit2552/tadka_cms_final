@@ -306,11 +306,18 @@ async def fetch_release_source(source_id: str, background_tasks: BackgroundTasks
     if not source:
         raise HTTPException(status_code=404, detail="Release source not found")
     
-    # Run fetch in background
-    background_tasks.add_task(
-        release_scraper_service.fetch_source,
-        source
-    )
+    # Run fetch in background - wrap async function properly
+    import asyncio
+    
+    def run_fetch():
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(release_scraper_service.fetch_source(source))
+        finally:
+            loop.close()
+    
+    background_tasks.add_task(run_fetch)
     
     return {
         "message": f"Fetch started for {source['source_name']}",
