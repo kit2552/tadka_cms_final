@@ -3165,36 +3165,37 @@ const SystemSettings = () => {
                   YouTube Channel <span className="text-red-500">*</span>
                 </label>
                 <select
-                  value={realityShowForm.youtube_channel_id}
+                  value={realityShowForm.youtube_channel_id || ''}
                   onChange={(e) => {
-                    const selectedChannelId = e.target.value;
-                    // Find the channel - use the data-channel-name from the selected option
-                    const selectedOption = e.target.options[e.target.selectedIndex];
-                    const channelName = selectedOption.getAttribute('data-channel-name');
+                    const selectedId = e.target.value;
+                    const selectedChannel = youtubeChannels.find(ch => ch.id === selectedId);
                     
-                    setRealityShowForm({
-                      ...realityShowForm,
-                      youtube_channel_id: selectedChannelId,
-                      youtube_channel_name: channelName || ''
-                    });
+                    if (selectedChannel) {
+                      setRealityShowForm({
+                        ...realityShowForm,
+                        youtube_channel_id: selectedChannel.channel_id,
+                        youtube_channel_name: selectedChannel.channel_name
+                      });
+                    }
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
                   required
                 >
                   <option value="">-- Select YouTube Channel --</option>
                   {youtubeChannels.map((channel) => (
-                    <option 
-                      key={`${channel.channel_id}-${channel.id}`} 
-                      value={channel.channel_id}
-                      data-channel-name={channel.channel_name}
-                    >
-                      {channel.channel_name} ({channel.channel_type})
+                    <option key={channel.id} value={channel.id}>
+                      {channel.channel_name} - ({channel.channel_type})
                     </option>
                   ))}
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  Select the YouTube channel for this reality show. Channel type is shown in parentheses.
+                  Select the YouTube channel for this reality show. Channel type shown to help distinguish duplicates.
                 </p>
+                {realityShowForm.youtube_channel_id && (
+                  <p className="text-xs text-green-600 mt-1 font-medium">
+                    ✓ Selected: {realityShowForm.youtube_channel_name}
+                  </p>
+                )}
               </div>
 
               {/* Language */}
