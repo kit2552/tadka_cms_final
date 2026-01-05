@@ -3336,9 +3336,391 @@ const SystemSettings = () => {
               </div>
             )}
 
+            {/* Releases Tab */}
+            {activeTab === 'releases' && (
+              <div className="space-y-6">
+                {/* Header with Stats */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="text-left">
+                    <h2 className="text-lg font-semibold text-gray-900">Release Sources Configuration</h2>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Configure RSS feeds and websites to fetch OTT & Theater release data
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleFetchAllSources}
+                      className="inline-flex items-center px-3 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      Fetch All
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowReleaseSourceModal(true);
+                        setEditingReleaseSource(null);
+                        setReleaseSourceForm({
+                          source_name: '',
+                          source_type: 'rss',
+                          source_url: '',
+                          content_filter: 'auto_detect',
+                          language_filter: 'all',
+                          is_active: true,
+                          fetch_mode: 'manual',
+                          schedule_interval: null
+                        });
+                      }}
+                      className="inline-flex items-center px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Add Source
+                    </button>
+                  </div>
+                </div>
+
+                {/* Stats Cards */}
+                {releaseStats && (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-blue-50 rounded-lg p-4 text-left">
+                      <div className="text-2xl font-bold text-blue-600">{releaseStats.sources?.active || 0}</div>
+                      <div className="text-sm text-gray-600">Active Sources</div>
+                    </div>
+                    <div className="bg-green-50 rounded-lg p-4 text-left">
+                      <div className="text-2xl font-bold text-green-600">{releaseStats.items?.total || 0}</div>
+                      <div className="text-sm text-gray-600">Total Items</div>
+                    </div>
+                    <div className="bg-yellow-50 rounded-lg p-4 text-left">
+                      <div className="text-2xl font-bold text-yellow-600">{releaseStats.items?.unused || 0}</div>
+                      <div className="text-sm text-gray-600">Unused Items</div>
+                    </div>
+                    <div className="bg-purple-50 rounded-lg p-4 text-left">
+                      <div className="text-2xl font-bold text-purple-600">{releaseStats.items?.used || 0}</div>
+                      <div className="text-sm text-gray-600">Used Items</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Message */}
+                {releaseSourceMessage.text && (
+                  <div className={`p-4 rounded-lg ${releaseSourceMessage.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+                    {releaseSourceMessage.text}
+                  </div>
+                )}
+
+                {/* Sources List */}
+                {releaseSourcesLoading ? (
+                  <div className="flex justify-center items-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  </div>
+                ) : releaseSources.length === 0 ? (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    <p className="text-gray-500">No release sources configured</p>
+                    <p className="text-sm text-gray-400 mt-1">Add RSS feeds or websites to start fetching release data</p>
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Filter</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Items</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Fetch</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {releaseSources.map((source) => (
+                            <tr key={source.id} className="hover:bg-gray-50">
+                              <td className="px-6 py-4">
+                                <div className="text-left">
+                                  <div className="text-sm font-medium text-gray-900">{source.source_name}</div>
+                                  <div className="text-xs text-gray-500 truncate max-w-xs" title={source.source_url}>
+                                    {source.source_url}
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4">
+                                <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
+                                  source.source_type === 'rss' 
+                                    ? 'bg-orange-100 text-orange-800' 
+                                    : 'bg-blue-100 text-blue-800'
+                                }`}>
+                                  {source.source_type === 'rss' ? 'RSS Feed' : 'Website'}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-left">
+                                <div className="text-xs text-gray-600">
+                                  {contentFilterOptions.find(f => f.value === source.content_filter)?.label || source.content_filter}
+                                </div>
+                                <div className="text-xs text-gray-400">
+                                  {source.language_filter === 'all' ? 'All Languages' : source.language_filter}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4">
+                                <span className="text-sm font-medium text-gray-900">{source.items_count || 0}</span>
+                              </td>
+                              <td className="px-6 py-4 text-left">
+                                <div className="text-xs text-gray-500">
+                                  {source.last_fetch 
+                                    ? new Date(source.last_fetch).toLocaleString() 
+                                    : 'Never'}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4">
+                                <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
+                                  source.is_active 
+                                    ? 'bg-green-100 text-green-800' 
+                                    : 'bg-gray-100 text-gray-800'
+                                }`}>
+                                  {source.is_active ? 'Active' : 'Inactive'}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-right">
+                                <button
+                                  onClick={() => handleFetchSource(source)}
+                                  disabled={fetchingSourceId === source.id}
+                                  className="text-green-600 hover:text-green-900 mr-3 disabled:opacity-50"
+                                  title="Fetch Now"
+                                >
+                                  {fetchingSourceId === source.id ? (
+                                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                  ) : (
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                  )}
+                                </button>
+                                <button
+                                  onClick={() => openEditReleaseSource(source)}
+                                  className="text-blue-600 hover:text-blue-900 mr-3"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setReleaseSourceToDelete(source);
+                                    setShowDeleteReleaseSourceModal(true);
+                                  }}
+                                  className="text-red-600 hover:text-red-900"
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Info Box */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+                  <div className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div className="text-sm text-blue-800 text-left">
+                      <p className="font-medium mb-1">Supported Sources:</p>
+                      <ul className="list-disc list-inside space-y-1 text-xs">
+                        <li><strong>RSS Feeds:</strong> Gadgets360, OTTRelease.com, and other entertainment RSS feeds</li>
+                        <li><strong>Websites:</strong> Direct scraping of movie/OTT release pages</li>
+                        <li>Auto-detects content type (Movie, Web Series, Documentary, TV Show)</li>
+                        <li>Detects languages from content (Telugu, Hindi, Tamil, etc.)</li>
+                        <li>Extracts trailer links and OTT platform info</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
 
           </div>
         </div>
+
+        {/* Release Source Modal */}
+        {showReleaseSourceModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-lg">
+              <div className="p-6 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {editingReleaseSource ? 'Edit Release Source' : 'Add Release Source'}
+                </h3>
+              </div>
+              <form onSubmit={handleSaveReleaseSource} className="p-6 space-y-4">
+                {/* Source Name */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Source Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={releaseSourceForm.source_name}
+                    onChange={(e) => setReleaseSourceForm({ ...releaseSourceForm, source_name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g., Gadgets360 OTT Releases"
+                    required
+                  />
+                </div>
+
+                {/* Source Type */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Source Type <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={releaseSourceForm.source_type}
+                    onChange={(e) => setReleaseSourceForm({ ...releaseSourceForm, source_type: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="rss">RSS Feed</option>
+                    <option value="website">Website Scraping</option>
+                  </select>
+                </div>
+
+                {/* Source URL */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Source URL <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="url"
+                    value={releaseSourceForm.source_url}
+                    onChange={(e) => setReleaseSourceForm({ ...releaseSourceForm, source_url: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://www.gadgets360.com/rss/entertainment/feeds"
+                    required
+                  />
+                </div>
+
+                {/* Content Filter */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Content Filter
+                  </label>
+                  <select
+                    value={releaseSourceForm.content_filter}
+                    onChange={(e) => setReleaseSourceForm({ ...releaseSourceForm, content_filter: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                  >
+                    {contentFilterOptions.map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Language Filter */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Language Filter
+                  </label>
+                  <select
+                    value={releaseSourceForm.language_filter}
+                    onChange={(e) => setReleaseSourceForm({ ...releaseSourceForm, language_filter: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                  >
+                    {languageFilterOptions.map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Is Active Toggle */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-700">Active</span>
+                  <button
+                    type="button"
+                    onClick={() => setReleaseSourceForm({ ...releaseSourceForm, is_active: !releaseSourceForm.is_active })}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      releaseSourceForm.is_active ? 'bg-blue-600' : 'bg-gray-200'
+                    }`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      releaseSourceForm.is_active ? 'translate-x-6' : 'translate-x-1'
+                    }`} />
+                  </button>
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowReleaseSourceModal(false);
+                      setEditingReleaseSource(null);
+                    }}
+                    className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                    disabled={savingReleaseSource}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={savingReleaseSource}
+                    className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {savingReleaseSource ? 'Saving...' : (editingReleaseSource ? 'Update' : 'Create')}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Release Source Confirmation Modal */}
+        {showDeleteReleaseSourceModal && releaseSourceToDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-sm mx-4 overflow-hidden">
+              <div className="p-6 text-center">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Release Source</h3>
+                <p className="text-sm text-gray-600 mb-1">
+                  Are you sure you want to delete <strong>{releaseSourceToDelete.source_name}</strong>?
+                </p>
+                <p className="text-xs text-red-600">
+                  This will also delete all fetched items ({releaseSourceToDelete.items_count || 0} items) from this source.
+                </p>
+              </div>
+              <div className="flex border-t border-gray-200">
+                <button
+                  onClick={() => {
+                    setShowDeleteReleaseSourceModal(false);
+                    setReleaseSourceToDelete(null);
+                  }}
+                  className="flex-1 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteReleaseSource}
+                  disabled={deletingReleaseSource}
+                  className="flex-1 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 border-l border-gray-200 disabled:opacity-50"
+                >
+                  {deletingReleaseSource ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Reality Show Modal */}
         {showRealityShowModal && (
