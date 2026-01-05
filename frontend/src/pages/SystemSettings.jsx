@@ -3167,11 +3167,15 @@ const SystemSettings = () => {
                 <select
                   value={realityShowForm.youtube_channel_id}
                   onChange={(e) => {
-                    const selectedChannel = youtubeChannels.find(ch => ch.channel_id === e.target.value);
+                    const selectedChannelId = e.target.value;
+                    // Find the channel - use the data-channel-name from the selected option
+                    const selectedOption = e.target.options[e.target.selectedIndex];
+                    const channelName = selectedOption.getAttribute('data-channel-name');
+                    
                     setRealityShowForm({
                       ...realityShowForm,
-                      youtube_channel_id: e.target.value,
-                      youtube_channel_name: selectedChannel ? selectedChannel.channel_name : ''
+                      youtube_channel_id: selectedChannelId,
+                      youtube_channel_name: channelName || ''
                     });
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
@@ -3179,13 +3183,17 @@ const SystemSettings = () => {
                 >
                   <option value="">-- Select YouTube Channel --</option>
                   {youtubeChannels.map((channel) => (
-                    <option key={channel.channel_id} value={channel.channel_id}>
+                    <option 
+                      key={`${channel.channel_id}-${channel.id}`} 
+                      value={channel.channel_id}
+                      data-channel-name={channel.channel_name}
+                    >
                       {channel.channel_name} ({channel.channel_type})
                     </option>
                   ))}
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  Select the YouTube channel for this reality show. If not listed, add it in YouTube Channels tab first.
+                  Select the YouTube channel for this reality show. Channel type is shown in parentheses.
                 </p>
               </div>
 
