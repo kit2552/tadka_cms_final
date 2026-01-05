@@ -1217,6 +1217,16 @@ const SystemSettings = () => {
               >
                 TV Reality Shows
               </button>
+              <button
+                onClick={() => setActiveTab('releases')}
+                className={`py-4 px-4 border-b-2 font-normal text-sm transition-colors ${
+                  activeTab === 'releases'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Releases
+              </button>
             </nav>
           </div>
 
