@@ -52,6 +52,156 @@ class ReleaseSourceResponse(BaseModel):
     updated_at: datetime
 
 
+# Static routes MUST come before parameterized routes
+@router.get("/stats")
+async def get_release_stats():
+    """Get statistics about release sources and items"""
+    total_sources = db[RELEASE_SOURCES].count_documents({})
+    active_sources = db[RELEASE_SOURCES].count_documents({"is_active": True})
+    
+    total_items = db[RELEASE_FEED_ITEMS].count_documents({})
+    unused_items = db[RELEASE_FEED_ITEMS].count_documents({"is_used": False, "is_skipped": {"$ne": True}})
+    used_items = db[RELEASE_FEED_ITEMS].count_documents({"is_used": True})
+    skipped_items = db[RELEASE_FEED_ITEMS].count_documents({"is_skipped": True})
+    
+    # Count by content type
+    by_content_type = {}
+    for ctype in ['ott', 'theater', 'web_series', 'movie', 'documentary', 'tv_show']:
+        by_content_type[ctype] = db[RELEASE_FEED_ITEMS].count_documents({"content_type": ctype})
+    
+    return {
+        "sources": {
+            "total": total_sources,
+            "active": active_sources
+        },
+        "items": {
+            "total": total_items,
+            "unused": unused_items,
+            "used": used_items,
+            "skipped": skipped_items
+        },
+        "by_content_type": by_content_type
+    }
+
+
+@router.get("/content-filters")
+async def get_content_filter_options():
+    """Get available content filter options"""
+    return {
+        "filters": [
+            {"value": "auto_detect", "label": "Auto-Detect from Content"},
+            {"value": "ott_only", "label": "OTT Releases Only"},
+            {"value": "theater_only", "label": "Theater Releases Only"},
+            {"value": "web_series_only", "label": "Web Series Only"},
+            {"value": "movies_only", "label": "Movies Only"},
+            {"value": "documentary_only", "label": "Documentary Only"},
+            {"value": "tv_shows_only", "label": "TV Shows Only"}
+        ]
+    }
+
+
+@router.get("/language-options")
+async def get_language_options():
+    """Get available language filter options"""
+    return {
+        "languages": [
+            {"value": "all", "label": "All Languages"},
+            {"value": "Telugu", "label": "Telugu"},
+            {"value": "Hindi", "label": "Hindi"},
+            {"value": "Tamil", "label": "Tamil"},
+            {"value": "Kannada", "label": "Kannada"},
+            {"value": "Malayalam", "label": "Malayalam"},
+            {"value": "Bengali", "label": "Bengali"},
+            {"value": "Marathi", "label": "Marathi"},
+            {"value": "Punjabi", "label": "Punjabi"},
+            {"value": "English", "label": "English"},
+            {"value": "Korean", "label": "Korean"},
+            {"value": "Spanish", "label": "Spanish"}
+        ]
+    }
+
+
+@router.get("/items/all")
+async def get_all_feed_items(
+    skip: int = 0,
+    limit: int = 50,
+    content_type: Optional[str] = None,
+    language: Optional[str] = None,
+    is_used: Optional[bool] = None
+):
+    """Get all release feed items with filters"""
+    query = {}
+    
+    if content_type:
+        query["content_type"] = content_type
+    if language:
+        query["languages"] = language
+    if is_used is not None:
+        query["is_used"] = is_used
+    
+    items = list(
+        db[RELEASE_FEED_ITEMS]
+        .find(query, {"_id": 0})
+        .sort("fetched_at", -1)
+        .skip(skip)
+        .limit(limit)
+    )
+    
+    total = db[RELEASE_FEED_ITEMS].count_documents(query)
+    
+    return {
+        "items": items,
+        "total": total,
+        "skip": skip,
+        "limit": limit
+    }
+
+
+@router.get("/items/unused")
+async def get_unused_feed_items(
+    content_type: Optional[str] = None,
+    language: Optional[str] = None,
+    limit: int = 20
+):
+    """Get unused release items for AI agent processing"""
+    query = {"is_used": False, "is_skipped": {"$ne": True}}
+    
+    if content_type:
+        query["content_type"] = content_type
+    if language:
+        query["languages"] = language
+    
+    items = list(
+        db[RELEASE_FEED_ITEMS]
+        .find(query, {"_id": 0})
+        .sort("release_date", -1)
+        .limit(limit)
+    )
+    
+    return items
+
+
+@router.post("/fetch-all")
+async def fetch_all_sources(background_tasks: BackgroundTasks):
+    """Fetch all active release sources"""
+    from services.release_scraper_service import release_scraper_service
+    
+    sources = list(db[RELEASE_SOURCES].find({"is_active": True}))
+    
+    if not sources:
+        return {"message": "No active sources to fetch", "count": 0}
+    
+    # Run fetch in background
+    background_tasks.add_task(
+        release_scraper_service.fetch_all_sources
+    )
+    
+    return {
+        "message": f"Fetch started for {len(sources)} sources",
+        "sources": [s['source_name'] for s in sources]
+    }
+
+
 @router.get("", response_model=List[ReleaseSourceResponse])
 async def get_release_sources():
     """Get all release sources"""
@@ -72,6 +222,7 @@ async def get_release_source(source_id: str):
     source = db[RELEASE_SOURCES].find_one({"id": source_id}, {"_id": 0})
     if not source:
         raise HTTPException(status_code=404, detail="Release source not found")
+
     
     source['items_count'] = db[RELEASE_FEED_ITEMS].count_documents({
         "source_id": source_id
