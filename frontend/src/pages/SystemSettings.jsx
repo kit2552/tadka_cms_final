@@ -943,10 +943,10 @@ const SystemSettings = () => {
         setChannelRefreshed(true); // Mark that channel was refreshed to trigger video fetch on save
       } else {
         const error = await response.json();
-        setEditRefreshError(error.detail || 'Failed to extract channel details');
+        setEditRefreshError(error.detail || 'Failed to extract channel details. Please verify the URL by opening it in your browser first.');
       }
     } catch (error) {
-      setEditRefreshError('Failed to extract channel details');
+      setEditRefreshError('Network error. Please check your connection and try again.');
     } finally {
       setExtractingEditChannel(false);
     }
