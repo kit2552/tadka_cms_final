@@ -185,16 +185,23 @@ async def get_unused_feed_items(
 async def fetch_all_sources(background_tasks: BackgroundTasks):
     """Fetch all active release sources"""
     from services.release_scraper_service import release_scraper_service
+    import asyncio
     
     sources = list(db[RELEASE_SOURCES].find({"is_active": True}))
     
     if not sources:
         return {"message": "No active sources to fetch", "count": 0}
     
-    # Run fetch in background
-    background_tasks.add_task(
-        release_scraper_service.fetch_all_sources
-    )
+    # Run fetch in background - wrap async function properly
+    def run_fetch_all():
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(release_scraper_service.fetch_all_sources())
+        finally:
+            loop.close()
+    
+    background_tasks.add_task(run_fetch_all)
     
     return {
         "message": f"Fetch started for {len(sources)} sources",
