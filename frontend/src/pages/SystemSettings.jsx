@@ -1244,6 +1244,29 @@ const SystemSettings = () => {
     setShowReleaseSourceModal(true);
   };
 
+  const openReleaseItemsModal = async (source) => {
+    setReleaseItemsSource(source);
+    setShowReleaseItemsModal(true);
+    setReleaseItemsLoading(true);
+    setReleaseItems([]);
+    
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/release-sources/items/all?limit=100`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        // Filter items by source_id
+        const sourceItems = data.items.filter(item => item.source_id === source.id);
+        setReleaseItems(sourceItems);
+      }
+    } catch (error) {
+      console.error('Failed to fetch release items:', error);
+    } finally {
+      setReleaseItemsLoading(false);
+    }
+  };
+
   // Fetch Reality Shows function
   const fetchRealityShows = async () => {
     try {
