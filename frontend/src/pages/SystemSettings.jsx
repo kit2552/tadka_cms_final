@@ -180,6 +180,10 @@ const SystemSettings = () => {
   const [deletingReleaseSource, setDeletingReleaseSource] = useState(false);
   const [fetchingSourceId, setFetchingSourceId] = useState(null);
   const [releaseStats, setReleaseStats] = useState(null);
+  const [showReleaseItemsModal, setShowReleaseItemsModal] = useState(false);
+  const [releaseItemsSource, setReleaseItemsSource] = useState(null);
+  const [releaseItems, setReleaseItems] = useState([]);
+  const [releaseItemsLoading, setReleaseItemsLoading] = useState(false);
   const [contentFilterOptions] = useState([
     { value: 'auto_detect', label: 'Auto-Detect from Content' },
     { value: 'ott_only', label: 'OTT Releases Only' },
