@@ -157,6 +157,53 @@ const SystemSettings = () => {
   const [showDeleteRealityShowModal, setShowDeleteRealityShowModal] = useState(false);
   const [realityShowToDelete, setRealityShowToDelete] = useState(null);
   const [deletingRealityShow, setDeletingRealityShow] = useState(false);
+
+  // Release Sources State
+  const [releaseSources, setReleaseSources] = useState([]);
+  const [releaseSourcesLoading, setReleaseSourcesLoading] = useState(false);
+  const [showReleaseSourceModal, setShowReleaseSourceModal] = useState(false);
+  const [editingReleaseSource, setEditingReleaseSource] = useState(null);
+  const [releaseSourceForm, setReleaseSourceForm] = useState({
+    source_name: '',
+    source_type: 'rss',
+    source_url: '',
+    content_filter: 'auto_detect',
+    language_filter: 'all',
+    is_active: true,
+    fetch_mode: 'manual',
+    schedule_interval: null
+  });
+  const [savingReleaseSource, setSavingReleaseSource] = useState(false);
+  const [releaseSourceMessage, setReleaseSourceMessage] = useState({ type: '', text: '' });
+  const [showDeleteReleaseSourceModal, setShowDeleteReleaseSourceModal] = useState(false);
+  const [releaseSourceToDelete, setReleaseSourceToDelete] = useState(null);
+  const [deletingReleaseSource, setDeletingReleaseSource] = useState(false);
+  const [fetchingSourceId, setFetchingSourceId] = useState(null);
+  const [releaseStats, setReleaseStats] = useState(null);
+  const [contentFilterOptions] = useState([
+    { value: 'auto_detect', label: 'Auto-Detect from Content' },
+    { value: 'ott_only', label: 'OTT Releases Only' },
+    { value: 'theater_only', label: 'Theater Releases Only' },
+    { value: 'web_series_only', label: 'Web Series Only' },
+    { value: 'movies_only', label: 'Movies Only' },
+    { value: 'documentary_only', label: 'Documentary Only' },
+    { value: 'tv_shows_only', label: 'TV Shows Only' }
+  ]);
+  const [languageFilterOptions] = useState([
+    { value: 'all', label: 'All Languages' },
+    { value: 'Telugu', label: 'Telugu' },
+    { value: 'Hindi', label: 'Hindi' },
+    { value: 'Tamil', label: 'Tamil' },
+    { value: 'Kannada', label: 'Kannada' },
+    { value: 'Malayalam', label: 'Malayalam' },
+    { value: 'Bengali', label: 'Bengali' },
+    { value: 'Marathi', label: 'Marathi' },
+    { value: 'Punjabi', label: 'Punjabi' },
+    { value: 'English', label: 'English' },
+    { value: 'Korean', label: 'Korean' },
+    { value: 'Spanish', label: 'Spanish' }
+  ]);
+
   const [youtubeLanguages] = useState([
     { value: 'Hindi', label: 'Hindi' },
     { value: 'Telugu', label: 'Telugu' },
