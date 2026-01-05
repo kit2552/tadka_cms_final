@@ -119,7 +119,10 @@ async def extract_channel_details(request: ChannelURLRequest):
         channel_id = await _get_channel_id_from_handle(f"@{url}")
     
     if not channel_id:
-        raise HTTPException(status_code=400, detail="Could not extract channel ID from URL. Please provide a valid YouTube channel URL.")
+        raise HTTPException(
+            status_code=400, 
+            detail="Could not find this YouTube channel. The channel handle may be incorrect or deleted. Please verify the URL by opening it in a browser first. Supported formats: youtube.com/@handle, youtube.com/channel/UC..., youtube.com/c/customname"
+        )
     
     # Generate RSS URL
     rss_url = RSS_URL_TEMPLATE.format(channel_id=channel_id)
