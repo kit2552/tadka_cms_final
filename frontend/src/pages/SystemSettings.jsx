@@ -1076,7 +1076,169 @@ const SystemSettings = () => {
     if (activeTab === 'reality-shows') {
       fetchRealityShows();
     }
+    if (activeTab === 'releases') {
+      fetchReleaseSources();
+      fetchReleaseStats();
+    }
   }, [youtubeLanguageFilter, youtubeTypeFilter, activeTab]);
+
+  // Fetch Release Sources functions
+  const fetchReleaseSources = async () => {
+    try {
+      setReleaseSourcesLoading(true);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/release-sources`);
+      if (response.ok) {
+        const data = await response.json();
+        setReleaseSources(data || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch release sources:', error);
+    } finally {
+      setReleaseSourcesLoading(false);
+    }
+  };
+
+  const fetchReleaseStats = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/release-sources/stats`);
+      if (response.ok) {
+        const data = await response.json();
+        setReleaseStats(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch release stats:', error);
+    }
+  };
+
+  const handleSaveReleaseSource = async (e) => {
+    e.preventDefault();
+    setSavingReleaseSource(true);
+    setReleaseSourceMessage({ type: '', text: '' });
+
+    try {
+      const url = editingReleaseSource
+        ? `${process.env.REACT_APP_BACKEND_URL}/api/release-sources/${editingReleaseSource.id}`
+        : `${process.env.REACT_APP_BACKEND_URL}/api/release-sources`;
+      
+      const response = await fetch(url, {
+        method: editingReleaseSource ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(releaseSourceForm)
+      });
+
+      if (response.ok) {
+        setReleaseSourceMessage({ type: 'success', text: editingReleaseSource ? 'Release source updated!' : 'Release source created!' });
+        setShowReleaseSourceModal(false);
+        fetchReleaseSources();
+        setEditingReleaseSource(null);
+        setReleaseSourceForm({
+          source_name: '',
+          source_type: 'rss',
+          source_url: '',
+          content_filter: 'auto_detect',
+          language_filter: 'all',
+          is_active: true,
+          fetch_mode: 'manual',
+          schedule_interval: null
+        });
+      } else {
+        const error = await response.json();
+        setReleaseSourceMessage({ type: 'error', text: error.detail || 'Failed to save release source' });
+      }
+    } catch (error) {
+      setReleaseSourceMessage({ type: 'error', text: 'Failed to save release source' });
+    } finally {
+      setSavingReleaseSource(false);
+    }
+  };
+
+  const handleDeleteReleaseSource = async () => {
+    if (!releaseSourceToDelete) return;
+    setDeletingReleaseSource(true);
+    
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/release-sources/${releaseSourceToDelete.id}`,
+        { method: 'DELETE' }
+      );
+      
+      if (response.ok) {
+        setReleaseSourceMessage({ type: 'success', text: 'Release source deleted!' });
+        fetchReleaseSources();
+        fetchReleaseStats();
+      } else {
+        setReleaseSourceMessage({ type: 'error', text: 'Failed to delete release source' });
+      }
+    } catch (error) {
+      setReleaseSourceMessage({ type: 'error', text: 'Failed to delete release source' });
+    } finally {
+      setDeletingReleaseSource(false);
+      setShowDeleteReleaseSourceModal(false);
+      setReleaseSourceToDelete(null);
+    }
+  };
+
+  const handleFetchSource = async (source) => {
+    setFetchingSourceId(source.id);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/release-sources/${source.id}/fetch`,
+        { method: 'POST' }
+      );
+      
+      if (response.ok) {
+        setReleaseSourceMessage({ type: 'success', text: `Fetching started for ${source.source_name}` });
+        // Refresh after a delay to show updated counts
+        setTimeout(() => {
+          fetchReleaseSources();
+          fetchReleaseStats();
+        }, 3000);
+      } else {
+        setReleaseSourceMessage({ type: 'error', text: 'Failed to start fetch' });
+      }
+    } catch (error) {
+      setReleaseSourceMessage({ type: 'error', text: 'Failed to start fetch' });
+    } finally {
+      setFetchingSourceId(null);
+    }
+  };
+
+  const handleFetchAllSources = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/release-sources/fetch-all`,
+        { method: 'POST' }
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        setReleaseSourceMessage({ type: 'success', text: data.message });
+        setTimeout(() => {
+          fetchReleaseSources();
+          fetchReleaseStats();
+        }, 5000);
+      } else {
+        setReleaseSourceMessage({ type: 'error', text: 'Failed to start fetch' });
+      }
+    } catch (error) {
+      setReleaseSourceMessage({ type: 'error', text: 'Failed to start fetch' });
+    }
+  };
+
+  const openEditReleaseSource = (source) => {
+    setEditingReleaseSource(source);
+    setReleaseSourceForm({
+      source_name: source.source_name,
+      source_type: source.source_type,
+      source_url: source.source_url,
+      content_filter: source.content_filter,
+      language_filter: source.language_filter,
+      is_active: source.is_active,
+      fetch_mode: source.fetch_mode,
+      schedule_interval: source.schedule_interval
+    });
+    setShowReleaseSourceModal(true);
+  };
 
   // Fetch Reality Shows function
   const fetchRealityShows = async () => {
