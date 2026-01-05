@@ -428,52 +428,71 @@ class ReleaseScraperService:
                 page_title = soup.find('title')
                 print(f"   📄 Page title: {page_title.get_text() if page_title else 'N/A'}")
                 
-                # Try to find article/item containers (common patterns)
-                article_selectors = [
-                    'article',
-                    '.article',
-                    '.post',
-                    '.item',
-                    '.card',
-                    '.movie-item',
-                    '.release-item',
-                    '.content-item',
-                    '[class*="movie"]',
-                    '[class*="release"]',
-                    'li[class*="item"]',
-                    '.entry',
-                    '.post-item',
-                    '.grid-item'
+                articles = []
+                
+                # First try: Look for links with content URL patterns (most reliable)
+                content_patterns = [
+                    r'/web-series/[a-z0-9][a-z0-9-]+',  # Must have a slug after /web-series/
+                    r'/movies?/[a-z0-9][a-z0-9-]+',
+                    r'/films?/[a-z0-9][a-z0-9-]+',
+                    r'/documentary/[a-z0-9][a-z0-9-]+',
+                    r'/tv-shows?/[a-z0-9][a-z0-9-]+',
+                    r'/ott/[a-z0-9][a-z0-9-]+',
+                    r'/release/[a-z0-9][a-z0-9-]+',
+                    r'/\d{4}/\d{2}/[a-z0-9-]+',  # Date-based URLs like /2024/01/movie-name
                 ]
                 
-                articles = []
-                for selector in article_selectors:
-                    found = soup.select(selector)
-                    if found and len(found) > 3:  # At least 3 items to be considered a list
-                        articles = found
-                        break
+                # Skip patterns for non-content URLs
+                skip_url_patterns = [
+                    r'/page/\d+', r'/category/', r'/tag/', r'/author/',
+                    r'#', r'/search', r'/login', r'/register', r'/cart',
+                    r'\.(jpg|png|gif|css|js)$', r'/wp-content/', r'/wp-admin/',
+                    r'/contact', r'/about', r'/privacy', r'/terms', r'/disclaimer',
+                ]
                 
-                if not articles:
-                    # Fallback: Look for links with movie/series patterns in URL path
-                    # These patterns require a slug after the category path
-                    content_patterns = [
-                        r'/web-series/[a-z0-9][a-z0-9-]+$',  # Must have a slug after /web-series/
-                        r'/movies?/[a-z0-9][a-z0-9-]+$',
-                        r'/films?/[a-z0-9][a-z0-9-]+$',
-                        r'/documentary/[a-z0-9][a-z0-9-]+$',
-                        r'/tv-shows?/[a-z0-9][a-z0-9-]+$',
-                        r'/ott/[a-z0-9][a-z0-9-]+$',
-                        r'/release/[a-z0-9][a-z0-9-]+$',
-                        r'/\d{4}/\d{2}/[a-z0-9-]+$',  # Date-based URLs like /2024/01/movie-name
+                all_links = soup.find_all('a', href=True)
+                for link in all_links:
+                    href = link.get('href', '').rstrip('/')  # Remove trailing slash
+                    
+                    # Skip if matches skip patterns
+                    should_skip = False
+                    for pattern in skip_url_patterns:
+                        if re.search(pattern, href, re.I):
+                            should_skip = True
+                            break
+                    if should_skip:
+                        continue
+                    
+                    # Check if matches content patterns
+                    for pattern in content_patterns:
+                        if re.search(pattern, href, re.I):
+                            articles.append(link)
+                            break
+                
+                print(f"   📊 Found {len(articles)} content links via URL patterns")
+                
+                # Second try: Fall back to article selectors if URL patterns found nothing
+                if len(articles) < 3:
+                    article_selectors = [
+                        'article',
+                        '.article',
+                        '.post',
+                        '.movie-item',
+                        '.release-item',
+                        '.content-item',
+                        '[class*="movie"]',
+                        '[class*="release"]',
+                        '.entry',
+                        '.post-item',
+                        '.grid-item'
                     ]
                     
-                    all_links = soup.find_all('a', href=True)
-                    for link in all_links:
-                        href = link.get('href', '').rstrip('/')  # Remove trailing slash
-                        for pattern in content_patterns:
-                            if re.search(pattern, href, re.I):
-                                articles.append(link)
-                                break
+                    for selector in article_selectors:
+                        found = soup.select(selector)
+                        if found and len(found) > 3:
+                            articles = found
+                            print(f"   📊 Using selector '{selector}': found {len(found)} articles")
+                            break
                 
                 # Filter out common non-content patterns
                 skip_patterns = [
