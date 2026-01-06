@@ -462,18 +462,26 @@ class ReleaseScraperService:
                 for link in all_links:
                     href = link.get('href', '').rstrip('/')  # Remove trailing slash
                     
+                    # Normalize URL - remove domain prefix if present
+                    href_path = re.sub(r'^https?://[^/]+', '', href)
+                    
                     # Skip if matches skip patterns
                     should_skip = False
                     for pattern in skip_url_patterns:
-                        if re.search(pattern, href, re.I):
+                        if re.search(pattern, href_path, re.I):
                             should_skip = True
                             break
                     if should_skip:
                         continue
                     
+                    # Skip the base page itself (no slug after the category)
+                    if href_path in ['/streaming-premiere-dates', '/streaming-premiere-dates/', 
+                                     '/web-series', '/movies', '/tv-shows', '/documentary']:
+                        continue
+                    
                     # Check if matches content patterns
                     for pattern in content_patterns:
-                        if re.search(pattern, href, re.I):
+                        if re.search(pattern, href_path, re.I):
                             articles.append(link)
                             break
                 
