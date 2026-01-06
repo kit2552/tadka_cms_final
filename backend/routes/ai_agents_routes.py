@@ -78,6 +78,12 @@ class AIAgent(BaseModel):
     reality_show_lookback_days: Optional[int] = 2  # Days to look back for videos
     include_keywords: Optional[str] = None  # Comma-separated keywords that MUST be in title (e.g., "Big Boss,Entertainment Ki Raat")
     
+    # OTT Release Agent fields
+    ott_language: Optional[str] = None  # Language filter: Hindi, Telugu, Tamil, etc.
+    ott_streaming_now: Optional[bool] = True  # Fetch "Streaming Now" releases
+    ott_streaming_soon: Optional[bool] = False  # Fetch "Streaming Soon" releases
+    ott_fetch_limit: Optional[int] = 10  # Number of releases to fetch: 5, 10, 20, 50
+    
     # Post Aggregation fields (for Video Agent)
     enable_aggregation: Optional[bool] = False  # Enable post grouping by movie/event name
     aggregation_lookback_days: Optional[int] = 2  # Days to look back for grouping (1-30)
