@@ -192,6 +192,9 @@ const AIAgents = () => {
       case 'review': return 'Review Agent';
       case 'video': return 'Video Agent';
       case 'tadka_pics': return 'Tadka Pics Agent';
+      case 'tv_video': return 'TV Video Agent';
+      case 'reality_show': return 'Reality Shows Agent';
+      case 'ott_release': return 'OTT Release Agent';
       default: return type;
     }
   };
