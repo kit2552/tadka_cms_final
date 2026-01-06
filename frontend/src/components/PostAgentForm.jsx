@@ -1961,6 +1961,104 @@ Instructions:
               </div>
             )}
 
+            {/* OTT Release Settings Section - Only for ott_release agent type */}
+            {formData.agent_type === 'ott_release' && (
+              <div className="bg-teal-50 rounded-lg p-4 space-y-4 border border-teal-200">
+                <div className="text-left">
+                  <h3 className="text-sm font-semibold text-teal-900">🎬 OTT Release Agent Settings</h3>
+                  <p className="text-xs text-teal-600 mt-0.5">Fetch OTT releases from Binged.com and create movie/web series entries</p>
+                </div>
+
+                {/* Language Selection */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Language <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="ott_language"
+                    value={formData.ott_language || 'Hindi'}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  >
+                    <option value="Hindi">Hindi</option>
+                    <option value="Telugu">Telugu</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Bengali">Bengali</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Punjabi">Punjabi</option>
+                    <option value="English">English</option>
+                    <option value="Korean">Korean</option>
+                    <option value="Japanese">Japanese</option>
+                  </select>
+                </div>
+
+                {/* Fetch Limit Selection */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Number of Releases to Fetch
+                  </label>
+                  <select
+                    name="ott_fetch_limit"
+                    value={formData.ott_fetch_limit || 10}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  >
+                    <option value={5}>5 releases</option>
+                    <option value={10}>10 releases</option>
+                    <option value={20}>20 releases</option>
+                    <option value={50}>50 releases</option>
+                  </select>
+                </div>
+
+                {/* Streaming Type Checkboxes */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Release Type
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="ott_streaming_now"
+                        checked={formData.ott_streaming_now !== false}
+                        onChange={handleInputChange}
+                        className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+                      />
+                      <span className="text-sm text-gray-700">Streaming Now</span>
+                      <span className="text-xs text-gray-500">(Currently available on OTT)</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="ott_streaming_soon"
+                        checked={formData.ott_streaming_soon === true}
+                        onChange={handleInputChange}
+                        className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+                      />
+                      <span className="text-sm text-gray-700">Streaming Soon</span>
+                      <span className="text-xs text-gray-500">(Upcoming releases)</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Info Box */}
+                <div className="bg-white rounded-lg p-3 border border-teal-200">
+                  <div className="text-xs text-teal-800 text-left space-y-1">
+                    <p className="font-semibold text-teal-900">How it works:</p>
+                    <p>• Fetches releases from Binged.com for selected language</p>
+                    <p>• Extracts movie details: cast, director, synopsis, trailer, poster</p>
+                    <p>• Creates OTT Release entries in Manage Content → Movie Releases</p>
+                    <p>• Skips duplicates (already existing movies)</p>
+                    <p className="text-teal-700 mt-2 font-medium">
+                      💡 New releases are created as drafts - publish from Movie Releases page
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Instagram URLs Section - Only for Tadka Pics with Instagram source */}
             {formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram' && (
               <div className="bg-pink-50 rounded-lg p-4 space-y-3 border border-pink-200">
