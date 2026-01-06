@@ -249,6 +249,10 @@ class BingedScraperService:
                 
                 soup = BeautifulSoup(response.text, 'html.parser')
                 
+                # Extract title first (used in multiple places)
+                title_elem = soup.find('title')
+                title_text = title_elem.get_text() if title_elem else ''
+                
                 # Extract movie name from h1
                 h1 = soup.find('h1')
                 movie_name = h1.get_text(strip=True) if h1 else None
