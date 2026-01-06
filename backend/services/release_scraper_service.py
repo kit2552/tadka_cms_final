@@ -444,6 +444,9 @@ class ReleaseScraperService:
                     r'/ott/[a-z0-9][a-z0-9-]+',
                     r'/release/[a-z0-9][a-z0-9-]+',
                     r'/\d{4}/\d{2}/[a-z0-9-]+',  # Date-based URLs like /2024/01/movie-name
+                    r'/streaming-premiere-dates/[a-z0-9][a-z0-9-]+-streaming-online-watch',  # binged.com pattern
+                    r'/streaming-premiere-dates/[a-z0-9][a-z0-9-]+-movie-streaming',  # binged.com movie pattern
+                    r'/streaming-premiere-dates/[a-z0-9][a-z0-9-]+(?!/$)',  # binged.com general pattern (not just the base path)
                 ]
                 
                 # Skip patterns for non-content URLs
