@@ -210,6 +210,10 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
             # Use Reality Show Agent Service
             from services.reality_show_agent_service import reality_show_agent_service
             result = await reality_show_agent_service.run_reality_show_agent(agent_id)
+        elif agent_type == 'ott_release':
+            # Use OTT Release Agent Service
+            from services.ott_release_agent_service import ott_release_agent_service
+            result = await ott_release_agent_service.run_ott_release_agent(agent_id)
         else:
             # Use Post Agent Service (default)
             result = await agent_runner.run_agent(agent_id)
