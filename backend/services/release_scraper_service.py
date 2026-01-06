@@ -452,6 +452,7 @@ class ReleaseScraperService:
                     r'#', r'/search', r'/login', r'/register', r'/cart',
                     r'\.(jpg|png|gif|css|js)$', r'/wp-content/', r'/wp-admin/',
                     r'/contact', r'/about', r'/privacy', r'/terms', r'/disclaimer',
+                    r'\?mode=',  # Skip filter URLs like ?mode=streaming-soon
                 ]
                 
                 all_links = soup.find_all('a', href=True)
