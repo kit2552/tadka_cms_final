@@ -217,51 +217,58 @@ class OTTReleaseAgentService:
             except:
                 release_date = datetime.now()
         
-        # Format languages as comma-separated string
+        # Format languages as list
         languages = release.get('languages', [])
-        language_str = ', '.join(languages) if languages else 'Hindi'
+        if not languages:
+            languages = ['Hindi']
         
-        # Format cast as comma-separated string
+        # Format cast as list
         cast = release.get('cast', [])
-        cast_str = ', '.join(cast[:10]) if cast else None  # Limit to 10 cast members
+        cast_list = cast[:10] if cast else []  # Limit to 10 cast members
         
-        # Format genres
+        # Format genres as list
         genres = release.get('genres', [])
-        genre_str = ', '.join(genres) if genres else None
         
-        # Determine content type for category
+        # OTT platforms as list
+        platforms = release.get('ott_platforms', [])
+        
+        # Determine content type
         content_type = release.get('content_type', 'movie')
         if content_type == 'web_series':
-            category = 'Web Series'
+            content_type = 'Web Series'
         elif content_type == 'documentary':
-            category = 'Documentary'
+            content_type = 'Documentary'
         elif content_type == 'tv_show':
-            category = 'TV Show'
+            content_type = 'TV Show'
         else:
-            category = 'Movie'
+            content_type = 'Movie'
         
         return {
             "movie_name": release.get('movie_name', 'Unknown'),
-            "movie_tagline": release.get('synopsis', '')[:200] if release.get('synopsis') else None,
-            "movie_description": release.get('synopsis'),
+            "content_type": content_type,
+            "season": None,
+            "episodes_count": None,
+            "original_language": languages[0] if languages else 'Hindi',
             "release_date": release_date,
-            "release_year": release.get('year'),
-            "ott_platform_id": platform_id,
-            "language": language_str,
-            "cast": cast_str,
+            "movie_image": release.get('poster_url'),
+            "youtube_url": release.get('youtube_url'),
+            "ott_platforms": platforms,
+            "states": [],
+            "languages": languages,
+            "genres": genres,
             "director": release.get('director'),
             "producer": None,
+            "banner": None,
             "music_director": None,
+            "dop": None,
+            "editor": None,
+            "cast": cast_list,
             "runtime": release.get('runtime'),
-            "genre": genre_str,
-            "movie_poster": release.get('poster_url'),
-            "movie_banner": None,
-            "trailer_url": release.get('youtube_url'),
-            "category": category,
-            "is_published": False,  # Keep in draft
-            "created_at": datetime.now(timezone.utc),
+            "censor_rating": None,
+            "is_published": False,
             "source_url": release.get('source_url'),
-            "release_type": release.get('release_type', 'streaming_now')
+            "release_type": release.get('release_type', 'streaming_now'),
+            "synopsis": release.get('synopsis')
         }
 
 
