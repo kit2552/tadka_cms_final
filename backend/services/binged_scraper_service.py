@@ -294,19 +294,34 @@ class BingedScraperService:
                     if re.search(rf'\b{lang}\b', info_text, re.I):
                         languages.append(lang)
                 
-                # Extract OTT platforms
+                # Extract OTT platforms - look for specific streaming date section
                 ott_platforms = []
-                platform_imgs = soup.find_all('img', alt=re.compile(r'platform|logo', re.I))
-                for img in platform_imgs:
-                    alt = img.get('alt', '')
-                    platform = self._normalize_platform(alt.replace('platform logo', '').replace('logo', ''))
-                    if platform and platform not in ott_platforms:
-                        ott_platforms.append(platform)
                 
-                # Also check text for platform names
-                for key, value in self.OTT_PLATFORM_MAP.items():
-                    if re.search(rf'\b{key}\b', info_text, re.I) and value not in ott_platforms:
-                        ott_platforms.append(value)
+                # Look for the streaming date section which contains the actual platform
+                streaming_section = soup.find(string=re.compile(r'Streaming Date', re.I))
+                if streaming_section:
+                    parent = streaming_section.find_parent(['div', 'section', 'a'])
+                    if parent:
+                        # Look for platform logo in this section
+                        platform_img = parent.find('img')
+                        if platform_img:
+                            alt = platform_img.get('alt', '')
+                            platform = self._normalize_platform(alt)
+                            if platform and platform not in ott_platforms:
+                                ott_platforms.append(platform)
+                        # Also check text content
+                        section_text = parent.get_text()
+                        for key, value in self.OTT_PLATFORM_MAP.items():
+                            if re.search(rf'\b{key}\b', section_text, re.I) and value not in ott_platforms:
+                                ott_platforms.append(value)
+                
+                # Also look for platform in title or near the poster
+                title_text = soup.find('title')
+                if title_text:
+                    title_str = title_text.get_text()
+                    for key, value in self.OTT_PLATFORM_MAP.items():
+                        if re.search(rf'\b{key}\b', title_str, re.I) and value not in ott_platforms:
+                            ott_platforms.append(value)
                 
                 # Extract streaming/release date
                 release_date = None
