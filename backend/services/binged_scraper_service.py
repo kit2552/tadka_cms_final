@@ -311,11 +311,9 @@ class BingedScraperService:
                                     languages.append(lang)
                 
                 # Also check the title for language hints
-                if title_text:
-                    title_str = title_text.get_text()
-                    for lang in ['Hindi', 'Telugu', 'Tamil', 'Malayalam', 'Kannada', 'Bengali', 'Marathi']:
-                        if lang.lower() in title_str.lower() and lang not in languages:
-                            languages.append(lang)
+                for lang in ['Hindi', 'Telugu', 'Tamil', 'Malayalam', 'Kannada', 'Bengali', 'Marathi']:
+                    if lang.lower() in title_text.lower() and lang not in languages:
+                        languages.append(lang)
                 
                 # Extract OTT platforms - look for specific streaming date section
                 ott_platforms = []
