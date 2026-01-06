@@ -336,13 +336,10 @@ class BingedScraperService:
                             if re.search(rf'\b{key}\b', section_text, re.I) and value not in ott_platforms:
                                 ott_platforms.append(value)
                 
-                # Also look for platform in title or near the poster
-                title_text = soup.find('title')
-                if title_text:
-                    title_str = title_text.get_text()
-                    for key, value in self.OTT_PLATFORM_MAP.items():
-                        if re.search(rf'\b{key}\b', title_str, re.I) and value not in ott_platforms:
-                            ott_platforms.append(value)
+                # Also look for platform in title
+                for key, value in self.OTT_PLATFORM_MAP.items():
+                    if re.search(rf'\b{key}\b', title_text, re.I) and value not in ott_platforms:
+                        ott_platforms.append(value)
                 
                 # Extract streaming/release date
                 release_date = None
