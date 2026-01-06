@@ -156,18 +156,8 @@ class OTTReleaseAgentService:
         
         # Try exact match first
         existing = db.ott_releases.find_one({
-            "movie_name": {"$regex": f"^{normalized_name}$", "$options": "i"}
+            "movie_name": {"$regex": f"^{re.escape(normalized_name)}$", "$options": "i"}
         })
-        
-        if existing:
-            return existing
-        
-        # Try with year if available
-        if year:
-            existing = db.ott_releases.find_one({
-                "movie_name": {"$regex": normalized_name, "$options": "i"},
-                "release_year": str(year)
-            })
         
         return existing
     
