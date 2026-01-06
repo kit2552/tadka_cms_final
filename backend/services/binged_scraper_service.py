@@ -288,11 +288,30 @@ class BingedScraperService:
                     if genre_text and genre_text not in genres:
                         genres.append(genre_text)
                 
-                # Extract languages from page text
+                # Extract languages - look for specific language section near genres
                 languages = []
-                for lang in self.LANGUAGE_MAP.keys():
-                    if re.search(rf'\b{lang}\b', info_text, re.I):
-                        languages.append(lang)
+                
+                # Look for language text near the genres/info section
+                # Pattern: "Drama Mystery Malayalam, Tamil, Telugu, Kannada, Hindi"
+                genre_links = soup.find_all('a', href=re.compile(r'\?genre='))
+                if genre_links:
+                    last_genre = genre_links[-1]
+                    # Get the parent and look for language text after genres
+                    parent = last_genre.parent
+                    if parent:
+                        parent_text = parent.get_text()
+                        # Extract languages after the last genre
+                        for lang in self.LANGUAGE_MAP.keys():
+                            if re.search(rf'\b{lang}\b', parent_text, re.I):
+                                if lang not in languages:
+                                    languages.append(lang)
+                
+                # Also check the title for language hints
+                if title_text:
+                    title_str = title_text.get_text()
+                    for lang in ['Hindi', 'Telugu', 'Tamil', 'Malayalam', 'Kannada', 'Bengali', 'Marathi']:
+                        if lang.lower() in title_str.lower() and lang not in languages:
+                            languages.append(lang)
                 
                 # Extract OTT platforms - look for specific streaming date section
                 ott_platforms = []
