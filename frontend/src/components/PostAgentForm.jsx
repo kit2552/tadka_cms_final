@@ -404,9 +404,21 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between z-10">
           <div className="text-left">
             <h2 className="text-lg font-semibold text-gray-900">
-              {editingAgent ? 'Edit' : 'Create'} Post Agent
+              {editingAgent ? 'Edit' : 'Create'} {
+                formData.agent_type === 'ott_release' ? 'OTT Release Agent' :
+                formData.agent_type === 'reality_show' ? 'Reality Show Agent' :
+                formData.agent_type === 'tv_video' ? 'TV Video Agent' :
+                formData.agent_type === 'video' ? 'Video Agent' :
+                formData.agent_type === 'photo_gallery' ? 'Photo Gallery Agent' :
+                formData.agent_type === 'tadka_pics' ? 'Tadka Pics Agent' :
+                'Post Agent'
+              }
             </h2>
-            <p className="text-xs text-gray-600 mt-0.5">Configure your automated post generation agent</p>
+            <p className="text-xs text-gray-600 mt-0.5">
+              {formData.agent_type === 'ott_release' 
+                ? 'Configure OTT release fetching from Binged.com' 
+                : 'Configure your automated post generation agent'}
+            </p>
           </div>
           <button
             onClick={onClose}
