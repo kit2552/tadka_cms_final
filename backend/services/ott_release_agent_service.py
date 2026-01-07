@@ -199,7 +199,7 @@ class OTTReleaseAgentService:
             print(f"      ⚠️ Failed to create platform: {e}")
             return None
     
-    def _prepare_ott_release_data(self, release: Dict, platform_id: Optional[int]) -> Dict:
+    def _prepare_ott_release_data(self, release: Dict, platform_id: Optional[int], content_workflow: str = 'in_review') -> Dict:
         """Prepare release data for OTT release creation"""
         # Parse release date
         release_date = None
@@ -235,6 +235,13 @@ class OTTReleaseAgentService:
         else:
             content_type = 'Movie'
         
+        # Determine status based on workflow
+        # in_review -> is_published: False, status: 'in_review'
+        # ready_to_publish -> is_published: False, status: 'ready_to_publish'
+        # publish -> is_published: True, status: 'published'
+        is_published = content_workflow == 'publish'
+        status = 'published' if content_workflow == 'publish' else content_workflow
+        
         return {
             "movie_name": release.get('movie_name', 'Unknown'),
             "content_type": content_type,
@@ -242,7 +249,7 @@ class OTTReleaseAgentService:
             "episodes_count": None,
             "original_language": languages[0] if languages else 'Hindi',
             "release_date": release_date,
-            "movie_image": release.get('poster_url'),
+            "movie_image": None,  # No poster extraction
             "youtube_url": release.get('youtube_url'),
             "ott_platforms": platforms,
             "states": [],
@@ -257,7 +264,8 @@ class OTTReleaseAgentService:
             "cast": cast_list,
             "runtime": release.get('runtime'),
             "censor_rating": None,
-            "is_published": False,
+            "is_published": is_published,
+            "status": status,
             "source_url": release.get('source_url'),
             "release_type": release.get('release_type', 'streaming_now'),
             "synopsis": release.get('synopsis')
