@@ -1151,6 +1151,12 @@ def create_ott_release(db, release):
         "cast": release_data.get("cast"),
         "runtime": release_data.get("runtime"),
         "censor_rating": release_data.get("censor_rating"),
+        "is_published": release_data.get("is_published", False),
+        "status": release_data.get("status", "in_review"),
+        "source_url": release_data.get("source_url"),
+        "release_type": release_data.get("release_type"),
+        "synopsis": release_data.get("synopsis"),
+        "category": release_data.get("category"),
         "created_by": release_data.get("created_by"),
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
