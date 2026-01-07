@@ -257,9 +257,7 @@ class BingedScraperService:
                 h1 = soup.find('h1')
                 movie_name = h1.get_text(strip=True) if h1 else None
                 
-                # Extract poster image
-                poster_img = soup.find('img', src=re.compile(r'bingeddata\.s3\.amazonaws\.com'))
-                poster_url = poster_img.get('src') if poster_img else None
+                # Poster extraction removed - not needed
                 
                 # Extract meta description for synopsis
                 meta_desc = soup.find('meta', attrs={'name': 'description'})
