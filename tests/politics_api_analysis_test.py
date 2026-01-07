@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://tv-dashboard-7.preview.emergentagent.com"
+BACKEND_URL = "https://filmfetch-12.preview.emergentagent.com"
 
 def test_politics_api_structure():
     """
