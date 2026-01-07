@@ -393,7 +393,7 @@ class BingedScraperService:
                     'director': director,
                     'cast': cast,
                     'synopsis': synopsis,
-                    'poster_url': poster_url,
+                    'poster_url': None,  # Not extracting poster
                     'youtube_url': youtube_url,
                     'source_url': url,
                 }
