@@ -42,8 +42,9 @@ class OTTReleaseAgentService:
         streaming_now = agent.get('ott_streaming_now', True)
         streaming_soon = agent.get('ott_streaming_soon', False)
         fetch_limit = agent.get('ott_fetch_limit', 10)
+        content_workflow = agent.get('content_workflow', 'in_review')  # in_review, ready_to_publish, publish
         
-        print(f"   📋 Settings: Language={language}, StreamingNow={streaming_now}, StreamingSoon={streaming_soon}, Limit={fetch_limit}")
+        print(f"   📋 Settings: Language={language}, StreamingNow={streaming_now}, StreamingSoon={streaming_soon}, Limit={fetch_limit}, Workflow={content_workflow}")
         
         # Update agent last run time
         db.ai_agents.update_one(
