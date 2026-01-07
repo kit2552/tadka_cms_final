@@ -908,8 +908,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             </div>
             )}
 
-            {/* Agent Prompt Section - Hide for tadka_pics */}
-            {formData.agent_type !== 'tadka_pics' && (
+            {/* Agent Prompt Section - Hide for tadka_pics and ott_release */}
+            {formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'ott_release' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="text-left">
@@ -1520,7 +1520,7 @@ Instructions:
             )}
 
             {/* Split Content Section - Only for post agent type */}
-            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && (
+            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="text-left">
@@ -2157,8 +2157,8 @@ Instructions:
               </div>
             )}
 
-            {/* Reference Content Section - Hide for Tadka Pics with Instagram source, Video agents, TV Video agents, and Reality Show agents */}
-            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && (
+            {/* Reference Content Section - Hide for Tadka Pics with Instagram source, Video agents, TV Video agents, Reality Show agents, and OTT Release agents */}
+            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-gray-900 text-left">Reference Content</h3>
