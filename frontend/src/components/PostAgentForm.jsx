@@ -2055,17 +2055,37 @@ Instructions:
                   </div>
                 </div>
 
+                {/* Content Workflow for OTT Release */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Content Workflow
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    {workflowOptions.map(option => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, content_workflow: option.value }))}
+                        className={`p-2 rounded border-2 font-medium text-xs transition-all ${
+                          formData.content_workflow === option.value
+                            ? 'border-teal-600 bg-teal-100 text-teal-700'
+                            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Info Box */}
                 <div className="bg-white rounded-lg p-3 border border-teal-200">
                   <div className="text-xs text-teal-800 text-left space-y-1">
                     <p className="font-semibold text-teal-900">How it works:</p>
                     <p>• Fetches releases from Binged.com for selected language</p>
-                    <p>• Extracts movie details: cast, director, synopsis, trailer, poster</p>
+                    <p>• Extracts movie details: cast, director, synopsis, trailer</p>
                     <p>• Creates OTT Release entries in Manage Content → Movie Releases</p>
                     <p>• Skips duplicates (already existing movies)</p>
-                    <p className="text-teal-700 mt-2 font-medium">
-                      💡 New releases are created as drafts - publish from Movie Releases page
-                    </p>
                   </div>
                 </div>
               </div>
