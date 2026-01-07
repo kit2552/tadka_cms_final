@@ -97,7 +97,7 @@ class OTTReleaseAgentService:
                         platform_id = self._get_or_create_platform(platform_name)
                     
                     # Prepare release data for OTT release
-                    release_data = self._prepare_ott_release_data(release, platform_id, content_workflow)
+                    release_data = self._prepare_ott_release_data(release, platform_id, content_workflow, category)
                     
                     # Create OTT release
                     created = crud.create_ott_release(db, release_data)
