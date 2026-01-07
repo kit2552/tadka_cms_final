@@ -2078,6 +2078,29 @@ Instructions:
                   </div>
                 </div>
 
+                {/* Category Selection for OTT Release */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category (Homepage Section)
+                  </label>
+                  <select
+                    name="category"
+                    value={formData.category || ''}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  >
+                    <option value="">Select Category</option>
+                    <option value="tollywood">Tollywood</option>
+                    <option value="bollywood">Bollywood</option>
+                    <option value="kollywood">Kollywood</option>
+                    <option value="hollywood">Hollywood</option>
+                    <option value="web-series">Web Series</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Select which homepage section these releases will appear under
+                  </p>
+                </div>
+
                 {/* Info Box */}
                 <div className="bg-white rounded-lg p-3 border border-teal-200">
                   <div className="text-xs text-teal-800 text-left space-y-1">
