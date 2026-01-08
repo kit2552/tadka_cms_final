@@ -102,7 +102,7 @@ class BingedScraperService:
     
     def _extract_youtube_url(self, soup: BeautifulSoup) -> Optional[str]:
         """Extract YouTube trailer URL from page - returns watch URL format"""
-        # Look for YouTube embeds
+        # Look for YouTube video embeds (not channels)
         youtube_patterns = [
             r'(https?://(?:www\.)?youtube\.com/embed/([\w-]+))',
             r'(https?://(?:www\.)?youtube\.com/watch\?v=([\w-]+))',
@@ -116,18 +116,23 @@ class BingedScraperService:
                 # Extract video ID and return standard watch URL
                 full_url = match.group(1)
                 video_id = match.group(2)
+                # Skip channel URLs
+                if '/channel/' in full_url or '/user/' in full_url:
+                    continue
                 # Convert to standard watch URL format
                 return f'https://www.youtube.com/watch?v={video_id}'
         
-        # Look for trailer links
-        trailer_links = soup.find_all('a', href=re.compile(r'youtube\.com|youtu\.be', re.I))
+        # Look for trailer links (but skip channel links)
+        trailer_links = soup.find_all('a', href=re.compile(r'youtube\.com/watch|youtu\.be/', re.I))
         if trailer_links:
             href = trailer_links[0].get('href')
+            # Skip channel/user links
+            if '/channel/' in href or '/user/' in href:
+                return None
             # Try to extract video ID from link
-            video_id_match = re.search(r'(?:v=|youtu\.be/|embed/)([\w-]+)', href)
+            video_id_match = re.search(r'(?:v=|youtu\.be/)([\w-]+)', href)
             if video_id_match:
                 return f'https://www.youtube.com/watch?v={video_id_match.group(1)}'
-            return href
         
         return None
     
