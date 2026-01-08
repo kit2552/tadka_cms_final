@@ -243,35 +243,72 @@ const OTTReleases = ({ articles, onArticleClick }) => {
                           {release.languages && (
                             <div className="text-xs text-blue-600 mt-1">
                               {(() => {
-                                const langs = Array.isArray(release.languages) ? release.languages : [release.languages];
-                                const originalLang = release.original_language;
-                                
-                                // In Bollywood tab, only show "Hindi" in single line
-                                if (activeTab === 'bollywood') {
-                                  return <div>Hindi</div>;
+                                // Parse languages
+                                let langs = [];
+                                if (Array.isArray(release.languages)) {
+                                  langs = release.languages;
+                                } else if (typeof release.languages === 'string') {
+                                  try {
+                                    langs = JSON.parse(release.languages);
+                                  } catch {
+                                    langs = [release.languages];
+                                  }
                                 }
                                 
-                                // In OTT tab, show languages vertically with dubbed first, then original
+                                const originalLang = release.original_language;
+                                
+                                // In Bollywood tab, only show "Hindi"
+                                if (activeTab === 'bollywood') {
+                                  return <span>Hindi</span>;
+                                }
+                                
+                                // Get user's preferred language based on selected states
+                                const userStateNames = JSON.parse(localStorage.getItem('tadka_state') || '[]');
+                                const stateToLanguage = {
+                                  'Andhra Pradesh': 'Telugu',
+                                  'Telangana': 'Telugu',
+                                  'Tamil Nadu': 'Tamil',
+                                  'Karnataka': 'Kannada',
+                                  'Kerala': 'Malayalam',
+                                  'Maharashtra': 'Marathi',
+                                  'West Bengal': 'Bengali',
+                                  'Gujarat': 'Gujarati',
+                                  'Punjab': 'Punjabi',
+                                  'Odisha': 'Odia'
+                                };
+                                
+                                // Get user's preferred languages from their states
+                                const userPreferredLangs = [...new Set(userStateNames.map(state => stateToLanguage[state]).filter(Boolean))];
+                                
+                                // Find if user's preferred language exists in this release's languages
+                                const userLangInRelease = userPreferredLangs.find(lang => langs.includes(lang));
+                                
+                                // If no original language info, just show all languages
                                 if (!originalLang) {
-                                  return langs.map((lang, index) => (
-                                    <div key={index}>{lang}</div>
+                                  return langs.slice(0, 2).map((lang, idx) => (
+                                    <span key={idx}>{idx > 0 ? ', ' : ''}{lang}</span>
                                   ));
                                 }
                                 
-                                // Separate dubbed and original languages
-                                const dubbedLangs = langs.filter(lang => lang !== originalLang);
-                                const originalLangs = langs.filter(lang => lang === originalLang);
+                                // Build display string
+                                const displayParts = [];
                                 
-                                return (
-                                  <>
-                                    {dubbedLangs.map((lang, index) => (
-                                      <div key={`dubbed-${index}`}>{lang} (Dubbed)</div>
-                                    ))}
-                                    {originalLangs.map((lang, index) => (
-                                      <div key={`original-${index}`}>{lang} (Original)</div>
-                                    ))}
-                                  </>
-                                );
+                                // If user has a preferred language in this release
+                                if (userLangInRelease) {
+                                  if (userLangInRelease === originalLang) {
+                                    // User's preferred language IS the original - just show language name
+                                    displayParts.push(userLangInRelease);
+                                  } else {
+                                    // User's preferred language is dubbed - show both
+                                    displayParts.push(`${userLangInRelease} (Dubbed)`);
+                                    displayParts.push(`${originalLang} (Original)`);
+                                  }
+                                } else {
+                                  // No user preference match - show original language
+                                  displayParts.push(`${originalLang} (Original)`);
+                                }
+                                
+                                return <span>{displayParts.join(' ')}</span>;
                               })()}
                             </div>
                           )}
