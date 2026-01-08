@@ -94,10 +94,15 @@ const AIAgents = () => {
       });
       const data = await response.json();
       
-      if (response.ok && data.success) {
+      if (response.ok && (data.success || data.status === 'success')) {
         // Handle different agent types
         let message = '';
-        if (data.groups_created !== undefined || data.groups_updated !== undefined) {
+        if (data.releases_created !== undefined) {
+          // OTT Release agent response
+          const created = data.releases_created || 0;
+          const skipped = data.releases_skipped || 0;
+          message = `${created} OTT release(s) created! (${skipped} skipped - already exist)`;
+        } else if (data.groups_created !== undefined || data.groups_updated !== undefined) {
           // TV Video agent response
           const articlesCreated = data.articles_created || 0;
           const articlesExisting = data.articles_existing || 0;
