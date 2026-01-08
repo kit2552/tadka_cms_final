@@ -199,7 +199,7 @@ class OTTReleaseAgentService:
             print(f"      ⚠️ Failed to create platform: {e}")
             return None
     
-    def _prepare_ott_release_data(self, release: Dict, platform_id: Optional[int], content_workflow: str = 'in_review', category: str = '') -> Dict:
+    def _prepare_ott_release_data(self, release: Dict, platform_id: Optional[int], content_workflow: str = 'in_review') -> Dict:
         """Prepare release data for OTT release creation"""
         # Parse release date
         release_date = None
@@ -268,8 +268,7 @@ class OTTReleaseAgentService:
             "status": status,
             "source_url": release.get('source_url'),
             "release_type": release.get('release_type', 'streaming_now'),
-            "synopsis": release.get('synopsis'),
-            "category": category  # Homepage section category
+            "synopsis": release.get('synopsis')
         }
 
 
