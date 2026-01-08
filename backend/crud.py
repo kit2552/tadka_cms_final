@@ -1156,7 +1156,6 @@ def create_ott_release(db, release):
         "source_url": release_data.get("source_url"),
         "release_type": release_data.get("release_type"),
         "synopsis": release_data.get("synopsis"),
-        "category": release_data.get("category"),
         "created_by": release_data.get("created_by"),
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
