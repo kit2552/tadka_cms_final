@@ -316,16 +316,27 @@ class BingedScraperService:
                     parent = last_genre.parent
                     if parent:
                         parent_text = parent.get_text()
-                        # Extract languages after the last genre
-                        for lang in self.LANGUAGE_MAP.keys():
-                            if re.search(rf'\b{lang}\b', parent_text, re.I):
-                                if lang not in languages:
-                                    languages.append(lang)
+                        # Find all languages in the text and preserve their order
+                        # Use regex to find the language list portion (comma-separated languages)
+                        lang_pattern = r'(?:Malayalam|Tamil|Telugu|Kannada|Hindi|Bengali|Marathi|English|Gujarati|Punjabi|Odia|Korean|Japanese|Spanish|French|German|Chinese|Italian|Portuguese|Russian|Arabic|Turkish|Thai|Vietnamese|Indonesian|Malay)(?:\s*,\s*(?:Malayalam|Tamil|Telugu|Kannada|Hindi|Bengali|Marathi|English|Gujarati|Punjabi|Odia|Korean|Japanese|Spanish|French|German|Chinese|Italian|Portuguese|Russian|Arabic|Turkish|Thai|Vietnamese|Indonesian|Malay))*'
+                        lang_match = re.search(lang_pattern, parent_text, re.I)
+                        if lang_match:
+                            lang_str = lang_match.group(0)
+                            # Split by comma and clean up
+                            for lang in lang_str.split(','):
+                                lang = lang.strip()
+                                # Normalize case
+                                for known_lang in self.LANGUAGE_MAP.keys():
+                                    if lang.lower() == known_lang.lower():
+                                        if known_lang not in languages:
+                                            languages.append(known_lang)
+                                        break
                 
-                # Also check the title for language hints
-                for lang in ['Hindi', 'Telugu', 'Tamil', 'Malayalam', 'Kannada', 'Bengali', 'Marathi']:
-                    if lang.lower() in title_text.lower() and lang not in languages:
-                        languages.append(lang)
+                # Fallback: Also check the title for language hints if no languages found
+                if not languages:
+                    for lang in ['Malayalam', 'Hindi', 'Telugu', 'Tamil', 'Kannada', 'Bengali', 'Marathi']:
+                        if lang.lower() in title_text.lower() and lang not in languages:
+                            languages.append(lang)
                 
                 # Extract OTT platforms - look for specific streaming date section
                 ott_platforms = []
