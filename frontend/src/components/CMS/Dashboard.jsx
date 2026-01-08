@@ -4650,20 +4650,17 @@ const Dashboard = () => {
                           {/* Sticky Table Header */}
                           <div className="bg-gray-50 sticky top-28 z-30 border-b border-gray-200 shadow-sm px-4 py-3">
                             <div className="grid grid-cols-12 gap-4">
-                              <div className="col-span-2 text-left">
+                              <div className="col-span-3 text-left">
                                 <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">MOVIE NAME</span>
                               </div>
                               <div className="col-span-2 text-left">
                                 <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">PLATFORM</span>
                               </div>
-                              <div className="col-span-1 text-left">
-                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">LANGUAGE</span>
+                              <div className="col-span-2 text-left">
+                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">LANGUAGES</span>
                               </div>
                               <div className="col-span-2 text-left">
                                 <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">RELEASE DATE</span>
-                              </div>
-                              <div className="col-span-2 text-left">
-                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">IMAGE</span>
                               </div>
                               <div className="col-span-3 text-left">
                                 <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">ACTIONS</span>
@@ -4677,7 +4674,36 @@ const Dashboard = () => {
                               let filteredReleases = filterReleasesByDate(ottReleases);
                               filteredReleases = filterReleasesByLanguage(filteredReleases);
                               
-                              return filteredReleases.map((release, index) => (
+                              return filteredReleases.map((release, index) => {
+                                // Parse languages - handle both JSON string and array
+                                let languagesList = [];
+                                if (release.languages) {
+                                  if (typeof release.languages === 'string') {
+                                    try {
+                                      languagesList = JSON.parse(release.languages);
+                                    } catch (e) {
+                                      languagesList = [release.languages];
+                                    }
+                                  } else if (Array.isArray(release.languages)) {
+                                    languagesList = release.languages;
+                                  }
+                                }
+                                
+                                // Parse platforms
+                                let platformsList = [];
+                                if (release.ott_platforms) {
+                                  if (typeof release.ott_platforms === 'string') {
+                                    try {
+                                      platformsList = JSON.parse(release.ott_platforms);
+                                    } catch (e) {
+                                      platformsList = [release.ott_platforms];
+                                    }
+                                  } else if (Array.isArray(release.ott_platforms)) {
+                                    platformsList = release.ott_platforms;
+                                  }
+                                }
+                                
+                                return (
                               <div 
                                 key={release.id} 
                                 className={`grid grid-cols-12 gap-4 px-4 py-4 ${
@@ -4685,27 +4711,41 @@ const Dashboard = () => {
                                 } hover:bg-gray-100 transition-colors duration-150`}
                               >
                                 {/* Movie Name Column */}
-                                <div className="col-span-2">
+                                <div className="col-span-3">
                                   <div className="text-left">
                                     <h3 className="text-sm font-medium text-gray-900 text-left">
                                       {release.movie_name}
                                     </h3>
+                                    {release.content_type && release.content_type !== 'Movie' && (
+                                      <span className="text-xs text-gray-500">{release.content_type}</span>
+                                    )}
                                   </div>
                                 </div>
                                 
                                 {/* Platform Column */}
                                 <div className="col-span-2">
                                   <div className="text-left">
-                                    <span className="text-sm text-gray-700">{release.ott_platform}</span>
+                                    <span className="text-sm text-gray-700">
+                                      {platformsList.length > 0 ? platformsList.join(', ') : '-'}
+                                    </span>
                                   </div>
                                 </div>
                                 
-                                {/* Language Column */}
-                                <div className="col-span-1">
-                                  <div className="text-left">
-                                    <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                                      {release.language}
-                                    </span>
+                                {/* Languages Column */}
+                                <div className="col-span-2">
+                                  <div className="text-left flex flex-wrap gap-1">
+                                    {languagesList.length > 0 ? (
+                                      languagesList.slice(0, 3).map((lang, idx) => (
+                                        <span key={idx} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                          {lang}
+                                        </span>
+                                      ))
+                                    ) : (
+                                      <span className="text-sm text-gray-400">-</span>
+                                    )}
+                                    {languagesList.length > 3 && (
+                                      <span className="text-xs text-gray-500">+{languagesList.length - 3}</span>
+                                    )}
                                   </div>
                                 </div>
                                 
@@ -4715,21 +4755,6 @@ const Dashboard = () => {
                                     <span className="text-sm text-gray-700">
                                       {new Date(release.release_date).toLocaleDateString()}
                                     </span>
-                                  </div>
-                                </div>
-                                
-                                {/* Image Column */}
-                                <div className="col-span-2">
-                                  <div className="text-left">
-                                    {release.movie_image ? (
-                                      <img 
-                                        src={`${process.env.REACT_APP_BACKEND_URL}/${release.movie_image}`} 
-                                        alt={release.movie_name}
-                                        className="w-12 h-12 object-cover rounded"
-                                      />
-                                    ) : (
-                                      <span className="text-sm text-gray-400">No image</span>
-                                    )}
                                   </div>
                                 </div>
                                 
@@ -4751,7 +4776,8 @@ const Dashboard = () => {
                                   </div>
                                 </div>
                               </div>
-                            ));
+                                );
+                              });
                             })()}
                           </div>
                         </div>
