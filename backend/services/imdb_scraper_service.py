@@ -326,17 +326,75 @@ class IMDbScraperService:
                 if year_match:
                     year = int(year_match.group(1))
                 
-                # Extract release date
+                # Extract release date - try multiple methods
                 release_date = None
-                # Look for release date in various places
-                release_info = soup.find(string=re.compile(r'Release date', re.I))
-                if release_info:
-                    parent = release_info.find_parent()
-                    if parent:
-                        date_text = parent.get_text()
-                        date_match = re.search(r'(\w+\s+\d+,?\s+\d{4})', date_text)
+                date_pattern = r'(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2},?\s+\d{4}'
+                
+                # Method 1: Look for "Release date" or "Releases" text
+                for search_text in ['Release date', 'Releases', 'Release Date']:
+                    release_info = soup.find(string=re.compile(search_text, re.I))
+                    if release_info:
+                        # Get parent and siblings to find the actual date
+                        parent = release_info.find_parent()
+                        if parent:
+                            # Search in parent and its parent for dates
+                            for _ in range(3):
+                                if parent:
+                                    parent_text = parent.get_text()
+                                    date_match = re.search(date_pattern, parent_text, re.I)
+                                    if date_match:
+                                        release_date = self._parse_date(date_match.group(0))
+                                        if release_date:
+                                            break
+                                    parent = parent.find_parent()
+                        if release_date:
+                            break
+                
+                # Method 2: Look for data-testid attribute for release date
+                if not release_date:
+                    release_containers = soup.find_all(['li', 'div', 'span'], {'data-testid': re.compile(r'release', re.I)})
+                    for container in release_containers:
+                        container_text = container.get_text()
+                        date_match = re.search(date_pattern, container_text, re.I)
                         if date_match:
-                            release_date = self._parse_date(date_match.group(1))
+                            release_date = self._parse_date(date_match.group(0))
+                            if release_date:
+                                break
+                
+                # Method 3: Look for "Coming soon" or upcoming section
+                if not release_date:
+                    upcoming_section = soup.find(string=re.compile(r'Coming soon|Upcoming|In theaters', re.I))
+                    if upcoming_section:
+                        parent = upcoming_section.find_parent()
+                        if parent:
+                            for _ in range(3):
+                                if parent:
+                                    parent_text = parent.get_text()
+                                    date_match = re.search(date_pattern, parent_text, re.I)
+                                    if date_match:
+                                        release_date = self._parse_date(date_match.group(0))
+                                        if release_date:
+                                            break
+                                    parent = parent.find_parent()
+                
+                # Method 4: Search entire page for a release date near India/IN
+                if not release_date:
+                    # Look for dates near "India" text
+                    india_refs = soup.find_all(string=re.compile(r'\bIndia\b|\bIN\b', re.I))
+                    for ref in india_refs[:5]:
+                        parent = ref.find_parent()
+                        if parent:
+                            for _ in range(3):
+                                if parent:
+                                    parent_text = parent.get_text()
+                                    date_match = re.search(date_pattern, parent_text, re.I)
+                                    if date_match:
+                                        release_date = self._parse_date(date_match.group(0))
+                                        if release_date:
+                                            break
+                                    parent = parent.find_parent()
+                        if release_date:
+                            break
                 
                 # If no release date found, try to get from year
                 if not release_date and year:
