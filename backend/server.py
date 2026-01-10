@@ -2853,7 +2853,7 @@ async def get_homepage_theater_bollywood_releases(
             "this_week": format_release_response(this_week_theater, True),
             "coming_soon": format_release_response(upcoming_theater, True)
         },
-        "ott": {
+        "bollywood": {
             "this_week": format_release_response(this_week_bollywood, True),
             "coming_soon": format_release_response(upcoming_bollywood, True)
         }
