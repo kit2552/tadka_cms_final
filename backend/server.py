@@ -2759,13 +2759,18 @@ async def get_homepage_theater_bollywood_releases(
     user_states: str = None,  # New parameter for multiple states (comma-separated)
     db = Depends(get_db)
 ):
-    """Get theater and Bollywood theater releases for homepage display with state filtering
+    """Get theater releases for homepage display with state-language mapping
     
     Args:
         user_state: Single state code (for backward compatibility)
         user_states: Comma-separated state codes (e.g., 'ap,ts')
+    
+    Returns:
+        - theater: Releases in user's preferred languages based on state-language mapping
+        - bollywood: Hindi language releases for Bollywood tab
     """
-    # Get state-based theater releases (excluding 'all')
+    from state_language_mapping import get_languages_for_states
+    
     # Handle both single state and multiple states
     states_to_query = []
     if user_states:
@@ -2773,54 +2778,49 @@ async def get_homepage_theater_bollywood_releases(
     elif user_state:
         states_to_query = [user_state]
     
-    # Fetch releases for all states and combine
-    all_this_week = []
-    all_upcoming = []
+    # Get user's preferred languages based on state-language mapping
+    user_languages = get_languages_for_states(states_to_query) if states_to_query else []
     
-    if states_to_query:
-        for state in states_to_query:
-            this_week = crud.get_this_week_theater_releases_by_state(db, state=state, limit=10)
-            upcoming = crud.get_upcoming_theater_releases_by_state(db, state=state, limit=10)
-            all_this_week.extend(this_week)
-            all_upcoming.extend(upcoming)
-        
-        # Remove duplicates based on ID
-        seen_ids = set()
-        this_week_theater = []
-        for release in all_this_week:
-            if release.get('id') not in seen_ids:
-                seen_ids.add(release.get('id'))
-                this_week_theater.append(release)
-        
-        upcoming_theater = []
-        for release in all_upcoming:
-            if release.get('id') not in seen_ids:
-                seen_ids.add(release.get('id'))
-                upcoming_theater.append(release)
-        
-        # Limit to 4 releases each
-        this_week_theater = this_week_theater[:4]
-        upcoming_theater = upcoming_theater[:4]
+    # Fetch releases based on language preference
+    if user_languages:
+        theater_releases = crud.get_theater_releases_by_language(db, user_languages, limit=8)
     else:
-        this_week_theater = crud.get_this_week_theater_releases_by_state(db, state=None, limit=4)
-        upcoming_theater = crud.get_upcoming_theater_releases_by_state(db, state=None, limit=4)
+        # No state preference - show all releases
+        theater_releases = crud.get_theater_releases_by_language(db, [], limit=8)
     
-    # Get ALL states releases for Bollywood tab
-    this_week_bollywood = crud.get_this_week_theater_releases_all_states(db, limit=4)
-    upcoming_bollywood = crud.get_upcoming_theater_releases_all_states(db, limit=4)
+    # Split into this_week and upcoming (first 4 and next 4)
+    this_week_theater = theater_releases[:4]
+    upcoming_theater = theater_releases[4:8] if len(theater_releases) > 4 else []
+    
+    # Get Hindi releases for Bollywood tab
+    bollywood_releases = crud.get_theater_releases_bollywood(db, limit=8)
+    this_week_bollywood = bollywood_releases[:4]
+    upcoming_bollywood = bollywood_releases[4:8] if len(bollywood_releases) > 4 else []
     
     def format_release_response(releases, is_theater=True):
         result = []
         for release in releases:
+            # Parse languages from JSON string
+            languages = release.get("languages", "[]")
+            if isinstance(languages, str):
+                try:
+                    import json
+                    languages = json.loads(languages)
+                except:
+                    languages = [languages] if languages else []
+            
             release_data = {
                 "id": release.get("id"),
                 "movie_name": release.get("movie_name"),
-                "languages": release.get("languages"),
+                "languages": languages,
+                "original_language": release.get("original_language"),
                 "release_date": release.get("release_date"),
                 "movie_image": release.get("movie_image"),
                 "youtube_url": release.get("youtube_url"),
                 "states": release.get("states"),
                 "genres": release.get("genres"),
+                "director": release.get("director"),
+                "cast": release.get("cast"),
                 "created_at": release.get("created_at")
             }
             if is_theater:
