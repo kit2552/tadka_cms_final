@@ -391,34 +391,35 @@ class IMDbScraperService:
                 # Extract genres - try multiple methods
                 genres = []
                 
-                # Method 1: Look for genre links
-                genre_links = soup.find_all('a', href=re.compile(r'/search/title.*genres'))
-                for link in genre_links:
-                    genre = link.get_text(strip=True)
-                    if genre and genre not in genres and len(genre) < 20 and genre.lower() not in ['imdb', 'menu']:
-                        genres.append(genre)
+                # Method 1: Look for chip elements with genre text
+                chips = soup.find_all(['span', 'a'], class_=re.compile(r'chip|ipc-chip', re.I))
+                common_genres = ['Action', 'Adventure', 'Animation', 'Biography', 'Comedy', 'Crime', 
+                                 'Documentary', 'Drama', 'Family', 'Fantasy', 'Horror', 'Musical',
+                                 'Mystery', 'Romance', 'Sci-Fi', 'Sport', 'Thriller', 'War', 'Western',
+                                 'History', 'Music', 'News', 'Reality-TV', 'Talk-Show']
+                for chip in chips:
+                    chip_text = chip.get_text(strip=True)
+                    if chip_text in common_genres and chip_text not in genres:
+                        genres.append(chip_text)
                 
-                # Method 2: Look for genre chips/spans near genre label
+                # Method 2: Look for genre links
                 if not genres:
-                    genre_container = soup.find('div', {'data-testid': re.compile(r'genres', re.I)})
-                    if genre_container:
-                        genre_spans = genre_container.find_all('span', class_=re.compile(r'chip|genre', re.I))
-                        for span in genre_spans:
-                            genre = span.get_text(strip=True)
-                            if genre and genre not in genres and len(genre) < 20:
+                    genre_links = soup.find_all('a', href=re.compile(r'/search/title.*genres'))
+                    for link in genre_links:
+                        genre = link.get_text(strip=True)
+                        if genre and genre not in genres and len(genre) < 20 and genre.lower() not in ['imdb', 'menu']:
+                            genres.append(genre)
+                
+                # Method 3: Look in storyline section
+                if not genres:
+                    storyline = soup.find(['div', 'section'], {'data-testid': re.compile(r'storyline', re.I)})
+                    if storyline:
+                        for genre in common_genres:
+                            if re.search(rf'\b{genre}\b', storyline.get_text(), re.I) and genre not in genres:
                                 genres.append(genre)
                 
-                # Method 3: Look for common genre keywords in page
-                if not genres:
-                    common_genres = ['Action', 'Adventure', 'Animation', 'Biography', 'Comedy', 'Crime', 
-                                     'Documentary', 'Drama', 'Family', 'Fantasy', 'Horror', 'Musical',
-                                     'Mystery', 'Romance', 'Sci-Fi', 'Sport', 'Thriller', 'War', 'Western']
-                    for genre in common_genres:
-                        # Look for genre in specific sections, not entire page
-                        genre_section = soup.find('li', {'data-testid': re.compile(r'storyline-genres', re.I)})
-                        if genre_section and re.search(rf'\b{genre}\b', genre_section.get_text(), re.I):
-                            if genre not in genres:
-                                genres.append(genre)
+                # Dedupe while preserving order
+                genres = list(dict.fromkeys(genres))
                 
                 # Extract director - try multiple methods
                 director = None
