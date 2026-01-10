@@ -2289,19 +2289,22 @@ Instructions:
                         type="url"
                         value={getUrlValue(item)}
                         onChange={(e) => updateReferenceUrl(index, 'url', e.target.value)}
-                        placeholder="https://example.com/news"
+                        placeholder={formData.agent_type === 'theater_release' ? "https://www.imdb.com/calendar/?region=IN" : "https://example.com/news"}
                         className="flex-1 px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
-                      <select
-                        value={getUrlType(item)}
-                        onChange={(e) => updateReferenceUrl(index, 'url_type', e.target.value)}
-                        className="w-36 px-2 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                        title="URL Type"
-                      >
-                        {urlTypeOptions.map(opt => (
-                          <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                      </select>
+                      {/* Hide URL type dropdown for theater_release agent */}
+                      {formData.agent_type !== 'theater_release' && (
+                        <select
+                          value={getUrlType(item)}
+                          onChange={(e) => updateReferenceUrl(index, 'url_type', e.target.value)}
+                          className="w-36 px-2 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                          title="URL Type"
+                        >
+                          {urlTypeOptions.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                      )}
                       <button
                         type="button"
                         onClick={() => removeReferenceUrl(index)}
@@ -2316,14 +2319,25 @@ Instructions:
                   ))}
                 </div>
               )}
-              <div className="text-xs text-gray-500 text-left space-y-1">
-                <p>Add reference URLs for the AI to use as content sources.</p>
-                <ul className="list-disc list-inside pl-2 text-gray-400">
-                  <li><strong>Auto Detect</strong> - Agent guesses if it's a listing or direct article</li>
-                  <li><strong>Listing Page</strong> - Agent finds the latest article link first, then fetches its content</li>
-                  <li><strong>Direct Article</strong> - Agent fetches content directly from this URL</li>
-                </ul>
-              </div>
+              {/* Hide URL type helper text for theater_release agent */}
+              {formData.agent_type === 'theater_release' ? (
+                <div className="text-xs text-gray-500 text-left space-y-1">
+                  <p>Add IMDb URLs to fetch theater releases from:</p>
+                  <ul className="list-disc list-inside pl-2 text-gray-400">
+                    <li><strong>IMDb Calendar</strong> - https://www.imdb.com/calendar/?region=IN</li>
+                    <li><strong>IMDb Search</strong> - https://www.imdb.com/search/title/?title_type=feature&release_date=2025-01-01,2026-03-01&countries=IN</li>
+                  </ul>
+                </div>
+              ) : (
+                <div className="text-xs text-gray-500 text-left space-y-1">
+                  <p>Add reference URLs for the AI to use as content sources.</p>
+                  <ul className="list-disc list-inside pl-2 text-gray-400">
+                    <li><strong>Auto Detect</strong> - Agent guesses if it's a listing or direct article</li>
+                    <li><strong>Listing Page</strong> - Agent finds the latest article link first, then fetches its content</li>
+                    <li><strong>Direct Article</strong> - Agent fetches content directly from this URL</li>
+                  </ul>
+                </div>
+              )}
             </div>
             )}
 
