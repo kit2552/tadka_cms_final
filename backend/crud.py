@@ -1023,6 +1023,41 @@ def get_upcoming_theater_releases_all_states(db, limit: int = 100):
     docs = list(db[THEATER_RELEASES].find(query).sort([("created_at", -1), ("release_date", -1)]).skip(limit).limit(limit))
     return serialize_doc(docs)
 
+def get_theater_releases_by_language(db, languages: list, limit: int = 100):
+    """Get theater releases filtered by language(s) - for state-language mapping"""
+    import json
+    
+    if not languages:
+        # If no languages specified, return all releases
+        docs = list(db[THEATER_RELEASES].find({}).sort([("release_date", -1), ("created_at", -1)]).limit(limit))
+        return serialize_doc(docs)
+    
+    # Build query to match any of the specified languages
+    # Languages are stored as JSON strings like '["Telugu", "Hindi"]'
+    language_conditions = []
+    for lang in languages:
+        language_conditions.append({"languages": {"$regex": f'"{lang}"', "$options": "i"}})
+        # Also check original_language field
+        language_conditions.append({"original_language": {"$regex": f'^{lang}$', "$options": "i"}})
+    
+    query = {"$or": language_conditions}
+    
+    docs = list(db[THEATER_RELEASES].find(query).sort([("release_date", -1), ("created_at", -1)]).limit(limit))
+    return serialize_doc(docs)
+
+def get_theater_releases_bollywood(db, limit: int = 100):
+    """Get Hindi language theater releases for Bollywood tab"""
+    # Hindi releases for Bollywood section
+    query = {
+        "$or": [
+            {"languages": {"$regex": '"Hindi"', "$options": "i"}},
+            {"original_language": {"$regex": "^Hindi$", "$options": "i"}}
+        ]
+    }
+    
+    docs = list(db[THEATER_RELEASES].find(query).sort([("release_date", -1), ("created_at", -1)]).limit(limit))
+    return serialize_doc(docs)
+
 def get_ott_release(db, release_id: int):
     """Get single OTT release by ID"""
     doc = db[OTT_RELEASES].find_one({"id": release_id})
