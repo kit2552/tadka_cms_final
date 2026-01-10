@@ -302,7 +302,7 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                           )}
                           {release.languages && (
                             <p className="text-xs text-blue-600 mt-1">
-                              {JSON.parse(release.languages || '[]').join(', ')}
+                              {formatLanguageDisplay(release)}
                             </p>
                           )}
                         </div>
