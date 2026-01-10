@@ -2098,6 +2098,100 @@ Instructions:
               </div>
             )}
 
+            {/* Theater Release Settings Section - Only for theater_release agent type */}
+            {formData.agent_type === 'theater_release' && (
+              <div className="bg-amber-50 rounded-lg p-4 space-y-4 border border-amber-200">
+                <h3 className="text-sm font-semibold text-amber-900">🎬 Theater Release Agent Settings</h3>
+                
+                {/* Number of Releases */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Number of Releases to Fetch
+                  </label>
+                  <select
+                    name="theater_fetch_limit"
+                    value={formData.theater_fetch_limit || 10}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  >
+                    <option value={5}>5 releases</option>
+                    <option value={10}>10 releases</option>
+                    <option value={20}>20 releases</option>
+                    <option value={50}>50 releases</option>
+                  </select>
+                </div>
+
+                {/* Include English Option */}
+                <div className="text-left">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="theater_include_english"
+                      checked={formData.theater_include_english !== false}
+                      onChange={handleInputChange}
+                      className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
+                    />
+                    <span className="text-sm text-gray-700">Include English Language Movies</span>
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1 ml-6">
+                    Uncheck to exclude English-only movies (keeps regional Indian films only)
+                  </p>
+                </div>
+
+                {/* Search Trailers Option */}
+                <div className="text-left">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="theater_search_trailers"
+                      checked={formData.theater_search_trailers === true}
+                      onChange={handleInputChange}
+                      className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
+                    />
+                    <span className="text-sm text-gray-700">Search for Trailers</span>
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1 ml-6">
+                    After creating releases, search YouTube RSS feeds for trailers/teasers
+                  </p>
+                </div>
+
+                {/* Content Workflow for Theater Release */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Content Workflow
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    {workflowOptions.map(option => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, content_workflow: option.value }))}
+                        className={`p-2 rounded border-2 font-medium text-xs transition-all ${
+                          formData.content_workflow === option.value
+                            ? 'border-amber-600 bg-amber-100 text-amber-700'
+                            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Info Box */}
+                <div className="bg-white rounded-lg p-3 border border-amber-200">
+                  <div className="text-xs text-amber-800 text-left space-y-1">
+                    <p className="font-semibold text-amber-900">How it works:</p>
+                    <p>• Add IMDb URLs in the Reference Content section below</p>
+                    <p>• Supports: IMDb Calendar (/calendar/?region=IN) and Search pages</p>
+                    <p>• Extracts: Movie details, cast, director, languages, genres</p>
+                    <p>• Creates Theater Release entries in Manage Content → Movie Releases</p>
+                    <p>• Uses state-language mapping to show releases on homepage</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Instagram URLs Section - Only for Tadka Pics with Instagram source */}
             {formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram' && (
               <div className="bg-pink-50 rounded-lg p-4 space-y-3 border border-pink-200">
