@@ -10,10 +10,24 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses, theme } = useTheme();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useTabState('movie-schedules', 'theater');
-  const [releaseData, setReleaseData] = useState({ theater: {}, ott: {} });
+  const [releaseData, setReleaseData] = useState({ theater: {}, bollywood: {} });
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
+  
+  // State-to-language mapping
+  const stateToLanguage = {
+    'Andhra Pradesh': 'Telugu',
+    'Telangana': 'Telugu',
+    'Tamil Nadu': 'Tamil',
+    'Karnataka': 'Kannada',
+    'Kerala': 'Malayalam',
+    'Maharashtra': 'Marathi',
+    'West Bengal': 'Bengali',
+    'Gujarat': 'Gujarati',
+    'Punjab': 'Punjabi',
+    'Odisha': 'Odia'
+  };
   
   const handleReleaseClick = (release) => {
     // Open video modal with trailer
@@ -36,14 +50,34 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
 
   const fetchReleaseData = async () => {
     try {
-      const url = `${process.env.REACT_APP_BACKEND_URL}/api/releases`;
+      // Get user's selected states from localStorage
+      const userStateNames = JSON.parse(localStorage.getItem('tadka_state') || '[]');
       
-      console.log('MovieSchedules - Fetching latest releases from:', url);
+      // Convert state names to state codes for API
+      const stateNameToCode = {
+        'Andhra Pradesh': 'ap',
+        'Telangana': 'ts',
+        'Tamil Nadu': 'tn',
+        'Karnataka': 'ka',
+        'Kerala': 'kl',
+        'Maharashtra': 'mh',
+        'West Bengal': 'wb',
+        'Gujarat': 'gj',
+        'Punjab': 'pb',
+        'Odisha': 'od'
+      };
+      
+      const stateCodes = userStateNames.map(name => stateNameToCode[name]).filter(Boolean);
+      const statesParam = stateCodes.length > 0 ? `user_states=${stateCodes.join(',')}` : '';
+      
+      const url = `${process.env.REACT_APP_BACKEND_URL}/api/releases/theater-bollywood${statesParam ? '?' + statesParam : ''}`;
+      
+      console.log('MovieSchedules - Fetching releases from:', url);
       
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
-        console.log('MovieSchedules - Latest releases data:', data);
+        console.log('MovieSchedules - Releases data:', data);
         setReleaseData(data);
       }
     } catch (error) {
@@ -64,7 +98,8 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
   const getCurrentTabReleases = () => {
     if (loading) return [];
     
-    const currentTabData = releaseData[activeTab];
+    const tabKey = activeTab === 'theater' ? 'theater' : 'bollywood';
+    const currentTabData = releaseData[tabKey];
     if (!currentTabData) return [];
     
     const thisWeek = currentTabData.this_week || [];
@@ -78,12 +113,83 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
 
   const formatReleaseDate = (dateString) => {
     if (!dateString) return '';
-    // Append 'T00:00:00' to treat as local date, not UTC
-    const date = new Date(dateString + 'T00:00:00');
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric'
-    });
+    try {
+      // Handle various date formats
+      let date;
+      if (dateString.includes('T')) {
+        date = new Date(dateString);
+      } else {
+        // Append 'T00:00:00' to treat as local date, not UTC
+        date = new Date(dateString + 'T00:00:00');
+      }
+      
+      if (isNaN(date.getTime())) {
+        return '';
+      }
+      
+      return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric'
+      });
+    } catch (e) {
+      return '';
+    }
+  };
+  
+  // Format language display with dubbed/original logic
+  const formatLanguageDisplay = (release) => {
+    // Parse languages
+    let langs = [];
+    if (release.languages) {
+      if (Array.isArray(release.languages)) {
+        langs = release.languages;
+      } else if (typeof release.languages === 'string') {
+        try {
+          langs = JSON.parse(release.languages);
+        } catch {
+          langs = [release.languages];
+        }
+      }
+    }
+    
+    const originalLang = release.original_language;
+    
+    // In Bollywood tab, just show "Hindi"
+    if (activeTab === 'bollywood') {
+      return 'Hindi';
+    }
+    
+    // Get user's preferred language based on selected states
+    const userStateNames = JSON.parse(localStorage.getItem('tadka_state') || '[]');
+    const userPreferredLangs = [...new Set(userStateNames.map(state => stateToLanguage[state]).filter(Boolean))];
+    
+    // Find if user's preferred language exists in this release's languages
+    const userLangInRelease = userPreferredLangs.find(lang => langs.includes(lang));
+    
+    // If no original language info, just show the first language
+    if (!originalLang) {
+      return langs.slice(0, 2).join(', ');
+    }
+    
+    // Build display string
+    const displayParts = [];
+    
+    // If user has a preferred language in this release
+    if (userLangInRelease) {
+      if (userLangInRelease === originalLang) {
+        // User's preferred language IS the original - just show language name
+        displayParts.push(userLangInRelease);
+      } else {
+        // User's preferred language is dubbed - show both
+        displayParts.push(`${userLangInRelease} (Dubbed)`);
+        displayParts.push(`${originalLang} (Original)`);
+      }
+    } else {
+      // No user preference match - show original language
+      displayParts.push(`${originalLang} (Original)`);
+    }
+    
+    return displayParts.join(' ');
   };
 
   return (
