@@ -386,11 +386,17 @@ class IMDbScraperService:
         
         print(f"\n🎬 Fetching theater releases from {len(reference_urls)} URL(s)")
         
-        for url in reference_urls:
-            if not url or not url.strip():
+        for url_item in reference_urls:
+            # Handle both string URLs and dict format {url: "...", url_type: "..."}
+            if isinstance(url_item, dict):
+                url = url_item.get('url', '')
+            else:
+                url = url_item
+            
+            if not url or not str(url).strip():
                 continue
             
-            url = url.strip()
+            url = str(url).strip()
             
             # Determine URL type and fetch accordingly
             if 'calendar' in url.lower():
