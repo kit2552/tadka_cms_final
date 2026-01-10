@@ -277,12 +277,33 @@ class IMDbScraperService:
                             if lang in self.LANGUAGE_MAP:
                                 languages.append(lang)
                 
-                # Also check for language in the page content
+                # Also look for language in data-testid sections
                 if not languages:
-                    for lang in self.LANGUAGE_MAP.keys():
-                        if re.search(rf'\b{lang}\b', html_str, re.I):
-                            if lang not in languages:
+                    lang_containers = soup.find_all('li', {'data-testid': re.compile(r'language', re.I)})
+                    for container in lang_containers:
+                        links = container.find_all('a')
+                        for link in links:
+                            lang = link.get_text(strip=True)
+                            if lang in self.LANGUAGE_MAP and lang not in languages:
                                 languages.append(lang)
+                
+                # Check movie title for language hints (Indian films often have language in title)
+                if not languages and movie_name:
+                    title_lower = movie_name.lower()
+                    if 'telugu' in title_lower:
+                        languages = ['Telugu']
+                    elif 'tamil' in title_lower:
+                        languages = ['Tamil']
+                    elif 'malayalam' in title_lower:
+                        languages = ['Malayalam']
+                    elif 'kannada' in title_lower:
+                        languages = ['Kannada']
+                    elif 'hindi' in title_lower:
+                        languages = ['Hindi']
+                    elif 'bengali' in title_lower or 'bangla' in title_lower:
+                        languages = ['Bengali']
+                    elif 'marathi' in title_lower:
+                        languages = ['Marathi']
                 
                 # Filter English if needed
                 if not include_english and languages == ['English']:
