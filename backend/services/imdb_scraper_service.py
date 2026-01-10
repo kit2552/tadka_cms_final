@@ -625,8 +625,21 @@ class IMDbScraperService:
                         print(f"      ⏭️ Skipping English-only movie")
                         continue
                 
+                # Use release date from calendar if details page didn't find it
+                # or if the calendar date looks more accurate (not just year-01-01)
+                calendar_date = release.get('release_date')
+                details_date = details.get('release_date')
+                
+                if calendar_date:
+                    # Calendar date is more reliable - use it
+                    details['release_date'] = calendar_date
+                    print(f"      📅 Using calendar date: {calendar_date}")
+                elif details_date and details_date.endswith('-01-01'):
+                    # Details date is just year fallback, try to keep it
+                    print(f"      📅 Using fallback date: {details_date}")
+                
                 detailed_releases.append(details)
-                print(f"      ✅ Got details: {details.get('movie_name')}")
+                print(f"      ✅ Got details: {details.get('movie_name')} | Release: {details.get('release_date')}")
             else:
                 print(f"      ⚠️ Could not fetch details")
         
