@@ -65,7 +65,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     ott_language: 'Hindi',  // Language filter for OTT releases
     ott_streaming_now: true,  // Fetch "Streaming Now" releases
     ott_streaming_soon: false,  // Fetch "Streaming Soon" releases
-    ott_fetch_limit: 10  // Number of releases to fetch
+    ott_fetch_limit: 10,  // Number of releases to fetch
+    // Theater Release Agent fields
+    theater_fetch_limit: 10,  // Number of releases to fetch
+    theater_include_english: true,  // Include English language movies
+    theater_search_trailers: false  // Search YouTube RSS for trailers
   });
   
   // Default filter settings for each category
