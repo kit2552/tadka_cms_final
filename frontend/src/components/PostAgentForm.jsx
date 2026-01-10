@@ -421,7 +421,9 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             </h2>
             <p className="text-xs text-gray-600 mt-0.5">
               {formData.agent_type === 'ott_release' 
-                ? 'Configure OTT release fetching from Binged.com' 
+                ? 'Configure OTT release fetching from Binged.com'
+                : formData.agent_type === 'theater_release'
+                ? 'Fetches theater movie releases from IMDb India'
                 : 'Configure your automated post generation agent'}
             </p>
           </div>
