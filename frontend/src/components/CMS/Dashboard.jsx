@@ -3954,20 +3954,17 @@ const Dashboard = () => {
                           {/* Sticky Table Header */}
                           <div className="bg-gray-50 sticky top-28 z-30 border-b border-gray-200 shadow-sm px-4 py-3">
                             <div className="grid grid-cols-12 gap-4">
-                              <div className="col-span-2 text-left">
-                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">MOVIE NAME</span>
+                              <div className="col-span-3 text-left">
+                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">MOVIE NAME / CAST</span>
                               </div>
                               <div className="col-span-2 text-left">
-                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">BANNER</span>
+                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">LANGUAGES</span>
                               </div>
-                              <div className="col-span-1 text-left">
-                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">LANGUAGE</span>
+                              <div className="col-span-2 text-left">
+                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">GENRES</span>
                               </div>
                               <div className="col-span-2 text-left">
                                 <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">RELEASE DATE</span>
-                              </div>
-                              <div className="col-span-2 text-left">
-                                <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">IMAGE</span>
                               </div>
                               <div className="col-span-3 text-left">
                                 <span className="text-xs font-medium text-gray-700 uppercase tracking-wider">ACTIONS</span>
