@@ -410,6 +410,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             <h2 className="text-lg font-semibold text-gray-900">
               {editingAgent ? 'Edit' : 'Create'} {
                 formData.agent_type === 'ott_release' ? 'OTT Release Agent' :
+                formData.agent_type === 'theater_release' ? 'Theater Release Agent' :
                 formData.agent_type === 'reality_show' ? 'Reality Show Agent' :
                 formData.agent_type === 'tv_video' ? 'TV Video Agent' :
                 formData.agent_type === 'video' ? 'Video Agent' :
