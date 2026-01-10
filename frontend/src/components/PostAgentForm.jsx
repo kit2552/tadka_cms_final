@@ -2233,8 +2233,8 @@ Instructions:
             </div>
             )}
 
-            {/* Image Options Section - Hide for photo_gallery, tadka_pics, video, tv_video, reality_show, and ott_release */}
-            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && (
+            {/* Image Options Section - Hide for photo_gallery, tadka_pics, video, tv_video, reality_show, ott_release, and theater_release */}
+            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && formData.agent_type !== 'theater_release' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Image Options</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
