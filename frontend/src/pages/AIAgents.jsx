@@ -97,7 +97,13 @@ const AIAgents = () => {
       if (response.ok && (data.success || data.status === 'success')) {
         // Handle different agent types
         let message = '';
-        if (data.releases_created !== undefined) {
+        if (data.releases_created !== undefined && data.trailers_found !== undefined) {
+          // Theater Release agent response
+          const created = data.releases_created || 0;
+          const skipped = data.releases_skipped || 0;
+          const trailers = data.trailers_found || 0;
+          message = `${created} theater release(s) created! (${skipped} skipped${trailers > 0 ? `, ${trailers} trailers found` : ''})`;
+        } else if (data.releases_created !== undefined) {
           // OTT Release agent response
           const created = data.releases_created || 0;
           const skipped = data.releases_skipped || 0;
