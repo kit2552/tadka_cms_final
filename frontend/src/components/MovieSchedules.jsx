@@ -209,9 +209,9 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
           {t('sections.theater_releases', 'Theater Releases')}
         </button>
         <button
-          onClick={() => setActiveTab('ott')}
+          onClick={() => setActiveTab('bollywood')}
           className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-tr-lg ${
-            activeTab === 'ott' 
+            activeTab === 'bollywood' 
               ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}` 
               : getSectionHeaderClasses().unselectedTabClass
           }`}
