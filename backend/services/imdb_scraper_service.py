@@ -313,23 +313,75 @@ class IMDbScraperService:
                 if not languages:
                     languages = ['Hindi']
                 
-                # Extract genres
+                # Extract genres - try multiple methods
                 genres = []
+                
+                # Method 1: Look for genre links
                 genre_links = soup.find_all('a', href=re.compile(r'/search/title.*genres'))
                 for link in genre_links:
                     genre = link.get_text(strip=True)
-                    if genre and genre not in genres and len(genre) < 20:
+                    if genre and genre not in genres and len(genre) < 20 and genre.lower() not in ['imdb', 'menu']:
                         genres.append(genre)
                 
-                # Extract director
+                # Method 2: Look for genre chips/spans near genre label
+                if not genres:
+                    genre_container = soup.find('div', {'data-testid': re.compile(r'genres', re.I)})
+                    if genre_container:
+                        genre_spans = genre_container.find_all('span', class_=re.compile(r'chip|genre', re.I))
+                        for span in genre_spans:
+                            genre = span.get_text(strip=True)
+                            if genre and genre not in genres and len(genre) < 20:
+                                genres.append(genre)
+                
+                # Method 3: Look for common genre keywords in page
+                if not genres:
+                    common_genres = ['Action', 'Adventure', 'Animation', 'Biography', 'Comedy', 'Crime', 
+                                     'Documentary', 'Drama', 'Family', 'Fantasy', 'Horror', 'Musical',
+                                     'Mystery', 'Romance', 'Sci-Fi', 'Sport', 'Thriller', 'War', 'Western']
+                    for genre in common_genres:
+                        # Look for genre in specific sections, not entire page
+                        genre_section = soup.find('li', {'data-testid': re.compile(r'storyline-genres', re.I)})
+                        if genre_section and re.search(rf'\b{genre}\b', genre_section.get_text(), re.I):
+                            if genre not in genres:
+                                genres.append(genre)
+                
+                # Extract director - try multiple methods
                 director = None
-                director_section = soup.find(string=re.compile(r'Director', re.I))
+                
+                # Method 1: Look for Director label
+                director_section = soup.find('li', {'data-testid': re.compile(r'director', re.I)})
                 if director_section:
-                    parent = director_section.find_parent()
-                    if parent:
-                        director_link = parent.find('a', href=re.compile(r'/name/nm\d+'))
-                        if director_link:
-                            director = director_link.get_text(strip=True)
+                    director_link = director_section.find('a', href=re.compile(r'/name/nm\d+'))
+                    if director_link:
+                        director = director_link.get_text(strip=True)
+                
+                # Method 2: Look for "Director" or "Directors" text
+                if not director:
+                    for text in ['Director', 'Directors']:
+                        director_label = soup.find(string=re.compile(rf'^{text}s?$', re.I))
+                        if director_label:
+                            parent = director_label.find_parent()
+                            if parent:
+                                # Go up a few levels to find the container
+                                for _ in range(3):
+                                    if parent.parent:
+                                        parent = parent.parent
+                                    director_link = parent.find('a', href=re.compile(r'/name/nm\d+'))
+                                    if director_link:
+                                        director = director_link.get_text(strip=True)
+                                        break
+                            if director:
+                                break
+                
+                # Method 3: Look in credits section
+                if not director:
+                    credits = soup.find_all('a', href=re.compile(r'/name/nm\d+'))
+                    for credit in credits[:20]:
+                        # Check if this name appears near "Director" text
+                        parent = credit.find_parent()
+                        if parent and re.search(r'director', parent.get_text(), re.I):
+                            director = credit.get_text(strip=True)
+                            break
                 
                 # Extract cast
                 cast = []
