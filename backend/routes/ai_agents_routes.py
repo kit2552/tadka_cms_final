@@ -84,6 +84,11 @@ class AIAgent(BaseModel):
     ott_streaming_soon: Optional[bool] = False  # Fetch "Streaming Soon" releases
     ott_fetch_limit: Optional[int] = 10  # Number of releases to fetch: 5, 10, 20, 50
     
+    # Theater Release Agent fields
+    theater_fetch_limit: Optional[int] = 10  # Number of releases to fetch: 5, 10, 20, 50
+    theater_include_english: Optional[bool] = True  # Include English language movies
+    theater_search_trailers: Optional[bool] = False  # Search YouTube RSS for trailers after creation
+    
     # Post Aggregation fields (for Video Agent)
     enable_aggregation: Optional[bool] = False  # Enable post grouping by movie/event name
     aggregation_lookback_days: Optional[int] = 2  # Days to look back for grouping (1-30)
