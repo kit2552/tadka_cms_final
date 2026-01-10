@@ -915,8 +915,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             </div>
             )}
 
-            {/* Agent Prompt Section - Hide for tadka_pics and ott_release */}
-            {formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'ott_release' && (
+            {/* Agent Prompt Section - Hide for tadka_pics, ott_release, and theater_release */}
+            {formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'ott_release' && formData.agent_type !== 'theater_release' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="text-left">
