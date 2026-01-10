@@ -219,6 +219,10 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
             # Use OTT Release Agent Service
             from services.ott_release_agent_service import ott_release_agent_service
             result = await ott_release_agent_service.run_ott_release_agent(agent_id)
+        elif agent_type == 'theater_release':
+            # Use Theater Release Agent Service
+            from services.theater_release_agent_service import theater_release_agent_service
+            result = await theater_release_agent_service.run_theater_release_agent(agent_id)
         else:
             # Use Post Agent Service (default)
             result = await agent_runner.run_agent(agent_id)
