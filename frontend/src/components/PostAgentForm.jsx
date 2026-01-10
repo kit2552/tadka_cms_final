@@ -1527,7 +1527,7 @@ Instructions:
             )}
 
             {/* Split Content Section - Only for post agent type */}
-            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && (
+            {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && formData.agent_type !== 'theater_release' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="text-left">
