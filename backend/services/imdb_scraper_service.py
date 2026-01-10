@@ -111,115 +111,55 @@ class IMDbScraperService:
                     return releases
                 
                 soup = BeautifulSoup(response.text, 'html.parser')
-                html_str = str(soup)
                 
-                # IMDb calendar page structure: date headers followed by movie lists
-                # Find all date sections - they appear as headers like "Jan 12, 2026"
-                
-                # Method 1: Find date headers and their associated movies
-                # Look for patterns like "Jan 12, 2026" or "January 12, 2026"
-                date_pattern = r'(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2},?\s+\d{4}'
-                
-                # Find all elements that might contain date headers
-                current_date = None
+                date_pattern = r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}'
                 seen_ids = set()
                 
-                # Try to find article/section elements that group movies by date
-                # IMDb uses various structures, so we try multiple approaches
-                
-                # Approach 1: Look for h3/h4 headers with dates
-                for header in soup.find_all(['h3', 'h4', 'div', 'span']):
-                    header_text = header.get_text(strip=True)
-                    date_match = re.search(date_pattern, header_text, re.I)
-                    if date_match:
-                        parsed_date = self._parse_date(date_match.group(0))
-                        if parsed_date:
-                            current_date = parsed_date
-                            
-                            # Find movie links near/after this header
-                            # Look in the next sibling or parent's children
-                            parent = header.find_parent(['article', 'section', 'div'])
-                            if parent:
-                                movie_links = parent.find_all('a', href=re.compile(r'/title/tt\d+'))
-                                for link in movie_links:
-                                    if len(releases) >= limit:
-                                        break
-                                    
-                                    href = link.get('href', '')
-                                    title = link.get_text(strip=True)
-                                    
-                                    # Skip empty or navigation titles
-                                    if not title or len(title) < 2:
-                                        continue
-                                    if title.lower() in ['imdb', 'menu', 'all', 'watchlist']:
-                                        continue
-                                    
-                                    # Extract IMDb ID
-                                    imdb_match = re.search(r'(tt\d+)', href)
-                                    if not imdb_match:
-                                        continue
-                                    
-                                    imdb_id = imdb_match.group(1)
-                                    
-                                    # Skip if already seen
-                                    if imdb_id in seen_ids:
-                                        continue
-                                    
-                                    seen_ids.add(imdb_id)
-                                    
-                                    releases.append({
-                                        'title': title,
-                                        'imdb_id': imdb_id,
-                                        'imdb_url': f'https://www.imdb.com/title/{imdb_id}/',
-                                        'release_date': current_date
-                                    })
-                
-                # Approach 2: If no releases found, try finding all movie links and get dates from detail pages
-                if not releases:
-                    movie_items = soup.find_all('a', href=re.compile(r'/title/tt\d+'))
+                # IMDb calendar page has articles, each containing a date header and movie links
+                for article in soup.find_all('article'):
+                    if len(releases) >= limit:
+                        break
                     
-                    for item in movie_items:
-                        if len(releases) >= limit:
-                            break
+                    article_text = article.get_text()
+                    date_match = re.search(date_pattern, article_text)
+                    
+                    if date_match:
+                        release_date = self._parse_date(date_match.group(0))
                         
-                        href = item.get('href', '')
-                        title = item.get_text(strip=True)
+                        # Find all movie links in this article
+                        movie_links = article.find_all('a', href=re.compile(r'/title/tt\d+'))
                         
-                        # Skip if already seen or empty title
-                        if not title or len(title) < 2:
-                            continue
-                        
-                        # Skip navigation links
-                        if title.lower() in ['imdb', 'menu', 'all', 'watchlist']:
-                            continue
-                        
-                        # Extract IMDb ID
-                        imdb_match = re.search(r'(tt\d+)', href)
-                        if not imdb_match:
-                            continue
-                        
-                        imdb_id = imdb_match.group(1)
-                        
-                        if imdb_id in seen_ids:
-                            continue
-                        
-                        seen_ids.add(imdb_id)
-                        
-                        # Try to find date near this link
-                        parent = item.find_parent(['li', 'div', 'article'])
-                        release_date = None
-                        if parent:
-                            parent_text = parent.get_text()
-                            date_match = re.search(date_pattern, parent_text, re.I)
-                            if date_match:
-                                release_date = self._parse_date(date_match.group(0))
-                        
-                        releases.append({
-                            'title': title,
-                            'imdb_id': imdb_id,
-                            'imdb_url': f'https://www.imdb.com/title/{imdb_id}/',
-                            'release_date': release_date
-                        })
+                        for link in movie_links:
+                            if len(releases) >= limit:
+                                break
+                            
+                            href = link.get('href', '')
+                            title = link.get_text(strip=True)
+                            
+                            # Skip empty titles
+                            if not title or len(title) < 2:
+                                continue
+                            
+                            # Extract IMDb ID
+                            imdb_match = re.search(r'(tt\d+)', href)
+                            if not imdb_match:
+                                continue
+                            
+                            imdb_id = imdb_match.group(1)
+                            
+                            # Skip duplicates
+                            if imdb_id in seen_ids:
+                                continue
+                            
+                            seen_ids.add(imdb_id)
+                            
+                            releases.append({
+                                'title': title,
+                                'imdb_id': imdb_id,
+                                'imdb_url': f'https://www.imdb.com/title/{imdb_id}/',
+                                'release_date': release_date
+                            })
+                            print(f"      📅 {title}: {release_date}")
                 
                 print(f"   ✅ Found {len(releases)} releases from calendar")
                 
