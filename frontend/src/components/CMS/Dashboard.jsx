@@ -3981,6 +3981,45 @@ const Dashboard = () => {
                               let filteredReleases = filterReleasesByDate(theaterReleases);
                               filteredReleases = filterReleasesByLanguage(filteredReleases);
                               
+                              // Helper function to format date without timezone conversion
+                              const formatDateSafe = (dateString) => {
+                                if (!dateString) return '-';
+                                try {
+                                  // Parse the date string directly without timezone conversion
+                                  const parts = dateString.split('T')[0].split('-');
+                                  if (parts.length === 3) {
+                                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                    const month = months[parseInt(parts[1], 10) - 1];
+                                    const day = parseInt(parts[2], 10);
+                                    const year = parts[0];
+                                    return `${month} ${day}, ${year}`;
+                                  }
+                                  return dateString;
+                                } catch (e) {
+                                  return dateString;
+                                }
+                              };
+                              
+                              // Helper function to parse JSON array and display as comma-separated
+                              const parseArrayField = (value) => {
+                                if (!value) return '-';
+                                if (typeof value === 'string') {
+                                  try {
+                                    const arr = JSON.parse(value);
+                                    if (Array.isArray(arr)) {
+                                      return arr.slice(0, 5).join(', ') + (arr.length > 5 ? '...' : '');
+                                    }
+                                    return value;
+                                  } catch {
+                                    return value;
+                                  }
+                                }
+                                if (Array.isArray(value)) {
+                                  return value.slice(0, 5).join(', ') + (value.length > 5 ? '...' : '');
+                                }
+                                return String(value);
+                              };
+                              
                               return filteredReleases.map((release, index) => (
                                 <div 
                                   key={release.id} 
@@ -3989,26 +4028,44 @@ const Dashboard = () => {
                                   } hover:bg-gray-100 transition-colors duration-150`}
                                 >
                                 {/* Movie Name Column */}
-                                <div className="col-span-2">
+                                <div className="col-span-3">
                                   <div className="text-left">
                                     <h3 className="text-sm font-medium text-gray-900 text-left">
                                       {release.movie_name}
                                     </h3>
+                                    {/* Show cast preview */}
+                                    <p className="text-xs text-gray-500 mt-0.5 truncate" title={parseArrayField(release.cast)}>
+                                      {parseArrayField(release.cast)}
+                                    </p>
                                   </div>
                                 </div>
                                 
-                                {/* Banner Column */}
+                                {/* Languages Column */}
+                                <div className="col-span-2">
+                                  <div className="text-left flex flex-wrap gap-1">
+                                    {(() => {
+                                      let langs = [];
+                                      if (release.languages) {
+                                        if (typeof release.languages === 'string') {
+                                          try { langs = JSON.parse(release.languages); } catch { langs = [release.languages]; }
+                                        } else if (Array.isArray(release.languages)) {
+                                          langs = release.languages;
+                                        }
+                                      }
+                                      return langs.length > 0 ? langs.slice(0, 2).map((lang, idx) => (
+                                        <span key={idx} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                          {lang}
+                                        </span>
+                                      )) : <span className="text-sm text-gray-400">-</span>;
+                                    })()}
+                                  </div>
+                                </div>
+                                
+                                {/* Genres Column */}
                                 <div className="col-span-2">
                                   <div className="text-left">
-                                    <span className="text-sm text-gray-700">{release.movie_banner}</span>
-                                  </div>
-                                </div>
-                                
-                                {/* Language Column */}
-                                <div className="col-span-1">
-                                  <div className="text-left">
-                                    <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                                      {release.language}
+                                    <span className="text-xs text-gray-600">
+                                      {parseArrayField(release.genres)}
                                     </span>
                                   </div>
                                 </div>
@@ -4017,23 +4074,8 @@ const Dashboard = () => {
                                 <div className="col-span-2">
                                   <div className="text-left">
                                     <span className="text-sm text-gray-700">
-                                      {new Date(release.release_date).toLocaleDateString()}
+                                      {formatDateSafe(release.release_date)}
                                     </span>
-                                  </div>
-                                </div>
-                                
-                                {/* Image Column */}
-                                <div className="col-span-2">
-                                  <div className="text-left">
-                                    {release.movie_image ? (
-                                      <img 
-                                        src={`${process.env.REACT_APP_BACKEND_URL}/${release.movie_image}`} 
-                                        alt={release.movie_name}
-                                        className="w-12 h-12 object-cover rounded"
-                                      />
-                                    ) : (
-                                      <span className="text-sm text-gray-400">No image</span>
-                                    )}
                                   </div>
                                 </div>
                                 
