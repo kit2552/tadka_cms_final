@@ -1069,6 +1069,8 @@ def get_this_week_ott_releases(db, limit: int = 100):
 
 def create_theater_release(db, release):
     """Create theater release"""
+    import json
+    
     # Convert Pydantic model to dict if needed
     if hasattr(release, 'dict'):
         release_data = release.dict()
@@ -1084,25 +1086,48 @@ def create_theater_release(db, release):
     if release_date and hasattr(release_date, 'isoformat'):
         release_date = release_date.isoformat()
     
+    # Helper function to ensure array fields are stored as JSON strings
+    def ensure_json_string(value, default='[]'):
+        if value is None:
+            return default
+        if isinstance(value, list):
+            return json.dumps(value)
+        if isinstance(value, str):
+            return value
+        return default
+    
+    # Helper function to ensure string fields
+    def ensure_string(value, default=''):
+        if value is None:
+            return default
+        if isinstance(value, (int, float)):
+            return str(value)
+        return str(value) if value else default
+    
     release_doc = {
         "id": new_id,
         "movie_name": release_data.get("movie_name"),
         "release_date": release_date,
         "movie_image": release_data.get("movie_image"),
-        "youtube_url": release_data.get("youtube_url"),
-        "states": release_data.get("states"),
-        "languages": release_data.get("languages"),
-        "genres": release_data.get("genres"),
-        "director": release_data.get("director"),
-        "producer": release_data.get("producer"),
-        "banner": release_data.get("banner"),
-        "music_director": release_data.get("music_director"),
-        "dop": release_data.get("dop"),
-        "editor": release_data.get("editor"),
-        "cast": release_data.get("cast"),
-        "runtime": release_data.get("runtime"),
-        "censor_rating": release_data.get("censor_rating"),
-        "created_by": release_data.get("created_by"),
+        "youtube_url": release_data.get("youtube_url") or '',
+        "states": ensure_json_string(release_data.get("states")),
+        "languages": ensure_json_string(release_data.get("languages")),
+        "original_language": release_data.get("original_language") or (release_data.get("languages", ['Hindi'])[0] if isinstance(release_data.get("languages"), list) else 'Hindi'),
+        "genres": ensure_json_string(release_data.get("genres")),
+        "director": ensure_string(release_data.get("director")),
+        "producer": ensure_string(release_data.get("producer")),
+        "banner": ensure_string(release_data.get("banner")),
+        "music_director": ensure_string(release_data.get("music_director")),
+        "dop": ensure_string(release_data.get("dop")),
+        "editor": ensure_string(release_data.get("editor")),
+        "cast": ensure_json_string(release_data.get("cast")),
+        "runtime": ensure_string(release_data.get("runtime")),
+        "censor_rating": ensure_string(release_data.get("censor_rating")),
+        "is_published": release_data.get("is_published", False),
+        "status": release_data.get("status", "in_review"),
+        "source_url": release_data.get("source_url"),
+        "imdb_id": release_data.get("imdb_id"),
+        "created_by": ensure_string(release_data.get("created_by"), 'AI Agent'),
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
     }
