@@ -659,8 +659,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               </>
             )}
 
-            {/* Common Fields - Content Settings - Hide for tadka_pics, video, tv_video, reality_show, and ott_release agents */}
-            {formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && (
+            {/* Common Fields - Content Settings - Hide for tadka_pics, video, tv_video, reality_show, ott_release, and theater_release agents */}
+            {formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && formData.agent_type !== 'theater_release' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Content Settings</h3>
               
