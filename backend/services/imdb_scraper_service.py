@@ -340,29 +340,50 @@ class IMDbScraperService:
                 if not release_date and year:
                     release_date = f"{year}-01-01"
                 
-                # Extract languages
+                # Extract languages - ONLY from specific language sections, not entire page
                 languages = []
-                lang_section = soup.find(string=re.compile(r'Language', re.I))
-                if lang_section:
-                    parent = lang_section.find_parent()
-                    if parent:
-                        lang_links = parent.find_all('a', href=re.compile(r'/search/title.*language'))
-                        for link in lang_links:
-                            lang = link.get_text(strip=True)
-                            if lang in self.LANGUAGE_MAP:
-                                languages.append(lang)
                 
-                # Also look for language in data-testid sections
+                # Method 1: Look for chip elements that contain language names
+                # These are the most reliable - IMDb shows language chips near the title
+                known_languages = ['Malayalam', 'Telugu', 'Tamil', 'Hindi', 'Kannada', 'Bengali', 
+                                   'Marathi', 'Gujarati', 'Punjabi', 'Odia', 'English', 
+                                   'Korean', 'Japanese', 'Spanish', 'French', 'German', 'Chinese']
+                
+                chips = soup.find_all(['span', 'a'], class_=re.compile(r'chip|ipc-chip', re.I))
+                for chip in chips:
+                    chip_text = chip.get_text(strip=True)
+                    if chip_text in known_languages and chip_text not in languages:
+                        languages.append(chip_text)
+                
+                # Method 2: Look for language links in specific sections
+                if not languages:
+                    lang_section = soup.find(string=re.compile(r'^Languages?$', re.I))
+                    if lang_section:
+                        parent = lang_section.find_parent()
+                        if parent:
+                            # Go up to find the container
+                            for _ in range(3):
+                                if parent:
+                                    lang_links = parent.find_all('a', href=re.compile(r'/search/title.*language'))
+                                    for link in lang_links:
+                                        lang = link.get_text(strip=True)
+                                        if lang in known_languages and lang not in languages:
+                                            languages.append(lang)
+                                    if languages:
+                                        break
+                                    parent = parent.find_parent()
+                
+                # Method 3: Look in data-testid sections
                 if not languages:
                     lang_containers = soup.find_all('li', {'data-testid': re.compile(r'language', re.I)})
                     for container in lang_containers:
                         links = container.find_all('a')
                         for link in links:
                             lang = link.get_text(strip=True)
-                            if lang in self.LANGUAGE_MAP and lang not in languages:
+                            if lang in known_languages and lang not in languages:
                                 languages.append(lang)
                 
-                # Check movie title for language hints (Indian films often have language in title)
+                # Method 4: Check movie title for language hints (Indian films often have language in title)
                 if not languages and movie_name:
                     title_lower = movie_name.lower()
                     if 'telugu' in title_lower:
