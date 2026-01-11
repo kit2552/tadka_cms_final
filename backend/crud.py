@@ -1030,8 +1030,8 @@ def get_theater_releases_by_language(db, languages: list, limit: int = 100):
     import json
     from datetime import datetime, timedelta
     
-    # Calculate date 5 days ago
-    five_days_ago = (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d")
+    # Calculate date 10 days ago
+    five_days_ago = (datetime.now() - timedelta(days=10)).strftime("%Y-%m-%d")
     
     if not languages:
         # If no languages specified, return all releases from past 5 days onwards
@@ -1064,8 +1064,8 @@ def get_theater_releases_bollywood(db, limit: int = 100):
     """
     from datetime import datetime, timedelta
     
-    # Calculate date 5 days ago
-    five_days_ago = (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d")
+    # Calculate date 10 days ago
+    five_days_ago = (datetime.now() - timedelta(days=10)).strftime("%Y-%m-%d")
     
     # Hindi releases for Bollywood section
     query = {
