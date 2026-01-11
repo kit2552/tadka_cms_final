@@ -2783,19 +2783,19 @@ async def get_homepage_theater_bollywood_releases(
     
     # Fetch releases based on language preference
     if user_languages:
-        theater_releases = crud.get_theater_releases_by_language(db, user_languages, limit=8)
+        theater_releases = crud.get_theater_releases_by_language(db, user_languages, limit=20)
     else:
         # No state preference - show all releases
-        theater_releases = crud.get_theater_releases_by_language(db, [], limit=8)
+        theater_releases = crud.get_theater_releases_by_language(db, [], limit=20)
     
-    # Split into this_week and upcoming (first 4 and next 4)
-    this_week_theater = theater_releases[:4]
-    upcoming_theater = theater_releases[4:8] if len(theater_releases) > 4 else []
+    # Split into this_week and upcoming (first 10 and next 10)
+    this_week_theater = theater_releases[:10]
+    upcoming_theater = theater_releases[10:20] if len(theater_releases) > 10 else []
     
     # Get Hindi releases for Bollywood tab
-    bollywood_releases = crud.get_theater_releases_bollywood(db, limit=8)
-    this_week_bollywood = bollywood_releases[:4]
-    upcoming_bollywood = bollywood_releases[4:8] if len(bollywood_releases) > 4 else []
+    bollywood_releases = crud.get_theater_releases_bollywood(db, limit=20)
+    this_week_bollywood = bollywood_releases[:10]
+    upcoming_bollywood = bollywood_releases[10:20] if len(bollywood_releases) > 10 else []
     
     def format_release_response(releases, is_theater=True):
         result = []
