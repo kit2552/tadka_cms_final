@@ -114,8 +114,8 @@ const OTTReleases = ({ articles, onArticleClick }) => {
     console.log('getCurrentTabReleases - comingSoon count:', comingSoon.length);
     console.log('getCurrentTabReleases - thisWeek data:', thisWeek);
     
-    // Combine and limit to 4 items
-    const combined = [...thisWeek, ...comingSoon].slice(0, 4);
+    // Combine and limit to 20 items
+    const combined = [...thisWeek, ...comingSoon].slice(0, 20);
     console.log('getCurrentTabReleases - combined releases:', combined);
     return combined;
   };
@@ -160,18 +160,13 @@ const OTTReleases = ({ articles, onArticleClick }) => {
       </div>
       
       <div 
-        className={`overflow-y-hidden relative ${getSectionBodyClasses().backgroundClass}`}
+        className={`overflow-y-auto relative ${getSectionBodyClasses().backgroundClass}`}
         style={{ 
           height: 'calc(352px - 45px)',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none'
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#cbd5e1 transparent'
         }}
       >
-        <style>{`
-          div::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
         
         <div className="p-2">
           {loading ? (

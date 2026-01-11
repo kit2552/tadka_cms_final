@@ -105,8 +105,8 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
     const thisWeek = currentTabData.this_week || [];
     const comingSoon = currentTabData.coming_soon || [];
     
-    // Combine and limit to 4 items
-    return [...thisWeek, ...comingSoon].slice(0, 4);
+    // Combine and limit to 20 items
+    return [...thisWeek, ...comingSoon].slice(0, 20);
   };
 
   const currentReleases = getCurrentTabReleases();
@@ -222,18 +222,13 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
       </div>
       
       <div 
-        className={`overflow-y-hidden relative ${getSectionBodyClasses().backgroundClass}`}
+        className={`overflow-y-auto relative ${getSectionBodyClasses().backgroundClass}`}
         style={{ 
           height: 'calc(352px - 45px)',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none'
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#cbd5e1 transparent'
         }}
       >
-        <style>{`
-          div::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
         
         <div className="p-2">
           {loading ? (
