@@ -1484,8 +1484,11 @@ async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_d
     
     Args:
         user_states: Comma-separated list of state codes (e.g., 'ap,ts')
+    
+    Returns releases from past 5 days onwards, sorted by release_date ascending
     """
     from state_language_mapping import get_languages_for_states
+    from datetime import datetime, timedelta
     import json
     
     # Get state-language mapping
@@ -1494,8 +1497,14 @@ async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_d
         state_list = [s.strip() for s in user_states.split(',')]
         user_languages = get_languages_for_states(state_list)
     
-    # Get all OTT releases (not filtered by date - we want to show all recent releases)
-    all_ott_docs = list(db.ott_releases.find({}, {"_id": 0}).sort("release_date", -1).limit(50))
+    # Calculate date 5 days ago
+    five_days_ago = (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d")
+    
+    # Get OTT releases from past 5 days onwards, sorted ascending by release_date
+    all_ott_docs = list(db.ott_releases.find(
+        {"release_date": {"$gte": five_days_ago}}, 
+        {"_id": 0}
+    ).sort("release_date", 1).limit(50))
     all_ott_releases = all_ott_docs
     
     def parse_languages(languages_str):
