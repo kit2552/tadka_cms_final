@@ -1024,12 +1024,20 @@ def get_upcoming_theater_releases_all_states(db, limit: int = 100):
     return serialize_doc(docs)
 
 def get_theater_releases_by_language(db, languages: list, limit: int = 100):
-    """Get theater releases filtered by language(s) - for state-language mapping"""
+    """Get theater releases filtered by language(s) - for state-language mapping
+    Includes releases from past 5 days and upcoming, sorted by release_date ascending
+    """
     import json
+    from datetime import datetime, timedelta
+    
+    # Calculate date 5 days ago
+    five_days_ago = (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d")
     
     if not languages:
-        # If no languages specified, return all releases
-        docs = list(db[THEATER_RELEASES].find({}).sort([("release_date", -1), ("created_at", -1)]).limit(limit))
+        # If no languages specified, return all releases from past 5 days onwards
+        docs = list(db[THEATER_RELEASES].find({
+            "release_date": {"$gte": five_days_ago}
+        }).sort([("release_date", 1), ("created_at", 1)]).limit(limit))
         return serialize_doc(docs)
     
     # Build query to match any of the specified languages
@@ -1040,22 +1048,37 @@ def get_theater_releases_by_language(db, languages: list, limit: int = 100):
         # Also check original_language field
         language_conditions.append({"original_language": {"$regex": f'^{lang}$', "$options": "i"}})
     
-    query = {"$or": language_conditions}
-    
-    docs = list(db[THEATER_RELEASES].find(query).sort([("release_date", -1), ("created_at", -1)]).limit(limit))
-    return serialize_doc(docs)
-
-def get_theater_releases_bollywood(db, limit: int = 100):
-    """Get Hindi language theater releases for Bollywood tab"""
-    # Hindi releases for Bollywood section
     query = {
-        "$or": [
-            {"languages": {"$regex": '"Hindi"', "$options": "i"}},
-            {"original_language": {"$regex": "^Hindi$", "$options": "i"}}
+        "$and": [
+            {"$or": language_conditions},
+            {"release_date": {"$gte": five_days_ago}}
         ]
     }
     
-    docs = list(db[THEATER_RELEASES].find(query).sort([("release_date", -1), ("created_at", -1)]).limit(limit))
+    docs = list(db[THEATER_RELEASES].find(query).sort([("release_date", 1), ("created_at", 1)]).limit(limit))
+    return serialize_doc(docs)
+
+def get_theater_releases_bollywood(db, limit: int = 100):
+    """Get Hindi language theater releases for Bollywood tab
+    Includes releases from past 5 days and upcoming, sorted by release_date ascending
+    """
+    from datetime import datetime, timedelta
+    
+    # Calculate date 5 days ago
+    five_days_ago = (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d")
+    
+    # Hindi releases for Bollywood section
+    query = {
+        "$and": [
+            {"$or": [
+                {"languages": {"$regex": '"Hindi"', "$options": "i"}},
+                {"original_language": {"$regex": "^Hindi$", "$options": "i"}}
+            ]},
+            {"release_date": {"$gte": five_days_ago}}
+        ]
+    }
+    
+    docs = list(db[THEATER_RELEASES].find(query).sort([("release_date", 1), ("created_at", 1)]).limit(limit))
     return serialize_doc(docs)
 
 def get_ott_release(db, release_id: int):
