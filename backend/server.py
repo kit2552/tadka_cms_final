@@ -1579,12 +1579,12 @@ async def get_ott_bollywood_releases(user_states: str = None, db = Depends(get_d
             result.append(release_data)
         return result
     
-    # Split filtered releases into this_week and coming_soon
-    ott_this_week = format_release_response(ott_filtered[:4])
-    ott_coming_soon = format_release_response(ott_filtered[4:8])
+    # Split filtered releases into this_week and coming_soon (10 each for 20 total)
+    ott_this_week = format_release_response(ott_filtered[:10])
+    ott_coming_soon = format_release_response(ott_filtered[10:20])
     
-    bollywood_this_week = format_release_response(bollywood_filtered[:4])
-    bollywood_coming_soon = format_release_response(bollywood_filtered[4:8])
+    bollywood_this_week = format_release_response(bollywood_filtered[:10])
+    bollywood_coming_soon = format_release_response(bollywood_filtered[10:20])
     
     return {
         "ott": {
