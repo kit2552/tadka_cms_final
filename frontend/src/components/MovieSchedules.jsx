@@ -335,8 +335,8 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2 ml-2">
-                        <div className="bg-gray-800 text-white px-2 py-1 rounded text-xs font-medium">
+                      <div className="flex-shrink-0 ml-2">
+                        <div className="bg-gray-800 text-white px-2 py-1 rounded text-xs font-medium whitespace-nowrap">
                           {formatReleaseDate(release.release_date)}
                         </div>
                       </div>
