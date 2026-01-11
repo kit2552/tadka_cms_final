@@ -306,33 +306,37 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                             </p>
                           )}
                           {/* Genre */}
-                          {release.genres && (
-                            <p className="text-xs text-gray-500 mt-0.5">
-                              {(() => {
-                                let genres = [];
-                                if (typeof release.genres === 'string') {
-                                  try { genres = JSON.parse(release.genres); } catch { genres = [release.genres]; }
-                                } else if (Array.isArray(release.genres)) {
-                                  genres = release.genres;
-                                }
-                                return genres.slice(0, 3).join(', ');
-                              })()}
-                            </p>
-                          )}
+                          {(() => {
+                            let genres = [];
+                            if (release.genres) {
+                              if (typeof release.genres === 'string') {
+                                try { genres = JSON.parse(release.genres); } catch { genres = [release.genres]; }
+                              } else if (Array.isArray(release.genres)) {
+                                genres = release.genres;
+                              }
+                            }
+                            return genres.length > 0 ? (
+                              <p className="text-xs text-gray-500 mt-0.5">
+                                {genres.slice(0, 3).join(', ')}
+                              </p>
+                            ) : null;
+                          })()}
                           {/* Cast */}
-                          {release.cast && (
-                            <p className="text-xs text-gray-400 mt-0.5 truncate">
-                              {(() => {
-                                let cast = [];
-                                if (typeof release.cast === 'string') {
-                                  try { cast = JSON.parse(release.cast); } catch { cast = [release.cast]; }
-                                } else if (Array.isArray(release.cast)) {
-                                  cast = release.cast;
-                                }
-                                return cast.slice(0, 3).join(', ');
-                              })()}
-                            </p>
-                          )}
+                          {(() => {
+                            let cast = [];
+                            if (release.cast) {
+                              if (typeof release.cast === 'string') {
+                                try { cast = JSON.parse(release.cast); } catch { cast = [release.cast]; }
+                              } else if (Array.isArray(release.cast)) {
+                                cast = release.cast;
+                              }
+                            }
+                            return cast.length > 0 ? (
+                              <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+                                {cast.slice(0, 4).join(', ')}
+                              </p>
+                            ) : null;
+                          })()}
                         </div>
                       </div>
                       <div className="flex-shrink-0 ml-2">
