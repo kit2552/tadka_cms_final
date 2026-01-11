@@ -301,8 +301,36 @@ const MovieSchedules = ({ articles, onArticleClick }) => {
                             </p>
                           )}
                           {release.languages && (
-                            <p className="text-xs text-blue-600 mt-1">
+                            <p className="text-xs text-blue-600 mt-0.5">
                               {formatLanguageDisplay(release)}
+                            </p>
+                          )}
+                          {/* Genre */}
+                          {release.genres && (
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              {(() => {
+                                let genres = [];
+                                if (typeof release.genres === 'string') {
+                                  try { genres = JSON.parse(release.genres); } catch { genres = [release.genres]; }
+                                } else if (Array.isArray(release.genres)) {
+                                  genres = release.genres;
+                                }
+                                return genres.slice(0, 3).join(', ');
+                              })()}
+                            </p>
+                          )}
+                          {/* Cast */}
+                          {release.cast && (
+                            <p className="text-xs text-gray-400 mt-0.5 truncate">
+                              {(() => {
+                                let cast = [];
+                                if (typeof release.cast === 'string') {
+                                  try { cast = JSON.parse(release.cast); } catch { cast = [release.cast]; }
+                                } else if (Array.isArray(release.cast)) {
+                                  cast = release.cast;
+                                }
+                                return cast.slice(0, 3).join(', ');
+                              })()}
                             </p>
                           )}
                         </div>
