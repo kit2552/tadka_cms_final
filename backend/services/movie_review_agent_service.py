@@ -219,8 +219,9 @@ class MovieReviewAgentService:
         content_workflow = agent.get('content_workflow', 'in_review')
         article_language = agent.get('review_language', agent.get('article_language', 'Telugu'))
         rating_strategy = agent.get('review_rating_strategy', 'lowest')
+        max_reviews = agent.get('max_reviews_from_listing', 10)  # Default to 10 if not specified
         
-        print(f"   📋 Settings: URLs={len(reference_urls)}, Language={article_language}, Rating Strategy={rating_strategy}")
+        print(f"   📋 Settings: URLs={len(reference_urls)}, Language={article_language}, Rating Strategy={rating_strategy}, Max Reviews={max_reviews}")
         
         # Update agent last run time
         db.ai_agents.update_one(
