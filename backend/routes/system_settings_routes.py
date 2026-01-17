@@ -696,3 +696,79 @@ async def test_ai_api_key(provider: str, db = Depends(get_db)):
         raise HTTPException(status_code=504, detail="Request timeout while testing API key")
     except requests.exceptions.RequestException as e:
         raise HTTPException(status_code=500, detail=f"Error testing API key: {str(e)}")
+
+# ==================== Movie Rating Verdicts Endpoints ====================
+
+class RatingVerdict(BaseModel):
+    rating: float = Field(..., ge=0.0, le=5.0)
+    tag: str
+    verdict: str
+
+class RatingVerdictsUpdate(BaseModel):
+    verdicts: Dict[str, RatingVerdict]  # Key is rating as string like "3.50"
+
+@router.get("/system-settings/movie-rating-verdicts")
+async def get_movie_rating_verdicts(db = Depends(get_db)):
+    """Get movie rating verdicts configuration"""
+    from services.movie_review_agent_service import DEFAULT_RATING_VERDICTS
+    
+    settings = db.system_settings.find_one({"setting_type": "movie_rating_verdicts"})
+    
+    if settings and settings.get('verdicts'):
+        return {
+            "verdicts": settings['verdicts'],
+            "is_default": False
+        }
+    
+    # Return default verdicts
+    return {
+        "verdicts": {str(k): v for k, v in DEFAULT_RATING_VERDICTS.items()},
+        "is_default": True
+    }
+
+@router.put("/system-settings/movie-rating-verdicts")
+async def update_movie_rating_verdicts(data: RatingVerdictsUpdate, db = Depends(get_db)):
+    """Update movie rating verdicts configuration"""
+    from datetime import datetime
+    
+    # Convert RatingVerdict objects to dict
+    verdicts_dict = {}
+    for rating_str, verdict_obj in data.verdicts.items():
+        verdicts_dict[rating_str] = {
+            "tag": verdict_obj.tag,
+            "verdict": verdict_obj.verdict
+        }
+    
+    # Update or insert in database
+    db.system_settings.update_one(
+        {"setting_type": "movie_rating_verdicts"},
+        {
+            "$set": {
+                "setting_type": "movie_rating_verdicts",
+                "verdicts": verdicts_dict,
+                "updated_at": datetime.utcnow()
+            }
+        },
+        upsert=True
+    )
+    
+    return {
+        "success": True,
+        "message": "Rating verdicts updated successfully",
+        "verdicts": verdicts_dict
+    }
+
+@router.post("/system-settings/movie-rating-verdicts/reset")
+async def reset_movie_rating_verdicts(db = Depends(get_db)):
+    """Reset movie rating verdicts to default"""
+    # Delete the custom settings
+    db.system_settings.delete_one({"setting_type": "movie_rating_verdicts"})
+    
+    from services.movie_review_agent_service import DEFAULT_RATING_VERDICTS
+    
+    return {
+        "success": True,
+        "message": "Rating verdicts reset to defaults",
+        "verdicts": {str(k): v for k, v in DEFAULT_RATING_VERDICTS.items()}
+    }
+
