@@ -460,8 +460,8 @@ Rewrite the given content in a professional, engaging tone.
             'review_quick_verdict': rewritten_sections.get('quick_verdict', ''),
             'review_plot_summary': f"<p>{rewritten_sections.get('story_plot', '')}</p>",
             'review_performances': f"<p>{rewritten_sections.get('performances', '')}</p>",
-            'review_what_works': f"<p>{rewritten_sections.get('what_works', '')}</p>",
-            'review_what_doesnt_work': f"<p>{rewritten_sections.get('what_doesnt_work', '')}</p>",
+            'review_what_works': self._format_as_list(rewritten_sections.get('what_works', '')),
+            'review_what_doesnt_work': self._format_as_list(rewritten_sections.get('what_doesnt_work', '')),
             'review_technical_aspects': f"<p>{rewritten_sections.get('technical_aspects', '')}</p>",
             'review_final_verdict': f"<p>{rewritten_sections.get('final_verdict', '')}</p>",
             
