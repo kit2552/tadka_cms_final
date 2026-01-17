@@ -11,6 +11,31 @@ import crud
 import re
 import json
 
+# Default rating verdicts mapping (used if not configured in system settings)
+DEFAULT_RATING_VERDICTS = {
+    0.00: {"tag": "Disaster", "verdict": "Complete disaster! Skip entirely. Not even worth OTT."},
+    0.25: {"tag": "Terrible", "verdict": "Absolute disaster. Save your time and money. Stay away!"},
+    0.50: {"tag": "Awful", "verdict": "Painfully bad. Not recommended under any circumstances."},
+    0.75: {"tag": "Very Poor", "verdict": "Major misfire. Even hardcore fans should skip this one."},
+    1.00: {"tag": "Flop", "verdict": "Big disappointment. Wait for TV premiere if curious."},
+    1.25: {"tag": "Poor", "verdict": "Falls short. Only for completists. Better options exist."},
+    1.50: {"tag": "Weak", "verdict": "Struggles throughout. Maybe catch on TV after 6 months."},
+    1.75: {"tag": "Below Par", "verdict": "Disappointing effort. Skip theaters, maybe OTT later."},
+    2.00: {"tag": "Below Average", "verdict": "Strictly average. Watch in theaters if you're bored and have nothing else to do, otherwise catch it on OTT later."},
+    2.25: {"tag": "Passable", "verdict": "Just okay time-pass. Hit theaters if you're free and bored, or wait for OTT - no rush either way."},
+    2.50: {"tag": "Average", "verdict": "Average entertainer. Worth catching in theaters if you have time this weekend, good OTT option too."},
+    2.75: {"tag": "Good", "verdict": "Good watch! Theaters recommended if you're free, makes for a good outing."},
+    3.00: {"tag": "Very Good", "verdict": "Very good entertainer! Catch it in theaters while you can - worth the experience."},
+    3.25: {"tag": "Hit", "verdict": "Solid hit! Book your weekend tickets. Worth the theater experience."},
+    3.50: {"tag": "Super Hit", "verdict": "Super hit! Paisa vasool. Grab friends and hit theaters! 🔥"},
+    3.75: {"tag": "Blockbuster", "verdict": "Blockbuster! Must watch in theaters. Don't wait for OTT! 💥"},
+    4.00: {"tag": "Excellent", "verdict": "Excellent! Outstanding cinema. Theater mandatory! ⭐"},
+    4.25: {"tag": "Superhit", "verdict": "Superhit! Cinematic brilliance. Book tickets now! 🏆"},
+    4.50: {"tag": "Masterpiece", "verdict": "Masterpiece! Pure magic. FDFS recommended! 💎"},
+    4.75: {"tag": "Epic", "verdict": "Epic cinema! Watch multiple times in theaters! 👑"},
+    5.00: {"tag": "Legendary", "verdict": "All-time classic! Unforgettable theatrical experience! 🌟"}
+}
+
 
 class MovieReviewAgentService:
     """Service for running Movie Review agents"""
