@@ -394,8 +394,10 @@ Rewrite the given content in a professional, engaging tone.
             'category': 'movie-reviews',
             'status': status,
             'is_published': is_published,
-            'article_language': 'en',  # Use 'en' for CMS filtering, movie_language specifies actual language
+            'article_language': 'en',  # Use 'en' for CMS filtering
+            'content_language': content_language_code,  # Actual language code (te, ta, hi, etc.)
             'summary': '',  # Required field
+            'youtube_url': '',  # Required field for movie review form
             
             # Movie review specific fields - review sections with HTML
             'review_quick_verdict': rewritten_sections.get('quick_verdict', ''),
