@@ -111,11 +111,14 @@ class MovieReviewAgentService:
     
     async def run_movie_review_agent(self, agent_id: str) -> Dict:
         """
-        Run the Movie Review agent - simplified single URL flow
+        Run the Movie Review agent - supports both listing pages and direct URLs
         
-        Step 1: Scrape and store in temp space
-        Step 2: Run LLM to rewrite from temp data
-        Step 3: Create article with movie info copied as-is
+        For Listing Pages: Scrapes review links, checks if movie exists in DB, creates only new reviews
+        For Direct URLs: Scrapes single review and creates article
+        
+        Step 1: Determine URL type and get review URLs
+        Step 2: For each URL, check if movie review exists in DB for that language
+        Step 3: Scrape and create only non-existing reviews
         """
         from services.movie_review_scraper_service import movie_review_scraper
         
@@ -129,21 +132,25 @@ class MovieReviewAgentService:
         # Extract agent settings
         reference_urls_raw = agent.get('reference_urls', [])
         
-        # Get single URL (first one)
-        review_url = None
+        # Parse reference URLs with url_type support
+        reference_urls = []
         if isinstance(reference_urls_raw, str):
-            review_url = reference_urls_raw.strip()
-        elif isinstance(reference_urls_raw, list) and len(reference_urls_raw) > 0:
-            first_item = reference_urls_raw[0]
-            if isinstance(first_item, str):
-                review_url = first_item.strip()
-            elif isinstance(first_item, dict) and 'url' in first_item:
-                review_url = first_item['url'].strip()
+            reference_urls.append({'url': reference_urls_raw.strip(), 'url_type': 'auto'})
+        elif isinstance(reference_urls_raw, list):
+            for item in reference_urls_raw:
+                if isinstance(item, str):
+                    reference_urls.append({'url': item.strip(), 'url_type': 'auto'})
+                elif isinstance(item, dict) and 'url' in item:
+                    reference_urls.append({
+                        'url': item['url'].strip(),
+                        'url_type': item.get('url_type', 'auto')
+                    })
         
         content_workflow = agent.get('content_workflow', 'in_review')
         article_language = agent.get('review_language', agent.get('article_language', 'Telugu'))
+        rating_strategy = agent.get('review_rating_strategy', 'lowest')
         
-        print(f"   📋 Settings: URL={review_url}, Language={article_language}")
+        print(f"   📋 Settings: URLs={len(reference_urls)}, Language={article_language}, Rating Strategy={rating_strategy}")
         
         # Update agent last run time
         db.ai_agents.update_one(
@@ -157,97 +164,61 @@ class MovieReviewAgentService:
             "status": "success",
             "reviews_scraped": 0,
             "reviews_created": 0,
+            "reviews_skipped": 0,
             "errors": [],
-            "created_reviews": []
+            "created_reviews": [],
+            "skipped_reviews": []
         }
         
-        if not review_url:
+        if not reference_urls:
             results["status"] = "failed"
-            results["errors"].append("No review URL provided")
+            results["errors"].append("No review URLs provided")
             return results
         
         try:
-            # ========== STEP 1: SCRAPE AND STORE IN TEMP SPACE ==========
-            print(f"\n   📥 STEP 1: Scraping review...")
-            
-            scraped_data = await movie_review_scraper.scrape_review(review_url)
-            results["reviews_scraped"] = 1
-            
-            # Store in temporary space
-            self.temp_review_data = {
-                'movie_name': scraped_data.movie_name,
-                'rating': scraped_data.rating,
-                'rating_scale': scraped_data.rating_scale,
-                'normalized_rating': scraped_data.normalized_rating,
+            # Process each reference URL
+            for ref_url_obj in reference_urls:
+                ref_url = ref_url_obj['url']
+                url_type = ref_url_obj['url_type']
                 
-                # Movie info - copy as-is
-                'cast': scraped_data.cast,
-                'director': scraped_data.director,
-                'producer': scraped_data.producer,
-                'music_director': scraped_data.music_director,
-                'dop': scraped_data.dop,
-                'editor': scraped_data.editor,
-                'genre': scraped_data.genre,
-                'runtime': scraped_data.runtime,
-                'release_date': scraped_data.release_date,
-                'banner': scraped_data.banner,
-                'poster_image': scraped_data.poster_image,
+                print(f"\n   🔗 Processing URL: {ref_url} (Type: {url_type})")
                 
-                # Review sections - to be rewritten
-                'story_plot': scraped_data.story_plot,
-                'performances': scraped_data.performances,
-                'what_works': scraped_data.what_works,
-                'what_doesnt_work': scraped_data.what_doesnt_work,
-                'technical_aspects': scraped_data.technical_aspects,
-                'final_verdict': scraped_data.final_verdict,
-                'quick_verdict': scraped_data.quick_verdict,
+                # Determine if this is a listing page or direct article
+                is_listing = await self._is_listing_page(ref_url, url_type)
                 
-                # Source info
-                'source_url': review_url,
-                'source_name': scraped_data.source_name
-            }
-            
-            print(f"   ✅ Scraped: {self.temp_review_data['movie_name']} - Rating: {self.temp_review_data['rating']}/{self.temp_review_data['rating_scale']}")
-            print(f"   📦 Stored in temp space")
-            
-            # ========== STEP 2: LLM REWRITE FROM TEMP DATA ==========
-            print(f"\n   ✍️ STEP 2: Rewriting review sections with LLM...")
-            
-            # Initialize LLM
-            self._initialize_llm()
-            
-            # Rewrite sections from temp data
-            rewritten_sections = self._rewrite_from_temp(article_language)
-            
-            print(f"   ✅ LLM rewrite complete")
-            
-            # ========== STEP 3: CREATE ARTICLE ==========
-            print(f"\n   📝 STEP 3: Creating article...")
-            
-            article_data = self._create_article_data(
-                content_workflow=content_workflow,
-                article_language=article_language,
-                rewritten_sections=rewritten_sections
-            )
-            
-            # Save to database
-            created_article = crud.create_article(db, article_data)
-            
-            if created_article:
-                results["reviews_created"] = 1
-                results["created_reviews"].append({
-                    "id": created_article.get('id'),
-                    "title": created_article.get('title'),
-                    "movie_name": self.temp_review_data['movie_name'],
-                    "rating": self.temp_review_data['normalized_rating']
-                })
-                print(f"\n   ✅ Created review: {self.temp_review_data['movie_name']} ({self.temp_review_data['normalized_rating']:.1f}/5)")
-            
-            # Clear temp data
-            self.temp_review_data = None
+                if is_listing:
+                    # LISTING PAGE: Get all review URLs from the list
+                    print(f"   📋 Detected as Listing Page - fetching review links...")
+                    review_urls = await self._extract_review_links_from_listing(ref_url)
+                    print(f"   ✅ Found {len(review_urls)} review links")
+                else:
+                    # DIRECT ARTICLE: Single URL
+                    print(f"   📄 Detected as Direct Article")
+                    review_urls = [ref_url]
+                
+                # Process each review URL
+                for review_url in review_urls:
+                    try:
+                        await self._process_single_review(
+                            review_url=review_url,
+                            article_language=article_language,
+                            content_workflow=content_workflow,
+                            rating_strategy=rating_strategy,
+                            results=results
+                        )
+                    except Exception as e:
+                        error_msg = f"Error processing {review_url}: {str(e)}"
+                        print(f"   ❌ {error_msg}")
+                        results["errors"].append(error_msg)
             
         except Exception as e:
             results["status"] = "failed"
+            error_msg = f"Agent execution error: {str(e)}"
+            print(f"   ❌ {error_msg}")
+            results["errors"].append(error_msg)
+        
+        print(f"\n   📊 Final Results: {results['reviews_created']} created, {results['reviews_skipped']} skipped")
+        return results
             results["errors"].append(str(e))
             print(f"\n   ❌ Agent failed: {str(e)}")
             import traceback
