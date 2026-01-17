@@ -1157,7 +1157,7 @@ const ArticlePage = () => {
           </div>
 
           {/* Right Sidebar - Comments & Related Articles Section - 40% width - Scrollable */}
-          <div className="lg:col-span-2 border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingLeft: '0px', paddingRight: '4px' }}>
+          <div className="lg:col-span-2 border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0 lg:overflow-y-auto custom-scrollbar lg:max-h-[calc(100vh-140px)] lg:min-h-[calc(100vh-140px)]" style={{ paddingLeft: '0px', paddingRight: '4px' }}>
             {/* Comment Section */}
             {article.content_type === 'movie_review' && (article.review_comments_enabled !== false) && (
               <div className="mb-6" style={{ marginTop: '1rem' }}>
