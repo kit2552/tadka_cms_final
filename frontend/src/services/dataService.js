@@ -651,7 +651,7 @@ export const dataService = {
         movieSchedulesData
       ] = await Promise.all([
         this.getTopStoriesData(),
-        this.getMovieReviewsData(),
+        this.getMovieReviewsData(userStateCodes),
         this.getOTTMovieReviewsData(),
         this.getPoliticsData(userStates),
         this.getMoviesData(userStates),
