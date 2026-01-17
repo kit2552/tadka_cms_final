@@ -316,7 +316,7 @@ class MovieReviewAgentService:
         return merged
     
     async def _rewrite_review_sections(self, merged_data: Dict, movie_name: str, language: str) -> Dict:
-        """Use LLM to rewrite each review section"""
+        """Use LLM to rewrite each review section, with fallback to raw content"""
         
         system_prompt = f"""You are an expert movie critic writing reviews in {language} language style for an Indian entertainment news website.
 Your task is to synthesize multiple review sources into a single, coherent, well-written review section.
@@ -329,6 +329,16 @@ Your task is to synthesize multiple review sources into a single, coherent, well
         
         rewritten = {}
         
+        def clean_raw_content(content_list):
+            """Clean raw content by removing source tags and joining"""
+            cleaned = []
+            for item in content_list:
+                # Remove source tags like [GreatAndhra]:
+                import re
+                clean_item = re.sub(r'^\[.*?\]:\s*', '', item)
+                cleaned.append(clean_item)
+            return ' '.join(cleaned)
+        
         # Rewrite story/plot
         if merged_data['story_plot']:
             prompt = f"""Rewrite the following plot summaries for "{movie_name}" into a single cohesive story summary (2-3 paragraphs):
@@ -336,7 +346,8 @@ Your task is to synthesize multiple review sources into a single, coherent, well
 {chr(10).join(merged_data['story_plot'])}
 
 Write only the plot summary, no headers or labels."""
-            rewritten['story_plot'] = self._llm_complete(system_prompt, prompt)
+            result = self._llm_complete(system_prompt, prompt)
+            rewritten['story_plot'] = result if result else clean_raw_content(merged_data['story_plot'])
         
         # Rewrite performances
         if merged_data['performances']:
@@ -345,7 +356,8 @@ Write only the plot summary, no headers or labels."""
 {chr(10).join(merged_data['performances'])}
 
 Write only the performances analysis, no headers or labels."""
-            rewritten['performances'] = self._llm_complete(system_prompt, prompt)
+            result = self._llm_complete(system_prompt, prompt)
+            rewritten['performances'] = result if result else clean_raw_content(merged_data['performances'])
         
         # Rewrite what works (positives)
         if merged_data['what_works']:
@@ -354,7 +366,8 @@ Write only the performances analysis, no headers or labels."""
 {chr(10).join(merged_data['what_works'])}
 
 Format as bullet points starting with •"""
-            rewritten['what_works'] = self._llm_complete(system_prompt, prompt)
+            result = self._llm_complete(system_prompt, prompt)
+            rewritten['what_works'] = result if result else clean_raw_content(merged_data['what_works'])
         
         # Rewrite what doesn't work (negatives)
         if merged_data['what_doesnt_work']:
@@ -363,7 +376,8 @@ Format as bullet points starting with •"""
 {chr(10).join(merged_data['what_doesnt_work'])}
 
 Format as bullet points starting with •"""
-            rewritten['what_doesnt_work'] = self._llm_complete(system_prompt, prompt)
+            result = self._llm_complete(system_prompt, prompt)
+            rewritten['what_doesnt_work'] = result if result else clean_raw_content(merged_data['what_doesnt_work'])
         
         # Rewrite technical aspects
         if merged_data['technical_aspects']:
@@ -372,7 +386,8 @@ Format as bullet points starting with •"""
 {chr(10).join(merged_data['technical_aspects'])}
 
 Cover cinematography, music, editing, and production design. Write only the content, no headers."""
-            rewritten['technical_aspects'] = self._llm_complete(system_prompt, prompt)
+            result = self._llm_complete(system_prompt, prompt)
+            rewritten['technical_aspects'] = result if result else clean_raw_content(merged_data['technical_aspects'])
         
         # Rewrite final verdict
         if merged_data['final_verdict']:
@@ -381,7 +396,8 @@ Cover cinematography, music, editing, and production design. Write only the cont
 {chr(10).join(merged_data['final_verdict'])}
 
 Provide a balanced conclusion that summarizes the overall experience. Write only the content, no headers."""
-            rewritten['final_verdict'] = self._llm_complete(system_prompt, prompt)
+            result = self._llm_complete(system_prompt, prompt)
+            rewritten['final_verdict'] = result if result else clean_raw_content(merged_data['final_verdict'])
         
         # Generate quick verdict
         if merged_data['quick_verdict']:
@@ -390,7 +406,8 @@ Provide a balanced conclusion that summarizes the overall experience. Write only
 {chr(10).join(merged_data['quick_verdict'])}
 
 Output only the one-liner, nothing else."""
-            rewritten['quick_verdict'] = self._llm_complete(system_prompt, prompt)
+            result = self._llm_complete(system_prompt, prompt)
+            rewritten['quick_verdict'] = result if result else merged_data['quick_verdict'][0] if merged_data['quick_verdict'] else ""
         
         return rewritten
     
