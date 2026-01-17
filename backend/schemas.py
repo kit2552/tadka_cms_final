@@ -91,6 +91,8 @@ class ArticleBase(BaseModel):
     review_producer: Optional[str] = None
     review_music_director: Optional[str] = None
     review_dop: Optional[str] = None
+    review_editor: Optional[str] = None
+    review_banner: Optional[str] = None
     review_genre: Optional[str] = None
     review_runtime: Optional[str] = None
     movie_language: Optional[str] = None
@@ -158,6 +160,8 @@ class ArticleUpdate(BaseModel):
     review_producer: Optional[str] = None
     review_music_director: Optional[str] = None
     review_dop: Optional[str] = None
+    review_editor: Optional[str] = None
+    review_banner: Optional[str] = None
     review_genre: Optional[str] = None
     review_runtime: Optional[str] = None
     movie_language: Optional[str] = None
