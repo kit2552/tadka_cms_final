@@ -69,7 +69,10 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     // Theater Release Agent fields
     theater_fetch_limit: 10,  // Number of releases to fetch
     theater_include_english: true,  // Include English language movies
-    theater_search_trailers: false  // Search YouTube RSS for trailers
+    theater_search_trailers: false,  // Search YouTube RSS for trailers
+    // Movie Review Agent fields
+    review_rating_strategy: 'lowest',  // lowest, highest, average
+    review_language: 'Telugu'  // Language for the review
   });
   
   // Default filter settings for each category
