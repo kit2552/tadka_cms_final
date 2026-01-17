@@ -2403,13 +2403,12 @@ Instructions:
                 </div>
               ) : formData.agent_type === 'movie_review' ? (
                 <div className="text-xs text-gray-500 text-left space-y-1">
-                  <p>Add movie review URLs from Telugu/Hindi movie review websites:</p>
+                  <p>Add a movie review URL from Telugu/Hindi movie review websites:</p>
                   <ul className="list-disc list-inside pl-2 text-gray-400">
                     <li><strong>GreatAndhra</strong> - https://www.greatandhra.com/movies/reviews/...</li>
                     <li><strong>Gulte</strong> - https://www.gulte.com/moviereviews/...</li>
                     <li><strong>123Telugu, IdleBrain</strong> - and other review sites</li>
                   </ul>
-                  <p className="mt-1 text-purple-600">💡 Add multiple URLs to combine reviews; rating uses your selected strategy.</p>
                 </div>
               ) : (
                 <div className="text-xs text-gray-500 text-left space-y-1">
