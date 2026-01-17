@@ -89,6 +89,10 @@ class AIAgent(BaseModel):
     theater_include_english: Optional[bool] = True  # Include English language movies
     theater_search_trailers: Optional[bool] = False  # Search YouTube RSS for trailers after creation
     
+    # Movie Review Agent fields
+    review_rating_strategy: Optional[str] = "lowest"  # lowest, highest, average - when multiple URLs provided
+    review_language: Optional[str] = "Telugu"  # Language for the review (Telugu, Tamil, Hindi, etc.)
+    
     # Post Aggregation fields (for Video Agent)
     enable_aggregation: Optional[bool] = False  # Enable post grouping by movie/event name
     aggregation_lookback_days: Optional[int] = 2  # Days to look back for grouping (1-30)
