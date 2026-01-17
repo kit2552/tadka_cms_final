@@ -227,6 +227,10 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
             # Use Theater Release Agent Service
             from services.theater_release_agent_service import theater_release_agent_service
             result = await theater_release_agent_service.run_theater_release_agent(agent_id)
+        elif agent_type == 'movie_review':
+            # Use Movie Review Agent Service
+            from services.movie_review_agent_service import movie_review_agent_service
+            result = await movie_review_agent_service.run_movie_review_agent(agent_id)
         else:
             # Use Post Agent Service (default)
             result = await agent_runner.run_agent(agent_id)
