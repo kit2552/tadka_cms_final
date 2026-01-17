@@ -201,7 +201,14 @@ class MovieReviewScraper:
                 else:
                     next_text = str(next_sibling).strip().lstrip(':').strip()
             
-            if 'cast' in label:
+            # Handle concatenated labels like "movie: namerating:2/5banner"
+            if 'banner' in label:
+                # Check if banner is at the end of a concatenated label
+                if label.endswith('banner') and len(label) > 10:
+                    data.banner = next_text
+                elif label == 'banner':
+                    data.banner = next_text
+            elif 'cast' in label:
                 data.cast = next_text
             elif ('written' in label and 'direction' in label) or label == 'written and direction':
                 # "Written and Direction" or "Written & Direction"
