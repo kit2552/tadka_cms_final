@@ -360,6 +360,19 @@ Rewrite the given content in a professional, engaging tone.
         else:
             genre_list = []
         
+        # Map language to content_language code
+        language_to_code = {
+            'Telugu': 'te',
+            'Tamil': 'ta',
+            'Kannada': 'kn',
+            'Malayalam': 'ml',
+            'Hindi': 'hi',
+            'Marathi': 'mr',
+            'Bengali': 'bn',
+            'English': 'en'
+        }
+        content_language_code = language_to_code.get(article_language, 'en')
+        
         # Map language to state for state-language mapping
         language_to_state = {
             'Telugu': ['ap', 'ts'],
