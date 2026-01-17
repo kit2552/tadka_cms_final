@@ -470,10 +470,10 @@ const ArticlePage = () => {
       <div className="max-w-5xl-plus mx-auto px-8 pb-6">
         
         {/* Two Section Layout with Gap - 60%/40% split */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:h-[calc(100vh-120px)]">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:min-h-[calc(100vh-140px)]">
           
           {/* Article Section - 60% width - Scrollable */}
-          <div className="lg:col-span-3 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingRight: '14px' }}>
+          <div className="lg:col-span-3 lg:overflow-y-auto custom-scrollbar lg:max-h-[calc(100vh-140px)] lg:min-h-[calc(100vh-140px)] lg:border-r-2 lg:border-gray-300" style={{ paddingRight: '14px' }}>
             {/* Article Section Header - Sticky with published date and bottom border */}
             <div className={`sticky top-0 z-40 border-b-2 border-gray-300`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 pt-4" style={{ paddingBottom: '1rem' }}>
