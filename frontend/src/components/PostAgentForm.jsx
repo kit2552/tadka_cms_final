@@ -2362,7 +2362,7 @@ Instructions:
                         type="url"
                         value={getUrlValue(item)}
                         onChange={(e) => updateReferenceUrl(index, 'url', e.target.value)}
-                        placeholder={formData.agent_type === 'theater_release' ? "https://www.imdb.com/calendar/?region=IN" : formData.agent_type === 'movie_review' ? "https://www.greatandhra.com/movies/reviews/..." : "https://example.com/news"}
+                        placeholder={formData.agent_type === 'theater_release' ? "https://www.imdb.com/calendar/?region=IN" : formData.agent_type === 'movie_review' ? "https://www.greatandhra.com/reviews (list) or direct review URL" : "https://example.com/news"}
                         className="flex-1 px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                       {/* Hide URL type dropdown only for theater_release agent */}
