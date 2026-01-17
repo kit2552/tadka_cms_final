@@ -289,10 +289,6 @@ class MovieReviewAgentService:
         
         print(f"\n   📊 Final Results: {results['reviews_created']} created, {results['reviews_skipped']} skipped")
         return results
-            results["errors"].append(str(e))
-            print(f"\n   ❌ Agent failed: {str(e)}")
-            import traceback
-            traceback.print_exc()
         
         return results
     
