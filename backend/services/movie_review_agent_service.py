@@ -353,6 +353,26 @@ Rewrite the given content in a professional, engaging tone.
         quick_verdict = rewritten_sections.get('quick_verdict', '')
         meta_description = f"{movie_name} movie review and rating. {quick_verdict} Rating: {rating:.1f}/5"
         
+        # Parse genre into array format
+        genre_raw = self.temp_review_data.get('genre', '')
+        if genre_raw:
+            # Handle comma-separated genres
+            genre_list = [g.strip() for g in genre_raw.split(',') if g.strip()]
+        else:
+            genre_list = []
+        
+        # Map language to state for state-language mapping
+        language_to_state = {
+            'Telugu': ['ap', 'ts'],
+            'Tamil': ['tn'],
+            'Kannada': ['ka'],
+            'Malayalam': ['kl'],
+            'Hindi': ['mh', 'dl', 'up'],
+            'Marathi': ['mh'],
+            'Bengali': ['wb'],
+        }
+        states = language_to_state.get(article_language, [])
+        
         article_data = {
             'title': title,
             'slug': slug,
@@ -364,28 +384,30 @@ Rewrite the given content in a professional, engaging tone.
             'is_published': is_published,
             'article_language': article_language,
             
-            # Movie review specific fields
+            # Movie review specific fields - review sections with HTML
             'review_quick_verdict': rewritten_sections.get('quick_verdict', ''),
-            'review_plot_summary': rewritten_sections.get('story_plot', ''),
-            'review_performances': rewritten_sections.get('performances', ''),
-            'review_what_works': rewritten_sections.get('what_works', ''),
-            'review_what_doesnt_work': rewritten_sections.get('what_doesnt_work', ''),
-            'review_technical_aspects': rewritten_sections.get('technical_aspects', ''),
-            'review_final_verdict': rewritten_sections.get('final_verdict', ''),
+            'review_plot_summary': f"<p>{rewritten_sections.get('story_plot', '')}</p>",
+            'review_performances': f"<p>{rewritten_sections.get('performances', '')}</p>",
+            'review_what_works': f"<p>{rewritten_sections.get('what_works', '')}</p>",
+            'review_what_doesnt_work': f"<p>{rewritten_sections.get('what_doesnt_work', '')}</p>",
+            'review_technical_aspects': f"<p>{rewritten_sections.get('technical_aspects', '')}</p>",
+            'review_final_verdict': f"<p>{rewritten_sections.get('final_verdict', '')}</p>",
             
-            # Movie details - copied as-is from temp
+            # Movie details - matching existing schema
             'review_cast': self.temp_review_data.get('cast', ''),
             'review_director': self.temp_review_data.get('director', ''),
             'review_producer': self.temp_review_data.get('producer', ''),
             'review_music_director': self.temp_review_data.get('music_director', ''),
             'review_dop': self.temp_review_data.get('dop', ''),
-            'review_genre': self.temp_review_data.get('genre', ''),
+            'review_genre': genre_list,  # Array format like ["Action","Romance"]
             'review_runtime': self.temp_review_data.get('runtime', ''),
             'release_date': self.temp_review_data.get('release_date', ''),
-            'movie_language': article_language,
             
-            # Rating - copied as-is
+            # Movie metadata - matching existing schema
+            'movie_language': [article_language],  # Array format like ["Telugu"]
             'movie_rating': rating,
+            'platform': 'Theater',  # Default to Theater for movie reviews
+            'states': states,  # Array of state codes for filtering
             
             # Images
             'image': self.temp_review_data.get('poster_image', ''),
