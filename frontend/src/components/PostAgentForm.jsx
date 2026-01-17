@@ -2199,6 +2199,104 @@ Instructions:
               </div>
             )}
 
+            {/* Movie Review Agent Settings Section - Only for movie_review agent type */}
+            {formData.agent_type === 'movie_review' && (
+              <div className="bg-purple-50 rounded-lg p-4 space-y-4 border border-purple-200">
+                <h3 className="text-sm font-semibold text-purple-900">🎬 Movie Review Agent Settings</h3>
+                
+                {/* Review Language */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Review Language
+                  </label>
+                  <select
+                    name="review_language"
+                    value={formData.review_language || 'Telugu'}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  >
+                    <option value="Telugu">Telugu</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Bengali">Bengali</option>
+                    <option value="English">English</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Used for state-language mapping on homepage display
+                  </p>
+                </div>
+
+                {/* Rating Strategy */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Rating Strategy (when multiple URLs provided)
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { value: 'lowest', label: 'Lowest', desc: 'Use lowest rating' },
+                      { value: 'highest', label: 'Highest', desc: 'Use highest rating' },
+                      { value: 'average', label: 'Average', desc: 'Use average rating' }
+                    ].map(option => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, review_rating_strategy: option.value }))}
+                        className={`p-2 rounded border-2 font-medium text-xs transition-all ${
+                          formData.review_rating_strategy === option.value
+                            ? 'border-purple-600 bg-purple-100 text-purple-700'
+                            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    How to calculate final rating when scraping multiple review sources
+                  </p>
+                </div>
+
+                {/* Content Workflow */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Content Workflow
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    {workflowOptions.map(option => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, content_workflow: option.value }))}
+                        className={`p-2 rounded border-2 font-medium text-xs transition-all ${
+                          formData.content_workflow === option.value
+                            ? 'border-purple-600 bg-purple-100 text-purple-700'
+                            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Info Box */}
+                <div className="bg-white rounded-lg p-3 border border-purple-200">
+                  <div className="text-xs text-purple-800 text-left space-y-1">
+                    <p className="font-semibold text-purple-900">How it works:</p>
+                    <p>• Add movie review URLs in the Reference Content section below</p>
+                    <p>• Supports: GreatAndhra, Gulte, IdleBrain, 123Telugu and more</p>
+                    <p>• Extracts: Movie details, rating, cast, director, all review sections</p>
+                    <p>• Uses AI (from System Settings) to rewrite and format content</p>
+                    <p>• Creates Movie Review posts in Manage Content → Posts</p>
+                    <p>• Multiple URLs combine data; rating uses selected strategy</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Instagram URLs Section - Only for Tadka Pics with Instagram source */}
             {formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram' && (
               <div className="bg-pink-50 rounded-lg p-4 space-y-3 border border-pink-200">
