@@ -419,7 +419,7 @@ Rewrite the given content in a professional, engaging tone.
             'review_banner': self.temp_review_data.get('banner', '') or '',
             'review_genre': json.dumps(genre_list),  # JSON string like '["Action","Romance"]'
             'review_runtime': self.temp_review_data.get('runtime', '') or '',
-            'release_date': self.temp_review_data.get('release_date', '') or '',
+            'release_date': self._format_release_date(self.temp_review_data.get('release_date', '')),
             
             # Movie metadata - JSON strings to match schema
             'movie_language': json.dumps([article_language]),  # JSON string like '["Telugu"]'
