@@ -415,6 +415,7 @@ Rewrite the given content in a professional, engaging tone.
             'review_producer': self.temp_review_data.get('producer', '') or '',
             'review_music_director': self.temp_review_data.get('music_director', '') or '',
             'review_dop': self.temp_review_data.get('dop', '') or '',
+            'review_editor': self.temp_review_data.get('editor', '') or '',
             'review_banner': self.temp_review_data.get('banner', '') or '',
             'review_genre': json.dumps(genre_list),  # JSON string like '["Action","Romance"]'
             'review_runtime': self.temp_review_data.get('runtime', '') or '',
