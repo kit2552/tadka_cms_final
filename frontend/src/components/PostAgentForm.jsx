@@ -412,6 +412,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
           <div className="text-left">
             <h2 className="text-lg font-semibold text-gray-900">
               {editingAgent ? 'Edit' : 'Create'} {
+                formData.agent_type === 'movie_review' ? 'Movie Review Agent' :
                 formData.agent_type === 'ott_release' ? 'OTT Release Agent' :
                 formData.agent_type === 'theater_release' ? 'Theater Release Agent' :
                 formData.agent_type === 'reality_show' ? 'Reality Show Agent' :
@@ -423,11 +424,14 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
               }
             </h2>
             <p className="text-xs text-gray-600 mt-0.5">
-              {formData.agent_type === 'ott_release' 
+              {formData.agent_type === 'movie_review'
+                ? 'Scrapes movie reviews from websites and uses LLM to create formatted reviews'
+                : formData.agent_type === 'ott_release' 
                 ? 'Configure OTT release fetching from Binged.com'
                 : formData.agent_type === 'theater_release'
                 ? 'Fetches theater movie releases from IMDb India'
                 : 'Configure your automated post generation agent'}
+            </p>
             </p>
           </div>
           <button
