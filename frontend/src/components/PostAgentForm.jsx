@@ -2243,15 +2243,13 @@ Instructions:
                   </label>
                   <select
                     name="max_reviews_from_listing"
-                    value={formData.max_reviews_from_listing !== undefined ? formData.max_reviews_from_listing : 10}
+                    value={formData.max_reviews_from_listing !== undefined && formData.max_reviews_from_listing !== null ? formData.max_reviews_from_listing : 10}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   >
-                    <option value="1">Latest 1 Review</option>
-                    <option value="5">Latest 5 Reviews</option>
-                    <option value="10">Latest 10 Reviews</option>
-                    <option value="15">Latest 15 Reviews</option>
-                    <option value="20">Latest 20 Reviews</option>
+                    {Array.from({ length: 50 }, (_, i) => i + 1).map(num => (
+                      <option key={num} value={num}>{num}</option>
+                    ))}
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
                     When using a listing page URL (e.g., https://www.gulte.com/category/moviereviews), agent will process up to this many reviews. Skips duplicates automatically.
