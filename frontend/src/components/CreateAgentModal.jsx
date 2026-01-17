@@ -115,7 +115,8 @@ const CreateAgentModal = ({ onClose, onSelect }) => {
       indigo: 'bg-indigo-100 text-indigo-600 hover:bg-indigo-50 border-indigo-200',
       pink: 'bg-pink-100 text-pink-600 hover:bg-pink-50 border-pink-200',
       teal: 'bg-teal-100 text-teal-600 hover:bg-teal-50 border-teal-200',
-      amber: 'bg-amber-100 text-amber-600 hover:bg-amber-50 border-amber-200'
+      amber: 'bg-amber-100 text-amber-600 hover:bg-amber-50 border-amber-200',
+      violet: 'bg-violet-100 text-violet-600 hover:bg-violet-50 border-violet-200'
     };
     return colors[color] || colors.blue;
   };
