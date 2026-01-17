@@ -386,6 +386,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
       
       const method = isEditing ? 'PUT' : 'POST';
 
+      // Log the value being sent for debugging
+      if (formData.agent_type === 'movie_review') {
+        console.log('Submitting movie review agent with max_reviews_from_listing:', formData.max_reviews_from_listing);
+      }
+
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
