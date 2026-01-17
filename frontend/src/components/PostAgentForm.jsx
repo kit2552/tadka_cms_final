@@ -2228,36 +2228,6 @@ Instructions:
                   </p>
                 </div>
 
-                {/* Rating Strategy */}
-                <div className="text-left">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Rating Strategy (when multiple URLs provided)
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { value: 'lowest', label: 'Lowest', desc: 'Use lowest rating' },
-                      { value: 'highest', label: 'Highest', desc: 'Use highest rating' },
-                      { value: 'average', label: 'Average', desc: 'Use average rating' }
-                    ].map(option => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => setFormData(prev => ({ ...prev, review_rating_strategy: option.value }))}
-                        className={`p-2 rounded border-2 font-medium text-xs transition-all ${
-                          formData.review_rating_strategy === option.value
-                            ? 'border-purple-600 bg-purple-100 text-purple-700'
-                            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    How to calculate final rating when scraping multiple review sources
-                  </p>
-                </div>
-
                 {/* Content Workflow */}
                 <div className="text-left">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -2285,12 +2255,11 @@ Instructions:
                 <div className="bg-white rounded-lg p-3 border border-purple-200">
                   <div className="text-xs text-purple-800 text-left space-y-1">
                     <p className="font-semibold text-purple-900">How it works:</p>
-                    <p>• Add movie review URLs in the Reference Content section below</p>
-                    <p>• Supports: GreatAndhra, Gulte, IdleBrain, 123Telugu and more</p>
-                    <p>• Extracts: Movie details, rating, cast, director, all review sections</p>
-                    <p>• Uses AI (from System Settings) to rewrite and format content</p>
-                    <p>• Creates Movie Review posts in Manage Content → Posts</p>
-                    <p>• Multiple URLs combine data; rating uses selected strategy</p>
+                    <p>1️⃣ Add a movie review URL in Reference Content below</p>
+                    <p>2️⃣ Agent scrapes: movie details, rating, cast, director, all review sections</p>
+                    <p>3️⃣ AI rewrites the review content in our style</p>
+                    <p>4️⃣ Creates Movie Review post in Manage Content → Posts</p>
+                    <p className="mt-2 text-purple-600">✅ Supports: GreatAndhra, Gulte, IdleBrain, 123Telugu and more</p>
                   </div>
                 </div>
               </div>
