@@ -62,9 +62,9 @@ class MovieReviewAgentService:
             raise TimeoutError("LLM call timed out")
         
         try:
-            # Set a 45 second timeout for LLM calls
+            # Set a 225 second timeout for LLM calls (5x increased)
             old_handler = signal.signal(signal.SIGALRM, timeout_handler)
-            signal.alarm(45)
+            signal.alarm(225)
             
             try:
                 if self.llm_provider == 'openai':
@@ -75,7 +75,7 @@ class MovieReviewAgentService:
                             {"role": "user", "content": user_prompt}
                         ],
                         max_completion_tokens=max_tokens,
-                        timeout=40
+                        timeout=200
                     )
                     result = response.choices[0].message.content.strip()
                     
