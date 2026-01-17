@@ -2394,11 +2394,11 @@ Instructions:
                         type="url"
                         value={getUrlValue(item)}
                         onChange={(e) => updateReferenceUrl(index, 'url', e.target.value)}
-                        placeholder={formData.agent_type === 'theater_release' ? "https://www.imdb.com/calendar/?region=IN" : "https://example.com/news"}
+                        placeholder={formData.agent_type === 'theater_release' ? "https://www.imdb.com/calendar/?region=IN" : formData.agent_type === 'movie_review' ? "https://www.greatandhra.com/movies/reviews/..." : "https://example.com/news"}
                         className="flex-1 px-3 py-1.5 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
-                      {/* Hide URL type dropdown for theater_release agent */}
-                      {formData.agent_type !== 'theater_release' && (
+                      {/* Hide URL type dropdown for theater_release and movie_review agents */}
+                      {formData.agent_type !== 'theater_release' && formData.agent_type !== 'movie_review' && (
                         <select
                           value={getUrlType(item)}
                           onChange={(e) => updateReferenceUrl(index, 'url_type', e.target.value)}
