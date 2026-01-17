@@ -382,7 +382,7 @@ Rewrite the given content in a professional, engaging tone.
             'category': 'movie-reviews',
             'status': status,
             'is_published': is_published,
-            'article_language': article_language,
+            'article_language': 'en',  # Use 'en' for CMS filtering, movie_language specifies actual language
             
             # Movie review specific fields - review sections with HTML
             'review_quick_verdict': rewritten_sections.get('quick_verdict', ''),
