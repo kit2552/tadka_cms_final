@@ -25,10 +25,14 @@ export const dataService = {
     return Array.from(languageSet);
   },
   
-  // Fetch Movie Reviews data from backend - latest 20 from each category
-  async getMovieReviewsData() {
+  // Fetch Movie Reviews data from backend - latest 20 from each category with state filtering
+  async getMovieReviewsData(userStateCodes = null) {
     try {
-      const response = await fetch(`${API_BASE_URL}/articles/sections/movie-reviews?limit=20`);
+      let url = `${API_BASE_URL}/articles/sections/movie-reviews?limit=20`;
+      if (userStateCodes && userStateCodes.length > 0) {
+        url += `&states=${userStateCodes.join(',')}`;
+      }
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch movie reviews');
       }
