@@ -4304,7 +4304,7 @@ const SystemSettings = () => {
                         </td>
                       </tr>
                     ))
-                  )}}
+                  )}
                 </tbody>
               </table>
             </div>
