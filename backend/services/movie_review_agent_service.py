@@ -255,7 +255,7 @@ class MovieReviewAgentService:
         return results
     
     def _rewrite_from_temp(self, language: str) -> Dict:
-        """Rewrite review sections from temp storage using LLM"""
+        """Rewrite review sections from temp storage using LLM, with fallback to raw content"""
         
         if not self.temp_review_data:
             return {}
@@ -271,63 +271,31 @@ Rewrite the given content in a professional, engaging tone.
         
         rewritten = {}
         
-        # Rewrite story/plot
-        if self.temp_review_data.get('story_plot'):
-            print(f"      - Rewriting story/plot...")
-            prompt = f"""Rewrite this plot summary for "{movie_name}" in 2-3 paragraphs:
-
-{self.temp_review_data['story_plot']}"""
-            result = self._llm_complete(system_prompt, prompt)
-            rewritten['story_plot'] = result if result else self.temp_review_data['story_plot']
+        # Try to rewrite each section, but use raw content if LLM fails
+        sections_to_rewrite = [
+            ('story_plot', 'story/plot', f'Rewrite this plot summary for "{movie_name}" in 2-3 paragraphs:\n\n'),
+            ('performances', 'performances', f'Rewrite this performances section for "{movie_name}" in 2-3 paragraphs:\n\n'),
+            ('what_works', 'highlights', f'Rewrite these highlights/positives for "{movie_name}" as 4-6 bullet points starting with •:\n\n'),
+            ('what_doesnt_work', 'drawbacks', f'Rewrite these drawbacks/negatives for "{movie_name}" as 3-5 bullet points starting with •:\n\n'),
+            ('technical_aspects', 'technical aspects', f'Rewrite this technical aspects section for "{movie_name}" in 1-2 paragraphs:\n\n'),
+            ('final_verdict', 'verdict', f'Rewrite this verdict for "{movie_name}" in 2-3 paragraphs:\n\n'),
+        ]
         
-        # Rewrite performances
-        if self.temp_review_data.get('performances'):
-            print(f"      - Rewriting performances...")
-            prompt = f"""Rewrite this performances section for "{movie_name}" in 2-3 paragraphs:
-
-{self.temp_review_data['performances']}"""
-            result = self._llm_complete(system_prompt, prompt)
-            rewritten['performances'] = result if result else self.temp_review_data['performances']
+        for field, label, prompt_prefix in sections_to_rewrite:
+            raw_content = self.temp_review_data.get(field, '')
+            if raw_content:
+                print(f"      - Processing {label}...")
+                try:
+                    result = self._llm_complete(system_prompt, prompt_prefix + raw_content)
+                    rewritten[field] = result if result else raw_content
+                except Exception as e:
+                    print(f"      ⚠️ LLM failed for {label}, using raw content: {str(e)[:50]}")
+                    rewritten[field] = raw_content
+            else:
+                rewritten[field] = ''
         
-        # Rewrite what works
-        if self.temp_review_data.get('what_works'):
-            print(f"      - Rewriting highlights...")
-            prompt = f"""Rewrite these highlights/positives for "{movie_name}" as 4-6 bullet points starting with •:
-
-{self.temp_review_data['what_works']}"""
-            result = self._llm_complete(system_prompt, prompt)
-            rewritten['what_works'] = result if result else self.temp_review_data['what_works']
-        
-        # Rewrite what doesn't work
-        if self.temp_review_data.get('what_doesnt_work'):
-            print(f"      - Rewriting drawbacks...")
-            prompt = f"""Rewrite these drawbacks/negatives for "{movie_name}" as 3-5 bullet points starting with •:
-
-{self.temp_review_data['what_doesnt_work']}"""
-            result = self._llm_complete(system_prompt, prompt)
-            rewritten['what_doesnt_work'] = result if result else self.temp_review_data['what_doesnt_work']
-        
-        # Rewrite technical aspects
-        if self.temp_review_data.get('technical_aspects'):
-            print(f"      - Rewriting technical aspects...")
-            prompt = f"""Rewrite this technical aspects section for "{movie_name}" in 1-2 paragraphs:
-
-{self.temp_review_data['technical_aspects']}"""
-            result = self._llm_complete(system_prompt, prompt)
-            rewritten['technical_aspects'] = result if result else self.temp_review_data['technical_aspects']
-        
-        # Rewrite final verdict
-        if self.temp_review_data.get('final_verdict'):
-            print(f"      - Rewriting verdict...")
-            prompt = f"""Rewrite this verdict for "{movie_name}" in 2-3 paragraphs:
-
-{self.temp_review_data['final_verdict']}"""
-            result = self._llm_complete(system_prompt, prompt)
-            rewritten['final_verdict'] = result if result else self.temp_review_data['final_verdict']
-        
-        # Quick verdict - just clean up
-        if self.temp_review_data.get('quick_verdict'):
-            rewritten['quick_verdict'] = self.temp_review_data['quick_verdict']
+        # Quick verdict - just copy as-is
+        rewritten['quick_verdict'] = self.temp_review_data.get('quick_verdict', '')
         
         return rewritten
     
