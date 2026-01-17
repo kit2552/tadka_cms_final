@@ -426,7 +426,6 @@ Rewrite the given content in a professional, engaging tone.
             'movie_rating': f"{rating:.2f}",  # String format with 2 decimals like '2.00'
             'platform': 'Theater',
             'states': json.dumps(states),  # JSON string like '["ap", "ts"]'
-            'review_editor': '',  # Editor field - empty by default
             
             # Images
             'image': self.temp_review_data.get('poster_image', ''),
