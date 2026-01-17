@@ -26,6 +26,7 @@ class MovieReviewData:
     producer: str = ""
     music_director: str = ""
     dop: str = ""
+    editor: str = ""
     genre: str = ""
     runtime: str = ""
     release_date: str = ""
