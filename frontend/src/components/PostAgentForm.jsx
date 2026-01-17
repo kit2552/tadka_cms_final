@@ -2403,12 +2403,13 @@ Instructions:
                 </div>
               ) : formData.agent_type === 'movie_review' ? (
                 <div className="text-xs text-gray-500 text-left space-y-1">
-                  <p>Add a movie review URL from Telugu/Hindi movie review websites:</p>
+                  <p>Add movie review URLs from Telugu/Hindi movie review websites:</p>
                   <ul className="list-disc list-inside pl-2 text-gray-400">
-                    <li><strong>GreatAndhra</strong> - https://www.greatandhra.com/movies/reviews/...</li>
-                    <li><strong>Gulte</strong> - https://www.gulte.com/moviereviews/...</li>
-                    <li><strong>123Telugu, IdleBrain</strong> - and other review sites</li>
+                    <li><strong>Listing Page</strong> - Reviews list page (e.g., https://www.greatandhra.com/reviews)</li>
+                    <li><strong>Direct Article</strong> - Direct review URL (e.g., https://www.greatandhra.com/movies/reviews/...)</li>
+                    <li><strong>Auto Detect</strong> - Agent automatically detects the type</li>
                   </ul>
+                  <p className="mt-2 text-gray-600">💡 Use <strong>Listing Page</strong> to automatically fetch and create reviews for new movies only.</p>
                 </div>
               ) : (
                 <div className="text-xs text-gray-500 text-left space-y-1">
