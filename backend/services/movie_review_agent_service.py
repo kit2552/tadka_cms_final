@@ -55,37 +55,60 @@ class MovieReviewAgentService:
         
         print(f"   🤖 Initialized {self.llm_provider} with model: {self.llm_model}")
     
-    def _llm_complete(self, system_prompt: str, user_prompt: str, max_tokens: int = 4000) -> str:
-        """Universal LLM completion"""
+    def _llm_complete(self, system_prompt: str, user_prompt: str, max_tokens: int = 2000) -> str:
+        """Universal LLM completion with timeout handling"""
+        import signal
+        
+        def timeout_handler(signum, frame):
+            raise TimeoutError("LLM call timed out")
+        
         try:
-            if self.llm_provider == 'openai':
-                response = self.llm_client.chat.completions.create(
-                    model=self.llm_model,
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt}
-                    ],
-                    max_completion_tokens=max_tokens
-                )
-                return response.choices[0].message.content.strip()
+            # Set a 30 second timeout for LLM calls
+            old_handler = signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(30)
+            
+            try:
+                if self.llm_provider == 'openai':
+                    response = self.llm_client.chat.completions.create(
+                        model=self.llm_model,
+                        messages=[
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt}
+                        ],
+                        max_completion_tokens=max_tokens,
+                        timeout=25
+                    )
+                    result = response.choices[0].message.content.strip()
+                    
+                elif self.llm_provider == 'gemini':
+                    full_prompt = f"{system_prompt}\n\n{user_prompt}"
+                    response = self.llm_client.generate_content(full_prompt)
+                    result = response.text.strip()
+                    
+                elif self.llm_provider == 'anthropic':
+                    response = self.llm_client.messages.create(
+                        model=self.llm_model,
+                        max_tokens=max_tokens,
+                        system=system_prompt,
+                        messages=[{"role": "user", "content": user_prompt}]
+                    )
+                    result = response.content[0].text.strip()
+                else:
+                    result = ""
+                    
+                signal.alarm(0)  # Cancel the alarm
+                return result
                 
-            elif self.llm_provider == 'gemini':
-                full_prompt = f"{system_prompt}\n\n{user_prompt}"
-                response = self.llm_client.generate_content(full_prompt)
-                return response.text.strip()
+            finally:
+                signal.alarm(0)
+                signal.signal(signal.SIGALRM, old_handler)
                 
-            elif self.llm_provider == 'anthropic':
-                response = self.llm_client.messages.create(
-                    model=self.llm_model,
-                    max_tokens=max_tokens,
-                    system=system_prompt,
-                    messages=[{"role": "user", "content": user_prompt}]
-                )
-                return response.content[0].text.strip()
-                
+        except TimeoutError:
+            print(f"   ⚠️ LLM call timed out, using raw content")
+            return ""
         except Exception as e:
             print(f"   ❌ LLM Error: {str(e)}")
-            raise Exception(f"LLM completion failed: {str(e)}")
+            return ""  # Return empty instead of raising, so we can fall back to raw content
     
     async def run_movie_review_agent(self, agent_id: str) -> Dict:
         """
