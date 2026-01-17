@@ -4266,6 +4266,10 @@ const SystemSettings = () => {
 
           {/* Verdicts Table */}
           <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            {/* Scroll Indicator */}
+            <div className="bg-blue-50 border-b border-blue-200 px-4 py-2 text-xs text-blue-700">
+              ⬇️ Scroll down to see all 21 ratings (0.00 to 5.00)
+            </div>
             <div className="overflow-x-auto" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50 sticky top-0 z-10">
