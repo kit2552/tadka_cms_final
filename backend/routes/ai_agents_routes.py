@@ -92,6 +92,7 @@ class AIAgent(BaseModel):
     # Movie Review Agent fields
     review_rating_strategy: Optional[str] = "lowest"  # lowest, highest, average - when multiple URLs provided
     review_language: Optional[str] = "Telugu"  # Language for the review (Telugu, Tamil, Hindi, etc.)
+    max_reviews_from_listing: Optional[int] = 10  # Number of reviews to fetch from listing page (1-50)
     
     # Post Aggregation fields (for Video Agent)
     enable_aggregation: Optional[bool] = False  # Enable post grouping by movie/event name
