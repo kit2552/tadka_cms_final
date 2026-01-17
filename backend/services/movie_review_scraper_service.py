@@ -202,6 +202,11 @@ class MovieReviewScraper:
             
             if 'cast' in label:
                 data.cast = next_text
+            elif 'written' in label and 'direction' in label:
+                # "Written and Direction" or "Written & Direction"
+                data.director = next_text
+            elif 'direction' in label and 'music' not in label:
+                data.director = next_text
             elif 'director' in label and 'music' not in label:
                 data.director = next_text
             elif 'producer' in label:
@@ -210,7 +215,9 @@ class MovieReviewScraper:
                 data.music_director = next_text
             elif 'dop' in label or 'cinematograph' in label:
                 data.dop = next_text
-            elif 'banner' in label:
+            elif 'editor' in label:
+                data.editor = next_text
+            elif 'banner' in label or 'production' in label:
                 data.banner = next_text
             elif 'release' in label:
                 data.release_date = next_text
