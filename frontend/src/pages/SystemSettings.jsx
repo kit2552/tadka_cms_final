@@ -4266,9 +4266,9 @@ const SystemSettings = () => {
 
           {/* Verdicts Table */}
           <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-            <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <div className="overflow-x-auto" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50 sticky top-0">
+                <thead className="bg-gray-50 sticky top-0 z-10">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
                       Rating
@@ -4282,39 +4282,47 @@ const SystemSettings = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {Object.entries(editingVerdicts)
-                    .sort(([a], [b]) => parseFloat(a) - parseFloat(b))
-                    .map(([rating, data]) => (
-                    <tr key={rating} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                        {parseFloat(rating).toFixed(2)}
-                      </td>
-                      <td className="px-4 py-3">
-                        <input
-                          type="text"
-                          value={data.tag || ''}
-                          onChange={(e) => setEditingVerdicts({
-                            ...editingVerdicts,
-                            [rating]: { ...data, tag: e.target.value }
-                          })}
-                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="e.g., Hit"
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <textarea
-                          value={data.verdict || ''}
-                          onChange={(e) => setEditingVerdicts({
-                            ...editingVerdicts,
-                            [rating]: { ...data, verdict: e.target.value }
-                          })}
-                          rows={2}
-                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                          placeholder="Enter verdict text..."
-                        />
+                  {Object.keys(editingVerdicts).length === 0 ? (
+                    <tr>
+                      <td colSpan="3" className="px-4 py-8 text-center text-sm text-gray-500">
+                        {verdictsLoading ? 'Loading verdicts...' : 'No verdicts found'}
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    Object.entries(editingVerdicts)
+                      .sort(([a], [b]) => parseFloat(a) - parseFloat(b))
+                      .map(([rating, data]) => (
+                      <tr key={rating} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                          {parseFloat(rating).toFixed(2)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <input
+                            type="text"
+                            value={data.tag || ''}
+                            onChange={(e) => setEditingVerdicts({
+                              ...editingVerdicts,
+                              [rating]: { ...data, tag: e.target.value }
+                            })}
+                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="e.g., Hit"
+                          />
+                        </td>
+                        <td className="px-4 py-3">
+                          <textarea
+                            value={data.verdict || ''}
+                            onChange={(e) => setEditingVerdicts({
+                              ...editingVerdicts,
+                              [rating]: { ...data, verdict: e.target.value }
+                            })}
+                            rows={2}
+                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                            placeholder="Enter verdict text..."
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  )}}
                 </tbody>
               </table>
             </div>
