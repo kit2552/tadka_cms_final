@@ -623,14 +623,48 @@ async def get_new_video_songs_articles(limit: int = 20, states: str = None, db =
         }
 
 @api_router.get("/articles/sections/movie-reviews")
-def get_movie_reviews_articles(limit: int = 20, db = Depends(get_db)):
-    """Get articles for Movie Reviews section with Movie Reviews and Bollywood tabs - latest 20 from each category"""
-    movie_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews", limit=limit)
+def get_movie_reviews_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
+    """Get articles for Movie Reviews section with state-based language filtering
+    
+    Args:
+        limit: Number of articles to fetch (default 20)
+        states: Comma-separated list of state codes for language filtering
+    """
+    from state_language_mapping import get_languages_for_states
+    
+    # For Movie Reviews tab - apply language filtering based on states
+    if states:
+        # Get languages for the selected states
+        state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+        user_languages = get_languages_for_states(state_list)
+        
+        # Convert language names to codes for filtering
+        lang_name_to_code = {
+            'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+            'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+            'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+        }
+        language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+        
+        print(f"🎬 Movie Reviews - States: {state_list}, Languages: {user_languages}, Codes: {language_codes}")
+        
+        # Filter articles by content_language matching user's state-based languages
+        movie_reviews_articles = crud.get_articles_by_content_language(
+            db, 
+            category_slug="movie-reviews", 
+            language_codes=language_codes, 
+            limit=limit
+        )
+    else:
+        # No state preference - show all movie reviews
+        movie_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews", limit=limit)
+    
+    # For Bollywood tab - always show all Bollywood content (no filtering)
     bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews-bollywood", limit=limit)
     
     return {
-        "movie_reviews": movie_reviews_articles,
-        "bollywood": bollywood_articles
+        "movie_reviews": movie_reviews_articles or [],
+        "bollywood": bollywood_articles or []
     }
 
 @api_router.get("/articles/sections/trailers-teasers")
