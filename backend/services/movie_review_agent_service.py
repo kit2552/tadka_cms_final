@@ -45,6 +45,51 @@ class MovieReviewAgentService:
         self.llm_model = None
         self.llm_provider = None
         self.temp_review_data = None  # Temporary storage for scraped data
+        self.rating_verdicts = None  # Rating verdicts mapping from system settings
+    
+    def _load_rating_verdicts(self):
+        """Load rating verdicts from system settings or use defaults"""
+        try:
+            # Try to get from system settings
+            settings = db.system_settings.find_one({"setting_type": "movie_rating_verdicts"})
+            if settings and settings.get('verdicts'):
+                # Convert string keys to float keys
+                self.rating_verdicts = {float(k): v for k, v in settings['verdicts'].items()}
+                print("   ✅ Loaded rating verdicts from system settings")
+            else:
+                # Use default verdicts
+                self.rating_verdicts = DEFAULT_RATING_VERDICTS.copy()
+                print("   ℹ️  Using default rating verdicts")
+        except Exception as e:
+            print(f"   ⚠️  Error loading rating verdicts: {e}, using defaults")
+            self.rating_verdicts = DEFAULT_RATING_VERDICTS.copy()
+    
+    def _round_rating(self, rating: float) -> float:
+        """Round rating to nearest 0.25"""
+        return round(rating * 4) / 4
+    
+    def _get_verdict_for_rating(self, rating: float) -> Dict[str, str]:
+        """
+        Get verdict tag and text for a given rating
+        
+        Returns: {"tag": "Hit", "verdict": "Solid hit! ..."}
+        """
+        if not self.rating_verdicts:
+            self._load_rating_verdicts()
+        
+        # Round to nearest 0.25
+        rounded_rating = self._round_rating(rating)
+        
+        # Clamp between 0.0 and 5.0
+        rounded_rating = max(0.0, min(5.0, rounded_rating))
+        
+        # Get verdict from mapping
+        verdict_data = self.rating_verdicts.get(rounded_rating, {
+            "tag": "Not Rated",
+            "verdict": "Rating not available."
+        })
+        
+        return verdict_data
     
     def _initialize_llm(self):
         """Initialize LLM client based on system settings"""
