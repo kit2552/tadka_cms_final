@@ -467,7 +467,7 @@ const ArticlePage = () => {
   return (
     <div className={`min-h-screen ${themeClasses.pageBackground}`}>
       {/* Main Container - Remove top padding for article pages */}
-      <div className="max-w-5xl-plus mx-auto px-8 pb-6">
+      <div className="max-w-5xl-plus mx-auto px-8 pb-0">
         
         {/* Two Section Layout with Gap - 60%/40% split */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:h-[calc(100vh-120px)]">
