@@ -483,6 +483,211 @@ Rewrite the given content in a professional, engaging tone.
         }
         
         return article_data
+    
+    async def _is_listing_page(self, url: str, url_type: str) -> bool:
+        """
+        Determine if URL is a listing page or direct article
+        
+        url_type: 'auto', 'listing', 'direct_article'
+        """
+        if url_type == 'listing':
+            return True
+        elif url_type == 'direct_article':
+            return False
+        
+        # Auto detection - check if URL pattern suggests listing page
+        url_lower = url.lower()
+        
+        # Common listing page patterns
+        listing_patterns = [
+            '/reviews',  # https://www.greatandhra.com/reviews
+            '/category/moviereviews',  # https://www.gulte.com/category/moviereviews
+            '/moviereviews',
+            '/reviews/',
+            '/category/reviews',
+            '/movie-reviews',
+        ]
+        
+        for pattern in listing_patterns:
+            if pattern in url_lower:
+                return True
+        
+        return False
+    
+    async def _extract_review_links_from_listing(self, listing_url: str, max_links: int = 10) -> list:
+        """
+        Extract individual review article URLs from a listing page
+        
+        Returns list of review URLs found on the page
+        """
+        import httpx
+        from bs4 import BeautifulSoup
+        
+        print(f"      🔍 Scraping listing page: {listing_url}")
+        
+        try:
+            async with httpx.AsyncClient(follow_redirects=True, timeout=30.0) as client:
+                response = await client.get(listing_url)
+                response.raise_for_status()
+                
+                soup = BeautifulSoup(response.content, 'html.parser')
+                review_links = []
+                
+                # Extract all article links from the page
+                # Different sites have different HTML structures
+                
+                # Pattern 1: GreatAndhra - find links within review listings
+                for link in soup.find_all('a', href=True):
+                    href = link.get('href', '')
+                    
+                    # Check if link is likely a review article
+                    if any(pattern in href.lower() for pattern in ['/reviews/', '/moviereviews/', 'review']):
+                        # Make absolute URL
+                        if href.startswith('http'):
+                            full_url = href
+                        elif href.startswith('/'):
+                            from urllib.parse import urlparse
+                            parsed = urlparse(listing_url)
+                            full_url = f"{parsed.scheme}://{parsed.netloc}{href}"
+                        else:
+                            continue
+                        
+                        # Avoid duplicates and pagination links
+                        if full_url not in review_links and 'page' not in full_url.lower() and 'category' not in full_url.lower():
+                            review_links.append(full_url)
+                            
+                            if len(review_links) >= max_links:
+                                break
+                
+                print(f"      ✅ Found {len(review_links)} review links")
+                return review_links[:max_links]
+                
+        except Exception as e:
+            print(f"      ❌ Error extracting links from listing page: {str(e)}")
+            return []
+    
+    async def _process_single_review(self, review_url: str, article_language: str, content_workflow: str, rating_strategy: str, results: dict):
+        """
+        Process a single review URL - check if exists, scrape, and create if needed
+        
+        Args:
+            review_url: URL of the review to process
+            article_language: Target language for the review
+            content_workflow: 'in_review' or 'published'
+            rating_strategy: 'lowest', 'highest', 'average'
+            results: Results dict to update
+        """
+        from services.movie_review_scraper_service import movie_review_scraper
+        
+        try:
+            # Step 1: Scrape the review to get movie name
+            print(f"      📥 Scraping: {review_url}")
+            scraped_data = await movie_review_scraper.scrape_review(review_url)
+            movie_name = scraped_data.movie_name
+            
+            results["reviews_scraped"] += 1
+            
+            # Step 2: Check if review already exists for this movie and language
+            content_language_code = self._get_language_code(article_language)
+            existing_review = db.articles.find_one({
+                "content_type": "movie_review",
+                "title": {"$regex": f"^{re.escape(movie_name)}", "$options": "i"},
+                "content_language": content_language_code
+            })
+            
+            if existing_review:
+                print(f"      ⏭️  SKIPPED: Review already exists for '{movie_name}' ({article_language})")
+                results["reviews_skipped"] += 1
+                results["skipped_reviews"].append({
+                    "movie_name": movie_name,
+                    "language": article_language,
+                    "reason": "Already exists in database"
+                })
+                return
+            
+            # Step 3: Review doesn't exist - create it
+            print(f"      ✅ NEW MOVIE: '{movie_name}' - Creating review...")
+            
+            # Store in temporary space
+            self.temp_review_data = {
+                'movie_name': movie_name,
+                'rating': scraped_data.rating,
+                'rating_scale': scraped_data.rating_scale,
+                'normalized_rating': scraped_data.normalized_rating,
+                'cast': scraped_data.cast,
+                'director': scraped_data.director,
+                'producer': scraped_data.producer,
+                'music_director': scraped_data.music_director,
+                'dop': scraped_data.dop,
+                'editor': scraped_data.editor,
+                'genre': scraped_data.genre,
+                'runtime': scraped_data.runtime,
+                'release_date': scraped_data.release_date,
+                'banner': scraped_data.banner,
+                'poster_image': scraped_data.poster_image,
+                'story_plot': scraped_data.story_plot,
+                'performances': scraped_data.performances,
+                'what_works': scraped_data.what_works,
+                'what_doesnt_work': scraped_data.what_doesnt_work,
+                'technical_aspects': scraped_data.technical_aspects,
+                'final_verdict': scraped_data.final_verdict,
+                'quick_verdict': scraped_data.quick_verdict,
+                'source_url': review_url,
+                'source_name': scraped_data.source_name
+            }
+            
+            # Initialize LLM if not already done
+            if not self.llm_client:
+                self._initialize_llm()
+            
+            # Rewrite sections
+            print(f"      ✍️  Rewriting with LLM...")
+            rewritten_sections = self._rewrite_from_temp(article_language)
+            
+            # Create article
+            print(f"      📝 Creating article...")
+            article_data = self._create_article_data(
+                content_workflow=content_workflow,
+                article_language=article_language,
+                rewritten_sections=rewritten_sections
+            )
+            
+            # Save to database
+            created_article = crud.create_article(db, article_data)
+            
+            if created_article:
+                results["reviews_created"] += 1
+                results["created_reviews"].append({
+                    "id": created_article.get('id'),
+                    "title": created_article.get('title'),
+                    "movie_name": movie_name,
+                    "rating": self.temp_review_data['normalized_rating']
+                })
+                print(f"      ✅ CREATED: {movie_name} ({self.temp_review_data['normalized_rating']:.1f}/5)")
+            
+            # Clear temp data
+            self.temp_review_data = None
+            
+        except Exception as e:
+            error_msg = f"Error processing {review_url}: {str(e)}"
+            print(f"      ❌ {error_msg}")
+            results["errors"].append(error_msg)
+    
+    def _get_language_code(self, language_name: str) -> str:
+        """Convert language name to ISO code"""
+        language_map = {
+            'Telugu': 'te',
+            'Tamil': 'ta',
+            'Hindi': 'hi',
+            'Kannada': 'kn',
+            'Malayalam': 'ml',
+            'Bengali': 'bn',
+            'Marathi': 'mr',
+            'Punjabi': 'pa',
+            'Gujarati': 'gu',
+            'English': 'en'
+        }
+        return language_map.get(language_name, 'en')
 
 
 # Singleton instance
