@@ -314,24 +314,48 @@ class MovieReviewScraper:
         # Look for movie info in the header area
         full_text = article.get_text()
         
+        # Extract runtime, genre, release date from movie info line
+        # Format: "02 Hrs 14 Mins  |  Social Drama  |  25-12-2025"
+        for p in article.find_all('p'):
+            p_text = p.get_text(strip=True)
+            # Check if this line has the movie info format
+            if 'hrs' in p_text.lower() and '|' in p_text:
+                parts = [part.strip() for part in p_text.split('|')]
+                if len(parts) >= 3:
+                    # First part: runtime
+                    data.runtime = parts[0].strip()
+                    # Second part: genre
+                    data.genre = parts[1].strip()
+                    # Third part: release date
+                    data.release_date = parts[2].strip()
+                    break
+        
         # Extract cast, director etc from bold labels
-        for strong in article.find_all(['strong', 'b']):
-            label_text = strong.get_text(strip=True).lower()
-            next_text = ""
-            next_sibling = strong.next_sibling
-            if next_sibling:
-                next_text = str(next_sibling).strip().lstrip('-–').strip()
+        # New format uses "Cast - ", "Director - ", etc.
+        for p in article.find_all('p'):
+            strong = p.find('strong')
+            if not strong:
+                continue
             
-            if 'cast' in label_text:
-                data.cast = next_text
-            elif 'director' in label_text and 'music' not in label_text:
-                data.director = next_text
-            elif 'producer' in label_text:
-                data.producer = next_text
-            elif 'music' in label_text:
-                data.music_director = next_text
-            elif 'banner' in label_text:
-                data.banner = next_text
+            label_text = strong.get_text(strip=True).lower()
+            # Get the full paragraph text and extract content after the strong tag
+            full_p_text = p.get_text(strip=True)
+            
+            # Remove the strong tag text and any leading dash/spaces
+            if strong.get_text(strip=True) in full_p_text:
+                content = full_p_text.replace(strong.get_text(strip=True), '').strip()
+                content = content.lstrip('-–').strip()
+                
+                if 'cast' in label_text and content:
+                    data.cast = content
+                elif 'director' in label_text and 'music' not in label_text and content:
+                    data.director = content
+                elif 'producer' in label_text and content:
+                    data.producer = content
+                elif 'music' in label_text and content:
+                    data.music_director = content
+                elif 'banner' in label_text and content:
+                    data.banner = content
         
         # Parse sections
         paragraphs = article.find_all('p')
