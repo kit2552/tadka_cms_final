@@ -421,9 +421,10 @@ Rewrite the given content in a professional, engaging tone.
             
             # Movie metadata - JSON strings to match schema
             'movie_language': json.dumps([article_language]),  # JSON string like '["Telugu"]'
-            'movie_rating': str(rating),  # String format like '2.0'
+            'movie_rating': f"{rating:.2f}",  # String format with 2 decimals like '2.00'
             'platform': 'Theater',
             'states': json.dumps(states),  # JSON string like '["ap", "ts"]'
+            'review_editor': '',  # Editor field - empty by default
             
             # Images
             'image': self.temp_review_data.get('poster_image', ''),
