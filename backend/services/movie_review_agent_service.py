@@ -504,6 +504,8 @@ Rewrite the given content in a professional, engaging tone.
             'faqs': '[]',
             'ott_platforms': '[]',
             'view_count': 0,
+            'comments_enabled': True,
+            'review_comments_enabled': True,  # Enable user reviews section
             
             # Author
             'author': 'AI Review Agent'
