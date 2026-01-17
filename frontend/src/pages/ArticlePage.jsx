@@ -470,10 +470,10 @@ const ArticlePage = () => {
       <div className="max-w-5xl-plus mx-auto px-8 pb-0">
         
         {/* Two Section Layout with Gap - 60%/40% split */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:h-[calc(100vh-80px)]">
           
           {/* Article Section - 60% width - Scrollable */}
-          <div className="lg:col-span-3" style={{ paddingRight: '14px' }}>
+          <div className="lg:col-span-3 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingRight: '14px' }}>
             {/* Article Section Header - Sticky with published date and bottom border */}
             <div className={`sticky top-0 z-40 border-b-2 border-gray-300`} style={{ backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))' }}>
               <div className="pl-0 pr-4 pt-4" style={{ paddingBottom: '1rem' }}>
@@ -1157,7 +1157,7 @@ const ArticlePage = () => {
           </div>
 
           {/* Right Sidebar - Comments & Related Articles Section - 40% width - Scrollable */}
-          <div className="lg:col-span-2 border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0" style={{ paddingLeft: '0px', paddingRight: '4px' }}>
+          <div className="lg:col-span-2 border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingLeft: '0px', paddingRight: '4px' }}>
             {/* Comment Section */}
             {article.content_type === 'movie_review' && (article.review_comments_enabled !== false) && (
               <div className="mb-6" style={{ marginTop: '1rem' }}>
