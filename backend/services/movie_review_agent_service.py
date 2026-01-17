@@ -424,6 +424,17 @@ Rewrite the given content in a professional, engaging tone.
             'updated_at': datetime.now(timezone.utc),
             'published_at': datetime.now(timezone.utc) if is_published else None,
             
+            # Required fields for CMS visibility
+            'is_scheduled': False,
+            'is_sponsored': False,
+            'is_featured': False,
+            'is_top_story': False,
+            'artists': [],
+            'faqs': [],
+            'image_gallery': [],
+            'ott_platforms': [],
+            'view_count': 0,
+            
             # Author
             'author': 'AI Review Agent'
         }
