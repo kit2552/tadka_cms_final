@@ -98,6 +98,13 @@ const SystemSettings = () => {
   const [editingPromptMappings, setEditingPromptMappings] = useState({});
   const [showPromptEditor, setShowPromptEditor] = useState(false);
   const [editingCategoryPrompt, setEditingCategoryPrompt] = useState(null);
+
+  // Movie Rating Verdicts State
+  const [ratingVerdicts, setRatingVerdicts] = useState({});
+  const [isDefaultVerdicts, setIsDefaultVerdicts] = useState(true);
+  const [editingVerdicts, setEditingVerdicts] = useState({});
+  const [verdictsLoading, setVerdictsLoading] = useState(false);
+  const [verdictsMessage, setVerdictsMessage] = useState({ type: '', text: '' });
   const [promptSaving, setPromptSaving] = useState(false);
 
   // YouTube Channels State
