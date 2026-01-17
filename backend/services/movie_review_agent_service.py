@@ -1,14 +1,13 @@
 """
 Movie Review Agent Service
-Orchestrates scraping movie reviews and using LLM to generate formatted review content
+Simplified flow: Scrape single URL -> Store temp -> LLM rewrite -> Create article
 """
 
 import asyncio
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 from database import db
 import crud
-import uuid
 import re
 import json
 
@@ -17,10 +16,10 @@ class MovieReviewAgentService:
     """Service for running Movie Review agents"""
     
     def __init__(self):
-        self.is_running = False
         self.llm_client = None
         self.llm_model = None
         self.llm_provider = None
+        self.temp_review_data = None  # Temporary storage for scraped data
     
     def _initialize_llm(self):
         """Initialize LLM client based on system settings"""
@@ -63,9 +62,9 @@ class MovieReviewAgentService:
             raise TimeoutError("LLM call timed out")
         
         try:
-            # Set a 30 second timeout for LLM calls
+            # Set a 45 second timeout for LLM calls
             old_handler = signal.signal(signal.SIGALRM, timeout_handler)
-            signal.alarm(30)
+            signal.alarm(45)
             
             try:
                 if self.llm_provider == 'openai':
@@ -76,7 +75,7 @@ class MovieReviewAgentService:
                             {"role": "user", "content": user_prompt}
                         ],
                         max_completion_tokens=max_tokens,
-                        timeout=25
+                        timeout=40
                     )
                     result = response.choices[0].message.content.strip()
                     
@@ -96,7 +95,7 @@ class MovieReviewAgentService:
                 else:
                     result = ""
                     
-                signal.alarm(0)  # Cancel the alarm
+                signal.alarm(0)
                 return result
                 
             finally:
@@ -108,17 +107,15 @@ class MovieReviewAgentService:
             return ""
         except Exception as e:
             print(f"   ❌ LLM Error: {str(e)}")
-            return ""  # Return empty instead of raising, so we can fall back to raw content
+            return ""
     
     async def run_movie_review_agent(self, agent_id: str) -> Dict:
         """
-        Run the Movie Review agent to scrape and create movie review posts
+        Run the Movie Review agent - simplified single URL flow
         
-        Args:
-            agent_id: The ID of the agent to run
-            
-        Returns:
-            Dict with execution results
+        Step 1: Scrape and store in temp space
+        Step 2: Run LLM to rewrite from temp data
+        Step 3: Create article with movie info copied as-is
         """
         from services.movie_review_scraper_service import movie_review_scraper
         
@@ -132,25 +129,21 @@ class MovieReviewAgentService:
         # Extract agent settings
         reference_urls_raw = agent.get('reference_urls', [])
         
-        # Handle different formats of reference_urls
-        reference_urls = []
+        # Get single URL (first one)
+        review_url = None
         if isinstance(reference_urls_raw, str):
-            reference_urls = [url.strip() for url in reference_urls_raw.split('\n') if url.strip()]
-        elif isinstance(reference_urls_raw, list):
-            for item in reference_urls_raw:
-                if isinstance(item, str):
-                    reference_urls.append(item.strip())
-                elif isinstance(item, dict) and 'url' in item:
-                    reference_urls.append(item['url'].strip())
+            review_url = reference_urls_raw.strip()
+        elif isinstance(reference_urls_raw, list) and len(reference_urls_raw) > 0:
+            first_item = reference_urls_raw[0]
+            if isinstance(first_item, str):
+                review_url = first_item.strip()
+            elif isinstance(first_item, dict) and 'url' in first_item:
+                review_url = first_item['url'].strip()
         
-        rating_strategy = agent.get('review_rating_strategy', 'lowest')  # lowest, highest, average
         content_workflow = agent.get('content_workflow', 'in_review')
         article_language = agent.get('review_language', agent.get('article_language', 'Telugu'))
         
-        print(f"   📋 Settings: URLs={len(reference_urls)}, RatingStrategy={rating_strategy}, Language={article_language}")
-        
-        # Initialize LLM
-        self._initialize_llm()
+        print(f"   📋 Settings: URL={review_url}, Language={article_language}")
         
         # Update agent last run time
         db.ai_agents.update_one(
@@ -168,65 +161,72 @@ class MovieReviewAgentService:
             "created_reviews": []
         }
         
-        if not reference_urls:
+        if not review_url:
             results["status"] = "failed"
-            results["errors"].append("No reference URLs provided")
+            results["errors"].append("No review URL provided")
             return results
         
         try:
-            # Scrape all reviews
-            scraped_reviews = []
-            for url in reference_urls:
-                try:
-                    review_data = await movie_review_scraper.scrape_review(url)
-                    scraped_reviews.append(review_data)
-                    results["reviews_scraped"] += 1
-                except Exception as e:
-                    error_msg = f"Failed to scrape {url}: {str(e)}"
-                    print(f"   ❌ {error_msg}")
-                    results["errors"].append(error_msg)
+            # ========== STEP 1: SCRAPE AND STORE IN TEMP SPACE ==========
+            print(f"\n   📥 STEP 1: Scraping review...")
             
-            if not scraped_reviews:
-                results["status"] = "failed"
-                results["errors"].append("No reviews could be scraped")
-                return results
+            scraped_data = await movie_review_scraper.scrape_review(review_url)
+            results["reviews_scraped"] = 1
             
-            # Determine the movie name (use most common or first)
-            movie_names = [r.movie_name for r in scraped_reviews if r.movie_name]
-            movie_name = movie_names[0] if movie_names else "Unknown Movie"
+            # Store in temporary space
+            self.temp_review_data = {
+                'movie_name': scraped_data.movie_name,
+                'rating': scraped_data.rating,
+                'rating_scale': scraped_data.rating_scale,
+                'normalized_rating': scraped_data.normalized_rating,
+                
+                # Movie info - copy as-is
+                'cast': scraped_data.cast,
+                'director': scraped_data.director,
+                'producer': scraped_data.producer,
+                'music_director': scraped_data.music_director,
+                'dop': scraped_data.dop,
+                'genre': scraped_data.genre,
+                'runtime': scraped_data.runtime,
+                'release_date': scraped_data.release_date,
+                'banner': scraped_data.banner,
+                'poster_image': scraped_data.poster_image,
+                
+                # Review sections - to be rewritten
+                'story_plot': scraped_data.story_plot,
+                'performances': scraped_data.performances,
+                'what_works': scraped_data.what_works,
+                'what_doesnt_work': scraped_data.what_doesnt_work,
+                'technical_aspects': scraped_data.technical_aspects,
+                'final_verdict': scraped_data.final_verdict,
+                'quick_verdict': scraped_data.quick_verdict,
+                
+                # Source info
+                'source_url': review_url,
+                'source_name': scraped_data.source_name
+            }
             
-            # Calculate final rating based on strategy
-            ratings = [r.normalized_rating for r in scraped_reviews if r.normalized_rating > 0]
-            if ratings:
-                if rating_strategy == 'lowest':
-                    final_rating = min(ratings)
-                elif rating_strategy == 'highest':
-                    final_rating = max(ratings)
-                else:  # average
-                    final_rating = sum(ratings) / len(ratings)
-            else:
-                final_rating = 0.0
+            print(f"   ✅ Scraped: {self.temp_review_data['movie_name']} - Rating: {self.temp_review_data['rating']}/{self.temp_review_data['rating_scale']}")
+            print(f"   📦 Stored in temp space")
             
-            print(f"\n   📊 Rating Strategy: {rating_strategy}")
-            print(f"   📊 Individual ratings: {ratings}")
-            print(f"   📊 Final rating: {final_rating:.1f}/5")
+            # ========== STEP 2: LLM REWRITE FROM TEMP DATA ==========
+            print(f"\n   ✍️ STEP 2: Rewriting review sections with LLM...")
             
-            # Merge data from all reviews
-            merged_data = self._merge_review_data(scraped_reviews)
+            # Initialize LLM
+            self._initialize_llm()
             
-            # Use LLM to rewrite each section
-            print("\n   ✍️ Rewriting review sections with LLM...")
-            rewritten_sections = await self._rewrite_review_sections(merged_data, movie_name, article_language)
+            # Rewrite sections from temp data
+            rewritten_sections = self._rewrite_from_temp(article_language)
             
-            # Create the movie review article
+            print(f"   ✅ LLM rewrite complete")
+            
+            # ========== STEP 3: CREATE ARTICLE ==========
+            print(f"\n   📝 STEP 3: Creating article...")
+            
             article_data = self._create_article_data(
-                movie_name=movie_name,
-                rating=final_rating,
-                merged_data=merged_data,
-                rewritten_sections=rewritten_sections,
                 content_workflow=content_workflow,
                 article_language=article_language,
-                source_urls=reference_urls
+                rewritten_sections=rewritten_sections
             )
             
             # Save to database
@@ -237,184 +237,108 @@ class MovieReviewAgentService:
                 results["created_reviews"].append({
                     "id": created_article.get('id'),
                     "title": created_article.get('title'),
-                    "movie_name": movie_name,
-                    "rating": final_rating
+                    "movie_name": self.temp_review_data['movie_name'],
+                    "rating": self.temp_review_data['normalized_rating']
                 })
-                print(f"\n   ✅ Created review: {movie_name} ({final_rating:.1f}/5)")
+                print(f"\n   ✅ Created review: {self.temp_review_data['movie_name']} ({self.temp_review_data['normalized_rating']:.1f}/5)")
+            
+            # Clear temp data
+            self.temp_review_data = None
             
         except Exception as e:
             results["status"] = "failed"
             results["errors"].append(str(e))
             print(f"\n   ❌ Agent failed: {str(e)}")
+            import traceback
+            traceback.print_exc()
         
         return results
     
-    def _merge_review_data(self, reviews: List) -> Dict:
-        """Merge data from multiple review sources"""
-        merged = {
-            'cast': '',
-            'director': '',
-            'producer': '',
-            'music_director': '',
-            'dop': '',
-            'genre': '',
-            'runtime': '',
-            'release_date': '',
-            'banner': '',
-            'poster_image': '',
-            'story_plot': [],
-            'performances': [],
-            'what_works': [],
-            'what_doesnt_work': [],
-            'technical_aspects': [],
-            'final_verdict': [],
-            'quick_verdict': [],
-            'full_review_texts': []
-        }
+    def _rewrite_from_temp(self, language: str) -> Dict:
+        """Rewrite review sections from temp storage using LLM"""
         
-        for review in reviews:
-            # Take first non-empty value for single fields
-            if review.cast and not merged['cast']:
-                merged['cast'] = review.cast
-            if review.director and not merged['director']:
-                merged['director'] = review.director
-            if review.producer and not merged['producer']:
-                merged['producer'] = review.producer
-            if review.music_director and not merged['music_director']:
-                merged['music_director'] = review.music_director
-            if review.dop and not merged['dop']:
-                merged['dop'] = review.dop
-            if review.genre and not merged['genre']:
-                merged['genre'] = review.genre
-            if review.runtime and not merged['runtime']:
-                merged['runtime'] = review.runtime
-            if review.release_date and not merged['release_date']:
-                merged['release_date'] = review.release_date
-            if review.banner and not merged['banner']:
-                merged['banner'] = review.banner
-            if review.poster_image and not merged['poster_image']:
-                merged['poster_image'] = review.poster_image
-            
-            # Collect all content for sections
-            if review.story_plot:
-                merged['story_plot'].append(f"[{review.source_name}]: {review.story_plot}")
-            if review.performances:
-                merged['performances'].append(f"[{review.source_name}]: {review.performances}")
-            if review.what_works:
-                merged['what_works'].append(f"[{review.source_name}]: {review.what_works}")
-            if review.what_doesnt_work:
-                merged['what_doesnt_work'].append(f"[{review.source_name}]: {review.what_doesnt_work}")
-            if review.technical_aspects:
-                merged['technical_aspects'].append(f"[{review.source_name}]: {review.technical_aspects}")
-            if review.final_verdict:
-                merged['final_verdict'].append(f"[{review.source_name}]: {review.final_verdict}")
-            if review.quick_verdict:
-                merged['quick_verdict'].append(review.quick_verdict)
-            if review.full_review_text:
-                merged['full_review_texts'].append(f"=== {review.source_name} ===\n{review.full_review_text[:3000]}")
+        if not self.temp_review_data:
+            return {}
         
-        return merged
-    
-    async def _rewrite_review_sections(self, merged_data: Dict, movie_name: str, language: str) -> Dict:
-        """Use LLM to rewrite each review section, with fallback to raw content"""
+        movie_name = self.temp_review_data['movie_name']
         
-        system_prompt = f"""You are an expert movie critic writing reviews in {language} language style for an Indian entertainment news website.
-Your task is to synthesize multiple review sources into a single, coherent, well-written review section.
-- Write in a professional but engaging tone
-- Be balanced and fair in your assessment
-- Keep the content concise but informative
-- Do not copy verbatim from sources - rewrite in your own words
-- Output should be in English unless specifically asked for another language
-- Do not include source attributions in the final text"""
+        system_prompt = f"""You are an expert movie critic writing reviews for an Indian entertainment news website.
+Rewrite the given content in a professional, engaging tone.
+- Keep it concise but informative
+- Do not copy verbatim - rewrite in your own words
+- Output should be in English
+- Do not add any headers or labels"""
         
         rewritten = {}
         
-        def clean_raw_content(content_list):
-            """Clean raw content by removing source tags and joining"""
-            cleaned = []
-            for item in content_list:
-                # Remove source tags like [GreatAndhra]:
-                import re
-                clean_item = re.sub(r'^\[.*?\]:\s*', '', item)
-                cleaned.append(clean_item)
-            return ' '.join(cleaned)
-        
         # Rewrite story/plot
-        if merged_data['story_plot']:
-            prompt = f"""Rewrite the following plot summaries for "{movie_name}" into a single cohesive story summary (2-3 paragraphs):
+        if self.temp_review_data.get('story_plot'):
+            print(f"      - Rewriting story/plot...")
+            prompt = f"""Rewrite this plot summary for "{movie_name}" in 2-3 paragraphs:
 
-{chr(10).join(merged_data['story_plot'])}
-
-Write only the plot summary, no headers or labels."""
+{self.temp_review_data['story_plot']}"""
             result = self._llm_complete(system_prompt, prompt)
-            rewritten['story_plot'] = result if result else clean_raw_content(merged_data['story_plot'])
+            rewritten['story_plot'] = result if result else self.temp_review_data['story_plot']
         
         # Rewrite performances
-        if merged_data['performances']:
-            prompt = f"""Rewrite the following performance reviews for "{movie_name}" into a single cohesive performances section (2-3 paragraphs):
+        if self.temp_review_data.get('performances'):
+            print(f"      - Rewriting performances...")
+            prompt = f"""Rewrite this performances section for "{movie_name}" in 2-3 paragraphs:
 
-{chr(10).join(merged_data['performances'])}
-
-Write only the performances analysis, no headers or labels."""
+{self.temp_review_data['performances']}"""
             result = self._llm_complete(system_prompt, prompt)
-            rewritten['performances'] = result if result else clean_raw_content(merged_data['performances'])
+            rewritten['performances'] = result if result else self.temp_review_data['performances']
         
-        # Rewrite what works (positives)
-        if merged_data['what_works']:
-            prompt = f"""Summarize the positives/highlights from these reviews of "{movie_name}" into a bulleted list of 4-6 key points:
+        # Rewrite what works
+        if self.temp_review_data.get('what_works'):
+            print(f"      - Rewriting highlights...")
+            prompt = f"""Rewrite these highlights/positives for "{movie_name}" as 4-6 bullet points starting with •:
 
-{chr(10).join(merged_data['what_works'])}
-
-Format as bullet points starting with •"""
+{self.temp_review_data['what_works']}"""
             result = self._llm_complete(system_prompt, prompt)
-            rewritten['what_works'] = result if result else clean_raw_content(merged_data['what_works'])
+            rewritten['what_works'] = result if result else self.temp_review_data['what_works']
         
-        # Rewrite what doesn't work (negatives)
-        if merged_data['what_doesnt_work']:
-            prompt = f"""Summarize the negatives/drawbacks from these reviews of "{movie_name}" into a bulleted list of 3-5 key points:
+        # Rewrite what doesn't work
+        if self.temp_review_data.get('what_doesnt_work'):
+            print(f"      - Rewriting drawbacks...")
+            prompt = f"""Rewrite these drawbacks/negatives for "{movie_name}" as 3-5 bullet points starting with •:
 
-{chr(10).join(merged_data['what_doesnt_work'])}
-
-Format as bullet points starting with •"""
+{self.temp_review_data['what_doesnt_work']}"""
             result = self._llm_complete(system_prompt, prompt)
-            rewritten['what_doesnt_work'] = result if result else clean_raw_content(merged_data['what_doesnt_work'])
+            rewritten['what_doesnt_work'] = result if result else self.temp_review_data['what_doesnt_work']
         
         # Rewrite technical aspects
-        if merged_data['technical_aspects']:
-            prompt = f"""Rewrite the following technical aspects reviews for "{movie_name}" into a single cohesive section (1-2 paragraphs):
+        if self.temp_review_data.get('technical_aspects'):
+            print(f"      - Rewriting technical aspects...")
+            prompt = f"""Rewrite this technical aspects section for "{movie_name}" in 1-2 paragraphs:
 
-{chr(10).join(merged_data['technical_aspects'])}
-
-Cover cinematography, music, editing, and production design. Write only the content, no headers."""
+{self.temp_review_data['technical_aspects']}"""
             result = self._llm_complete(system_prompt, prompt)
-            rewritten['technical_aspects'] = result if result else clean_raw_content(merged_data['technical_aspects'])
+            rewritten['technical_aspects'] = result if result else self.temp_review_data['technical_aspects']
         
         # Rewrite final verdict
-        if merged_data['final_verdict']:
-            prompt = f"""Synthesize these verdict/analysis sections for "{movie_name}" into a balanced final verdict (2-3 paragraphs):
+        if self.temp_review_data.get('final_verdict'):
+            print(f"      - Rewriting verdict...")
+            prompt = f"""Rewrite this verdict for "{movie_name}" in 2-3 paragraphs:
 
-{chr(10).join(merged_data['final_verdict'])}
-
-Provide a balanced conclusion that summarizes the overall experience. Write only the content, no headers."""
+{self.temp_review_data['final_verdict']}"""
             result = self._llm_complete(system_prompt, prompt)
-            rewritten['final_verdict'] = result if result else clean_raw_content(merged_data['final_verdict'])
+            rewritten['final_verdict'] = result if result else self.temp_review_data['final_verdict']
         
-        # Generate quick verdict
-        if merged_data['quick_verdict']:
-            prompt = f"""Based on these quick verdicts for "{movie_name}", create a single catchy one-liner verdict (max 5 words):
-
-{chr(10).join(merged_data['quick_verdict'])}
-
-Output only the one-liner, nothing else."""
-            result = self._llm_complete(system_prompt, prompt)
-            rewritten['quick_verdict'] = result if result else merged_data['quick_verdict'][0] if merged_data['quick_verdict'] else ""
+        # Quick verdict - just clean up
+        if self.temp_review_data.get('quick_verdict'):
+            rewritten['quick_verdict'] = self.temp_review_data['quick_verdict']
         
         return rewritten
     
-    def _create_article_data(self, movie_name: str, rating: float, merged_data: Dict, 
-                             rewritten_sections: Dict, content_workflow: str, 
-                             article_language: str, source_urls: List[str]) -> Dict:
-        """Create article data for database insertion"""
+    def _create_article_data(self, content_workflow: str, article_language: str, rewritten_sections: Dict) -> Dict:
+        """Create article data from temp storage and rewritten sections"""
+        
+        if not self.temp_review_data:
+            raise ValueError("No temp review data available")
+        
+        movie_name = self.temp_review_data['movie_name']
+        rating = self.temp_review_data['normalized_rating']
         
         # Map workflow to status
         status_map = {
@@ -428,25 +352,31 @@ Output only the one-liner, nothing else."""
         # Generate article ID
         article_id = crud.get_next_article_id(db)
         
-        # Create title
+        # Create title and slug
         title = f"{movie_name} Movie Review"
-        
-        # Create slug
         slug = re.sub(r'[^a-z0-9]+', '-', movie_name.lower()).strip('-')
         slug = f"{slug}-movie-review-{article_id}"
         
-        # Build content from sections
+        # Build HTML content from rewritten sections
         content_parts = []
         if rewritten_sections.get('story_plot'):
             content_parts.append(f"<h2>Story</h2>\n<p>{rewritten_sections['story_plot']}</p>")
         if rewritten_sections.get('performances'):
             content_parts.append(f"<h2>Performances</h2>\n<p>{rewritten_sections['performances']}</p>")
         if rewritten_sections.get('what_works'):
-            works_html = rewritten_sections['what_works'].replace('•', '<li>').replace('\n', '</li>\n')
-            content_parts.append(f"<h2>What Works</h2>\n<ul>{works_html}</ul>")
+            works_text = rewritten_sections['what_works']
+            if '•' in works_text:
+                works_html = '<ul>' + ''.join([f'<li>{item.strip()}</li>' for item in works_text.split('•') if item.strip()]) + '</ul>'
+            else:
+                works_html = f"<p>{works_text}</p>"
+            content_parts.append(f"<h2>What Works</h2>\n{works_html}")
         if rewritten_sections.get('what_doesnt_work'):
-            doesnt_html = rewritten_sections['what_doesnt_work'].replace('•', '<li>').replace('\n', '</li>\n')
-            content_parts.append(f"<h2>What Doesn't Work</h2>\n<ul>{doesnt_html}</ul>")
+            doesnt_text = rewritten_sections['what_doesnt_work']
+            if '•' in doesnt_text:
+                doesnt_html = '<ul>' + ''.join([f'<li>{item.strip()}</li>' for item in doesnt_text.split('•') if item.strip()]) + '</ul>'
+            else:
+                doesnt_html = f"<p>{doesnt_text}</p>"
+            content_parts.append(f"<h2>What Doesn't Work</h2>\n{doesnt_html}")
         if rewritten_sections.get('technical_aspects'):
             content_parts.append(f"<h2>Technical Aspects</h2>\n<p>{rewritten_sections['technical_aspects']}</p>")
         if rewritten_sections.get('final_verdict'):
@@ -454,8 +384,9 @@ Output only the one-liner, nothing else."""
         
         content = '\n\n'.join(content_parts)
         
-        # Create meta description
-        meta_description = f"{movie_name} movie review and rating. {rewritten_sections.get('quick_verdict', '')} Rating: {rating:.1f}/5"
+        # Meta description
+        quick_verdict = rewritten_sections.get('quick_verdict', '')
+        meta_description = f"{movie_name} movie review and rating. {quick_verdict} Rating: {rating:.1f}/5"
         
         article_data = {
             'id': article_id,
@@ -468,7 +399,7 @@ Output only the one-liner, nothing else."""
             'is_published': is_published,
             'language': article_language,
             
-            # Movie review specific fields
+            # Movie review specific fields - copied as-is from temp
             'review_quick_verdict': rewritten_sections.get('quick_verdict', ''),
             'review_plot_summary': rewritten_sections.get('story_plot', ''),
             'review_performances': rewritten_sections.get('performances', ''),
@@ -477,29 +408,29 @@ Output only the one-liner, nothing else."""
             'review_technical_aspects': rewritten_sections.get('technical_aspects', ''),
             'review_final_verdict': rewritten_sections.get('final_verdict', ''),
             
-            # Movie details
-            'review_cast': merged_data.get('cast', ''),
-            'review_director': merged_data.get('director', ''),
-            'review_producer': merged_data.get('producer', ''),
-            'review_music_director': merged_data.get('music_director', ''),
-            'review_dop': merged_data.get('dop', ''),
-            'review_genre': merged_data.get('genre', ''),
-            'review_runtime': merged_data.get('runtime', ''),
-            'release_date': merged_data.get('release_date', ''),
+            # Movie details - copied as-is from temp
+            'review_cast': self.temp_review_data.get('cast', ''),
+            'review_director': self.temp_review_data.get('director', ''),
+            'review_producer': self.temp_review_data.get('producer', ''),
+            'review_music_director': self.temp_review_data.get('music_director', ''),
+            'review_dop': self.temp_review_data.get('dop', ''),
+            'review_genre': self.temp_review_data.get('genre', ''),
+            'review_runtime': self.temp_review_data.get('runtime', ''),
+            'release_date': self.temp_review_data.get('release_date', ''),
             'movie_language': article_language,
             
-            # Rating
+            # Rating - copied as-is
             'rating': rating,
             
             # Images
-            'featured_image': merged_data.get('poster_image', ''),
+            'featured_image': self.temp_review_data.get('poster_image', ''),
             
             # SEO
             'meta_description': meta_description[:160],
             'meta_title': f"{movie_name} Review - Rating {rating:.1f}/5",
             
-            # Sources
-            'sources': json.dumps(source_urls),
+            # Source
+            'sources': json.dumps([self.temp_review_data.get('source_url', '')]),
             
             # Timestamps
             'created_at': datetime.now(timezone.utc),
