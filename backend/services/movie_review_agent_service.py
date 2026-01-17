@@ -259,8 +259,8 @@ class MovieReviewAgentService:
                 
                 if is_listing:
                     # LISTING PAGE: Get all review URLs from the list
-                    print(f"   📋 Detected as Listing Page - fetching review links...")
-                    review_urls = await self._extract_review_links_from_listing(ref_url)
+                    print(f"   📋 Detected as Listing Page - fetching up to {max_reviews} review links...")
+                    review_urls = await self._extract_review_links_from_listing(ref_url, max_links=max_reviews)
                     print(f"   ✅ Found {len(review_urls)} review links")
                 else:
                     # DIRECT ARTICLE: Single URL
