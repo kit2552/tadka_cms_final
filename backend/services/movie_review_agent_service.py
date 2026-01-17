@@ -326,6 +326,36 @@ Rewrite the given content in a professional, engaging tone.
         # Return as-is if no format matches
         return date_str
     
+    def _format_as_list(self, text: str) -> str:
+        """Convert bullet point text to proper HTML unordered list"""
+        if not text:
+            return ''
+        
+        # Check if text contains bullet points
+        if '•' in text:
+            # Split by bullet points and filter empty items
+            items = [item.strip() for item in text.split('•') if item.strip()]
+            if items:
+                list_items = ''.join([f'<li>{item}</li>' for item in items])
+                return f'<ul>{list_items}</ul>'
+        
+        # If no bullet points, check for newlines that might indicate list items
+        if '\n' in text:
+            lines = [line.strip() for line in text.split('\n') if line.strip()]
+            if len(lines) > 1:
+                # Check if lines start with common list markers
+                list_items = []
+                for line in lines:
+                    # Remove common list markers at the start
+                    clean_line = line.lstrip('-•*').strip()
+                    if clean_line:
+                        list_items.append(f'<li>{clean_line}</li>')
+                if list_items:
+                    return f'<ul>{"".join(list_items)}</ul>'
+        
+        # Return as paragraph if not a list
+        return f'<p>{text}</p>'
+    
     def _create_article_data(self, content_workflow: str, article_language: str, rewritten_sections: Dict) -> Dict:
         """Create article data from temp storage and rewritten sections"""
         
