@@ -432,7 +432,6 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                 ? 'Fetches theater movie releases from IMDb India'
                 : 'Configure your automated post generation agent'}
             </p>
-            </p>
           </div>
           <button
             onClick={onClose}
