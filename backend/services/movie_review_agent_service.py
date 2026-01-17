@@ -183,7 +183,7 @@ class MovieReviewAgentService:
             merged_data = self._merge_review_data(scraped_reviews)
             
             # Use LLM to rewrite each section
-            print(f"\n   ✍️ Rewriting review sections with LLM...")
+            print("\n   ✍️ Rewriting review sections with LLM...")
             rewritten_sections = await self._rewrite_review_sections(merged_data, movie_name, article_language)
             
             # Create the movie review article
