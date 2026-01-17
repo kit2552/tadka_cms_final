@@ -353,10 +353,9 @@ Rewrite the given content in a professional, engaging tone.
         quick_verdict = rewritten_sections.get('quick_verdict', '')
         meta_description = f"{movie_name} movie review and rating. {quick_verdict} Rating: {rating:.1f}/5"
         
-        # Parse genre into array format
+        # Parse genre into array format then stringify
         genre_raw = self.temp_review_data.get('genre', '')
         if genre_raw:
-            # Handle comma-separated genres
             genre_list = [g.strip() for g in genre_raw.split(',') if g.strip()]
         else:
             genre_list = []
@@ -383,6 +382,7 @@ Rewrite the given content in a professional, engaging tone.
             'status': status,
             'is_published': is_published,
             'article_language': 'en',  # Use 'en' for CMS filtering, movie_language specifies actual language
+            'summary': '',  # Required field
             
             # Movie review specific fields - review sections with HTML
             'review_quick_verdict': rewritten_sections.get('quick_verdict', ''),
@@ -399,15 +399,15 @@ Rewrite the given content in a professional, engaging tone.
             'review_producer': self.temp_review_data.get('producer', ''),
             'review_music_director': self.temp_review_data.get('music_director', ''),
             'review_dop': self.temp_review_data.get('dop', ''),
-            'review_genre': genre_list,  # Array format like ["Action","Romance"]
+            'review_genre': json.dumps(genre_list),  # JSON string like '["Action","Romance"]'
             'review_runtime': self.temp_review_data.get('runtime', ''),
             'release_date': self.temp_review_data.get('release_date', ''),
             
-            # Movie metadata - matching existing schema
-            'movie_language': [article_language],  # Array format like ["Telugu"]
-            'movie_rating': rating,
-            'platform': 'Theater',  # Default to Theater for movie reviews
-            'states': states,  # Array of state codes for filtering
+            # Movie metadata - JSON strings to match schema
+            'movie_language': json.dumps([article_language]),  # JSON string like '["Telugu"]'
+            'movie_rating': str(rating),  # String format like '2.0'
+            'platform': 'Theater',
+            'states': json.dumps(states),  # JSON string like '["ap", "ts"]'
             
             # Images
             'image': self.temp_review_data.get('poster_image', ''),
@@ -416,23 +416,19 @@ Rewrite the given content in a professional, engaging tone.
             'seo_description': meta_description[:160],
             'seo_title': f"{movie_name} Review - Rating {rating:.1f}/5",
             
-            # Source
-            'sources': json.dumps([self.temp_review_data.get('source_url', '')]),
-            
             # Timestamps
             'created_at': datetime.now(timezone.utc),
             'updated_at': datetime.now(timezone.utc),
             'published_at': datetime.now(timezone.utc) if is_published else None,
             
-            # Required fields for CMS visibility
+            # Required fields for CMS - as JSON strings
             'is_scheduled': False,
             'is_sponsored': False,
             'is_featured': False,
             'is_top_story': False,
-            'artists': [],
-            'faqs': [],
-            'image_gallery': [],
-            'ott_platforms': [],
+            'artists': '[]',
+            'faqs': '[]',
+            'ott_platforms': '[]',
             'view_count': 0,
             
             # Author
