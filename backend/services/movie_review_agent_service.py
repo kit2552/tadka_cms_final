@@ -678,6 +678,12 @@ Rewrite the given content in a professional, engaging tone.
             # Step 3: Review doesn't exist - create it
             print(f"      ✅ NEW MOVIE: '{movie_name}' - Creating review...")
             
+            # Generate quick verdict based on rating
+            verdict_data = self._get_verdict_for_rating(scraped_data.normalized_rating)
+            auto_generated_verdict = f"{verdict_data['tag']} - {verdict_data['verdict']}"
+            
+            print(f"      🎯 Auto-generated verdict: {auto_generated_verdict}")
+            
             # Store in temporary space
             self.temp_review_data = {
                 'movie_name': movie_name,
@@ -701,7 +707,7 @@ Rewrite the given content in a professional, engaging tone.
                 'what_doesnt_work': scraped_data.what_doesnt_work,
                 'technical_aspects': scraped_data.technical_aspects,
                 'final_verdict': scraped_data.final_verdict,
-                'quick_verdict': scraped_data.quick_verdict,
+                'quick_verdict': auto_generated_verdict,  # Use auto-generated verdict
                 'source_url': review_url,
                 'source_name': scraped_data.source_name
             }
