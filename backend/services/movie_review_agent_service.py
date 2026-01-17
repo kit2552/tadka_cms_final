@@ -186,6 +186,7 @@ class MovieReviewAgentService:
                 'producer': scraped_data.producer,
                 'music_director': scraped_data.music_director,
                 'dop': scraped_data.dop,
+                'editor': scraped_data.editor,
                 'genre': scraped_data.genre,
                 'runtime': scraped_data.runtime,
                 'release_date': scraped_data.release_date,
