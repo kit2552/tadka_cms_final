@@ -1091,7 +1091,97 @@ const SystemSettings = () => {
       fetchReleaseSources();
       fetchReleaseStats();
     }
+    if (activeTab === 'rating-verdicts') {
+      fetchRatingVerdicts();
+    }
   }, [youtubeLanguageFilter, youtubeTypeFilter, activeTab]);
+
+  // Fetch Rating Verdicts
+  const fetchRatingVerdicts = async () => {
+    setVerdictsLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/movie-rating-verdicts`);
+      const data = await response.json();
+      
+      setRatingVerdicts(data.verdicts || {});
+      setEditingVerdicts(JSON.parse(JSON.stringify(data.verdicts || {})));  // Deep copy
+      setIsDefaultVerdicts(data.is_default || false);
+    } catch (error) {
+      console.error('Error fetching rating verdicts:', error);
+      setVerdictsMessage({ type: 'error', text: 'Failed to load rating verdicts' });
+    } finally {
+      setVerdictsLoading(false);
+    }
+  };
+
+  // Save Rating Verdicts
+  const saveRatingVerdicts = async () => {
+    setVerdictsLoading(true);
+    setVerdictsMessage({ type: '', text: '' });
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/movie-rating-verdicts`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ verdicts: editingVerdicts })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setRatingVerdicts(data.verdicts);
+        setIsDefaultVerdicts(false);
+        setVerdictsMessage({ type: 'success', text: 'Rating verdicts updated successfully!' });
+        
+        setTimeout(() => {
+          setVerdictsMessage({ type: '', text: '' });
+        }, 3000);
+      } else {
+        throw new Error(data.detail || 'Failed to update rating verdicts');
+      }
+    } catch (error) {
+      console.error('Error saving rating verdicts:', error);
+      setVerdictsMessage({ type: 'error', text: error.message || 'Failed to save rating verdicts' });
+    } finally {
+      setVerdictsLoading(false);
+    }
+  };
+
+  // Reset Rating Verdicts to Default
+  const resetRatingVerdicts = async () => {
+    if (!window.confirm('Are you sure you want to reset all rating verdicts to default values?')) {
+      return;
+    }
+    
+    setVerdictsLoading(true);
+    setVerdictsMessage({ type: '', text: '' });
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/movie-rating-verdicts/reset`, {
+        method: 'POST'
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setRatingVerdicts(data.verdicts);
+        setEditingVerdicts(JSON.parse(JSON.stringify(data.verdicts)));
+        setIsDefaultVerdicts(true);
+        setVerdictsMessage({ type: 'success', text: 'Rating verdicts reset to defaults!' });
+        
+        setTimeout(() => {
+          setVerdictsMessage({ type: '', text: '' });
+        }, 3000);
+      } else {
+        throw new Error(data.detail || 'Failed to reset rating verdicts');
+      }
+    } catch (error) {
+      console.error('Error resetting rating verdicts:', error);
+      setVerdictsMessage({ type: 'error', text: error.message || 'Failed to reset rating verdicts' });
+    } finally {
+      setVerdictsLoading(false);
+    }
+  };
 
   // Fetch Release Sources functions
   const fetchReleaseSources = async () => {
