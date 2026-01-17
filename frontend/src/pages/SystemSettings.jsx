@@ -4244,7 +4244,7 @@ const SystemSettings = () => {
           {/* Actions */}
           <div className="flex justify-between items-center mb-4">
             <div className="text-sm text-gray-600">
-              Total Ratings: {Object.keys(editingVerdicts).length} (0.00 to 5.00 in 0.25 steps)
+              Total Ratings: <strong>{Object.keys(editingVerdicts).length}</strong> (0.00 to 5.00 in 0.25 steps)
             </div>
             <div className="flex gap-3">
               <button
