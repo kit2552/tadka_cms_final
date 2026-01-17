@@ -1103,6 +1103,9 @@ const SystemSettings = () => {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/movie-rating-verdicts`);
       const data = await response.json();
       
+      console.log('Fetched rating verdicts:', data);
+      console.log('Total verdicts:', Object.keys(data.verdicts || {}).length);
+      
       setRatingVerdicts(data.verdicts || {});
       setEditingVerdicts(JSON.parse(JSON.stringify(data.verdicts || {})));  // Deep copy
       setIsDefaultVerdicts(data.is_default || false);
