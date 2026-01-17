@@ -268,11 +268,17 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     
+    // Convert to number for specific numeric fields
+    let processedValue = value;
+    if (['max_reviews_from_listing', 'lookback_days', 'max_images', 'split_paragraphs'].includes(name)) {
+      processedValue = parseInt(value, 10);
+    }
+    
     // Update form data
     setFormData(prev => {
       const newData = {
         ...prev,
-        [name]: type === 'checkbox' ? checked : value,
+        [name]: type === 'checkbox' ? checked : processedValue,
         mode: activeTab
       };
       
