@@ -28,6 +28,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     adhoc_post_time: '09:00 AM',
     is_active: true,
     custom_prompt: '',  // Custom prompt for this agent instance
+    // Movie Review Agent fields
+    max_reviews_from_listing: 10,  // Number of reviews to fetch from listing page
     // Photo Gallery Agent fields
     gallery_type: 'vertical',
     gallery_category: 'Actress',
