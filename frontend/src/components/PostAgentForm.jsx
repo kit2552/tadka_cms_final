@@ -2230,6 +2230,28 @@ Instructions:
                   </p>
                 </div>
 
+                {/* Max Reviews from Listing Page */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Reviews to Process (For Listing Pages)
+                  </label>
+                  <select
+                    name="max_reviews_from_listing"
+                    value={formData.max_reviews_from_listing || 10}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  >
+                    <option value={1}>Latest 1 Review</option>
+                    <option value={5}>Latest 5 Reviews</option>
+                    <option value={10}>Latest 10 Reviews</option>
+                    <option value={15}>Latest 15 Reviews</option>
+                    <option value={20}>Latest 20 Reviews</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    When using a listing page URL (e.g., https://www.gulte.com/category/moviereviews), agent will process up to this many reviews. Skips duplicates automatically.
+                  </p>
+                </div>
+
                 {/* Content Workflow */}
                 <div className="text-left">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
