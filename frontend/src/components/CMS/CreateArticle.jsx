@@ -2621,7 +2621,7 @@ const CreateArticle = () => {
                             {/* YouTube Trailer Link */}
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
-                                YouTube Trailer Link *
+                                YouTube Trailer Link (Optional)
                               </label>
                               <input
                                 type="url"
@@ -2630,7 +2630,6 @@ const CreateArticle = () => {
                                 onChange={handleInputChange}
                                 placeholder="https://www.youtube.com/watch?v=..."
                                 className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
                               />
                             </div>
 
