@@ -300,6 +300,32 @@ Rewrite the given content in a professional, engaging tone.
         
         return rewritten
     
+    def _format_release_date(self, date_str: str) -> str:
+        """Convert date string to YYYY-MM-DD format for HTML date input"""
+        if not date_str:
+            return ''
+        
+        # Try various date formats
+        date_formats = [
+            '%b %d, %Y',    # Jan 09, 2026
+            '%B %d, %Y',    # January 09, 2026
+            '%d %b %Y',     # 09 Jan 2026
+            '%d %B %Y',     # 09 January 2026
+            '%Y-%m-%d',     # 2026-01-09 (already correct format)
+            '%d-%m-%Y',     # 09-01-2026
+            '%m/%d/%Y',     # 01/09/2026
+        ]
+        
+        for fmt in date_formats:
+            try:
+                parsed = datetime.strptime(date_str.strip(), fmt)
+                return parsed.strftime('%Y-%m-%d')
+            except ValueError:
+                continue
+        
+        # Return as-is if no format matches
+        return date_str
+    
     def _create_article_data(self, content_workflow: str, article_language: str, rewritten_sections: Dict) -> Dict:
         """Create article data from temp storage and rewritten sections"""
         
