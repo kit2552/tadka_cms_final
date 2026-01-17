@@ -277,30 +277,29 @@ code {
   border-color: #e1e1e1; /* Darker border so it's visible against #f9fafa background */
 }
 
-/* Custom Scrollbar - More Visible */
+/* Custom Scrollbar - Very Thin */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+  scrollbar-color: rgba(156, 163, 175, 0.15) transparent;
   scrollbar-gutter: stable;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(229, 231, 235, 0.5);
+  background: transparent;
   margin: 4px 0;
-  border-radius: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(156, 163, 175, 0.4);
-  border-radius: 2px;
+  background-color: rgba(156, 163, 175, 0.15);
+  border-radius: 1px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(156, 163, 175, 0.6);
+  background-color: rgba(156, 163, 175, 0.3);
 }
 
 /* Rich Text Editor Default Styles */
