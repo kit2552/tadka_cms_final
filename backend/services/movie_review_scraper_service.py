@@ -389,6 +389,40 @@ class MovieReviewScraper:
                 elif 'negative' in prev_text:
                     data.what_doesnt_work = '\n'.join(items)
         
+        # Also check for positives/negatives in paragraph format (not as <ol>/<ul>)
+        for p in article.find_all('p'):
+            p_text = p.get_text(strip=True)
+            
+            # Check if this paragraph has <strong>Positives:</strong> or <strong>Negatives:</strong>
+            strong_tag = p.find('strong')
+            if strong_tag:
+                strong_text = strong_tag.get_text(strip=True).lower()
+                
+                if 'positive' in strong_text:
+                    # Get text after the strong tag in this paragraph
+                    content_after_strong = p.get_text(strip=True).replace(strong_tag.get_text(strip=True), '').strip()
+                    if content_after_strong:
+                        data.what_works = content_after_strong
+                    else:
+                        # Check next paragraph(s) for numbered content
+                        next_p = p.find_next_sibling('p')
+                        if next_p:
+                            next_text = next_p.get_text(strip=True)
+                            # Check if it contains numbered items like "1.⁠ ⁠Item" or "1. Item"
+                            if next_text and (next_text[0].isdigit() or '1.' in next_text or '⁠' in next_text):
+                                data.what_works = next_text
+                
+                elif 'negative' in strong_text:
+                    content_after_strong = p.get_text(strip=True).replace(strong_tag.get_text(strip=True), '').strip()
+                    if content_after_strong:
+                        data.what_doesnt_work = content_after_strong
+                    else:
+                        next_p = p.find_next_sibling('p')
+                        if next_p:
+                            next_text = next_p.get_text(strip=True)
+                            if next_text and (next_text[0].isdigit() or '1.' in next_text or '⁠' in next_text):
+                                data.what_doesnt_work = next_text
+        
         # Poster image
         img = article.find('img', class_='wp-post-image') or article.find('img')
         if img:
