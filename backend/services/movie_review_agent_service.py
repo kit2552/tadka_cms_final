@@ -107,13 +107,22 @@ class MovieReviewAgentService:
             raise ValueError(f"Agent not found: {agent_id}")
         
         # Extract agent settings
-        reference_urls = agent.get('reference_urls', [])
-        if isinstance(reference_urls, str):
-            reference_urls = [url.strip() for url in reference_urls.split('\n') if url.strip()]
+        reference_urls_raw = agent.get('reference_urls', [])
+        
+        # Handle different formats of reference_urls
+        reference_urls = []
+        if isinstance(reference_urls_raw, str):
+            reference_urls = [url.strip() for url in reference_urls_raw.split('\n') if url.strip()]
+        elif isinstance(reference_urls_raw, list):
+            for item in reference_urls_raw:
+                if isinstance(item, str):
+                    reference_urls.append(item.strip())
+                elif isinstance(item, dict) and 'url' in item:
+                    reference_urls.append(item['url'].strip())
         
         rating_strategy = agent.get('review_rating_strategy', 'lowest')  # lowest, highest, average
         content_workflow = agent.get('content_workflow', 'in_review')
-        article_language = agent.get('article_language', 'Telugu')
+        article_language = agent.get('review_language', agent.get('article_language', 'Telugu'))
         
         print(f"   📋 Settings: URLs={len(reference_urls)}, RatingStrategy={rating_strategy}, Language={article_language}")
         
