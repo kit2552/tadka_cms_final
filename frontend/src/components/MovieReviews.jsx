@@ -127,15 +127,26 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
             {t('sections.movie_reviews', 'Movie Reviews')}
           </button>
           <button
-            onClick={() => setActiveTab('bollywood')}
-            className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-r-lg ${
-              activeTab === 'bollywood'
+            onClick={() => setActiveTab('hindi')}
+            className={`flex-1 px-3 py-2 transition-colors duration-200 text-left ${
+              activeTab === 'hindi'
                 ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
                 : getSectionHeaderClasses().unselectedTabClass
             }`}
             style={{fontSize: '14px', fontWeight: '500'}}
           >
-            {t('sections.bollywood', 'Bollywood')}
+            {t('sections.hindi', 'Hindi')}
+          </button>
+          <button
+            onClick={() => setActiveTab('english')}
+            className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-r-lg ${
+              activeTab === 'english'
+                ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
+                : getSectionHeaderClasses().unselectedTabClass
+            }`}
+            style={{fontSize: '14px', fontWeight: '500'}}
+          >
+            {t('sections.english', 'English')}
           </button>
           <Link 
             to="/movie-reviews" 
