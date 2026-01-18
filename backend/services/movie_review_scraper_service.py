@@ -529,30 +529,46 @@ class MovieReviewScraper:
         
         for p in paragraphs:
             p_text = p.get_text(strip=True)
+            if not p_text or len(p_text) < 10:
+                continue
             
             # Check for section headers in strong tags
             strong = p.find('strong')
             if strong:
                 header_text = strong.get_text(strip=True).lower()
                 
-                if 'plot' in header_text:
+                if 'plot' in header_text and ':' in header_text:
                     current_section = 'plot'
-                    # Include text after the strong tag
-                    remaining = p_text.replace(strong.get_text(strip=True), '').strip().lstrip(':')
+                    # Include text after the strong tag (after <br> or in same paragraph)
+                    # Remove the strong tag text and any colons
+                    remaining = p_text.replace(strong.get_text(strip=True), '').strip().lstrip(':').strip()
                     if remaining:
                         plot_parts.append(remaining)
                     continue
-                elif 'what works' in header_text or 'positives' in header_text:
+                elif 'what works' in header_text and ':' in header_text:
                     current_section = 'what_works'
+                    remaining = p_text.replace(strong.get_text(strip=True), '').strip().lstrip(':').strip()
+                    if remaining:
+                        what_works_parts.append(remaining)
                     continue
-                elif "what doesn't" in header_text or "what doesnt" in header_text or 'negatives' in header_text:
+                elif ("what doesn't" in header_text or "what doesnt" in header_text) and ':' in header_text:
                     current_section = 'what_doesnt'
+                    remaining = p_text.replace(strong.get_text(strip=True), '').strip().lstrip(':').strip()
+                    if remaining:
+                        what_doesnt_parts.append(remaining)
                     continue
-                elif 'performance' in header_text:
+                elif 'performance' in header_text and ':' in header_text:
                     current_section = 'performances'
                     continue
                 elif 'final verdict' in header_text or 'verdict' in header_text:
                     current_section = 'verdict'
+                    remaining = p_text.replace(strong.get_text(strip=True), '').strip().lstrip(':').strip()
+                    if remaining:
+                        verdict_parts.append(remaining)
+                    continue
+                elif 'here' in header_text and 'trailer' in header_text:
+                    # Skip trailer section
+                    current_section = None
                     continue
             
             # Add content to appropriate section
