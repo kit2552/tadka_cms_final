@@ -375,7 +375,19 @@ class OTTReviewAgentService:
                         review_data.genre = ', '.join(genres) if isinstance(genres, list) else str(genres)
                         review_data.youtube_url = detail_info.get('youtube_url', '')
                         review_data.synopsis = detail_info.get('synopsis', '')
-                        print(f"      ✅ Got details from binged page")
+                        
+                        # Extract release_date from detail page
+                        review_data.release_date = detail_info.get('release_date', '')
+                        
+                        # Extract and map content_type from detail page
+                        # Map scraped type to app's type: "Film"/"movie" -> "Movie", "Tv show"/"web_series" -> "Web Series"
+                        detail_content_type = detail_info.get('content_type', '')
+                        if detail_content_type in ['tv_show', 'web_series', 'Tv show']:
+                            review_data.content_type = 'webseries'
+                        elif detail_content_type in ['Film', 'movie', 'documentary']:
+                            review_data.content_type = 'movie'
+                        
+                        print(f"      ✅ Got details from binged page (release_date: {review_data.release_date}, content_type: {review_data.content_type})")
                 except Exception as e:
                     print(f"      ⚠️ Could not fetch details: {str(e)}")
             
