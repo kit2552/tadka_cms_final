@@ -3087,7 +3087,24 @@ const Dashboard = () => {
                 Posts
               </button>
               <button
-                onClick={() => setActiveTab('releases')}
+                onClick={() => setActiveTab('action-needed')}
+                className={`py-3 px-6 text-sm font-medium border-b-2 ${
+                  activeTab === 'action-needed'
+                    ? 'border-orange-500 text-orange-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } transition-colors duration-200 flex items-center gap-1`}
+              >
+                <span className="relative">
+                  Action Needed
+                  {actionNeededCount > 0 && (
+                    <span className="ml-1 inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                      {actionNeededCount}
+                    </span>
+                  )}
+                </span>
+              </button>
+              <button
+                onClick={() => setActiveTab('releases')}}
                 className={`py-3 px-6 text-sm font-medium border-b-2 ${
                   activeTab === 'releases'
                     ? 'border-blue-500 text-blue-600'
