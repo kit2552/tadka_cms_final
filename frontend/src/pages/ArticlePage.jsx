@@ -1575,7 +1575,7 @@ const ArticlePage = () => {
                             onError={(e) => {
                               const placeholder = document.createElement('div');
                               placeholder.className = 'w-20 h-16 bg-gray-500 flex items-center justify-center rounded flex-shrink-0';
-                              placeholder.innerHTML = `<span class="text-white font-bold text-lg">${relatedArticle.content_type === 'video' ? 'V' : relatedArticle.content_type === 'photo' ? 'P' : relatedArticle.content_type === 'movie_review' ? 'M' : 'A'}</span>`;
+                              placeholder.innerHTML = `<span class="text-white font-bold text-lg">${relatedArticle.content_type === 'video' ? 'V' : relatedArticle.content_type === 'photo' ? 'P' : (relatedArticle.content_type === 'movie_review' || relatedArticle.content_type === 'ott_review') ? 'M' : 'A'}</span>`;
                               e.target.parentNode.replaceChild(placeholder, e.target);
                             }}
                           />
