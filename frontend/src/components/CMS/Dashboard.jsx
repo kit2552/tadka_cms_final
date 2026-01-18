@@ -915,6 +915,32 @@ const Dashboard = () => {
     }
   };
 
+  // Fetch Action Needed articles
+  const fetchActionNeededArticles = async () => {
+    setActionNeededLoading(true);
+    try {
+      const skip = (actionNeededCurrentPage - 1) * actionNeededItemsPerPage;
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/cms/articles/action-needed?skip=${skip}&limit=${actionNeededItemsPerPage}`
+      );
+      const result = await response.json();
+      
+      if (result.articles && Array.isArray(result.articles)) {
+        setActionNeededArticles(result.articles);
+        setActionNeededCount(result.total || 0);
+      } else {
+        setActionNeededArticles([]);
+        setActionNeededCount(0);
+      }
+    } catch (error) {
+      console.error('Error fetching action needed articles:', error);
+      setActionNeededArticles([]);
+      setActionNeededCount(0);
+    } finally {
+      setActionNeededLoading(false);
+    }
+  };
+
   // Release data fetching functions
   const fetchReleaseData = async () => {
     setReleaseLoading(true);
