@@ -2687,8 +2687,8 @@ const CreateArticle = () => {
                               <label className="flex items-center space-x-3 cursor-pointer">
                                 <input
                                   type="checkbox"
-                                  name="review_comments_enabled"
-                                  checked={formData.review_comments_enabled}
+                                  name="enable_user_rating"
+                                  checked={formData.enable_user_rating}
                                   onChange={handleInputChange}
                                   className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                                 />
