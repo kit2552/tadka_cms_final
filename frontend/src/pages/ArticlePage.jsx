@@ -46,6 +46,14 @@ const ArticlePage = () => {
     return cleaned;
   };
 
+  // Utility function to check if HTML content has actual text (not just empty tags like <p></p>)
+  const hasContent = (html) => {
+    if (!html) return false;
+    // Strip HTML tags and check if there's any text content
+    const textContent = html.replace(/<[^>]*>/g, '').trim();
+    return textContent.length > 0;
+  };
+
   // Update page title, meta tags, and schema markup for SEO/AEO
   useEffect(() => {
     if (article) {
