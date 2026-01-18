@@ -46,7 +46,7 @@ class ArticleBase(BaseModel):
     content: str
     content_secondary: Optional[str] = None
     summary: str
-    author: str
+    author: Optional[str] = None
     article_language: str = "en"
     content_language: Optional[str] = None  # Content Language for movie/video categories
     states: Optional[str] = None  # JSON string
