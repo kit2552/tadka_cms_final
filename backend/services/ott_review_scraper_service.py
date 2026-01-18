@@ -69,7 +69,7 @@ class OTTReviewScraper:
         print(f"🔍 Fetching OTT review links from {url}")
         
         try:
-            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, http2=True) as client:
                 response = await client.get(url, headers=self.headers)
                 response.raise_for_status()
                 
@@ -176,7 +176,7 @@ class OTTReviewScraper:
         data.source_url = url
         
         try:
-            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, http2=True) as client:
                 response = await client.get(url, headers=self.headers)
                 response.raise_for_status()
                 
