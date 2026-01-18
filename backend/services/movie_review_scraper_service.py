@@ -63,10 +63,14 @@ class MovieReviewScraper:
             'Accept-Language': 'en-US,en;q=0.5',
         }
     
-    async def scrape_review(self, url: str) -> MovieReviewData:
+    async def scrape_review(self, url: str, force_source: str = None) -> MovieReviewData:
         """
         Scrape a movie review from any supported URL
         Auto-detects the source and uses appropriate parsing strategy
+        
+        Args:
+            url: URL of the review to scrape
+            force_source: Force use of a specific scraper (greatandhra, gulte, pinkvilla, bollywoodhungama, idlebrain, 123telugu)
         """
         print(f"🎬 Scraping review from: {url}")
         
@@ -81,23 +85,31 @@ class MovieReviewScraper:
         
         soup = BeautifulSoup(html, 'html.parser')
         
-        # Detect source and parse accordingly
-        source_name = self._detect_source(url)
-        print(f"   📰 Detected source: {source_name}")
+        # Use forced source or detect from URL
+        if force_source:
+            source_name = force_source.title()
+            print(f"   📰 Using forced source: {source_name}")
+        else:
+            source_name = self._detect_source(url)
+            print(f"   📰 Detected source: {source_name}")
         
-        if 'greatandhra' in url.lower():
+        # Select parser based on source (check both URL and force_source)
+        source_lower = (force_source or '').lower()
+        url_lower = url.lower()
+        
+        if 'greatandhra' in url_lower or source_lower == 'greatandhra':
             review_data = self._parse_greatandhra(soup, url)
-        elif 'gulte' in url.lower():
+        elif 'gulte' in url_lower or source_lower == 'gulte':
             review_data = self._parse_gulte(soup, url)
-        elif 'pinkvilla' in url.lower():
+        elif 'pinkvilla' in url_lower or source_lower == 'pinkvilla':
             review_data = self._parse_pinkvilla(soup, url)
-        elif 'bollywoodhungama' in url.lower():
+        elif 'bollywoodhungama' in url_lower or source_lower == 'bollywoodhungama':
             review_data = self._parse_bollywoodhungama(soup, url)
-        elif 'idlebrain' in url.lower():
+        elif 'idlebrain' in url_lower or source_lower == 'idlebrain':
             review_data = self._parse_idlebrain(soup, url)
-        elif '123telugu' in url.lower():
+        elif '123telugu' in url_lower or source_lower == '123telugu':
             review_data = self._parse_123telugu(soup, url)
-        elif 'telugumirchi' in url.lower():
+        elif 'telugumirchi' in url_lower or source_lower == 'telugumirchi':
             review_data = self._parse_telugumirchi(soup, url)
         else:
             # Generic fallback parser
