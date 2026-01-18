@@ -2005,8 +2005,64 @@ async def update_cms_article(
         raise HTTPException(status_code=404, detail="Article not found")
     
     # Convert Pydantic model to dict
-    updated_article = crud.update_article_cms(db, article_id, article_update.dict(exclude_unset=True))
+    update_data = article_update.dict(exclude_unset=True)
+    
+    # Check if this article had action_needed flag and if the missing fields are now provided
+    if article.get('action_needed', False):
+        youtube_url = update_data.get('youtube_url', article.get('youtube_url', ''))
+        image = update_data.get('image', article.get('image', ''))
+        
+        # Check if all required fields are now present
+        has_youtube = bool(youtube_url and youtube_url.strip())
+        has_image = bool(image and image.strip())
+        
+        if has_youtube and has_image:
+            # All required fields present - auto-publish
+            update_data['action_needed'] = False
+            update_data['action_needed_reasons'] = []
+            update_data['is_published'] = True
+            update_data['status'] = 'approved'
+            update_data['published_at'] = datetime.now(timezone.utc)
+            print(f"   ✅ Auto-publishing article {article_id} - action resolved")
+        else:
+            # Update action_needed_reasons based on what's still missing
+            reasons = []
+            if not has_youtube:
+                reasons.append('Missing YouTube trailer')
+            if not has_image:
+                reasons.append('Missing poster image')
+            update_data['action_needed_reasons'] = reasons
+    
+    updated_article = crud.update_article_cms(db, article_id, update_data)
     return updated_article
+
+
+@api_router.get("/cms/articles/action-needed")
+async def get_action_needed_articles(
+    skip: int = 0,
+    limit: int = 20,
+    db = Depends(get_db)
+):
+    """Get articles that need action (missing YouTube trailer or image)"""
+    # Query articles with action_needed = True
+    articles = list(db.articles.find({
+        'action_needed': True
+    }).sort('created_at', -1).skip(skip).limit(limit))
+    
+    # Convert ObjectId to string
+    for article in articles:
+        if '_id' in article:
+            article['_id'] = str(article['_id'])
+    
+    # Get total count
+    total = db.articles.count_documents({'action_needed': True})
+    
+    return {
+        'articles': articles,
+        'total': total,
+        'skip': skip,
+        'limit': limit
+    }
 
 
 @api_router.patch("/cms/articles/{article_id}", response_model=schemas.ArticleResponse)
