@@ -2437,9 +2437,9 @@ Instructions:
                 </div>
               ) : formData.agent_type === 'movie_review' ? (
                 <div className="text-xs text-gray-500 text-left space-y-1">
-                  <p>Add movie review URLs from Telugu/Hindi movie review websites:</p>
+                  <p>Add movie review URLs from Telugu/Hindi/English movie review websites:</p>
                   <ul className="list-disc list-inside pl-2 text-gray-400">
-                    <li><strong>Listing Page</strong> - Reviews list page (e.g., https://www.greatandhra.com/reviews)</li>
+                    <li><strong>Listing Page</strong> - Reviews list page (e.g., https://www.greatandhra.com/reviews or https://www.pinkvilla.com/entertainment/movie-review)</li>
                     <li><strong>Direct Article</strong> - Direct review URL (e.g., https://www.greatandhra.com/movies/reviews/...)</li>
                     <li><strong>Auto Detect</strong> - Agent automatically detects the type</li>
                   </ul>
