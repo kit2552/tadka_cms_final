@@ -564,12 +564,7 @@ class MovieReviewScraper:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'performances'
                     section_content = []
-                    # Extract text after "Performances:" if on same line
-                    perf_idx = line_lower.index('performances:')
-                    remaining = line[perf_idx + len('Performances:'):].strip()
-                    if remaining:
-                        section_content.append(remaining)
-                elif 'final verdict' in line_lower:
+                elif 'final verdict' in line_lower and len(line) < 50:
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'verdict'
