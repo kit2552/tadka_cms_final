@@ -493,7 +493,7 @@ Rewrite the given content in a professional, engaging tone.
             'article_language': 'en',  # Use 'en' for CMS filtering
             'content_language': content_language_code,  # Actual language code (te, ta, hi, etc.)
             'summary': '',  # Required field
-            'youtube_url': '',  # Optional field for movie review trailer
+            'youtube_url': self.temp_review_data.get('youtube_url', '') or '',  # YouTube trailer URL
             
             # Movie review specific fields - review sections with HTML
             'review_quick_verdict': rewritten_sections.get('quick_verdict', ''),
