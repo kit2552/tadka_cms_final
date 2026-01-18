@@ -696,6 +696,10 @@ Rewrite the given content in a professional, engaging tone.
                 if isinstance(json_data, dict) and json_data.get('@type') == 'ItemList':
                     items = json_data.get('itemListElement', [])
                     
+                    # Handle nested list structure (Pinkvilla uses [[item1, item2], ...])
+                    if items and isinstance(items[0], list):
+                        items = items[0]  # Flatten the nested list
+                    
                     for item in items:
                         if len(review_links) >= max_links:
                             break
