@@ -17,7 +17,7 @@ import json
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://repo-to-tadka.preview.emergentagent.com/api"
+BACKEND_URL = "https://binged-scraper.preview.emergentagent.com/api"
 
 def test_politics_api_states_field():
     """Test Politics API includes states field for state-specific filtering"""

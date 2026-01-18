@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://repo-to-tadka.preview.emergentagent.com"
+BACKEND_URL = "https://binged-scraper.preview.emergentagent.com"
 
 def test_ott_movie_reviews_endpoint():
     """Test the OTT Movie Reviews API endpoint"""
