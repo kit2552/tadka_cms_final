@@ -294,8 +294,13 @@ class MovieReviewAgentService:
                     print(f"   📄 Detected as Direct Article")
                     review_urls = [ref_url]
                 
-                # Process each review URL
+                # Process each review URL (stop when we've created enough reviews)
                 for review_url in review_urls:
+                    # Check if we've already created enough reviews
+                    if results["reviews_created"] >= max_reviews:
+                        print(f"   ✅ Reached max reviews limit ({max_reviews}), stopping...")
+                        break
+                    
                     try:
                         await self._process_single_review(
                             review_url=review_url,
