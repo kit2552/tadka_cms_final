@@ -587,6 +587,7 @@ class OTTReviewAgentService:
             
             'review_genre': json.dumps([review_data.genre]) if review_data.genre else '[]',
             'review_runtime': review_data.runtime,
+            'release_date': review_data.release_date if hasattr(review_data, 'release_date') and review_data.release_date else None,
             'states': json.dumps(states),
             
             # Images
