@@ -805,6 +805,26 @@ const ArticlePage = () => {
                   .movie-review-content {
                     font-size: 1rem;
                   }
+                  
+                  /* Convert bullet lists to numbered lists for What Works/Doesn't Work sections */
+                  .movie-review-numbered-list ul {
+                    list-style-type: none;
+                    counter-reset: item;
+                    padding-left: 0;
+                  }
+                  .movie-review-numbered-list ul li {
+                    counter-increment: item;
+                    margin-bottom: 0.5rem;
+                    padding-left: 2rem;
+                    position: relative;
+                  }
+                  .movie-review-numbered-list ul li::before {
+                    content: counter(item) ". ";
+                    position: absolute;
+                    left: 0;
+                    font-weight: 600;
+                    color: #1f2937;
+                  }
                 `}</style>
 
                 {/* Plot Summary */}
