@@ -8,46 +8,70 @@ import json
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 import os
+import asyncio
 
 
 class OTTReviewAgentService:
     """Service for creating OTT review articles"""
+    
+    # Language name to ISO code mapping
+    LANGUAGE_MAP = {
+        'Telugu': 'te',
+        'Tamil': 'ta',
+        'Hindi': 'hi',
+        'Kannada': 'kn',
+        'Malayalam': 'ml',
+        'Bengali': 'bn',
+        'Marathi': 'mr',
+        'Punjabi': 'pa',
+        'Gujarati': 'gu',
+        'Odia': 'or',
+        'English': 'en',
+        'Korean': 'ko',
+        'Japanese': 'ja',
+        'Spanish': 'es',
+        'French': 'fr',
+        'German': 'de',
+    }
+    
+    # State codes for each language
+    STATE_MAP = {
+        'Telugu': ['ap', 'ts'],
+        'Tamil': ['tn'],
+        'Hindi': ['up', 'mp', 'rj', 'br', 'hr', 'jh', 'uk', 'cg', 'dl', 'mh'],
+        'Kannada': ['ka'],
+        'Malayalam': ['kl'],
+        'Bengali': ['wb'],
+        'Marathi': ['mh'],
+        'Punjabi': ['pb'],
+        'Gujarati': ['gj'],
+        'Odia': ['od'],
+        'English': [],  # English is shown in Bollywood tab (with Hindi)
+    }
     
     def __init__(self):
         self.temp_review_data = {}
     
     def _get_language_code(self, language_name: str) -> str:
         """Convert language name to ISO code"""
-        lang_map = {
-            'Telugu': 'te',
-            'Tamil': 'ta',
-            'Hindi': 'hi',
-            'Kannada': 'kn',
-            'Malayalam': 'ml',
-            'Bengali': 'bn',
-            'Marathi': 'mr',
-            'Punjabi': 'pa',
-            'Gujarati': 'gu',
-            'Odia': 'or',
-            'English': 'en',
-        }
-        return lang_map.get(language_name, 'en')
+        return self.LANGUAGE_MAP.get(language_name, 'en')
     
     def _get_states_for_language(self, language: str) -> List[str]:
         """Get state codes for a language"""
-        state_map = {
-            'Telugu': ['ap', 'ts'],
-            'Tamil': ['tn'],
-            'Hindi': ['up', 'mp', 'rj', 'br', 'hr', 'jh', 'uk', 'cg', 'dl'],
-            'Kannada': ['ka'],
-            'Malayalam': ['kl'],
-            'Bengali': ['wb'],
-            'Marathi': ['mh'],
-            'Punjabi': ['pb'],
-            'Gujarati': ['gj'],
-            'Odia': ['od'],
-        }
-        return state_map.get(language, [])
+        return self.STATE_MAP.get(language, [])
+    
+    def _normalize_title_for_matching(self, title: str) -> str:
+        """Normalize title for comparison/matching"""
+        if not title:
+            return ''
+        # Remove review suffix, year, special chars
+        normalized = title.lower().strip()
+        normalized = re.sub(r'\s*review\s*$', '', normalized, flags=re.I)
+        normalized = re.sub(r'\s*\(\d{4}\)\s*$', '', normalized)
+        normalized = re.sub(r'\s*-\s*$', '', normalized)
+        normalized = re.sub(r'[^\w\s]', '', normalized)
+        normalized = re.sub(r'\s+', ' ', normalized).strip()
+        return normalized
     
     async def run(self, agent: dict, db) -> Dict:
         """
@@ -82,28 +106,46 @@ class OTTReviewAgentService:
             article_language = agent.get('review_language', 'Telugu')
             max_reviews = agent.get('max_reviews_from_listing', 5)
             
-            print(f"   📋 Settings: Language={article_language}, Max Reviews={max_reviews}")
+            print(f"   📋 Settings: Language={article_language}, Workflow={content_workflow}, Max Reviews={max_reviews}")
             
             # Import scrapers
             from services.ott_review_scraper_service import ott_review_scraper
             from services.binged_scraper_service import binged_scraper
             
-            # Get OTT releases data for matching (from binged streaming-now)
-            print(f"\n   📥 Fetching OTT releases data for matching...")
-            ott_releases = await binged_scraper.scrape_releases(language=article_language, mode='streaming-now')
+            # Fetch OTT releases data for matching (streaming-now for the target language)
+            print(f"\n   📥 Fetching OTT releases data for {article_language} to match reviews...")
+            ott_releases = await binged_scraper.fetch_ott_releases(
+                language=article_language,
+                streaming_now=True,
+                streaming_soon=True,
+                limit=50  # Fetch more to increase matching chances
+            )
             print(f"   ✅ Found {len(ott_releases)} OTT releases for matching")
             
-            # Build lookup dict by title
+            # Build lookup dict by normalized title
             ott_lookup = {}
             for release in ott_releases:
-                title = release.get('title', '').lower().strip()
+                title = release.get('movie_name', '') or release.get('title', '')
                 if title:
-                    ott_lookup[title] = release
+                    normalized = self._normalize_title_for_matching(title)
+                    ott_lookup[normalized] = release
+                    # Also add without common suffixes
+                    alt_normalized = re.sub(r'\s*(season\s*\d+|s\d+)$', '', normalized, flags=re.I).strip()
+                    if alt_normalized != normalized:
+                        ott_lookup[alt_normalized] = release
+            
+            print(f"   📚 Built lookup with {len(ott_lookup)} titles")
+            
+            # If no reference URLs provided, use the default reviews listing page
+            if not reference_urls:
+                reference_urls = [{'url': 'https://www.binged.com/category/reviews/', 'url_type': 'listing'}]
             
             # Process each reference URL
-            for ref_url in reference_urls:
-                if isinstance(ref_url, dict):
-                    ref_url = ref_url.get('url', '')
+            for ref_url_obj in reference_urls:
+                if isinstance(ref_url_obj, dict):
+                    ref_url = ref_url_obj.get('url', '')
+                else:
+                    ref_url = ref_url_obj
                 
                 if not ref_url:
                     continue
@@ -111,11 +153,14 @@ class OTTReviewAgentService:
                 print(f"\n   🔗 Processing URL: {ref_url}")
                 
                 # Check if this is a listing page or direct review
-                if '/category/reviews' in ref_url or ref_url.endswith('/reviews/'):
+                is_listing = '/category/reviews' in ref_url or ref_url.endswith('/reviews/')
+                
+                if is_listing:
                     # Listing page - get review links
-                    fetch_count = max(max_reviews * 3, 10)
+                    fetch_count = max(max_reviews * 3, 15)  # Fetch extra to allow for skips
                     print(f"   📋 Listing page - fetching up to {fetch_count} review links...")
-                    review_urls = await ott_review_scraper.get_review_links(max_links=fetch_count)
+                    review_items = await ott_review_scraper.get_review_links(max_links=fetch_count)
+                    review_urls = [item['url'] for item in review_items]
                 else:
                     # Direct review URL
                     review_urls = [ref_url]
@@ -135,6 +180,8 @@ class OTTReviewAgentService:
                             results=results,
                             db=db
                         )
+                        # Small delay between reviews to avoid rate limiting
+                        await asyncio.sleep(0.5)
                     except Exception as e:
                         error_msg = f"Error processing {review_url}: {str(e)}"
                         print(f"   ❌ {error_msg}")
@@ -144,6 +191,8 @@ class OTTReviewAgentService:
             results["status"] = "failed"
             error_msg = f"Agent execution error: {str(e)}"
             print(f"   ❌ {error_msg}")
+            import traceback
+            traceback.print_exc()
             results["errors"].append(error_msg)
         
         print(f"\n   📊 Final Results: {results['reviews_created']} created, {results['reviews_skipped']} skipped")
@@ -154,6 +203,7 @@ class OTTReviewAgentService:
                                       results: dict, db):
         """Process a single OTT review"""
         from services.ott_review_scraper_service import ott_review_scraper
+        from services.binged_scraper_service import binged_scraper
         import crud
         
         try:
@@ -170,12 +220,16 @@ class OTTReviewAgentService:
             results["reviews_scraped"] += 1
             title = review_data.title
             
-            # Check for duplicates
+            # Check for duplicates in database
             content_language_code = self._get_language_code(article_language)
+            
+            # Search for existing review with similar title
             existing = db.articles.find_one({
                 "content_type": "ott_review",
-                "title": {"$regex": f"^{re.escape(title)[:30]}", "$options": "i"},
-                "content_language": content_language_code
+                "$or": [
+                    {"title": {"$regex": f"^{re.escape(title[:30])}", "$options": "i"}},
+                    {"title": {"$regex": re.escape(self._normalize_title_for_matching(title)), "$options": "i"}}
+                ]
             })
             
             if existing:
@@ -183,27 +237,78 @@ class OTTReviewAgentService:
                 results["reviews_skipped"] += 1
                 results["skipped_reviews"].append({
                     "title": title,
-                    "reason": "Already exists"
+                    "reason": "Already exists in database"
                 })
                 return
             
             # Try to match with OTT releases data
-            title_lower = title.lower().strip()
-            ott_info = ott_lookup.get(title_lower, {})
+            normalized_title = self._normalize_title_for_matching(title)
+            ott_info = ott_lookup.get(normalized_title)
+            
+            # Try partial matching if exact match not found
+            if not ott_info:
+                for lookup_title, info in ott_lookup.items():
+                    if normalized_title in lookup_title or lookup_title in normalized_title:
+                        ott_info = info
+                        break
             
             if ott_info:
-                print(f"      ✅ Matched with OTT release: {ott_info.get('title')}")
-                review_data.cast = ott_info.get('cast', '')
+                print(f"      ✅ Matched with OTT release: {ott_info.get('movie_name', ott_info.get('title', 'Unknown'))}")
+                
+                # Populate review data from OTT release info
+                cast_list = ott_info.get('cast', [])
+                review_data.cast = ', '.join(cast_list) if isinstance(cast_list, list) else str(cast_list)
                 review_data.director = ott_info.get('director', '')
-                review_data.platform = ott_info.get('platform', '')
-                review_data.language = ott_info.get('language', article_language)
-                review_data.runtime = str(ott_info.get('runtime', ''))
-                review_data.genre = ott_info.get('genre', '')
+                
+                platforms = ott_info.get('ott_platforms', [])
+                review_data.platforms = platforms if isinstance(platforms, list) else [platforms] if platforms else []
+                
+                languages = ott_info.get('languages', [])
+                review_data.languages = languages if isinstance(languages, list) else [languages] if languages else [article_language]
+                
+                # Set original language (first in the list is typically original)
+                if review_data.languages:
+                    review_data.original_language = review_data.languages[0]
+                
+                runtime = ott_info.get('runtime')
+                review_data.runtime = f"{runtime} min" if runtime else ''
+                
+                genres = ott_info.get('genres', [])
+                review_data.genre = ', '.join(genres) if isinstance(genres, list) else str(genres)
+                
                 review_data.youtube_url = ott_info.get('youtube_url', '')
+                review_data.synopsis = ott_info.get('synopsis', '')
+                
                 if not review_data.poster_image:
-                    review_data.poster_image = ott_info.get('poster', '')
+                    review_data.poster_image = ott_info.get('poster_url', '')
             else:
                 print(f"      ⚠️  No OTT release match found for '{title}'")
+                # Set default language
+                review_data.languages = [article_language]
+                review_data.original_language = article_language
+            
+            # If we have a binged detail URL but no OTT info, try to fetch it
+            if not ott_info and review_data.binged_detail_url:
+                print(f"      🔍 Fetching details from: {review_data.binged_detail_url}")
+                try:
+                    detail_info = await binged_scraper.fetch_release_details(review_data.binged_detail_url)
+                    if detail_info:
+                        cast_list = detail_info.get('cast', [])
+                        review_data.cast = ', '.join(cast_list) if isinstance(cast_list, list) else str(cast_list)
+                        review_data.director = detail_info.get('director', '')
+                        review_data.platforms = detail_info.get('ott_platforms', [])
+                        review_data.languages = detail_info.get('languages', [article_language])
+                        if review_data.languages:
+                            review_data.original_language = review_data.languages[0]
+                        runtime = detail_info.get('runtime')
+                        review_data.runtime = f"{runtime} min" if runtime else ''
+                        genres = detail_info.get('genres', [])
+                        review_data.genre = ', '.join(genres) if isinstance(genres, list) else str(genres)
+                        review_data.youtube_url = detail_info.get('youtube_url', '')
+                        review_data.synopsis = detail_info.get('synopsis', '')
+                        print(f"      ✅ Got details from binged page")
+                except Exception as e:
+                    print(f"      ⚠️ Could not fetch details: {str(e)}")
             
             # Create article
             article = await self._create_article(
@@ -225,6 +330,8 @@ class OTTReviewAgentService:
         except Exception as e:
             error_msg = f"Error processing review: {str(e)}"
             print(f"      ❌ {error_msg}")
+            import traceback
+            traceback.print_exc()
             results["errors"].append(error_msg)
     
     async def _create_article(self, review_data, article_language: str, 
@@ -243,15 +350,15 @@ class OTTReviewAgentService:
         if not youtube_url:
             action_needed = True
             action_needed_reasons.append('Missing YouTube trailer')
-            poster_image = ''  # Don't use poster without YouTube
+            main_image_url = review_data.poster_image or ''
         else:
             # Generate thumbnail from YouTube
-            youtube_match = re.search(r'(?:youtube\.com/watch\?v=|youtu\.be/)([a-zA-Z0-9_-]+)', youtube_url)
+            youtube_match = re.search(r'(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([a-zA-Z0-9_-]+)', youtube_url)
             if youtube_match:
                 video_id = youtube_match.group(1)
-                poster_image = f'https://img.youtube.com/vi/{video_id}/maxresdefault.jpg'
+                main_image_url = f'https://img.youtube.com/vi/{video_id}/maxresdefault.jpg'
             else:
-                poster_image = review_data.poster_image or ''
+                main_image_url = review_data.poster_image or ''
         
         # Determine status and publish state
         if action_needed:
@@ -273,20 +380,31 @@ class OTTReviewAgentService:
         slug = re.sub(r'[^a-z0-9]+', '-', review_data.title.lower()).strip('-')
         slug = f"{slug}-ott-review-{datetime.now().strftime('%Y%m%d%H%M%S')}"
         
-        # Build content
+        # Build content from review
         content_parts = []
+        if review_data.synopsis:
+            content_parts.append(f"<h2>Synopsis</h2>\n<p>{review_data.synopsis}</p>")
         if review_data.review_content:
-            content_parts.append(f"<p>{review_data.review_content}</p>")
+            # Split into paragraphs
+            paragraphs = review_data.review_content.split('\n\n')
+            review_html = '\n'.join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
+            content_parts.append(f"<h2>Review</h2>\n{review_html}")
         if review_data.verdict:
             content_parts.append(f"<h2>Verdict</h2>\n<p>{review_data.verdict}</p>")
         
         content = '\n\n'.join(content_parts)
         
         # Normalize rating to 5-point scale
-        if review_data.rating_scale and review_data.rating_scale != 5:
+        if review_data.rating_scale and review_data.rating_scale != 5 and review_data.rating_scale > 0:
             normalized_rating = (review_data.rating / review_data.rating_scale) * 5
         else:
             normalized_rating = review_data.rating
+        
+        # Ensure rating is within bounds
+        normalized_rating = max(0, min(5, normalized_rating))
+        
+        # Build platform string
+        platform_str = ', '.join(review_data.platforms) if review_data.platforms else ''
         
         article_data = {
             'title': title,
@@ -298,9 +416,9 @@ class OTTReviewAgentService:
             'category': 'ott-reviews',
             'status': status,
             'is_published': is_published,
-            'article_language': 'en',
-            'content_language': content_language_code,
-            'summary': '',
+            'article_language': 'en',  # Article written in English
+            'content_language': content_language_code,  # Content language for filtering
+            'summary': review_data.verdict[:200] if review_data.verdict else '',
             'youtube_url': youtube_url,
             
             # Action Needed tracking
@@ -314,18 +432,25 @@ class OTTReviewAgentService:
             # OTT info
             'review_cast': review_data.cast,
             'review_director': review_data.director,
-            'platform': review_data.platform,
-            'movie_language': json.dumps([article_language]),
+            'platform': platform_str,
+            'ott_platforms': json.dumps(review_data.platforms),
+            
+            # Language info - critical for state-based filtering
+            'movie_language': json.dumps(review_data.languages),
+            'original_language': review_data.original_language,
+            'languages': json.dumps(review_data.languages),
+            
             'review_genre': json.dumps([review_data.genre]) if review_data.genre else '[]',
             'review_runtime': review_data.runtime,
             'states': json.dumps(states),
             
             # Images
-            'image': poster_image,
+            'image': main_image_url,
+            'main_image_url': main_image_url,
             
             # SEO
-            'seo_description': f"{review_data.title} OTT review. Rating: {normalized_rating:.1f}/5",
-            'seo_title': f"{review_data.title} Review - {review_data.platform or 'OTT'}",
+            'seo_description': f"{review_data.title} OTT review. Rating: {normalized_rating:.1f}/5. {platform_str}",
+            'seo_title': f"{review_data.title} Review - {platform_str or 'OTT'}",
             
             # Source
             'source_url': review_data.source_url,
