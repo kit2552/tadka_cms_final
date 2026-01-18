@@ -889,7 +889,7 @@ const ArticlePage = () => {
                 )}
 
                 {/* Final Verdict */}
-                {article.review_final_verdict && (
+                {hasContent(article.review_final_verdict) && (
                   <div className="mb-6">
                     <div className="border-b-2 border-gray-300 mb-4 pb-3">
                       <h3 className="text-base font-bold text-black text-left leading-tight">Final Verdict</h3>
