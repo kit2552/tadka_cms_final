@@ -543,22 +543,23 @@ class MovieReviewScraper:
                 line_lower = line.lower()
                 
                 # Check if line contains section header (even if concatenated with other text)
-                if 'plot:' in line_lower:
+                # Handle both "Plot:" and "Plot" formats
+                if 'plot' in line_lower and len(line) < 50:
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'plot'
                     section_content = []
-                elif 'what works:' in line_lower:
+                elif 'what work' in line_lower and len(line) < 50:  # Matches "What Works" and "What Worked"
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'what_works'
                     section_content = []
-                elif 'what doesn' in line_lower and ':' in line:
+                elif 'what didn' in line_lower and len(line) < 50:  # Matches "What Didn't Work"
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'what_doesnt'
                     section_content = []
-                elif 'performances:' in line_lower:
+                elif 'performances' in line_lower and len(line) < 50:
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'performances'
