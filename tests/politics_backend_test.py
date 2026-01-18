@@ -11,7 +11,7 @@ import sys
 import os
 
 # Get backend URL from environment
-BACKEND_URL = "https://movie-guru-1.preview.emergentagent.com"
+BACKEND_URL = "https://repo-to-tadka.preview.emergentagent.com"
 API_BASE = f"{BACKEND_URL}/api"
 
 def test_politics_section_api():
