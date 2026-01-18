@@ -613,14 +613,20 @@ class MovieReviewScraper:
     def _parse_bollywoodhungama(self, soup: BeautifulSoup, url: str) -> MovieReviewData:
         """
         Parse movie review from BollywoodHungama.com
-        Extracts data from JSON-LD structured data (Review schema)
+        
+        Bollywood Hungama section mapping:
+        1. "Movie Review Synopsis:" → story_plot (Main Plot)
+        2. "Movie Story Review:" → story_review_text (for LLM to extract what works/doesn't work)
+        3. "Movie Review Performances:" → performances
+        4. "music and other technical aspects:" → technical_aspects
+        5. "Movie Review Conclusion:" → final_verdict
         """
         import json
         import re
         
         data = MovieReviewData()
         
-        # Extract JSON-LD structured data
+        # Extract JSON-LD structured data for basic movie info
         json_ld_scripts = soup.find_all('script', type='application/ld+json')
         
         for script in json_ld_scripts:
@@ -639,7 +645,8 @@ class MovieReviewScraper:
                         # Extract director
                         directors = item_reviewed.get('director', [])
                         if isinstance(directors, list) and len(directors) > 0:
-                            director_names = [d.get('name', '') for d in directors if isinstance(d, dict)]
+                            # Remove duplicates
+                            director_names = list(set([d.get('name', '') for d in directors if isinstance(d, dict) and d.get('name')]))
                             data.director = ', '.join(director_names)
                         elif isinstance(directors, dict):
                             data.director = directors.get('name', '')
@@ -663,13 +670,7 @@ class MovieReviewScraper:
                         best_rating = review_rating.get('bestRating', '5')
                         data.rating_scale = float(best_rating) if best_rating else 5.0
                     
-                    # Extract review body as final verdict
-                    data.final_verdict = json_data.get('reviewBody', '')
-                    
-                    # Extract description as story_plot
-                    data.story_plot = json_data.get('description', '')
-                    
-                    print(f"   ✅ Extracted from Review schema: {data.movie_name}")
+                    print(f"   ✅ Extracted from Review schema: {data.movie_name}, Rating: {data.rating}/{data.rating_scale}")
                     
             except (json.JSONDecodeError, ValueError) as e:
                 continue
@@ -679,41 +680,109 @@ class MovieReviewScraper:
             meta_desc = soup.find('meta', attrs={'name': 'description'})
             if meta_desc:
                 desc_content = meta_desc.get('content', '')
-                # Pattern: "Movie Name Movie Review"
                 match = re.search(r'^(.+?)\s+Movie Review', desc_content)
                 if match:
                     data.movie_name = match.group(1).strip()
         
-        # Extract more details from meta description
+        # Extract more cast details from meta description if not found
         meta_desc = soup.find('meta', attrs={'name': 'description'})
         if meta_desc:
             desc_content = meta_desc.get('content', '')
             
-            # Extract Star Cast
+            # Extract Star Cast (full list)
             cast_match = re.search(r'Star Cast[:\s]*([^D]+?)(?:Director|$)', desc_content)
-            if cast_match and not data.cast:
+            if cast_match:
                 data.cast = cast_match.group(1).strip().rstrip(',')
-            
-            # Extract Director
-            director_match = re.search(r'Director[:\s]*([^G\n]+?)(?:$|\s{2,}|Review)', desc_content)
-            if director_match and not data.director:
-                data.director = director_match.group(1).strip().rstrip(',')
         
-        # Extract full review text from article content
+        # Get article content for section extraction
         article = soup.find('article') or soup.find('main') or soup.find('div', class_='entry-content')
         if article:
             data.full_review_text = article.get_text()
         else:
             data.full_review_text = soup.get_text()
         
-        # Try to extract story from the article content
-        if not data.story_plot and data.full_review_text:
-            # Look for Synopsis section
-            synopsis_match = re.search(r'Synopsis[:\s]*(.+?)(?:Analysis|Verdict|$)', data.full_review_text, re.IGNORECASE | re.DOTALL)
-            if synopsis_match:
-                data.story_plot = synopsis_match.group(1).strip()[:1500]  # Limit length
+        # Extract sections from article HTML content
+        article_html = str(article) if article else str(soup)
+        
+        # Section patterns for Bollywood Hungama - they use <strong> tags for section headers
+        # Pattern: <strong>Movie Name Movie Review Synopsis:</strong>
+        
+        # 1. Synopsis → story_plot (Main Plot)
+        synopsis_match = re.search(
+            r'Movie Review Synopsis[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
+            article_html, re.IGNORECASE | re.DOTALL
+        )
+        if synopsis_match:
+            synopsis_html = synopsis_match.group(1)
+            # Remove HTML tags to get plain text
+            synopsis_text = re.sub(r'<[^>]+>', ' ', synopsis_html)
+            synopsis_text = re.sub(r'\s+', ' ', synopsis_text).strip()
+            data.story_plot = synopsis_text
+            print(f"   📖 Extracted Synopsis: {len(data.story_plot)} chars")
+        
+        # 2. Story Review → for extracting what works/doesn't work (store as raw text)
+        story_review_match = re.search(
+            r'Movie Story Review[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
+            article_html, re.IGNORECASE | re.DOTALL
+        )
+        story_review_text = ""
+        if story_review_match:
+            story_review_html = story_review_match.group(1)
+            story_review_text = re.sub(r'<[^>]+>', ' ', story_review_html)
+            story_review_text = re.sub(r'\s+', ' ', story_review_text).strip()
+            # Store raw text for LLM processing later
+            data.what_works = f"[STORY_REVIEW_RAW]{story_review_text}[/STORY_REVIEW_RAW]"
+            print(f"   📝 Extracted Story Review for analysis: {len(story_review_text)} chars")
+        
+        # 3. Performances → performances
+        performances_match = re.search(
+            r'Movie Review Performances[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
+            article_html, re.IGNORECASE | re.DOTALL
+        )
+        if performances_match:
+            performances_html = performances_match.group(1)
+            performances_text = re.sub(r'<[^>]+>', ' ', performances_html)
+            performances_text = re.sub(r'\s+', ' ', performances_text).strip()
+            data.performances = performances_text
+            print(f"   🎭 Extracted Performances: {len(data.performances)} chars")
+        
+        # 4. Technical Aspects → technical_aspects
+        technical_match = re.search(
+            r'(?:music and other )?technical aspects[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
+            article_html, re.IGNORECASE | re.DOTALL
+        )
+        if technical_match:
+            technical_html = technical_match.group(1)
+            technical_text = re.sub(r'<[^>]+>', ' ', technical_html)
+            technical_text = re.sub(r'\s+', ' ', technical_text).strip()
+            data.technical_aspects = technical_text
+            print(f"   🎬 Extracted Technical Aspects: {len(data.technical_aspects)} chars")
+        
+        # 5. Conclusion → final_verdict
+        conclusion_match = re.search(
+            r'Movie Review Conclusion[:\s]*</strong>\s*(.+?)(?=<strong>|<div|$)',
+            article_html, re.IGNORECASE | re.DOTALL
+        )
+        if conclusion_match:
+            conclusion_html = conclusion_match.group(1)
+            conclusion_text = re.sub(r'<[^>]+>', ' ', conclusion_html)
+            conclusion_text = re.sub(r'\s+', ' ', conclusion_text).strip()
+            data.final_verdict = conclusion_text
+            print(f"   ✅ Extracted Conclusion: {len(data.final_verdict)} chars")
+        
+        # If we didn't find sections, fall back to full text parsing
+        if not data.story_plot:
+            # Try to extract from full_review_text
+            full_text = data.full_review_text
+            synopsis_text_match = re.search(
+                r'Synopsis[:\s]*(.+?)(?:Story Review|Performances|$)',
+                full_text, re.IGNORECASE | re.DOTALL
+            )
+            if synopsis_text_match:
+                data.story_plot = synopsis_text_match.group(1).strip()[:2000]
         
         print(f"   📝 Bollywood Hungama parsed: {data.movie_name}, Rating: {data.rating}/{data.rating_scale}")
+        print(f"      Sections: Synopsis={bool(data.story_plot)}, Performances={bool(data.performances)}, Technical={bool(data.technical_aspects)}, Verdict={bool(data.final_verdict)}")
         return data
     
     def _parse_idlebrain(self, soup: BeautifulSoup, url: str) -> MovieReviewData:
