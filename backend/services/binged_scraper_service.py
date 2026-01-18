@@ -402,11 +402,24 @@ class BingedScraperService:
                 # Extract YouTube trailer
                 youtube_url = self._extract_youtube_url(soup)
                 
-                # Determine content type
-                if 'web-series' in url.lower() or 'season' in (movie_name or '').lower():
+                # Determine content type from the info line pattern (e.g., "2024 | Film | UA")
+                # Look for explicit type indicators in the page text
+                content_type_match = re.search(r'20\d{2}\s*[|·]\s*(Film|Tv\s*Show|TV\s*Show|Web\s*Series|Documentary)', info_text, re.I)
+                if content_type_match:
+                    type_str = content_type_match.group(1).lower().strip()
+                    if 'film' in type_str:
+                        content_type = 'Film'
+                    elif 'tv' in type_str or 'show' in type_str:
+                        content_type = 'Tv show'
+                    elif 'web' in type_str or 'series' in type_str:
+                        content_type = 'web_series'
+                    elif 'documentary' in type_str:
+                        content_type = 'documentary'
+                # Fallback checks if pattern not found
+                elif 'web-series' in url.lower() or 'season' in (movie_name or '').lower():
                     content_type = 'web_series'
-                elif 'Tv show' in info_text:
-                    content_type = 'tv_show'
+                elif re.search(r'\btv\s*show\b', info_text, re.I):
+                    content_type = 'Tv show'
                 elif 'Documentary' in info_text:
                     content_type = 'documentary'
                 
