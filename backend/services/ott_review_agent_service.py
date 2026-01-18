@@ -76,8 +76,11 @@ class OTTReviewAgentService:
     async def _get_quick_verdict(self, rating: float, bottom_line: str, db) -> str:
         """
         Get quick verdict tagline based on OTT rating mapping from system settings
-        Falls back to default verdicts based on rating
+        Combines rating tag with bottom line description
+        Example: "Good Watch - High Tension, Low Surprise Cop Thriller"
         """
+        tag = ""
+        
         # Try to get OTT rating mapping from system settings
         try:
             settings = db.system_settings.find_one({"setting_type": "ott_rating_verdicts"})
@@ -101,25 +104,32 @@ class OTTReviewAgentService:
                         tag = verdict_data.get('tag', '')
                         if tag:
                             print(f"   📌 Using OTT rating verdict: {tag} (for rating {rating_key})")
-                            return tag
+                            break
         except Exception as e:
             print(f"   ⚠️ Error fetching OTT rating mapping: {str(e)}")
         
-        # Default verdicts based on rating (don't use bottom_line as it may contain garbage)
-        if rating >= 4.0:
-            return "Must Watch!"
-        elif rating >= 3.5:
-            return "Worth Your Time"
-        elif rating >= 3.0:
-            return "Good Watch"
-        elif rating >= 2.5:
-            return "One-Time Watch"
-        elif rating >= 2.0:
-            return "Below Average"
-        elif rating >= 1.0:
-            return "Disappointing"
-        else:
-            return "Skip It"
+        # Default tag based on rating if not found in settings
+        if not tag:
+            if rating >= 4.0:
+                tag = "Must Watch!"
+            elif rating >= 3.5:
+                tag = "Worth Your Time"
+            elif rating >= 3.0:
+                tag = "Good Watch"
+            elif rating >= 2.5:
+                tag = "One-Time Watch"
+            elif rating >= 2.0:
+                tag = "Below Average"
+            elif rating >= 1.0:
+                tag = "Disappointing"
+            else:
+                tag = "Skip It"
+        
+        # Combine tag with bottom line description if available
+        # Format: "Good Watch - High Tension, Low Surprise Cop Thriller"
+        if bottom_line and bottom_line.strip():
+            return f"{tag} - {bottom_line.strip()}"
+        return tag
     
     async def run(self, agent: dict, db) -> Dict:
         """
