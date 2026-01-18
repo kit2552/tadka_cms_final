@@ -73,6 +73,43 @@ class OTTReviewAgentService:
         normalized = re.sub(r'\s+', ' ', normalized).strip()
         return normalized
     
+    async def _get_quick_verdict(self, rating: float, bottom_line: str, db) -> str:
+        """
+        Get quick verdict tagline based on OTT rating mapping from system settings
+        Falls back to bottom_line from review if no mapping found
+        """
+        # Try to get OTT rating mapping from system settings
+        try:
+            settings = db.system_settings.find_one({"setting_type": "ott_rating_mapping"})
+            if settings and settings.get('mappings'):
+                mappings = settings['mappings']
+                # Find the matching rating range
+                for mapping in mappings:
+                    min_rating = float(mapping.get('min_rating', 0))
+                    max_rating = float(mapping.get('max_rating', 5))
+                    if min_rating <= rating <= max_rating:
+                        return mapping.get('verdict', '')
+        except Exception as e:
+            print(f"   ⚠️ Error fetching OTT rating mapping: {str(e)}")
+        
+        # Fallback to bottom_line from review
+        if bottom_line:
+            return bottom_line
+        
+        # Default verdicts based on rating
+        if rating >= 4.0:
+            return "Must Watch!"
+        elif rating >= 3.5:
+            return "Worth Your Time"
+        elif rating >= 3.0:
+            return "One-Time Watch"
+        elif rating >= 2.5:
+            return "Passable"
+        elif rating >= 2.0:
+            return "Below Average"
+        else:
+            return "Skip It"
+    
     async def run(self, agent: dict, db) -> Dict:
         """
         Run the OTT Review agent
