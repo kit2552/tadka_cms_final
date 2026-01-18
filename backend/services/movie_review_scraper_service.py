@@ -724,9 +724,10 @@ class MovieReviewScraper:
             print(f"   📖 Extracted Synopsis: {len(data.story_plot)} chars")
         
         # 2. Story Review → for extracting what works/doesn't work (store as raw text)
-        # Pattern: "Story Review:" followed by content until next <strong> or <p><strong>
+        # Pattern: "Story Review:" followed by content until "Review Performances" or iframe (trailer)
+        # Story Review spans multiple paragraphs in Bollywood Hungama
         story_review_match = re.search(
-            r'Story\s+Review[:\s]*</strong>(?:\s*<br\s*/?>)?\s*(.+?)(?=<p>\s*<strong>|<strong>|$)',
+            r'Story\s+Review[:\s]*</strong>(?:\s*<br\s*/?>)?\s*(.+?)(?=Review\s+Performances|<p>\s*<span[^>]*underline|<iframe|$)',
             article_html, re.IGNORECASE | re.DOTALL
         )
         story_review_text = ""
