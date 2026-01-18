@@ -687,6 +687,18 @@ const Dashboard = () => {
     }
   }, [adsCurrentPage, adsItemsPerPage, selectedAdType, selectedAdStatus, selectedLanguage, activeTab]);
 
+  // Fetch action needed articles when tab is active or on mount (for count)
+  useEffect(() => {
+    // Always fetch count on mount
+    fetchActionNeededArticles();
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === 'action-needed') {
+      fetchActionNeededArticles();
+    }
+  }, [activeTab, actionNeededCurrentPage, actionNeededItemsPerPage]);
+
   // Reset ads pagination when filters change
   useEffect(() => {
     setAdsCurrentPage(1);
