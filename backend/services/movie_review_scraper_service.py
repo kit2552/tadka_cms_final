@@ -515,11 +515,22 @@ class MovieReviewScraper:
             lines = article_body_text.split('\n')
             current_section = None
             section_content = []
+            youtube_video_id = None
             
             for line in lines:
                 line = line.strip()
                 if not line:
                     continue
+                
+                # Extract YouTube video ID (format: YEv0zokK140 - 11 characters)
+                # It appears before "Performances:" in the text
+                if not youtube_video_id and 'performances:' in line.lower():
+                    # Look for YouTube ID pattern (11 alphanumeric characters)
+                    import re
+                    match = re.search(r'([A-Za-z0-9_-]{11})(?:Performances:)', line)
+                    if match:
+                        youtube_video_id = match.group(1)
+                        print(f"   🎬 Found YouTube trailer ID: {youtube_video_id}")
                 
                 # Check for section headers (case-insensitive, handle embedded text)
                 line_lower = line.lower()
