@@ -898,6 +898,327 @@ const ArticlePage = () => {
                   </div>
                 )}
               </div>
+            ) : article.content_type === 'ott_review' ? (
+              /* OTT Review Content - Same styling as movie_review */
+              <div className="space-y-6 mb-8">
+                {/* Compact OTT Info Card - Dark Theme */}
+                <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 rounded-lg shadow-xl border border-gray-700">
+                  <div className="flex items-stretch justify-between gap-6">
+                    {/* Left Side - OTT Details */}
+                    <div className="flex-1 space-y-0 text-left">
+                      
+                      {/* Section 1: Basic Info */}
+                      <div className="space-y-2 py-2">
+                        {article.title && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Title</span>
+                            <span className="text-white font-medium text-xs">{article.title.replace(' Review', '')}</span>
+                          </div>
+                        )}
+                        {article.ott_content_type && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Type</span>
+                            <span className="text-white font-medium text-xs">{article.ott_content_type}</span>
+                          </div>
+                        )}
+                        {article.movie_language && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Language</span>
+                            <span className="text-white font-medium text-xs">
+                              {(() => {
+                                try {
+                                  if (typeof article.movie_language === 'string' && article.movie_language.startsWith('[')) {
+                                    const languages = JSON.parse(article.movie_language);
+                                    return Array.isArray(languages) ? languages.join(', ') : article.movie_language;
+                                  }
+                                  return article.movie_language;
+                                } catch (e) {
+                                  return article.movie_language;
+                                }
+                              })()}
+                            </span>
+                          </div>
+                        )}
+                        {article.platform && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Platform</span>
+                            <span className="text-white font-medium text-xs">{article.platform}</span>
+                          </div>
+                        )}
+                        {article.ott_platforms && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">OTT</span>
+                            <span className="text-white font-medium text-xs">
+                              {(() => {
+                                try {
+                                  const platforms = typeof article.ott_platforms === 'string' 
+                                    ? JSON.parse(article.ott_platforms) 
+                                    : article.ott_platforms;
+                                  return Array.isArray(platforms) ? platforms.join(', ') : article.ott_platforms;
+                                } catch {
+                                  return article.ott_platforms;
+                                }
+                              })()}
+                            </span>
+                          </div>
+                        )}
+                        {article.review_genre && (
+                          <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Genre</span>
+                            <span className="text-white font-medium text-xs">
+                              {(() => {
+                                try {
+                                  const genres = typeof article.review_genre === 'string' 
+                                    ? JSON.parse(article.review_genre) 
+                                    : article.review_genre;
+                                  return Array.isArray(genres) ? genres.join(', ') : article.review_genre;
+                                } catch {
+                                  return article.review_genre;
+                                }
+                              })()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Divider between sections */}
+                      {(() => {
+                        const hasValidDirector = article.review_director && article.review_director !== 'Not Available' && article.review_director !== 'N/A';
+                        
+                        return hasValidDirector && (
+                          <div className="border-t border-gray-700 my-2"></div>
+                        );
+                      })()}
+
+                      {/* Section 2: Crew */}
+                      {(() => {
+                        const hasValidDirector = article.review_director && article.review_director !== 'Not Available' && article.review_director !== 'N/A';
+                        
+                        return hasValidDirector && (
+                          <div className="space-y-2 py-2">
+                            {hasValidDirector && (
+                              <div className="flex items-center gap-4">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Director</span>
+                                <span className="text-white font-medium text-xs">{article.review_director}</span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
+
+                      {/* Divider between sections */}
+                      {article.review_cast && (
+                        <div className="border-t border-gray-700 my-2"></div>
+                      )}
+
+                      {/* Section 3: Cast */}
+                      {article.review_cast && (
+                        <div className="space-y-2 py-2">
+                          <div className="flex items-start gap-4">
+                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px] pt-0.5">Cast</span>
+                            <span className="text-white font-medium text-xs leading-relaxed">{article.review_cast}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right Side - Rating */}
+                    {article.movie_rating && (
+                      <div className="flex flex-col items-center border-l border-gray-700 pl-4 flex-shrink-0">
+                        {/* Top Section - Ratings */}
+                        <div className="flex flex-col items-center">
+                          <div className="text-4xl font-bold text-white leading-none">
+                          {(() => {
+                            const rating = parseFloat(article.movie_rating);
+                            return rating % 1 === 0 ? rating.toFixed(0) : rating.toString();
+                          })()}
+                        </div>
+                          <div className="text-xs text-gray-400 mb-1">/5</div>
+                          <div className="flex items-center gap-0.5 mb-3">
+                            {[...Array(5)].map((_, i) => {
+                              const rating = parseFloat(article.movie_rating);
+                              const filled = i < Math.floor(rating);
+                              return (
+                                <svg
+                                  key={i}
+                                  className={`w-3 h-3 ${filled ? 'text-yellow-400' : 'text-gray-600'}`}
+                                  fill="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                </svg>
+                              );
+                            })}
+                          </div>
+
+                          {/* Divider */}
+                          <div className="w-full border-t border-gray-700 mb-3"></div>
+
+                          {/* User Rating */}
+                          {userRating ? (
+                            <div className="flex flex-col items-center">
+                              <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">User Rating</div>
+                              <div className="text-2xl font-bold text-white leading-none">
+                                {(() => {
+                                  const rating = parseFloat(userRating);
+                                  return rating % 1 === 0 ? rating.toFixed(0) : rating.toString();
+                                })()}
+                              </div>
+                              <div className="text-[10px] text-gray-400 mb-1">/5</div>
+                              <div className="flex items-center gap-0.5">
+                                {[...Array(5)].map((_, i) => {
+                                  const rating = parseFloat(userRating);
+                                  const filled = i < Math.floor(rating);
+                                  return (
+                                    <svg
+                                      key={i}
+                                      className={`w-2.5 h-2.5 ${filled ? 'text-yellow-400' : 'text-gray-600'}`}
+                                      fill="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                    </svg>
+                                  );
+                                })}
+                              </div>
+                              <div className="text-[10px] text-gray-400 mt-1">({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})</div>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center">
+                              <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">User Rating</div>
+                              <div className="text-xs text-gray-500">No reviews yet</div>
+                            </div>
+                          )}
+
+                          {/* Runtime and Release Date - Right below User Rating */}
+                          {(article.review_runtime || article.release_date) && (
+                            <>
+                              <div className="w-full border-t border-gray-700 my-2"></div>
+                              <div className="flex flex-col items-center gap-2 py-2">
+                                {article.review_runtime && (
+                                  <div className="flex flex-col items-center">
+                                    <div className="text-xs text-gray-400 font-medium mb-1">Runtime</div>
+                                    <div className="text-xs text-gray-300 font-medium">{article.review_runtime}</div>
+                                  </div>
+                                )}
+                                {article.release_date && (
+                                  <div className="flex flex-col items-center">
+                                    <div className="text-xs text-gray-400 font-medium mb-1">Release Date</div>
+                                    <div className="text-xs text-gray-300 font-medium">
+                                      {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Quick Verdict */}
+                {hasContent(article.review_quick_verdict) && (
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">Quick Verdict</h3>
+                    </div>
+                    <p className="text-gray-900 leading-relaxed whitespace-pre-line text-left">{article.review_quick_verdict}</p>
+                  </div>
+                )}
+
+                <style>{`
+                  .ott-review-content p,
+                  .ott-review-content span {
+                    font-size: 1rem !important;
+                    line-height: 1.75 !important;
+                  }
+                  .ott-review-content {
+                    font-size: 1rem;
+                  }
+                  
+                  /* Convert bullet lists to numbered lists for What Works/Doesn't Work sections */
+                  .ott-review-numbered-list ul {
+                    list-style-type: none;
+                    counter-reset: item;
+                    padding-left: 0;
+                  }
+                  .ott-review-numbered-list ul li {
+                    counter-increment: item;
+                    margin-bottom: 0.5rem;
+                    padding-left: 2rem;
+                    position: relative;
+                  }
+                  .ott-review-numbered-list ul li::before {
+                    content: counter(item) ". ";
+                    position: absolute;
+                    left: 0;
+                    font-weight: 600;
+                    color: #1f2937;
+                  }
+                `}</style>
+
+                {/* Plot Summary */}
+                {hasContent(article.review_plot_summary) && (
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">Story</h3>
+                    </div>
+                    <div className="ott-review-content text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: stripLinkStyles(article.review_plot_summary) }} />
+                  </div>
+                )}
+
+                {/* Performances */}
+                {hasContent(article.review_performances) && (
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">Performances</h3>
+                    </div>
+                    <div className="ott-review-content text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: stripLinkStyles(article.review_performances) }} />
+                  </div>
+                )}
+
+                {/* What Works */}
+                {hasContent(article.review_what_works) && (
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">What Works</h3>
+                    </div>
+                    <div className="ott-review-content ott-review-numbered-list text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: stripLinkStyles(article.review_what_works) }} />
+                  </div>
+                )}
+
+                {/* What Doesn't Work */}
+                {hasContent(article.review_what_doesnt_work) && (
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">What Doesn't Work</h3>
+                    </div>
+                    <div className="ott-review-content ott-review-numbered-list text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: stripLinkStyles(article.review_what_doesnt_work) }} />
+                  </div>
+                )}
+
+                {/* Technical Aspects */}
+                {hasContent(article.review_technical_aspects) && (
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">Technical Aspects</h3>
+                    </div>
+                    <div className="ott-review-content text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: stripLinkStyles(article.review_technical_aspects) }} />
+                  </div>
+                )}
+
+                {/* Final Verdict */}
+                {hasContent(article.review_final_verdict) && (
+                  <div className="mb-6">
+                    <div className="border-b-2 border-gray-300 mb-4 pb-3">
+                      <h3 className="text-base font-bold text-black text-left leading-tight">Final Verdict</h3>
+                    </div>
+                    <div className="ott-review-content text-gray-900 leading-relaxed text-left" dangerouslySetInnerHTML={{ __html: stripLinkStyles(article.review_final_verdict) }} />
+                  </div>
+                )}
+              </div>
             ) : article.content_type === 'video' ? (
               /* Pure Video Content - No main content, only video */
               <div className="prose prose-lg max-w-none mb-3 pt-3 pb-3">
