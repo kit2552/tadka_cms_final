@@ -2,6 +2,7 @@
 OTT Review Agent Service
 Creates OTT movie and web series review articles from binged.com
 Combines review content with OTT releases data for complete information
+Uses LLM to rewrite and format content for better readability
 """
 import re
 import json
@@ -51,6 +52,111 @@ class OTTReviewAgentService:
     
     def __init__(self):
         self.temp_review_data = {}
+        self.llm_client = None
+        self.llm_model = None
+        self.llm_provider = None
+        self.llm_initialized = False
+    
+    def _initialize_llm(self, db):
+        """Initialize LLM client based on system settings"""
+        if self.llm_initialized:
+            return
+            
+        try:
+            ai_config = db.system_settings.find_one({"type": "ai_api_keys"})
+            if not ai_config:
+                print("   ⚠️ No AI API keys configured - LLM rewriting disabled")
+                return
+            
+            self.llm_model = ai_config.get('default_text_model') or 'gpt-4o'
+            model_lower = self.llm_model.lower()
+            
+            # Determine provider based on model name
+            if 'gemini' in model_lower:
+                self.llm_provider = 'gemini'
+                import google.generativeai as genai
+                genai.configure(api_key=ai_config['gemini_api_key'])
+                self.llm_client = genai.GenerativeModel(self.llm_model)
+            elif 'claude' in model_lower or 'anthropic' in model_lower:
+                self.llm_provider = 'anthropic'
+                import anthropic
+                self.llm_client = anthropic.Anthropic(api_key=ai_config['anthropic_api_key'])
+            else:
+                # Default to OpenAI
+                self.llm_provider = 'openai'
+                from openai import OpenAI
+                self.llm_client = OpenAI(api_key=ai_config['openai_api_key'])
+            
+            self.llm_initialized = True
+            print(f"   🤖 Initialized {self.llm_provider} with model: {self.llm_model}")
+        except Exception as e:
+            print(f"   ⚠️ Failed to initialize LLM: {str(e)}")
+            self.llm_initialized = False
+    
+    def _llm_complete(self, system_prompt: str, user_prompt: str, max_tokens: int = 1500) -> str:
+        """Make LLM completion call"""
+        if not self.llm_client:
+            return None
+        
+        try:
+            if self.llm_provider == 'openai':
+                response = self.llm_client.chat.completions.create(
+                    model=self.llm_model,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    max_tokens=max_tokens,
+                    temperature=0.7
+                )
+                return response.choices[0].message.content.strip()
+            elif self.llm_provider == 'gemini':
+                full_prompt = f"{system_prompt}\n\n{user_prompt}"
+                response = self.llm_client.generate_content(full_prompt)
+                return response.text.strip()
+            elif self.llm_provider == 'anthropic':
+                response = self.llm_client.messages.create(
+                    model=self.llm_model,
+                    max_tokens=max_tokens,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_prompt}]
+                )
+                return response.content[0].text.strip()
+        except Exception as e:
+            print(f"      ⚠️ LLM call failed: {str(e)[:100]}")
+            return None
+    
+    def _rewrite_section(self, content: str, section_type: str, title: str) -> str:
+        """Rewrite a review section to be more concise with proper paragraphs"""
+        if not content or not self.llm_client:
+            return content
+        
+        system_prompt = """You are an expert entertainment critic. Rewrite the given content to be:
+- Concise and engaging
+- Split into 2-3 short paragraphs (each 3-4 sentences max)
+- Professional tone suitable for an entertainment news website
+- In English
+- Do NOT add any headers, labels, or formatting markers
+- Just output the rewritten paragraphs separated by blank lines"""
+        
+        prompts = {
+            'story': f'Summarize this story/plot for "{title}" in 2 concise paragraphs:\n\n{content}',
+            'performances': f'Summarize the key performance highlights for "{title}" in 2-3 concise paragraphs:\n\n{content}',
+            'technical': f'Summarize the technical aspects for "{title}" in 1-2 concise paragraphs:\n\n{content}',
+            'verdict': f'Summarize the verdict/conclusion for "{title}" in 2 concise paragraphs:\n\n{content}',
+            'analysis': f'Summarize the analysis for "{title}" in 2-3 concise paragraphs:\n\n{content}',
+        }
+        
+        user_prompt = prompts.get(section_type, f'Rewrite this in 2-3 concise paragraphs:\n\n{content}')
+        
+        try:
+            result = self._llm_complete(system_prompt, user_prompt)
+            if result:
+                return result
+        except Exception as e:
+            print(f"      ⚠️ Rewrite failed for {section_type}: {str(e)[:50]}")
+        
+        return content
     
     def _get_language_code(self, language_name: str) -> str:
         """Convert language name to ISO code"""
