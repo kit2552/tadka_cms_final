@@ -2086,34 +2086,6 @@ async def update_cms_article(
     return updated_article
 
 
-@api_router.get("/cms/articles/action-needed")
-async def get_action_needed_articles(
-    skip: int = 0,
-    limit: int = 20,
-    db = Depends(get_db)
-):
-    """Get articles that need action (missing YouTube trailer or image)"""
-    # Query articles with action_needed = True
-    articles = list(db.articles.find({
-        'action_needed': True
-    }).sort('created_at', -1).skip(skip).limit(limit))
-    
-    # Convert ObjectId to string
-    for article in articles:
-        if '_id' in article:
-            article['_id'] = str(article['_id'])
-    
-    # Get total count
-    total = db.articles.count_documents({'action_needed': True})
-    
-    return {
-        'articles': articles,
-        'total': total,
-        'skip': skip,
-        'limit': limit
-    }
-
-
 @api_router.patch("/cms/articles/{article_id}", response_model=schemas.ArticleResponse)
 async def patch_cms_article(
     article_id: int, 
