@@ -241,9 +241,16 @@ export const dataService = {
       };
     }
   },
-  async getOTTMovieReviewsData() {
+  async getOTTMovieReviewsData(userStateCodes = null) {
     try {
-      const response = await fetch(`${API_BASE_URL}/articles/sections/ott-movie-reviews`);
+      let url = `${API_BASE_URL}/articles/sections/ott-movie-reviews`;
+      
+      // Add states parameter if available
+      if (userStateCodes && userStateCodes.length > 0) {
+        url += `?states=${userStateCodes.join(',')}`;
+      }
+      
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch OTT reviews');
       }
@@ -252,8 +259,8 @@ export const dataService = {
       console.error('Error fetching OTT reviews:', error);
       // Fallback to empty data
       return {
-        ott_movie_reviews: [],
-        web_series: []
+        ott_reviews: [],
+        bollywood: []
       };
     }
   },
