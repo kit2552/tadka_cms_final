@@ -45,10 +45,8 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   
   const itemsPerSlide = 6; // Show 6 items per slide
   const getCurrentData = () => {
-    if (activeTab === 'hindi') {
-      return hindiReviews;
-    } else if (activeTab === 'english') {
-      return englishReviews;
+    if (activeTab === 'bollywood') {
+      return bollywoodReviews;
     } else {
       return movieReviews;
     }
