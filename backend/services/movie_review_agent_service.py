@@ -769,8 +769,8 @@ Story Review:
     
     async def _extract_pinkvilla_hindi_reviews(self, soup: BeautifulSoup, base_url: str, max_links: int) -> list:
         """
-        Extract Hindi movie review URLs from Pinkvilla listing page
-        Filters out English and South Indian movie reviews
+        Extract movie review URLs from Pinkvilla listing page
+        No language filtering - all reviews are included
         """
         import json
         from urllib.parse import urlparse
@@ -779,42 +779,8 @@ Story Review:
         parsed_base = urlparse(base_url)
         base_domain = f"{parsed_base.scheme}://{parsed_base.netloc}"
         
-        # Find JSON-LD structured data
+        # Method 1: Find JSON-LD structured data
         json_ld_scripts = soup.find_all('script', type='application/ld+json')
-        
-        # Common Bollywood/Hindi movie actors and directors for filtering
-        hindi_indicators = [
-            # Top Bollywood actors
-            'shah rukh khan', 'salman khan', 'aamir khan', 'akshay kumar', 'hrithik roshan',
-            'ranbir kapoor', 'ranveer singh', 'varun dhawan', 'tiger shroff', 'kartik aaryan',
-            'ayushmann khurrana', 'rajkummar rao', 'vicky kaushal', 'shahid kapoor',
-            'deepika padukone', 'priyanka chopra', 'katrina kaif', 'alia bhatt', 'kangana ranaut',
-            'anushka sharma', 'kareena kapoor', 'sonam kapoor', 'shraddha kapoor', 'kriti sanon',
-            'sara ali khan', 'janhvi kapoor', 'kiara advani', 'tara sutaria', 'ananya panday',
-            # Directors
-            'rohit shetty', 'karan johar', 'sanjay leela bhansali', 'rajkumar hirani',
-            'farah khan', 'zoya akhtar', 'imtiaz ali', 'anurag kashyap', 'vishal bhardwaj',
-            'raj kumar gupta', 'neeraj pandey', 'kabir khan', 'aditya chopra', 'yash chopra',
-            # Production houses
-            'yash raj', 'dharma productions', 'excel entertainment', 'red chillies',
-            # Common Hindi words in titles
-            'teri', 'meri', 'pyar', 'dil', 'jaan', 'zindagi', 'khiladi', 'sultan'
-        ]
-        
-        # English/Hollywood indicators to exclude
-        english_indicators = [
-            'hollywood', 'marvel', 'dc comics', 'pixar', 'disney',
-            'tom cruise', 'leonardo dicaprio', 'brad pitt', 'will smith', 'robert downey',
-            'scarlett johansson', 'jennifer lawrence', 'angelina jolie'
-        ]
-        
-        # South Indian indicators to exclude (but allow if Hindi dubbed/remake)
-        south_indicators = [
-            'telugu', 'tamil', 'malayalam', 'kannada',
-            'prabhas', 'mahesh babu', 'allu arjun', 'ram charan', 'jr ntr',
-            'vijay', 'ajith', 'suriya', 'dhanush', 'rajinikanth',
-            'mammootty', 'mohanlal', 'yash', 'sudeep'
-        ]
         
         for script in json_ld_scripts:
             try:
@@ -841,50 +807,38 @@ Story Review:
                         if item_url.startswith('/'):
                             item_url = base_domain + item_url
                         
-                        # Skip if not a review URL
-                        if '/reviews/' not in item_url.lower():
-                            continue
-                        
-                        # Extract name/title for filtering
-                        name = item.get('name', '').lower()
-                        
-                        # Filter logic
-                        is_hindi = False
-                        is_english = False
-                        is_south = False
-                        
-                        # Check for Hindi indicators
-                        for indicator in hindi_indicators:
-                            if indicator in name:
-                                is_hindi = True
-                                break
-                        
-                        # Check for English indicators
-                        for indicator in english_indicators:
-                            if indicator in name:
-                                is_english = True
-                                break
-                        
-                        # Check for South indicators (only if not Hindi)
-                        if not is_hindi:
-                            for indicator in south_indicators:
-                                if indicator in name:
-                                    is_south = True
-                                    break
-                        
-                        # Decision: Include if Hindi or if not clearly English/South
-                        # This errs on the side of inclusion for borderline cases
-                        if is_english or is_south:
-                            print(f"      ⏭️  Skipping {'English' if is_english else 'South'} movie: {name[:50]}...")
-                            continue
-                        
-                        # If we have strong Hindi indicators OR it's not clearly English/South, include it
-                        if item_url not in review_links:
-                            review_links.append(item_url)
-                            print(f"      ✅ Hindi review: {name[:60]}...")
+                        # Only include review URLs
+                        if '/reviews/' in item_url.lower() and 'movie-review' in item_url.lower():
+                            if item_url not in review_links:
+                                name = item.get('name', 'Unknown')
+                                review_links.append(item_url)
+                                print(f"      ✅ Review: {name[:60]}...")
                 
             except (json.JSONDecodeError, Exception) as e:
                 continue
+        
+        # Method 2: Fallback to HTML link extraction if JSON-LD didn't find enough
+        if len(review_links) < max_links:
+            for link in soup.find_all('a', href=True):
+                if len(review_links) >= max_links:
+                    break
+                    
+                href = link.get('href', '')
+                
+                # Check if it's a movie review URL
+                if '/reviews/' in href.lower() and 'movie-review' in href.lower():
+                    # Make absolute URL
+                    if href.startswith('http'):
+                        full_url = href
+                    elif href.startswith('/'):
+                        full_url = base_domain + href
+                    else:
+                        continue
+                    
+                    # Avoid duplicates and pagination
+                    if full_url not in review_links and '/page/' not in full_url.lower():
+                        review_links.append(full_url)
+                        print(f"      ✅ Review (HTML): {full_url.split('/')[-1][:50]}...")
         
         return review_links[:max_links]
     
