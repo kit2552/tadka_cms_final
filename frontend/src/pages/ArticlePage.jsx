@@ -769,7 +769,7 @@ const ArticlePage = () => {
                             </div>
                           )}
 
-                          {/* Runtime and Release Date - Right below User Rating */}
+                          {/* Runtime and Streaming Date - Right below User Rating */}
                           {(article.review_runtime || article.release_date) && (
                             <>
                               <div className="w-full border-t border-gray-700 my-2"></div>
@@ -782,7 +782,7 @@ const ArticlePage = () => {
                                 )}
                                 {article.release_date && (
                                   <div className="flex flex-col items-center">
-                                    <div className="text-xs text-gray-400 font-medium mb-1">Release Date</div>
+                                    <div className="text-xs text-gray-400 font-medium mb-1">Streaming On</div>
                                     <div className="text-xs text-gray-300 font-medium">
                                       {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                                     </div>
@@ -1084,7 +1084,7 @@ const ArticlePage = () => {
                             </div>
                           )}
 
-                          {/* Runtime and Release Date - Right below User Rating */}
+                          {/* Runtime and Streaming Date - Right below User Rating */}
                           {(article.review_runtime || article.release_date) && (
                             <>
                               <div className="w-full border-t border-gray-700 my-2"></div>
@@ -1097,7 +1097,7 @@ const ArticlePage = () => {
                                 )}
                                 {article.release_date && (
                                   <div className="flex flex-col items-center">
-                                    <div className="text-xs text-gray-400 font-medium mb-1">Release Date</div>
+                                    <div className="text-xs text-gray-400 font-medium mb-1">Streaming On</div>
                                     <div className="text-xs text-gray-300 font-medium">
                                       {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                                     </div>
