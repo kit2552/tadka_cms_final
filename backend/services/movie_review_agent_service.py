@@ -609,6 +609,9 @@ Rewrite the given content in a professional, engaging tone.
                 if 'pinkvilla' in listing_url.lower():
                     print(f"      📰 Pinkvilla detected - extracting from JSON-LD")
                     review_links = await self._extract_pinkvilla_hindi_reviews(soup, listing_url, max_links)
+                elif 'bollywoodhungama' in listing_url.lower():
+                    print(f"      📰 Bollywood Hungama detected - extracting review links")
+                    review_links = await self._extract_bollywoodhungama_reviews(soup, listing_url, max_links)
                 else:
                     # Generic extraction for other sites (Gulte, GreatAndhra, etc.)
                     for link in soup.find_all('a', href=True):
@@ -639,6 +642,41 @@ Rewrite the given content in a professional, engaging tone.
         except Exception as e:
             print(f"      ❌ Error extracting links from listing page: {str(e)}")
             return []
+    
+    async def _extract_bollywoodhungama_reviews(self, soup: BeautifulSoup, base_url: str, max_links: int) -> list:
+        """
+        Extract movie review URLs from Bollywood Hungama listing page
+        URL pattern: /movie/{movie-name}/critic-review/{slug}/
+        """
+        from urllib.parse import urlparse
+        
+        review_links = []
+        parsed_base = urlparse(base_url)
+        base_domain = f"{parsed_base.scheme}://{parsed_base.netloc}"
+        
+        # Find all links that match the critic-review pattern
+        for link in soup.find_all('a', href=True):
+            href = link.get('href', '')
+            
+            # Check if it's a critic-review URL
+            if '/critic-review/' in href.lower() and '-movie-review' in href.lower():
+                # Make absolute URL
+                if href.startswith('http'):
+                    full_url = href
+                elif href.startswith('/'):
+                    full_url = base_domain + href
+                else:
+                    continue
+                
+                # Avoid duplicates
+                if full_url not in review_links:
+                    review_links.append(full_url)
+                    print(f"         ✅ Found: {full_url[:80]}...")
+                    
+                    if len(review_links) >= max_links:
+                        break
+        
+        return review_links[:max_links]
     
     async def _extract_pinkvilla_hindi_reviews(self, soup: BeautifulSoup, base_url: str, max_links: int) -> list:
         """
