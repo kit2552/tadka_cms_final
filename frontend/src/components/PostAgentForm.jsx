@@ -441,6 +441,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
             <p className="text-xs text-gray-600 mt-0.5">
               {formData.agent_type === 'movie_review'
                 ? 'Scrapes movie reviews from websites and uses LLM to create formatted reviews'
+                : formData.agent_type === 'ott_review'
+                ? 'Scrapes OTT reviews from Binged.com and fetches movie/series metadata'
                 : formData.agent_type === 'ott_release' 
                 ? 'Configure OTT release fetching from Binged.com'
                 : formData.agent_type === 'theater_release'
