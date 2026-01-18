@@ -2034,12 +2034,16 @@ async def update_cms_article(
     # Convert Pydantic model to dict
     update_data = article_update.dict(exclude_unset=True)
     
-    # Check if this is a movie_review content type with action_needed flag
-    if article.get('action_needed', False) and article.get('content_type') == 'movie_review':
+    print(f"   📝 Updating article {article_id}: {article.get('title', '')[:50]}")
+    print(f"      Content type: {article.get('content_type')}, Action needed: {article.get('action_needed')}")
+    
+    # Check if this is a movie_review content type
+    if article.get('content_type') == 'movie_review':
+        # Get YouTube URL from update or existing article
         youtube_url = update_data.get('youtube_url', article.get('youtube_url', ''))
-        
-        # For movie reviews, image comes from YouTube thumbnail only
         has_youtube = bool(youtube_url and youtube_url.strip())
+        
+        print(f"      YouTube URL: {youtube_url[:50] if youtube_url else 'NONE'}, Has YouTube: {has_youtube}")
         
         if has_youtube:
             # Generate image from YouTube thumbnail
@@ -2048,17 +2052,27 @@ async def update_cms_article(
             if youtube_match:
                 video_id = youtube_match.group(1)
                 update_data['image'] = f'https://img.youtube.com/vi/{video_id}/maxresdefault.jpg'
+                print(f"      Generated thumbnail: {update_data['image']}")
             
-            # YouTube URL provided - auto-publish
-            update_data['action_needed'] = False
-            update_data['action_needed_reasons'] = []
-            update_data['is_published'] = True
-            update_data['status'] = 'approved'
-            update_data['published_at'] = datetime.now(timezone.utc)
-            print(f"   ✅ Auto-publishing movie review {article_id} - YouTube trailer added")
+            # Clear action_needed if it was set (regardless of current state)
+            if article.get('action_needed', False):
+                update_data['action_needed'] = False
+                update_data['action_needed_reasons'] = []
+                update_data['is_published'] = True
+                update_data['status'] = 'approved'
+                update_data['published_at'] = datetime.now(timezone.utc)
+                print(f"   ✅ Auto-publishing movie review {article_id} - YouTube trailer added")
+            else:
+                # Even if action_needed was False, make sure it stays False
+                update_data['action_needed'] = False
+                update_data['action_needed_reasons'] = []
         else:
-            # Still missing YouTube trailer
+            # No YouTube URL - set action_needed
+            update_data['action_needed'] = True
             update_data['action_needed_reasons'] = ['Missing YouTube trailer']
+            update_data['is_published'] = False
+            update_data['image'] = ''  # Clear image
+            print(f"   ⚠️ Article {article_id} missing YouTube trailer - action needed")
     elif article.get('action_needed', False):
         # Non-movie-review articles - original logic
         youtube_url = update_data.get('youtube_url', article.get('youtube_url', ''))
