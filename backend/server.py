@@ -2114,13 +2114,45 @@ async def patch_cms_article(
     # Convert Pydantic model to dict, excluding unset values
     update_data = article_update.dict(exclude_unset=True)
     
+    print(f"   📝 PATCH updating article {article_id}: {article.get('title', '')[:50]}")
+    
+    # Handle movie_review content type - action_needed logic
+    if article.get('content_type') == 'movie_review':
+        youtube_url = update_data.get('youtube_url', article.get('youtube_url', ''))
+        has_youtube = bool(youtube_url and youtube_url.strip())
+        
+        if has_youtube:
+            # Generate image from YouTube thumbnail
+            import re
+            youtube_match = re.search(r'(?:youtube\.com/watch\?v=|youtu\.be/)([a-zA-Z0-9_-]+)', youtube_url)
+            if youtube_match:
+                video_id = youtube_match.group(1)
+                update_data['image'] = f'https://img.youtube.com/vi/{video_id}/maxresdefault.jpg'
+            
+            # Clear action_needed
+            update_data['action_needed'] = False
+            update_data['action_needed_reasons'] = []
+            if article.get('action_needed', False):
+                update_data['is_published'] = True
+                update_data['status'] = 'approved'
+                update_data['published_at'] = datetime.now(timezone.utc)
+                print(f"   ✅ PATCH Auto-publishing movie review {article_id}")
+        else:
+            # No YouTube URL - set action_needed
+            update_data['action_needed'] = True
+            update_data['action_needed_reasons'] = ['Missing YouTube trailer']
+            update_data['is_published'] = False
+            update_data['image'] = ''
+    
     # Ensure status and is_published are always in sync
     if 'status' in update_data:
         # If status is explicitly set, sync is_published accordingly
         if update_data['status'] == 'published':
             update_data['is_published'] = True
         elif update_data['status'] in ['draft', 'in_review', 'approved']:
-            update_data['is_published'] = False
+            # Don't override is_published if we just set it for action_needed
+            if 'is_published' not in update_data:
+                update_data['is_published'] = False
     elif 'is_published' in update_data:
         # If only is_published is set, sync status accordingly
         if update_data['is_published'] == True:
