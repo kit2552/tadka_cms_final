@@ -380,17 +380,44 @@ class OTTReviewAgentService:
         slug = re.sub(r'[^a-z0-9]+', '-', review_data.title.lower()).strip('-')
         slug = f"{slug}-ott-review-{datetime.now().strftime('%Y%m%d%H%M%S')}"
         
-        # Build content from review
+        # Build content from review sections
         content_parts = []
-        if review_data.synopsis:
-            content_parts.append(f"<h2>Synopsis</h2>\n<p>{review_data.synopsis}</p>")
-        if review_data.review_content:
-            # Split into paragraphs
+        
+        # Story/Synopsis section
+        story_content = review_data.story_synopsis or review_data.synopsis
+        if story_content:
+            content_parts.append(f"<h2>Story</h2>\n<p>{story_content}</p>")
+        
+        # Performances section
+        if review_data.performances:
+            paragraphs = review_data.performances.split('\n\n')
+            perf_html = '\n'.join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
+            content_parts.append(f"<h2>Performances</h2>\n{perf_html}")
+        
+        # Analysis section
+        if review_data.analysis:
+            paragraphs = review_data.analysis.split('\n\n')
+            analysis_html = '\n'.join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
+            content_parts.append(f"<h2>Analysis</h2>\n{analysis_html}")
+        
+        # Technical Aspects section
+        if review_data.technical_aspects:
+            paragraphs = review_data.technical_aspects.split('\n\n')
+            tech_html = '\n'.join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
+            content_parts.append(f"<h2>Technical Aspects</h2>\n{tech_html}")
+        
+        # If no structured sections, use the full review content
+        if not content_parts and review_data.review_content:
             paragraphs = review_data.review_content.split('\n\n')
             review_html = '\n'.join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
             content_parts.append(f"<h2>Review</h2>\n{review_html}")
-        if review_data.verdict:
-            content_parts.append(f"<h2>Verdict</h2>\n<p>{review_data.verdict}</p>")
+        
+        # Verdict section
+        verdict_content = review_data.verdict
+        if verdict_content:
+            paragraphs = verdict_content.split('\n\n')
+            verdict_html = '\n'.join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
+            content_parts.append(f"<h2>Verdict</h2>\n{verdict_html}")
         
         content = '\n\n'.join(content_parts)
         
@@ -403,8 +430,36 @@ class OTTReviewAgentService:
         # Ensure rating is within bounds
         normalized_rating = max(0, min(5, normalized_rating))
         
+        # Get quick verdict from OTT rating mapping (similar to movie reviews)
+        quick_verdict = await self._get_quick_verdict(normalized_rating, review_data.bottom_line, db)
+        
         # Build platform string
         platform_str = ', '.join(review_data.platforms) if review_data.platforms else ''
+        
+        # Build highlights (what works) as bullet points
+        highlights_html = ""
+        if review_data.highlights:
+            highlights_html = f"<ul>\n"
+            for line in review_data.highlights.split('\n'):
+                line = line.strip()
+                if line:
+                    # Remove bullet prefix if present
+                    line = re.sub(r'^[•\-\*]\s*', '', line)
+                    if line:
+                        highlights_html += f"<li>{line}</li>\n"
+            highlights_html += "</ul>"
+        
+        # Build drawbacks (what doesn't work) as bullet points
+        drawbacks_html = ""
+        if review_data.drawbacks:
+            drawbacks_html = f"<ul>\n"
+            for line in review_data.drawbacks.split('\n'):
+                line = line.strip()
+                if line:
+                    line = re.sub(r'^[•\-\*]\s*', '', line)
+                    if line:
+                        drawbacks_html += f"<li>{line}</li>\n"
+            drawbacks_html += "</ul>"
         
         article_data = {
             'title': title,
@@ -425,9 +480,15 @@ class OTTReviewAgentService:
             'action_needed': action_needed,
             'action_needed_reasons': action_needed_reasons,
             
-            # Review fields
-            'review_final_verdict': f"<p>{review_data.verdict}</p>",
-            'movie_rating': f"{normalized_rating:.2f}",
+            # Review fields - properly filled from sections
+            'review_quick_verdict': quick_verdict,
+            'review_plot_summary': f"<p>{story_content}</p>" if story_content else '',
+            'review_performances': f"<p>{review_data.performances}</p>" if review_data.performances else '',
+            'review_what_works': highlights_html,
+            'review_what_doesnt_work': drawbacks_html,
+            'review_technical_aspects': f"<p>{review_data.technical_aspects}</p>" if review_data.technical_aspects else '',
+            'review_final_verdict': f"<p>{review_data.verdict}</p>" if review_data.verdict else '',
+            'movie_rating': f"{normalized_rating:.1f}",
             
             # OTT info
             'review_cast': review_data.cast,
