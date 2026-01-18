@@ -9,12 +9,13 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
   const { t } = useLanguage();
   const { getSectionHeaderClasses } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [activeTab, setActiveTab] = useTabState('movie-reviews', 'general'); // 'general' or 'bollywood'
+  const [activeTab, setActiveTab] = useTabState('movie-reviews', 'general'); // 'general', 'hindi', or 'english'
   const sliderRef = useRef(null);
 
   // Extract data from props - backend handles all date filtering based on EST timezone
   const movieReviews = movieReviewsData.movie_reviews || [];
-  const bollywoodReviews = movieReviewsData.bollywood || [];
+  const hindiReviews = movieReviewsData.hindi || [];
+  const englishReviews = movieReviewsData.english || [];
 
   // Get YouTube thumbnail URL from video URL
   const getYouTubeThumbnail = (youtubeUrl) => {
