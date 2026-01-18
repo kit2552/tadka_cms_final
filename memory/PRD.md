@@ -1,68 +1,83 @@
-# Tadka CMS - Product Requirements Document
+# Tadka - Personalized News Application
 
 ## Original Problem Statement
-Build an "OTT Release Agent" to scrape binged.com, a "Theater Release Agent" to scrape IMDb for movie release information, and a "Movie Review Agent" to scrape and aggregate movie reviews from websites.
+Build and maintain "Tadka", a full-stack news application with AI-powered content agents, movie reviews, and personalized content delivery based on user preferences (state, language, theme).
+
+## Core Requirements
+1. **Movie Review AI Agent** - Scrape and generate movie reviews from multiple sources
+2. **Homepage Sections** - Various content sections (Top Stories, Trailers, Movie Reviews, OTT, Sports, etc.)
+3. **Personalization** - Content filtering based on user's selected states and language preferences
+4. **CMS** - Content management system for creating/editing articles
+
+## Tech Stack
+- **Frontend:** React, Tailwind CSS, Shadcn/UI
+- **Backend:** FastAPI, Motor (async MongoDB)
+- **Database:** MongoDB
+- **AI:** OpenAI via Emergent LLM Key
 
 ## What's Been Implemented
 
-### OTT Release Agent (Complete)
-- Scrapes binged.com for OTT release information
-- Creates entries in `ott_releases` collection
-- Full CMS management in Dashboard
+### Movie Review AI Agent (Completed)
+- ✅ Single review URL processing
+- ✅ Listing page URL processing (scrape multiple movies from one URL)
+- ✅ Duplicate detection to avoid re-creating existing reviews
+- ✅ Auto-generated "Quick Verdict" based on movie rating
+- ✅ Gulte scraper (Telugu reviews)
+- ✅ Pinkvilla scraper (Hindi reviews with YouTube trailer extraction)
+- ✅ Configurable max reviews from listing page
+- ✅ Editable rating-to-verdict mapping in System Settings
 
-### Theater Release Agent (Complete)
-- **Date**: January 2025
-- Scrapes IMDb calendar pages (e.g., `https://www.imdb.com/calendar/?region=IN`)
-- Extracts: Title, Year, Release Date, Languages, Genres, Director, Cast, YouTube Trailer URL
-- Agent configuration form with dropdowns and checkboxes
-- Creates entries in `theater_releases` collection
+### Homepage Features (Completed)
+- ✅ Multiple content sections with tab navigation
+- ✅ State-based content filtering
+- ✅ Bollywood tab in Movie Reviews showing Hindi content (`content_type=movie_review` + `content_language=hi`)
+- ✅ Theme selection (Light, Dark, Colorful, Blue, Red)
 
-### Movie Review Agent (Complete)
-- **Date**: January 2026
-- Scrapes movie reviews from multiple websites (GreatAndhra, Gulte, IdleBrain, 123Telugu, etc.)
-- Extracts: Movie details, rating, cast, director, all review sections
-- Uses LLM (from System Settings) to rewrite and format content
-- **Rating Strategy**: Supports lowest/highest/average when multiple URLs provided
-- **Language dropdown**: For state-language mapping on homepage
-- Creates Movie Review posts in existing reviews section
+### CMS Features (Completed)
+- ✅ Article creation and editing
+- ✅ Movie review specific fields (rating, cast, what works/doesn't work)
+- ✅ YouTube trailer support
+- ✅ Image gallery support
 
-### Homepage Display (Complete)
-- Theater Releases section with tabs (Theater/Bollywood)
-- OTT Releases section with tabs (OTT/Bollywood)
-- State-to-language filtering based on user preferences
-- Language display with (Dubbed)/(Original) labels
-- Genre and Cast display for each movie
-- Scrollable sections showing up to 20 releases
-- Past 10 days filter + ascending date sort
+## Known Issues / Backlog
 
-## Prioritized Backlog
+### P1 - User Verification Pending
+- **Movie Review Page Layout** - Bottom padding/spacing issue. Previous fix attempt needs user verification.
 
-### P1 - YouTube Trailer Search Function
-Implement the checkbox-enabled feature to search YouTube for trailers when Theater Agent runs.
+### P2 - Not Started
+- **Article Status Bug** - When Movie Review Agent creates articles with `content_workflow="in_review"`, the `status` field is saved as `None` instead of `draft`. Needs investigation in `movie_review_agent_service.py` and `crud.py`.
 
-### P2 - API Refactoring
-Rename `/api/articles/sections/big-boss` → `/api/articles/sections/tv-reality-shows`
+### Technical Debt
+- `movie_review_scraper_service.py` is large - should be modularized into per-site parsers
+- `ArticlePage.jsx` and `SystemSettings.jsx` are over 1000+ lines - should be broken into sub-components
 
-### P3 - Code Cleanup
-Delete unused files:
-- `release_sources_routes.py`
-- `release_scraper_service.py`
+## Key Files Reference
+- `/app/backend/server.py` - Main FastAPI app and API routes
+- `/app/backend/services/movie_review_agent_service.py` - Movie Review Agent logic
+- `/app/backend/services/movie_review_scraper_service.py` - Web scraping (Gulte, Pinkvilla)
+- `/app/backend/crud.py` - Database operations
+- `/app/frontend/src/components/MovieReviews.jsx` - Homepage Movie Reviews component
+- `/app/frontend/src/pages/ArticlePage.jsx` - Movie review detail page
+- `/app/frontend/src/pages/SystemSettings.jsx` - System settings page
 
-## Key Database Collections
-- `ai_agents`: Agent configurations (includes movie_review type)
-- `theater_releases`: `{ movie_name, release_date, languages, genres, director, cast, youtube_url, status, is_published }`
-- `ott_releases`: `{ movie_name, release_date, languages, ott_platforms, director, cast, synopsis, status }`
-- `articles`: Movie reviews stored with `content_type: 'movie_review'`
+## Database Schema (Articles)
+```json
+{
+  "id": Number,
+  "title": String,
+  "slug": String,
+  "content_type": "movie_review" | "article" | ...,
+  "content_language": "hi" | "te" | "en" | ...,
+  "is_published": Boolean,
+  "status": "draft" | "published" | ...,
+  "movie_rating": String,
+  "review_quick_verdict": String,
+  "review_cast": String,
+  "review_what_works": String,
+  "review_what_doesnt_work": String,
+  ...
+}
+```
 
-## Tech Stack
-- **Frontend**: React, Tailwind CSS
-- **Backend**: FastAPI
-- **Database**: MongoDB
-- **Scraping**: BeautifulSoup4, httpx
-- **LLM**: OpenAI/Gemini/Anthropic (configurable via System Settings)
-
-## Key Files
-- `/app/backend/services/movie_review_scraper_service.py` - Generic review scraper
-- `/app/backend/services/movie_review_agent_service.py` - Agent orchestration + LLM
-- `/app/frontend/src/components/PostAgentForm.jsx` - Agent configuration form
-- `/app/frontend/src/components/CreateAgentModal.jsx` - Agent type selection
+## Last Updated
+January 18, 2026
