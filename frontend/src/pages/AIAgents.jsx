@@ -391,8 +391,8 @@ const AIAgents = () => {
         />
       )}
 
-      {/* Agent Form Modal - Show for post, photo_gallery, tadka_pics, video, tv_video, reality_show, ott_release, theater_release, and movie_review agents */}
-      {showAgentForm && (selectedAgentType === 'post' || selectedAgentType === 'photo_gallery' || selectedAgentType === 'tadka_pics' || selectedAgentType === 'video' || selectedAgentType === 'tv_video' || selectedAgentType === 'reality_show' || selectedAgentType === 'ott_release' || selectedAgentType === 'theater_release' || selectedAgentType === 'movie_review') && (
+      {/* Agent Form Modal - Show for post, photo_gallery, tadka_pics, video, tv_video, reality_show, ott_release, theater_release, movie_review, and ott_review agents */}
+      {showAgentForm && (selectedAgentType === 'post' || selectedAgentType === 'photo_gallery' || selectedAgentType === 'tadka_pics' || selectedAgentType === 'video' || selectedAgentType === 'tv_video' || selectedAgentType === 'reality_show' || selectedAgentType === 'ott_release' || selectedAgentType === 'theater_release' || selectedAgentType === 'movie_review' || selectedAgentType === 'ott_review') && (
         <PostAgentForm
           onClose={() => {
             setShowAgentForm(false);
