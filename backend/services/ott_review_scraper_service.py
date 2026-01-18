@@ -205,7 +205,13 @@ class OTTReviewScraper:
                     verdict_parts.append(sections['did i enjoy it'])
                 if sections.get('will you recommend it', ''):
                     verdict_parts.append(sections['will you recommend it'])
-                data.verdict = '\n\n'.join(verdict_parts)
+                verdict_text = '\n\n'.join(verdict_parts)
+                
+                # Clean up verdict - remove "Review by Binged Bureau" and similar patterns
+                verdict_text = re.sub(r'_?\[?The\s+\w+.*?Review.*?by\s+Binged\s+Bureau\]?_?', '', verdict_text, flags=re.IGNORECASE)
+                verdict_text = re.sub(r'Review\s+by\s+Binged\s+Bureau', '', verdict_text, flags=re.IGNORECASE)
+                verdict_text = re.sub(r'\s*\n\s*\n\s*\n+', '\n\n', verdict_text)  # Clean up extra newlines
+                data.verdict = verdict_text.strip()
                 
                 # Build full review content from all paragraphs as fallback
                 all_content = []
