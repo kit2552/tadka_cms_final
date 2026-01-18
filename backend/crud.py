@@ -550,9 +550,18 @@ def create_article(db, article: dict):
         "review_genre": article.get("review_genre"),
         "review_runtime": article.get("review_runtime"),
         "release_date": article.get("release_date"),
+        "release_type": article.get("release_type"),  # 'theater' or 'ott'
         "movie_language": article.get("movie_language"),
+        "original_language": article.get("original_language"),
+        "languages": article.get("languages"),
         "platform": article.get("platform"),
         "ott_platform": article.get("ott_platform"),
+        "ott_platforms": article.get("ott_platforms"),
+        "ott_content_type": article.get("ott_content_type"),  # 'movie' or 'webseries'
+        "enable_user_rating": article.get("enable_user_rating", False),
+        # Action needed fields
+        "action_needed": article.get("action_needed", False),
+        "action_needed_reasons": article.get("action_needed_reasons", []),
         # Social media embed fields
         "social_media_type": article.get("social_media_type"),
         "social_media_embed": _clean_twitter_embed(article.get("social_media_embed")),
