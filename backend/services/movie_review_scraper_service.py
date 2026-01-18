@@ -751,8 +751,9 @@ class MovieReviewScraper:
             print(f"   🎭 Extracted Performances: {len(data.performances)} chars")
         
         # 4. Technical Aspects → technical_aspects
+        # Pattern: "music and other technical aspects:" or "technical aspects:"
         technical_match = re.search(
-            r'(?:music and other )?technical aspects[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
+            r'(?:music\s+and\s+other\s+)?technical\s+aspects[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
             article_html, re.IGNORECASE | re.DOTALL
         )
         if technical_match:
@@ -763,8 +764,9 @@ class MovieReviewScraper:
             print(f"   🎬 Extracted Technical Aspects: {len(data.technical_aspects)} chars")
         
         # 5. Conclusion → final_verdict
+        # Pattern: "Review Conclusion:" or "Movie Review Conclusion:"
         conclusion_match = re.search(
-            r'Movie Review Conclusion[:\s]*</strong>\s*(.+?)(?=<strong>|<div|$)',
+            r'Review\s+Conclusion[:\s]*</strong>\s*(.+?)(?=<strong>|<div|$)',
             article_html, re.IGNORECASE | re.DOTALL
         )
         if conclusion_match:
@@ -786,7 +788,7 @@ class MovieReviewScraper:
                 data.story_plot = synopsis_text_match.group(1).strip()[:2000]
         
         print(f"   📝 Bollywood Hungama parsed: {data.movie_name}, Rating: {data.rating}/{data.rating_scale}")
-        print(f"      Sections: Synopsis={bool(data.story_plot)}, Performances={bool(data.performances)}, Technical={bool(data.technical_aspects)}, Verdict={bool(data.final_verdict)}")
+        print(f"      Sections: Synopsis={bool(data.story_plot)}, StoryReview={bool(data.what_works)}, Performances={bool(data.performances)}, Technical={bool(data.technical_aspects)}, Verdict={bool(data.final_verdict)}")
         return data
     
     def _parse_idlebrain(self, soup: BeautifulSoup, url: str) -> MovieReviewData:
