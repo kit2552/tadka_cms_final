@@ -212,6 +212,9 @@ const AIAgents = () => {
       case 'tv_video': return 'TV Video Agent';
       case 'reality_show': return 'Reality Shows Agent';
       case 'ott_release': return 'OTT Release Agent';
+      case 'theater_release': return 'Theater Release Agent';
+      case 'movie_review': return 'Movie Review Agent';
+      case 'ott_review': return 'OTT Review Agent';
       default: return type;
     }
   };
