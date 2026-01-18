@@ -186,7 +186,7 @@ class BingedScraperService:
         page = 1
         
         try:
-            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, http2=True) as client:
                 while len(releases) < limit:
                     url = self._build_url(language, mode, page)
                     print(f"   📄 Fetching page {page}: {url}")
@@ -259,7 +259,7 @@ class BingedScraperService:
     async def fetch_release_details(self, url: str) -> Optional[Dict]:
         """Fetch detailed information for a single release"""
         try:
-            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, http2=True) as client:
                 response = await client.get(url, headers=self.headers)
                 
                 if response.status_code != 200:
