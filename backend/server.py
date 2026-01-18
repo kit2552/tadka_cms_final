@@ -557,14 +557,95 @@ async def get_tadka_shorts_articles(limit: int = 20, states: str = None, db = De
         }
 
 @api_router.get("/articles/sections/ott-movie-reviews")
-async def get_ott_movie_reviews_articles(limit: int = 4, db = Depends(get_db)):
-    """Get articles for OTT Reviews section with OTT Reviews and Bollywood tabs"""
-    ott_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="ott-reviews", limit=limit)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="ott-reviews-bollywood", limit=limit)
+async def get_ott_movie_reviews_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
+    """Get articles for OTT Reviews section with state-based language filtering
+    
+    Args:
+        limit: Number of articles to fetch (default 20)
+        states: Comma-separated list of state codes for language filtering
+    
+    Returns:
+        ott_reviews: Regional OTT reviews based on user's state
+        bollywood: Hindi/Bollywood OTT reviews
+    """
+    from state_language_mapping import get_languages_for_states
+    
+    # For OTT Reviews tab - apply language filtering based on states
+    if states:
+        state_list = [s.strip() for s in states.split(',') if s.strip() and s.strip() != 'all']
+        user_languages = get_languages_for_states(state_list)
+        
+        lang_name_to_code = {
+            'Telugu': 'te', 'Tamil': 'ta', 'Hindi': 'hi', 'Kannada': 'kn',
+            'Malayalam': 'ml', 'Bengali': 'bn', 'Marathi': 'mr', 'Punjabi': 'pa',
+            'Gujarati': 'gu', 'Odia': 'or', 'Assamese': 'as', 'Urdu': 'ur'
+        }
+        language_codes = [lang_name_to_code.get(lang, lang.lower()[:2]) for lang in user_languages]
+        
+        print(f"🎬 OTT Reviews - States: {state_list}, Languages: {user_languages}, Codes: {language_codes}")
+        
+        # Filter articles by content_language matching user's state-based languages
+        ott_reviews_articles = list(db.articles.find({
+            "content_type": "ott_review",
+            "content_language": {"$in": language_codes},
+            "is_published": True
+        }).sort("published_at", -1).limit(limit))
+        
+        # Convert ObjectId to string
+        for article in ott_reviews_articles:
+            if '_id' in article:
+                article['_id'] = str(article['_id'])
+    else:
+        # No state preference - show all OTT reviews
+        ott_reviews_articles = list(db.articles.find({
+            "content_type": "ott_review",
+            "is_published": True
+        }).sort("published_at", -1).limit(limit))
+        
+        for article in ott_reviews_articles:
+            if '_id' in article:
+                article['_id'] = str(article['_id'])
+    
+    # For Bollywood tab - fetch Hindi OTT reviews (content_type=ott_review, content_language=hi)
+    bollywood_articles = list(db.articles.find({
+        "content_type": "ott_review",
+        "content_language": "hi",
+        "is_published": True
+    }).sort("published_at", -1).limit(limit))
+    
+    for article in bollywood_articles:
+        if '_id' in article:
+            article['_id'] = str(article['_id'])
+    
+    # Also include legacy category-based OTT reviews
+    legacy_ott = crud.get_articles_by_category_slug(db, category_slug="ott-reviews", limit=limit)
+    legacy_bollywood = crud.get_articles_by_category_slug(db, category_slug="ott-reviews-bollywood", limit=limit)
+    
+    # Merge and deduplicate
+    all_ott = ott_reviews_articles + (legacy_ott or [])
+    all_bollywood = bollywood_articles + (legacy_bollywood or [])
+    
+    seen_ids = set()
+    unique_ott = []
+    for article in all_ott:
+        article_id = article.get('id') or article.get('_id')
+        if article_id not in seen_ids:
+            seen_ids.add(article_id)
+            unique_ott.append(article)
+    
+    seen_ids_bw = set()
+    unique_bollywood = []
+    for article in all_bollywood:
+        article_id = article.get('id') or article.get('_id')
+        if article_id not in seen_ids_bw:
+            seen_ids_bw.add(article_id)
+            unique_bollywood.append(article)
+    
+    print(f"🎬 OTT Reviews - General: {len(unique_ott)}, Bollywood: {len(unique_bollywood)}")
     
     return {
-        "ott_movie_reviews": ott_reviews_articles,
-        "web_series": bollywood_articles
+        "ott_reviews": unique_ott[:limit],
+        "bollywood": unique_bollywood[:limit]
     }
 
 @api_router.get("/articles/sections/new-video-songs")
