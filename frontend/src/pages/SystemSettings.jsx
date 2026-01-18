@@ -4430,6 +4430,129 @@ const SystemSettings = () => {
         </div>
       )}
 
+      {/* OTT Rating Verdicts Tab */}
+      {activeTab === 'ott-rating-verdicts' && (
+        <div className="space-y-6">
+          {/* Success/Error Messages */}
+          {ottVerdictsMessage.text && (
+            <div className={`p-4 rounded-lg ${ottVerdictsMessage.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
+              <p className={`text-sm ${ottVerdictsMessage.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
+                {ottVerdictsMessage.text}
+              </p>
+            </div>
+          )}
+
+          {/* Info Box */}
+          <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
+            <h3 className="text-sm font-semibold text-cyan-900 mb-1">OTT Review Rating Verdicts</h3>
+            <p className="text-xs text-cyan-700">
+              Configure taglines/verdicts for OTT movie and web series reviews based on their rating.
+              These verdicts will be displayed on the OTT review pages.
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-between items-center mb-4">
+            <div className="text-sm text-gray-600">
+              Total Ratings: <strong>{Object.keys(editingOttVerdicts).length}</strong> (0.00 to 5.00 in 0.25 steps)
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={resetOttRatingVerdicts}
+                disabled={ottVerdictsLoading || isDefaultOttVerdicts}
+                className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Reset to Defaults
+              </button>
+              <button
+                onClick={saveOttRatingVerdicts}
+                disabled={ottVerdictsLoading}
+                className="px-4 py-2 text-sm text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 disabled:opacity-50"
+              >
+                {ottVerdictsLoading ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+
+          {/* Verdicts Table */}
+          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            {/* Scroll Indicator */}
+            <div className="bg-cyan-50 border-b border-cyan-200 px-4 py-2 text-xs text-cyan-700">
+              ⬇️ Scroll down to see all 21 ratings (0.00 to 5.00)
+            </div>
+            <div className="overflow-x-auto" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50 sticky top-0 z-10">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                      Rating
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48">
+                      Tag
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Verdict
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {Object.keys(editingOttVerdicts).length === 0 ? (
+                    <tr>
+                      <td colSpan="3" className="px-4 py-8 text-center text-sm text-gray-500">
+                        {ottVerdictsLoading ? 'Loading verdicts...' : 'No verdicts found'}
+                      </td>
+                    </tr>
+                  ) : (
+                    Object.entries(editingOttVerdicts)
+                      .sort(([a], [b]) => parseFloat(a) - parseFloat(b))
+                      .map(([rating, data]) => (
+                      <tr key={rating} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                          {parseFloat(rating).toFixed(2)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <input
+                            type="text"
+                            value={data.tag || ''}
+                            onChange={(e) => setEditingOttVerdicts({
+                              ...editingOttVerdicts,
+                              [rating]: { ...data, tag: e.target.value }
+                            })}
+                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                            placeholder="e.g., Must Watch"
+                          />
+                        </td>
+                        <td className="px-4 py-3">
+                          <textarea
+                            value={data.verdict || ''}
+                            onChange={(e) => setEditingOttVerdicts({
+                              ...editingOttVerdicts,
+                              [rating]: { ...data, verdict: e.target.value }
+                            })}
+                            rows={2}
+                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 resize-none"
+                            placeholder="Enter verdict text..."
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Preview Example */}
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <h4 className="text-sm font-medium text-gray-900 mb-2">Preview Example:</h4>
+            <div className="text-sm text-gray-700 space-y-1">
+              <p><strong>Rating 3.50:</strong> {editingOttVerdicts['3.5']?.tag} - {editingOttVerdicts['3.5']?.verdict}</p>
+              <p><strong>Rating 2.75:</strong> {editingOttVerdicts['2.75']?.tag} - {editingOttVerdicts['2.75']?.verdict}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       </div>
     </div>
   );
