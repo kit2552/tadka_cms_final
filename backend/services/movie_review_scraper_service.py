@@ -470,10 +470,15 @@ class MovieReviewScraper:
         
         # Extract JSON-LD structured data
         json_ld_scripts = soup.find_all('script', type='application/ld+json')
+        article_body_text = ""
         
         for script in json_ld_scripts:
             try:
                 json_data = json.loads(script.string)
+                
+                # Look for NewsArticle with articleBody
+                if isinstance(json_data, dict) and json_data.get('@type') == 'NewsArticle':
+                    article_body_text = json_data.get('articleBody', '')
                 
                 # Look for Review schema
                 if isinstance(json_data, dict) and json_data.get('@type') == 'Review':
@@ -503,6 +508,45 @@ class MovieReviewScraper:
                         
             except (json.JSONDecodeError, ValueError) as e:
                 continue
+        
+        # If we have articleBody from JSON-LD, parse it
+        if article_body_text:
+            # Split by sections
+            sections = article_body_text.split('\n\n')
+            current_section = None
+            
+            for section in sections:
+                section = section.strip()
+                if not section:
+                    continue
+                
+                if section.lower().startswith('plot:'):
+                    current_section = 'plot'
+                    data.story_plot = section.replace('Plot:', '').strip()
+                elif section.lower().startswith('what works:'):
+                    current_section = 'what_works'
+                    data.what_works = section.replace('What Works:', '').replace('What works:', '').strip()
+                elif section.lower().startswith('what doesn'):
+                    current_section = 'what_doesnt'
+                    data.what_doesnt_work = section.replace("What Doesn't:", '').replace("What doesn't:", '').strip()
+                elif section.lower().startswith('performance'):
+                    current_section = 'performances'
+                    data.performances = section.replace('Performances:', '').strip()
+                elif section.lower().startswith('final verdict'):
+                    current_section = 'verdict'
+                    data.final_verdict = section.replace('Final Verdict:', '').strip()
+                else:
+                    # Continue adding to current section
+                    if current_section == 'plot' and len(section) > 20:
+                        data.story_plot += '\n\n' + section
+                    elif current_section == 'what_works':
+                        data.what_works += '\n' + section
+                    elif current_section == 'what_doesnt':
+                        data.what_doesnt_work += '\n' + section
+                    elif current_section == 'performances':
+                        data.performances += '\n' + section
+                    elif current_section == 'verdict':
+                        data.final_verdict += '\n' + section
         
         # Fallback: Extract movie details from HTML if not found in JSON-LD
         # Look for director and cast in HTML (format: <h3 class="movie-details-style-bo">Director: Name</h3>)
