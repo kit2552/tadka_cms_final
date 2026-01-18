@@ -610,6 +610,112 @@ class MovieReviewScraper:
         elif section == 'verdict':
             data.final_verdict = text
     
+    def _parse_bollywoodhungama(self, soup: BeautifulSoup, url: str) -> MovieReviewData:
+        """
+        Parse movie review from BollywoodHungama.com
+        Extracts data from JSON-LD structured data (Review schema)
+        """
+        import json
+        import re
+        
+        data = MovieReviewData()
+        
+        # Extract JSON-LD structured data
+        json_ld_scripts = soup.find_all('script', type='application/ld+json')
+        
+        for script in json_ld_scripts:
+            try:
+                json_data = json.loads(script.string)
+                
+                # Look for Review schema
+                if isinstance(json_data, dict) and json_data.get('@type') == 'Review':
+                    print(f"   📋 Found Review JSON-LD schema")
+                    
+                    # Extract movie name from itemReviewed
+                    item_reviewed = json_data.get('itemReviewed', {})
+                    if item_reviewed.get('@type') == 'Movie':
+                        data.movie_name = item_reviewed.get('name', '')
+                        
+                        # Extract director
+                        directors = item_reviewed.get('director', [])
+                        if isinstance(directors, list) and len(directors) > 0:
+                            director_names = [d.get('name', '') for d in directors if isinstance(d, dict)]
+                            data.director = ', '.join(director_names)
+                        elif isinstance(directors, dict):
+                            data.director = directors.get('name', '')
+                        
+                        # Extract actors
+                        actors = item_reviewed.get('actor', [])
+                        if isinstance(actors, list) and len(actors) > 0:
+                            actor_names = [a.get('name', '') for a in actors if isinstance(a, dict)]
+                            data.cast = ', '.join(actor_names)
+                        elif isinstance(actors, dict):
+                            data.cast = actors.get('name', '')
+                        
+                        # Extract poster image
+                        data.poster_image = item_reviewed.get('image', '')
+                    
+                    # Extract rating
+                    review_rating = json_data.get('reviewRating', {})
+                    if review_rating:
+                        rating_value = review_rating.get('ratingValue', '0')
+                        data.rating = float(rating_value) if rating_value else 0
+                        best_rating = review_rating.get('bestRating', '5')
+                        data.rating_scale = float(best_rating) if best_rating else 5.0
+                    
+                    # Extract review body as final verdict
+                    data.final_verdict = json_data.get('reviewBody', '')
+                    
+                    # Extract description as story_plot
+                    data.story_plot = json_data.get('description', '')
+                    
+                    print(f"   ✅ Extracted from Review schema: {data.movie_name}")
+                    
+            except (json.JSONDecodeError, ValueError) as e:
+                continue
+        
+        # If movie name not found from JSON-LD, try from meta description
+        if not data.movie_name:
+            meta_desc = soup.find('meta', attrs={'name': 'description'})
+            if meta_desc:
+                desc_content = meta_desc.get('content', '')
+                # Pattern: "Movie Name Movie Review"
+                match = re.search(r'^(.+?)\s+Movie Review', desc_content)
+                if match:
+                    data.movie_name = match.group(1).strip()
+        
+        # Extract more details from meta description
+        meta_desc = soup.find('meta', attrs={'name': 'description'})
+        if meta_desc:
+            desc_content = meta_desc.get('content', '')
+            
+            # Extract Star Cast
+            cast_match = re.search(r'Star Cast[:\s]*([^D]+?)(?:Director|$)', desc_content)
+            if cast_match and not data.cast:
+                data.cast = cast_match.group(1).strip().rstrip(',')
+            
+            # Extract Director
+            director_match = re.search(r'Director[:\s]*([^G\n]+?)(?:$|\s{2,}|Review)', desc_content)
+            if director_match and not data.director:
+                data.director = director_match.group(1).strip().rstrip(',')
+        
+        # Extract full review text from article content
+        article = soup.find('article') or soup.find('main') or soup.find('div', class_='entry-content')
+        if article:
+            data.full_review_text = article.get_text()
+        else:
+            data.full_review_text = soup.get_text()
+        
+        # Try to extract story from the article content
+        if not data.story_plot and data.full_review_text:
+            # Look for Synopsis section
+            synopsis_match = re.search(r'Synopsis[:\s]*(.+?)(?:Analysis|Verdict|$)', data.full_review_text, re.IGNORECASE | re.DOTALL)
+            if synopsis_match:
+                data.story_plot = synopsis_match.group(1).strip()[:1500]  # Limit length
+        
+        print(f"   📝 Bollywood Hungama parsed: {data.movie_name}, Rating: {data.rating}/{data.rating_scale}")
+        return data
+    
     def _parse_idlebrain(self, soup: BeautifulSoup, url: str) -> MovieReviewData:
         """Parse movie review from idlebrain.com"""
         data = MovieReviewData()
