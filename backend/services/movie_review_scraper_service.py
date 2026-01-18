@@ -45,6 +45,7 @@ class MovieReviewData:
     source_url: str = ""
     source_name: str = ""
     poster_image: str = ""
+    youtube_url: str = ""  # YouTube trailer URL
     reviewer: str = ""
     review_date: str = ""
     
