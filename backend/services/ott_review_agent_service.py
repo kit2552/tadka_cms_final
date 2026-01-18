@@ -340,12 +340,12 @@ class OTTReviewAgentService:
                 # Get release date from OTT info
                 review_data.release_date = ott_info.get('release_date', '')
                 
-                # Get content type from OTT info - map to 'movie' or 'webseries'
+                # Get content type from OTT info - map to 'Movie' or 'Web Series'
                 ott_content_type = ott_info.get('content_type', '')
                 if ott_content_type in ['tv_show', 'web_series', 'Tv show']:
-                    review_data.content_type = 'webseries'
+                    review_data.content_type = 'Web Series'
                 elif ott_content_type in ['Film', 'movie', 'documentary']:
-                    review_data.content_type = 'movie'
+                    review_data.content_type = 'Movie'
                 # else keep the content_type detected from the review URL/title
                 
                 if not review_data.poster_image:
