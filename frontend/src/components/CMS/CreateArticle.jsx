@@ -2609,8 +2609,8 @@ const CreateArticle = () => {
                     </div>
                   )}
 
-                  {/* MOVIE REVIEW Type Fields */}
-                  {formData.content_type === 'movie_review' && (
+                  {/* MOVIE REVIEW / OTT REVIEW Type Fields */}
+                  {(formData.content_type === 'movie_review' || formData.content_type === 'ott_review') && (
                     <>
                       {/* Section 1: Basic Info - Two Column Layout */}
                       <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-5 mb-6">
