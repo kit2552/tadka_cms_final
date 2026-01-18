@@ -311,17 +311,83 @@ Rewrite the given content in a professional, engaging tone.
         
         rewritten = {}
         
-        # Try to rewrite each section, but use raw content if LLM fails
-        sections_to_rewrite = [
+        # Check if what_works contains story review raw text (from Bollywood Hungama)
+        # In that case, we need to use LLM to extract what works and what doesn't work
+        what_works_raw = self.temp_review_data.get('what_works', '')
+        what_doesnt_work_raw = self.temp_review_data.get('what_doesnt_work', '')
+        
+        if what_works_raw.startswith('[STORY_REVIEW_RAW]'):
+            # Extract the story review text
+            story_review_text = what_works_raw.replace('[STORY_REVIEW_RAW]', '').replace('[/STORY_REVIEW_RAW]', '').strip()
+            
+            print(f"      - Processing Story Review with LLM to extract what works/doesn't work...")
+            
+            # Use LLM to extract what works
+            try:
+                what_works_prompt = f"""Analyze this movie story review for "{movie_name}" and extract ONLY the positive points, things that worked well, or highlights mentioned.
+Output as 4-6 bullet points starting with •.
+Only include genuine positives, not neutral observations.
+
+Story Review:
+{story_review_text}"""
+                
+                result_works = self._llm_complete(system_prompt, what_works_prompt)
+                rewritten['what_works'] = result_works if result_works else ''
+                print(f"      ✅ Extracted what works: {len(rewritten['what_works'])} chars")
+            except Exception as e:
+                print(f"      ⚠️ LLM failed for what_works: {str(e)[:50]}")
+                rewritten['what_works'] = ''
+            
+            # Use LLM to extract what doesn't work
+            try:
+                what_doesnt_work_prompt = f"""Analyze this movie story review for "{movie_name}" and extract ONLY the negative points, things that didn't work, or drawbacks mentioned.
+Output as 3-5 bullet points starting with •.
+Only include genuine negatives or criticisms, not neutral observations.
+
+Story Review:
+{story_review_text}"""
+                
+                result_doesnt_work = self._llm_complete(system_prompt, what_doesnt_work_prompt)
+                rewritten['what_doesnt_work'] = result_doesnt_work if result_doesnt_work else ''
+                print(f"      ✅ Extracted what doesn't work: {len(rewritten['what_doesnt_work'])} chars")
+            except Exception as e:
+                print(f"      ⚠️ LLM failed for what_doesnt_work: {str(e)[:50]}")
+                rewritten['what_doesnt_work'] = ''
+        else:
+            # Normal processing for other sources
+            # Process what_works
+            if what_works_raw:
+                print(f"      - Processing highlights...")
+                try:
+                    result = self._llm_complete(system_prompt, f'Rewrite these highlights/positives for "{movie_name}" as 4-6 bullet points starting with •:\n\n' + what_works_raw)
+                    rewritten['what_works'] = result if result else what_works_raw
+                except Exception as e:
+                    print(f"      ⚠️ LLM failed for highlights, using raw content: {str(e)[:50]}")
+                    rewritten['what_works'] = what_works_raw
+            else:
+                rewritten['what_works'] = ''
+            
+            # Process what_doesnt_work
+            if what_doesnt_work_raw:
+                print(f"      - Processing drawbacks...")
+                try:
+                    result = self._llm_complete(system_prompt, f'Rewrite these drawbacks/negatives for "{movie_name}" as 3-5 bullet points starting with •:\n\n' + what_doesnt_work_raw)
+                    rewritten['what_doesnt_work'] = result if result else what_doesnt_work_raw
+                except Exception as e:
+                    print(f"      ⚠️ LLM failed for drawbacks, using raw content: {str(e)[:50]}")
+                    rewritten['what_doesnt_work'] = what_doesnt_work_raw
+            else:
+                rewritten['what_doesnt_work'] = ''
+        
+        # Process other sections normally
+        other_sections = [
             ('story_plot', 'story/plot', f'Rewrite this plot summary for "{movie_name}" in 2-3 paragraphs:\n\n'),
             ('performances', 'performances', f'Rewrite this performances section for "{movie_name}" in 2-3 paragraphs:\n\n'),
-            ('what_works', 'highlights', f'Rewrite these highlights/positives for "{movie_name}" as 4-6 bullet points starting with •:\n\n'),
-            ('what_doesnt_work', 'drawbacks', f'Rewrite these drawbacks/negatives for "{movie_name}" as 3-5 bullet points starting with •:\n\n'),
             ('technical_aspects', 'technical aspects', f'Rewrite this technical aspects section for "{movie_name}" in 1-2 paragraphs:\n\n'),
             ('final_verdict', 'verdict', f'Rewrite this verdict for "{movie_name}" in 2-3 paragraphs:\n\n'),
         ]
         
-        for field, label, prompt_prefix in sections_to_rewrite:
+        for field, label, prompt_prefix in other_sections:
             raw_content = self.temp_review_data.get(field, '')
             if raw_content:
                 print(f"      - Processing {label}...")
