@@ -108,6 +108,18 @@ const AIAgents = () => {
           const created = data.releases_created || 0;
           const skipped = data.releases_skipped || 0;
           message = `${created} OTT release(s) created! (${skipped} skipped - already exist)`;
+        } else if (data.reviews_created !== undefined) {
+          // Movie Review or OTT Review agent response
+          const created = data.reviews_created || 0;
+          const skipped = data.reviews_skipped || 0;
+          const scraped = data.reviews_scraped || 0;
+          if (created > 0) {
+            message = `${created} review(s) created successfully! (${skipped} skipped)`;
+          } else if (scraped > 0) {
+            message = `${scraped} review(s) scraped, ${skipped} skipped (all duplicates)`;
+          } else {
+            message = `No new reviews found to create`;
+          }
         } else if (data.groups_created !== undefined || data.groups_updated !== undefined) {
           // TV Video agent response
           const articlesCreated = data.articles_created || 0;
@@ -122,9 +134,12 @@ const AIAgents = () => {
         } else if (data.gallery_id !== undefined) {
           // Gallery agent response
           message = `Gallery "${data.title}" created successfully!`;
+        } else if (data.article_id !== undefined && data.title) {
+          // Single article created
+          message = `"${data.title}" created successfully!`;
         } else {
-          // Post agent response
-          message = `Article "${data.title || 'Untitled'}" created successfully!`;
+          // Generic success response
+          message = `Agent completed successfully!`;
         }
         
         setRunResults(prev => ({ 
