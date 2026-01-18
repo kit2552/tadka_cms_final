@@ -155,10 +155,13 @@ class OTTReviewScraper:
                 # Extract title from h1
                 title_elem = soup.find('h1')
                 if title_elem:
-                    data.title = title_elem.get_text(strip=True)
-                    # Clean title - remove common suffixes
-                    data.title = re.sub(r'\s*Review$', '', data.title, flags=re.IGNORECASE)
-                    print(f"   📝 Title: {data.title}")
+                    raw_title = title_elem.get_text(strip=True)
+                    # Clean title - remove "Review" suffix and taglines after dash/colon
+                    # Example: "The Rip Review – High Tension, Low Surprise Cop Thriller" -> "The Rip"
+                    data.title = re.sub(r'\s*Review$', '', raw_title, flags=re.IGNORECASE)
+                    # Remove everything after dash, colon, or pipe (taglines)
+                    data.title = re.sub(r'\s*[–\-:|\|].*$', '', data.title).strip()
+                    print(f"   📝 Title: {data.title} (from: {raw_title[:50]}...)")
                 
                 # Detect content type from title or URL
                 url_lower = url.lower()
