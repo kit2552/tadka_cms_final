@@ -632,8 +632,7 @@ def get_movie_reviews_articles(limit: int = 20, states: str = None, db = Depends
     
     Returns:
         movie_reviews: Regional movie reviews based on user's state
-        hindi: Hindi language movie reviews
-        english: English language movie reviews
+        bollywood: Hindi/Bollywood movie reviews (includes both Hindi and English movies from Bollywood sources)
     """
     from state_language_mapping import get_languages_for_states
     
@@ -664,70 +663,43 @@ def get_movie_reviews_articles(limit: int = 20, states: str = None, db = Depends
         # No state preference - show all movie reviews
         movie_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews", limit=limit)
     
-    # For Hindi tab - fetch Hindi movie reviews (content_type=movie_review, content_language=hi)
-    # This includes reviews created by Movie Review Agent for Hindi movies
-    hindi_articles = list(db.articles.find({
+    # For Bollywood tab - fetch Hindi movie reviews (content_type=movie_review, content_language=hi)
+    # This includes reviews created by Movie Review Agent from Pinkvilla/Bollywood Hungama
+    # (both Hindi and English movies are stored with content_language=hi for Bollywood tab)
+    bollywood_articles = list(db.articles.find({
         "content_type": "movie_review",
         "content_language": "hi",
         "is_published": True
     }).sort("published_at", -1).limit(limit))
     
     # Convert ObjectId to string and ensure proper format
-    for article in hindi_articles:
+    for article in bollywood_articles:
         if '_id' in article:
             article['_id'] = str(article['_id'])
     
-    # Also include articles from category-based hindi/bollywood reviews (if any exist)
-    category_based_hindi = crud.get_articles_by_category_slug(db, category_slug="movie-reviews-bollywood", limit=limit)
+    # Also include articles from category-based bollywood reviews (if any exist)
+    category_based_bollywood = crud.get_articles_by_category_slug(db, category_slug="movie-reviews-bollywood", limit=limit)
     
-    # Merge and deduplicate Hindi reviews
-    all_hindi = hindi_articles + (category_based_hindi or [])
+    # Merge and deduplicate Bollywood reviews
+    all_bollywood = bollywood_articles + (category_based_bollywood or [])
     seen_ids = set()
-    unique_hindi = []
-    for article in all_hindi:
+    unique_bollywood = []
+    for article in all_bollywood:
         article_id = article.get('id') or article.get('_id')
         if article_id not in seen_ids:
             seen_ids.add(article_id)
-            unique_hindi.append(article)
+            unique_bollywood.append(article)
     
     # Sort by published_at and limit
-    unique_hindi.sort(key=lambda x: x.get('published_at', ''), reverse=True)
-    unique_hindi = unique_hindi[:limit]
+    unique_bollywood.sort(key=lambda x: x.get('published_at', ''), reverse=True)
+    unique_bollywood = unique_bollywood[:limit]
     
-    # For English tab - fetch English movie reviews (content_type=movie_review, content_language=en)
-    # This includes reviews created by Movie Review Agent for English/Hollywood movies
-    english_articles = list(db.articles.find({
-        "content_type": "movie_review",
-        "content_language": "en",
-        "is_published": True
-    }).sort("published_at", -1).limit(limit))
-    
-    # Convert ObjectId to string and ensure proper format
-    for article in english_articles:
-        if '_id' in article:
-            article['_id'] = str(article['_id'])
-    
-    # Also include articles from category-based english reviews (if any exist)
-    category_based_english = crud.get_articles_by_category_slug(db, category_slug="movie-reviews-english", limit=limit)
-    
-    # Merge and deduplicate English reviews
-    all_english = english_articles + (category_based_english or [])
-    seen_ids_en = set()
-    unique_english = []
-    for article in all_english:
-        article_id = article.get('id') or article.get('_id')
-        if article_id not in seen_ids_en:
-            seen_ids_en.add(article_id)
-            unique_english.append(article)
-    
-    # Sort by published_at and limit
-    unique_english.sort(key=lambda x: x.get('published_at', ''), reverse=True)
-    unique_english = unique_english[:limit]
-    
-    print(f"🎬 Movie Reviews - General: {len(movie_reviews_articles or [])}, Hindi: {len(unique_hindi)}, English: {len(unique_english)}")
+    print(f"🎬 Movie Reviews - General: {len(movie_reviews_articles or [])}, Bollywood: {len(unique_bollywood)}")
     
     return {
         "movie_reviews": movie_reviews_articles or [],
+        "bollywood": unique_bollywood or []
+    }
         "hindi": unique_hindi or [],
         "english": unique_english or []
     }
