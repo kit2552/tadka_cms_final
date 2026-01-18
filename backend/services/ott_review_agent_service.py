@@ -534,6 +534,9 @@ class OTTReviewAgentService:
             'summary': review_data.verdict[:200] if review_data.verdict else '',
             'youtube_url': youtube_url,
             
+            # Release type - set to OTT for OTT reviews
+            'release_type': 'ott',
+            
             # Action Needed tracking
             'action_needed': action_needed,
             'action_needed_reasons': action_needed_reasons,
