@@ -609,7 +609,11 @@ Story Review:
             'article_language': 'en',  # Use 'en' for CMS filtering
             'content_language': content_language_code,  # Actual language code (te, ta, hi, etc.)
             'summary': '',  # Required field
-            'youtube_url': self.temp_review_data.get('youtube_url', '') or '',  # YouTube trailer URL
+            'youtube_url': youtube_url,  # YouTube trailer URL (may be empty)
+            
+            # Action Needed tracking
+            'action_needed': action_needed,
+            'action_needed_reasons': action_needed_reasons if action_needed else [],
             
             # Movie review specific fields - review sections with HTML
             'review_quick_verdict': rewritten_sections.get('quick_verdict', ''),
@@ -638,8 +642,8 @@ Story Review:
             'platform': 'Theater',
             'states': json.dumps(states),  # JSON string like '["ap", "ts"]'
             
-            # Images
-            'image': self.temp_review_data.get('poster_image', ''),
+            # Images - only set if we have YouTube trailer (action not needed)
+            'image': poster_image,
             
             # SEO
             'seo_description': meta_description[:160],
