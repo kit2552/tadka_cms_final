@@ -458,6 +458,145 @@ class MovieReviewScraper:
         
         return data
     
+    def _parse_pinkvilla(self, soup: BeautifulSoup, url: str) -> MovieReviewData:
+        """
+        Parse movie review from Pinkvilla.com
+        Extracts data from JSON-LD structured data and HTML content
+        """
+        import json
+        import re
+        
+        data = MovieReviewData()
+        
+        # Extract JSON-LD structured data
+        json_ld_scripts = soup.find_all('script', type='application/ld+json')
+        
+        for script in json_ld_scripts:
+            try:
+                json_data = json.loads(script.string)
+                
+                # Look for Review schema
+                if isinstance(json_data, dict) and json_data.get('@type') == 'Review':
+                    # Extract movie name
+                    item_reviewed = json_data.get('itemReviewed', {})
+                    if item_reviewed.get('@type') == 'Movie':
+                        data.movie_name = item_reviewed.get('name', '')
+                        
+                        # Extract director
+                        director_info = item_reviewed.get('director', {})
+                        if isinstance(director_info, dict):
+                            data.director = director_info.get('name', '')
+                        
+                        # Extract cast (comes as list or string)
+                        actors = item_reviewed.get('actor', [])
+                        if isinstance(actors, list) and len(actors) > 0:
+                            data.cast = actors[0] if isinstance(actors[0], str) else ''
+                        elif isinstance(actors, str):
+                            data.cast = actors
+                    
+                    # Extract rating
+                    review_rating = json_data.get('reviewRating', {})
+                    if review_rating:
+                        rating_value = review_rating.get('ratingValue', '0')
+                        data.rating = float(rating_value) if rating_value else 0
+                        data.rating_scale = float(review_rating.get('bestRating', 5))
+                        
+            except (json.JSONDecodeError, ValueError) as e:
+                continue
+        
+        # Fallback: Extract movie details from HTML if not found in JSON-LD
+        # Look for director and cast in HTML (format: <h3 class="movie-details-style-bo">Director: Name</h3>)
+        for h3 in soup.find_all('h3', class_='movie-details-style-bo'):
+            text = h3.get_text(strip=True)
+            if text.lower().startswith('director:'):
+                data.director = text.replace('Director:', '').strip()
+            elif text.lower().startswith('cast:'):
+                data.cast = text.replace('Cast:', '').strip()
+        
+        # Extract article body content
+        article = soup.find('article') or soup.find('div', class_='article-content') or soup
+        
+        # Get all paragraphs
+        paragraphs = article.find_all('p')
+        
+        # Extract sections based on content
+        current_section = None
+        plot_parts = []
+        what_works_parts = []
+        what_doesnt_parts = []
+        performances_parts = []
+        verdict_parts = []
+        
+        for p in paragraphs:
+            p_text = p.get_text(strip=True)
+            
+            # Check for section headers in strong tags
+            strong = p.find('strong')
+            if strong:
+                header_text = strong.get_text(strip=True).lower()
+                
+                if 'plot' in header_text:
+                    current_section = 'plot'
+                    # Include text after the strong tag
+                    remaining = p_text.replace(strong.get_text(strip=True), '').strip().lstrip(':')
+                    if remaining:
+                        plot_parts.append(remaining)
+                    continue
+                elif 'what works' in header_text or 'positives' in header_text:
+                    current_section = 'what_works'
+                    continue
+                elif "what doesn't" in header_text or "what doesnt" in header_text or 'negatives' in header_text:
+                    current_section = 'what_doesnt'
+                    continue
+                elif 'performance' in header_text:
+                    current_section = 'performances'
+                    continue
+                elif 'final verdict' in header_text or 'verdict' in header_text:
+                    current_section = 'verdict'
+                    continue
+            
+            # Add content to appropriate section
+            if current_section == 'plot' and p_text and len(p_text) > 20:
+                plot_parts.append(p_text)
+            elif current_section == 'what_works' and p_text:
+                what_works_parts.append(p_text)
+            elif current_section == 'what_doesnt' and p_text:
+                what_doesnt_parts.append(p_text)
+            elif current_section == 'performances' and p_text:
+                performances_parts.append(p_text)
+            elif current_section == 'verdict' and p_text:
+                verdict_parts.append(p_text)
+        
+        # Extract from ul/li for What Works and What Doesn't Work
+        for ul in article.find_all('ul'):
+            prev_strong = ul.find_previous('strong')
+            if prev_strong:
+                header = prev_strong.get_text(strip=True).lower()
+                items = [li.get_text(strip=True) for li in ul.find_all('li')]
+                
+                if 'what works' in header or 'positives' in header:
+                    what_works_parts.extend(items)
+                elif "what doesn't" in header or "what doesnt" in header or 'negatives' in header:
+                    what_doesnt_parts.extend(items)
+                elif 'performance' in header:
+                    performances_parts.extend(items)
+        
+        # Assign to data fields
+        data.story_plot = '\n\n'.join(plot_parts) if plot_parts else ''
+        data.what_works = '\n'.join(what_works_parts) if what_works_parts else ''
+        data.what_doesnt_work = '\n'.join(what_doesnt_parts) if what_doesnt_parts else ''
+        data.performances = '\n\n'.join(performances_parts) if performances_parts else ''
+        data.final_verdict = '\n\n'.join(verdict_parts) if verdict_parts else ''
+        
+        # Extract quick verdict from title or first paragraph
+        if not data.final_verdict:
+            first_p = paragraphs[0].get_text(strip=True) if paragraphs else ''
+            data.quick_verdict = first_p[:200] if first_p else ''
+        
+        data.full_review_text = article.get_text()
+        
+        return data
+    
     def _parse_idlebrain(self, soup: BeautifulSoup, url: str) -> MovieReviewData:
         """Parse movie review from idlebrain.com"""
         data = MovieReviewData()
