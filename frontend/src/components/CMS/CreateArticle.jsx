@@ -3019,21 +3019,21 @@ const CreateArticle = () => {
                             </div>
                           </div>
 
-                          {/* Row 7: Platform and Release Date */}
+                          {/* Row 7: Release Type and Release Date */}
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                 Release
                               </label>
                               <select
-                                name="platform"
-                                value={formData.platform}
+                                name="release_type"
+                                value={formData.release_type}
                                 onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Release Type</option>
-                                <option value="Theater">Theater</option>
-                                <option value="OTT">OTT</option>
+                                <option value="theater">Theater</option>
+                                <option value="ott">OTT</option>
                               </select>
                             </div>
 
@@ -3051,8 +3051,8 @@ const CreateArticle = () => {
                             </div>
                           </div>
 
-                          {/* OTT Release Fields - Show only when platform is OTT */}
-                          {formData.platform === 'OTT' && (
+                          {/* OTT Release Fields - Show only when release_type is OTT */}
+                          {formData.release_type === 'ott' && (
                             <>
                               {/* Row 7: Content Type and OTT Platforms */}
                               <div className="grid grid-cols-2 gap-4">
