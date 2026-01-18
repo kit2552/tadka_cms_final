@@ -606,10 +606,10 @@ async def get_ott_movie_reviews_articles(limit: int = 20, states: str = None, db
             if '_id' in article:
                 article['_id'] = str(article['_id'])
     
-    # For Bollywood tab - fetch Hindi OTT reviews (content_type=ott_review, content_language=hi)
+    # For Bollywood tab - fetch Hindi AND English OTT reviews (content_type=ott_review, content_language in [hi, en])
     bollywood_articles = list(db.articles.find({
         "content_type": "ott_review",
-        "content_language": "hi",
+        "content_language": {"$in": ["hi", "en"]},
         "is_published": True
     }).sort("published_at", -1).limit(limit))
     
