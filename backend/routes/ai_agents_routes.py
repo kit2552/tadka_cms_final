@@ -232,6 +232,12 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
             # Use Movie Review Agent Service
             from services.movie_review_agent_service import movie_review_agent_service
             result = await movie_review_agent_service.run_movie_review_agent(agent_id)
+        elif agent_type == 'ott_review':
+            # Use OTT Review Agent Service
+            from services.ott_review_agent_service import ott_review_agent_service
+            # Get agent config
+            agent_config = crud.get_ai_agent(db, agent_id)
+            result = await ott_review_agent_service.run(agent_config, db)
         else:
             # Use Post Agent Service (default)
             result = await agent_runner.run_agent(agent_id)
