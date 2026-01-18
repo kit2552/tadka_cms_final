@@ -577,6 +577,14 @@ class MovieReviewScraper:
             # Assign last section
             if current_section and section_content:
                 self._assign_section_content(data, current_section, section_content)
+            
+            # Set YouTube trailer URL and poster image if found
+            if youtube_video_id:
+                data.youtube_url = f"https://www.youtube.com/watch?v={youtube_video_id}"
+                # Use high-quality YouTube thumbnail as poster image
+                data.poster_image = f"https://img.youtube.com/vi/{youtube_video_id}/maxresdefault.jpg"
+                print(f"   🎥 YouTube URL: {data.youtube_url}")
+                print(f"   🖼️  Poster Image: {data.poster_image}")
         
         data.full_review_text = article_body_text
         return data
