@@ -1101,6 +1101,9 @@ const SystemSettings = () => {
     if (activeTab === 'rating-verdicts') {
       fetchRatingVerdicts();
     }
+    if (activeTab === 'ott-rating-verdicts') {
+      fetchOttRatingVerdicts();
+    }
   }, [youtubeLanguageFilter, youtubeTypeFilter, activeTab]);
 
   // Fetch Rating Verdicts
@@ -1121,6 +1124,95 @@ const SystemSettings = () => {
       setVerdictsMessage({ type: 'error', text: 'Failed to load rating verdicts' });
     } finally {
       setVerdictsLoading(false);
+    }
+  };
+
+  // Fetch OTT Rating Verdicts
+  const fetchOttRatingVerdicts = async () => {
+    setOttVerdictsLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ott-rating-verdicts`);
+      const data = await response.json();
+      
+      console.log('Fetched OTT rating verdicts:', data);
+      
+      setOttRatingVerdicts(data.verdicts || {});
+      setEditingOttVerdicts(JSON.parse(JSON.stringify(data.verdicts || {})));
+      setIsDefaultOttVerdicts(data.is_default || false);
+    } catch (error) {
+      console.error('Error fetching OTT rating verdicts:', error);
+      setOttVerdictsMessage({ type: 'error', text: 'Failed to load OTT rating verdicts' });
+    } finally {
+      setOttVerdictsLoading(false);
+    }
+  };
+
+  // Save OTT Rating Verdicts
+  const saveOttRatingVerdicts = async () => {
+    setOttVerdictsLoading(true);
+    setOttVerdictsMessage({ type: '', text: '' });
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ott-rating-verdicts`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ verdicts: editingOttVerdicts })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setOttRatingVerdicts(data.verdicts);
+        setIsDefaultOttVerdicts(false);
+        setOttVerdictsMessage({ type: 'success', text: 'OTT rating verdicts updated successfully!' });
+        
+        setTimeout(() => {
+          setOttVerdictsMessage({ type: '', text: '' });
+        }, 3000);
+      } else {
+        throw new Error(data.detail || 'Failed to update OTT rating verdicts');
+      }
+    } catch (error) {
+      console.error('Error saving OTT rating verdicts:', error);
+      setOttVerdictsMessage({ type: 'error', text: error.message || 'Failed to save OTT rating verdicts' });
+    } finally {
+      setOttVerdictsLoading(false);
+    }
+  };
+
+  // Reset OTT Rating Verdicts to Default
+  const resetOttRatingVerdicts = async () => {
+    if (!window.confirm('Are you sure you want to reset all OTT rating verdicts to default values?')) {
+      return;
+    }
+    
+    setOttVerdictsLoading(true);
+    setOttVerdictsMessage({ type: '', text: '' });
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/system-settings/ott-rating-verdicts/reset`, {
+        method: 'POST'
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setOttRatingVerdicts(data.verdicts);
+        setEditingOttVerdicts(JSON.parse(JSON.stringify(data.verdicts)));
+        setIsDefaultOttVerdicts(true);
+        setOttVerdictsMessage({ type: 'success', text: 'OTT rating verdicts reset to defaults!' });
+        
+        setTimeout(() => {
+          setOttVerdictsMessage({ type: '', text: '' });
+        }, 3000);
+      } else {
+        throw new Error(data.detail || 'Failed to reset OTT rating verdicts');
+      }
+    } catch (error) {
+      console.error('Error resetting OTT rating verdicts:', error);
+      setOttVerdictsMessage({ type: 'error', text: error.message || 'Failed to reset OTT rating verdicts' });
+    } finally {
+      setOttVerdictsLoading(false);
     }
   };
 
