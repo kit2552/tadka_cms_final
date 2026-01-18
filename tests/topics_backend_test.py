@@ -20,7 +20,7 @@ from datetime import datetime
 import os
 
 # Get backend URL from environment
-BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://tadka-importer.preview.emergentagent.com')
+BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://movie-guru-1.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
 class TopicsAPITester:
