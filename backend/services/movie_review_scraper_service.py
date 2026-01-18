@@ -521,38 +521,43 @@ class MovieReviewScraper:
                 if not line:
                     continue
                 
-                # Check for section headers
-                if line.lower() == 'plot:':
+                # Check for section headers (case-insensitive, handle embedded text)
+                line_lower = line.lower()
+                
+                # Check if line contains section header (even if concatenated with other text)
+                if 'plot:' in line_lower:
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'plot'
                     section_content = []
-                elif line.lower() == 'what works:':
+                elif 'what works:' in line_lower:
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'what_works'
                     section_content = []
-                elif line.lower().startswith('what doesn'):
+                elif 'what doesn' in line_lower and ':' in line:
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'what_doesnt'
                     section_content = []
-                elif line.lower() == 'performances:':
+                elif 'performances:' in line_lower:
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'performances'
                     section_content = []
-                elif line.lower().startswith('final verdict'):
+                    # Extract text after "Performances:" if on same line
+                    perf_idx = line_lower.index('performances:')
+                    remaining = line[perf_idx + len('Performances:'):].strip()
+                    if remaining:
+                        section_content.append(remaining)
+                elif 'final verdict' in line_lower:
                     if current_section and section_content:
                         self._assign_section_content(data, current_section, section_content)
                     current_section = 'verdict'
                     section_content = []
-                elif line.lower().startswith("here's a look"):
-                    # Skip trailer section
-                    if current_section and section_content:
-                        self._assign_section_content(data, current_section, section_content)
-                    current_section = None
-                    section_content = []
+                elif "here's a look" in line_lower or 'watch the trailer' in line_lower:
+                    # Skip trailer section - don't change current section
+                    continue
                 else:
                     # Add content to current section
                     if current_section:
