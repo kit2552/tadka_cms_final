@@ -184,33 +184,15 @@ class MovieReviewAgentService:
         """
         Detect if movie is English or Hindi based on title and source.
         
-        For Bollywood Hungama:
-        - "Movie Name (English)" → English movie
-        - "Movie Name" (no bracket) → Hindi movie
+        NOTE: This function is currently disabled for Pinkvilla and Bollywood Hungama.
+        All reviews from these sources are categorized as Hindi/Bollywood regardless of 
+        whether the movie is actually Hindi or English.
         
-        For Pinkvilla and other sources:
-        - Check if movie name contains known Hollywood/English indicators
-        - Default to selected language (don't filter)
-        
-        Returns: 'English', 'Hindi', or empty string (no filtering)
+        Returns: Empty string (no filtering)
         """
-        import re
-        
-        if not movie_name:
-            return ""  # No filtering
-        
-        # For Bollywood Hungama - use the (English) bracket convention
-        if 'bollywoodhungama' in source_url.lower():
-            if re.search(r'\(\s*english\s*\)\s*$', movie_name, re.IGNORECASE):
-                print(f"      🌐 Detected English movie from title: '{movie_name}'")
-                return "English"
-            # No "(English)" in Bollywood Hungama title means Hindi
-            return "Hindi"
-        
-        # For Pinkvilla and other sources - don't auto-filter based on title
-        # Let the user's selected language be used
-        # (Pinkvilla reviews both Hindi and English movies without language markers)
-        return ""  # Empty = no language filtering, use selected language
+        # No language filtering - all movies from Pinkvilla/Bollywood Hungama 
+        # are categorized as Hindi/Bollywood
+        return ""
     
     async def run_movie_review_agent(self, agent_id: str) -> Dict:
         """
