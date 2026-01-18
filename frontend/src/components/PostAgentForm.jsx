@@ -74,7 +74,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     theater_search_trailers: false,  // Search YouTube RSS for trailers
     // Movie Review Agent fields
     review_rating_strategy: 'lowest',  // lowest, highest, average
-    review_language: 'Telugu'  // Language for the review
+    review_language: 'Telugu',  // Language for the review
+    review_website: ''  // Website source for reviews
   });
   
   // Default filter settings for each category
