@@ -98,9 +98,13 @@ class ArticleBase(BaseModel):
     movie_language: Optional[str] = None
     censor_rating: Optional[str] = None
     release_date: Optional[str] = None
+    release_type: Optional[str] = None  # 'theater' or 'ott'
     platform: Optional[str] = None
     ott_content_type: Optional[str] = None
     ott_platforms: Optional[str] = None  # JSON array
+    enable_user_rating: Optional[bool] = None  # Enable user ratings for reviews
+    original_language: Optional[str] = None
+    languages: Optional[str] = None  # JSON array
     # Social Media Embed fields
     social_media_type: Optional[str] = None
     social_media_embed: Optional[str] = None
@@ -167,9 +171,13 @@ class ArticleUpdate(BaseModel):
     movie_language: Optional[str] = None
     censor_rating: Optional[str] = None
     release_date: Optional[str] = None
+    release_type: Optional[str] = None  # 'theater' or 'ott'
     platform: Optional[str] = None
     ott_content_type: Optional[str] = None
     ott_platforms: Optional[str] = None  # JSON array
+    enable_user_rating: Optional[bool] = None  # Enable user ratings for reviews
+    original_language: Optional[str] = None
+    languages: Optional[str] = None  # JSON array
     # Social Media Embed fields
     social_media_type: Optional[str] = None
     social_media_embed: Optional[str] = None
