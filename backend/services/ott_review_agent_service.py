@@ -76,7 +76,7 @@ class OTTReviewAgentService:
     async def _get_quick_verdict(self, rating: float, bottom_line: str, db) -> str:
         """
         Get quick verdict tagline based on OTT rating mapping from system settings
-        Falls back to bottom_line from review if no mapping found
+        Falls back to default verdicts based on rating
         """
         # Try to get OTT rating mapping from system settings
         try:
@@ -86,34 +86,38 @@ class OTTReviewAgentService:
                 # Find the exact or closest rating match
                 # Round to nearest 0.25
                 rounded_rating = round(rating * 4) / 4
-                rating_key = str(rounded_rating)
                 
-                if rating_key in verdicts:
-                    verdict_data = verdicts[rating_key]
-                    tag = verdict_data.get('tag', '')
-                    verdict = verdict_data.get('verdict', '')
-                    if tag:
-                        return f"{tag}"  # Return just the tag for the quick verdict
-                    elif verdict:
-                        return verdict[:50]  # Truncate verdict for display
+                # Try different key formats: "3.0", "3", "3.00"
+                rating_keys_to_try = [
+                    str(rounded_rating),
+                    str(int(rounded_rating)) if rounded_rating == int(rounded_rating) else None,
+                    f"{rounded_rating:.2f}",
+                    f"{rounded_rating:.1f}",
+                ]
+                
+                for rating_key in rating_keys_to_try:
+                    if rating_key and rating_key in verdicts:
+                        verdict_data = verdicts[rating_key]
+                        tag = verdict_data.get('tag', '')
+                        if tag:
+                            print(f"   📌 Using OTT rating verdict: {tag} (for rating {rating_key})")
+                            return tag
         except Exception as e:
             print(f"   ⚠️ Error fetching OTT rating mapping: {str(e)}")
         
-        # Fallback to bottom_line from review
-        if bottom_line:
-            return bottom_line
-        
-        # Default verdicts based on rating
+        # Default verdicts based on rating (don't use bottom_line as it may contain garbage)
         if rating >= 4.0:
             return "Must Watch!"
         elif rating >= 3.5:
             return "Worth Your Time"
         elif rating >= 3.0:
-            return "One-Time Watch"
+            return "Good Watch"
         elif rating >= 2.5:
-            return "Passable"
+            return "One-Time Watch"
         elif rating >= 2.0:
             return "Below Average"
+        elif rating >= 1.0:
+            return "Disappointing"
         else:
             return "Skip It"
     
