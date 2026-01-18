@@ -706,10 +706,12 @@ class MovieReviewScraper:
         
         # Section patterns for Bollywood Hungama - they use <strong> tags for section headers
         # Pattern: <strong>Movie Name Movie Review Synopsis:</strong>
+        # We look for keywords like "Review Synopsis", "Story Review", "Review Performances", etc.
         
         # 1. Synopsis → story_plot (Main Plot)
+        # Pattern: "Review Synopsis:" or "Movie Review Synopsis:"
         synopsis_match = re.search(
-            r'Movie Review Synopsis[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
+            r'Review\s+Synopsis[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
             article_html, re.IGNORECASE | re.DOTALL
         )
         if synopsis_match:
@@ -721,8 +723,9 @@ class MovieReviewScraper:
             print(f"   📖 Extracted Synopsis: {len(data.story_plot)} chars")
         
         # 2. Story Review → for extracting what works/doesn't work (store as raw text)
+        # Pattern: "Story Review:" or "Movie Story Review:"
         story_review_match = re.search(
-            r'Movie Story Review[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
+            r'Story\s+Review[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
             article_html, re.IGNORECASE | re.DOTALL
         )
         story_review_text = ""
@@ -735,8 +738,9 @@ class MovieReviewScraper:
             print(f"   📝 Extracted Story Review for analysis: {len(story_review_text)} chars")
         
         # 3. Performances → performances
+        # Pattern: "Review Performances:" or "Movie Review Performances:"
         performances_match = re.search(
-            r'Movie Review Performances[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
+            r'Review\s+Performances[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
             article_html, re.IGNORECASE | re.DOTALL
         )
         if performances_match:
