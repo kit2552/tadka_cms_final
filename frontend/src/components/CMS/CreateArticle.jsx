@@ -346,7 +346,8 @@ const CreateArticle = () => {
           youtube_url: article.youtube_url || '',
           display_title: article.display_title || '', // Load display title
           tags: article.tags || '',
-          movie_rating: article.movie_rating || '', // Load movie rating
+          // Normalize movie_rating to 2 decimal places to match select options
+          movie_rating: article.movie_rating ? parseFloat(article.movie_rating).toFixed(2) : '',
           is_featured: article.is_featured || false,
           is_sponsored: article.is_sponsored || false,
           is_published: article.is_published || false,
