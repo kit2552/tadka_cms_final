@@ -2550,8 +2550,8 @@ Instructions:
               </div>
             )}
 
-            {/* Reference Content Section - Hide for Tadka Pics with Instagram source, Video agents, TV Video agents, Reality Show agents, and OTT Release agents */}
-            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && (
+            {/* Reference Content Section - Hide for Tadka Pics with Instagram source, Video agents, TV Video agents, Reality Show agents, OTT Release agents, and OTT Review agents */}
+            {!(formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram') && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && formData.agent_type !== 'ott_review' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-gray-900 text-left">Reference Content</h3>
