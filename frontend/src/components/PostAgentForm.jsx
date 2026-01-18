@@ -2240,6 +2240,65 @@ Instructions:
                   </p>
                 </div>
 
+                {/* Website Source - Dynamic based on language */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Website Source
+                  </label>
+                  <select
+                    name="review_website"
+                    value={formData.review_website || ''}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                      // Auto-fill reference URL based on website selection
+                      const websiteUrls = {
+                        'greatandhra': 'https://www.greatandhra.com/reviews',
+                        'gulte': 'https://www.gulte.com/category/moviereviews',
+                        'idlebrain': 'https://www.idlebrain.com/movie/reviews.html',
+                        '123telugu': 'https://www.123telugu.com/reviews',
+                        'pinkvilla': 'https://www.pinkvilla.com/entertainment/movie-review',
+                        'bollywoodhungama': 'https://www.bollywoodhungama.com/movies/movie-review/'
+                      };
+                      if (websiteUrls[e.target.value]) {
+                        setFormData(prev => ({
+                          ...prev,
+                          reference_urls: [websiteUrls[e.target.value]]
+                        }));
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  >
+                    <option value="">-- Select Website --</option>
+                    {(formData.review_language === 'Telugu' || !formData.review_language) && (
+                      <>
+                        <option value="greatandhra">GreatAndhra</option>
+                        <option value="gulte">Gulte</option>
+                        <option value="idlebrain">IdleBrain</option>
+                        <option value="123telugu">123Telugu</option>
+                      </>
+                    )}
+                    {formData.review_language === 'Hindi' && (
+                      <>
+                        <option value="pinkvilla">Pinkvilla</option>
+                        <option value="bollywoodhungama">Bollywood Hungama</option>
+                      </>
+                    )}
+                    {formData.review_language === 'Tamil' && (
+                      <>
+                        <option value="pinkvilla">Pinkvilla</option>
+                      </>
+                    )}
+                    {(formData.review_language === 'Kannada' || formData.review_language === 'Malayalam' || formData.review_language === 'Marathi' || formData.review_language === 'Bengali') && (
+                      <>
+                        <option value="pinkvilla">Pinkvilla</option>
+                      </>
+                    )}
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Select website to auto-fill the review listing URL below.
+                  </p>
+                </div>
+
                 {/* Max Reviews from Listing Page */}
                 <div className="text-left">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
