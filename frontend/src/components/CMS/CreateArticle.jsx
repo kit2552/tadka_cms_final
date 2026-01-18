@@ -198,9 +198,11 @@ const CreateArticle = () => {
     movie_language: '',
     censor_rating: '',
     release_date: '',
+    release_type: '',  // 'theater' or 'ott'
     platform: '',
     ott_content_type: '',
     ott_platforms: [],
+    enable_user_rating: false,  // Enable user ratings for reviews
     // Comment settings
     comments_enabled: true,
     review_comments_enabled: true,
