@@ -659,12 +659,41 @@ def get_movie_reviews_articles(limit: int = 20, states: str = None, db = Depends
         # No state preference - show all movie reviews
         movie_reviews_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews", limit=limit)
     
-    # For Bollywood tab - always show all Bollywood content (no filtering)
-    bollywood_articles = crud.get_articles_by_category_slug(db, category_slug="movie-reviews-bollywood", limit=limit)
+    # For Bollywood tab - fetch Hindi movie reviews (content_type=movie_review, content_language=hi)
+    # This includes reviews created by Movie Review Agent for Hindi movies
+    bollywood_articles = list(db.articles.find({
+        "content_type": "movie_review",
+        "content_language": "hi",
+        "is_published": True
+    }).sort("published_at", -1).limit(limit))
+    
+    # Convert ObjectId to string and ensure proper format
+    for article in bollywood_articles:
+        if '_id' in article:
+            article['_id'] = str(article['_id'])
+    
+    # Also include articles from category-based bollywood reviews (if any exist)
+    category_based_bollywood = crud.get_articles_by_category_slug(db, category_slug="movie-reviews-bollywood", limit=limit)
+    
+    # Merge and deduplicate
+    all_bollywood = bollywood_articles + (category_based_bollywood or [])
+    seen_ids = set()
+    unique_bollywood = []
+    for article in all_bollywood:
+        article_id = article.get('id') or article.get('_id')
+        if article_id not in seen_ids:
+            seen_ids.add(article_id)
+            unique_bollywood.append(article)
+    
+    # Sort by published_at and limit
+    unique_bollywood.sort(key=lambda x: x.get('published_at', ''), reverse=True)
+    unique_bollywood = unique_bollywood[:limit]
+    
+    print(f"🎬 Movie Reviews - General: {len(movie_reviews_articles or [])}, Bollywood (Hindi): {len(unique_bollywood)}")
     
     return {
         "movie_reviews": movie_reviews_articles or [],
-        "bollywood": bollywood_articles or []
+        "bollywood": unique_bollywood or []
     }
 
 @api_router.get("/articles/sections/trailers-teasers")
