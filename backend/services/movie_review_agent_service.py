@@ -573,6 +573,8 @@ Rewrite the given content in a professional, engaging tone.
             '/reviews/',
             '/category/reviews',
             '/movie-reviews',
+            '/movie-review',  # https://www.pinkvilla.com/entertainment/movie-review
+            '/entertainment/movie-review',  # Pinkvilla listing
         ]
         
         for pattern in listing_patterns:
