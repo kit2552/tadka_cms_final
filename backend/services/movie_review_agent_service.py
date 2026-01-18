@@ -299,7 +299,8 @@ class MovieReviewAgentService:
                             article_language=article_language,
                             content_workflow=content_workflow,
                             rating_strategy=rating_strategy,
-                            results=results
+                            results=results,
+                            review_website=review_website
                         )
                     except Exception as e:
                         error_msg = f"Error processing {review_url}: {str(e)}"
