@@ -754,7 +754,7 @@ class MovieReviewScraper:
         # 4. Technical Aspects → technical_aspects
         # Pattern: "music and other technical aspects:" or "technical aspects:"
         technical_match = re.search(
-            r'(?:music\s+and\s+other\s+)?technical\s+aspects[:\s]*</strong>\s*(.+?)(?=<strong>|$)',
+            r'(?:music\s+and\s+other\s+)?technical\s+aspects[:\s]*</strong>(?:\s*<br\s*/?>)?\s*(.+?)(?=<p>\s*<strong>|<strong>|$)',
             article_html, re.IGNORECASE | re.DOTALL
         )
         if technical_match:
@@ -765,11 +765,17 @@ class MovieReviewScraper:
             print(f"   🎬 Extracted Technical Aspects: {len(data.technical_aspects)} chars")
         
         # 5. Conclusion → final_verdict
-        # Pattern: "Review Conclusion:" or "Movie Review Conclusion:"
+        # Pattern: "Review Conclusion:" followed by content until end or next section
         conclusion_match = re.search(
-            r'Review\s+Conclusion[:\s]*</strong>\s*(.+?)(?=<strong>|<div|$)',
+            r'Review\s+Conclusion[:\s]*(?:</strong>)?(?:\s*<br\s*/?>)?\s*</strong>(?:\s*<br\s*/?>)?\s*(.+?)(?=<p>\s*<strong>|<strong>|<div|<style|$)',
             article_html, re.IGNORECASE | re.DOTALL
         )
+        if not conclusion_match:
+            # Try alternate pattern - sometimes Conclusion is at the very end
+            conclusion_match = re.search(
+                r'Review\s+Conclusion[:\s]*</strong>(?:\s*<br\s*/?>)?\s*(.+?)(?=<style|<div\s+class|</p>\s*</div>|$)',
+                article_html, re.IGNORECASE | re.DOTALL
+            )
         if conclusion_match:
             conclusion_html = conclusion_match.group(1)
             conclusion_text = re.sub(r'<[^>]+>', ' ', conclusion_html)
