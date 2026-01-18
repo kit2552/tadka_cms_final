@@ -833,7 +833,9 @@ Rewrite the given content in a professional, engaging tone.
                 'final_verdict': scraped_data.final_verdict,
                 'quick_verdict': auto_generated_verdict,  # Use auto-generated verdict
                 'source_url': review_url,
-                'source_name': scraped_data.source_name
+                'source_name': scraped_data.source_name,
+                'youtube_url': scraped_data.youtube_url or '',  # YouTube trailer URL
+                'poster_image': scraped_data.poster_image or ''  # Movie poster/thumbnail
             }
             
             # Initialize LLM if not already done
