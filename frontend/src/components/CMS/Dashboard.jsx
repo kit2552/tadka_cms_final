@@ -3632,6 +3632,111 @@ const Dashboard = () => {
           </>
         )}
 
+        {/* Action Needed Tab */}
+        {activeTab === 'action-needed' && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            {/* Header */}
+            <div className="bg-orange-50 px-6 py-4 border-b border-orange-200 rounded-t-lg">
+              <h2 className="text-lg font-medium text-orange-900 text-left flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                Action Needed ({actionNeededCount})
+              </h2>
+              <p className="text-sm text-orange-700 mt-1 text-left">
+                These posts are missing YouTube trailer or poster image. Add the missing content and save to auto-publish.
+              </p>
+            </div>
+
+            {/* Content */}
+            <div className="p-4">
+              {actionNeededLoading ? (
+                <div className="flex justify-center items-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+                </div>
+              ) : actionNeededArticles.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  <svg className="w-12 h-12 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <p className="text-lg font-medium text-gray-900">All caught up!</p>
+                  <p className="text-sm text-gray-500">No posts need action right now.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {actionNeededArticles.map((article) => (
+                    <div 
+                      key={article.id || article._id} 
+                      className="flex items-center justify-between p-4 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 transition-colors"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-medium text-gray-900 truncate text-left">
+                            {article.title}
+                          </h3>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-200 text-orange-800">
+                            {article.content_type || 'post'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 mt-1">
+                          {article.action_needed_reasons && article.action_needed_reasons.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {article.action_needed_reasons.map((reason, idx) => (
+                                <span key={idx} className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-red-100 text-red-700">
+                                  {reason}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          <span className="text-xs text-gray-500">
+                            Created: {new Date(article.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 ml-4">
+                        <Link
+                          to={`/cms/edit/${article.id || article._id}`}
+                          className="inline-flex items-center px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-md transition-colors"
+                        >
+                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                          </svg>
+                          Fix Now
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Pagination */}
+              {actionNeededCount > actionNeededItemsPerPage && (
+                <div className="mt-4 flex justify-between items-center border-t border-gray-200 pt-4">
+                  <div className="text-sm text-gray-500">
+                    Showing {((actionNeededCurrentPage - 1) * actionNeededItemsPerPage) + 1} - {Math.min(actionNeededCurrentPage * actionNeededItemsPerPage, actionNeededCount)} of {actionNeededCount}
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setActionNeededCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={actionNeededCurrentPage === 1}
+                      className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => setActionNeededCurrentPage(prev => prev + 1)}
+                      disabled={actionNeededCurrentPage * actionNeededItemsPerPage >= actionNeededCount}
+                      className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Manage Related Articles Tab */}
         {/* Manage Related Articles Tab */}
         {activeTab === 'related' && (
