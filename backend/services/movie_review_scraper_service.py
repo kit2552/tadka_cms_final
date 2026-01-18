@@ -91,6 +91,8 @@ class MovieReviewScraper:
             review_data = self._parse_gulte(soup, url)
         elif 'pinkvilla' in url.lower():
             review_data = self._parse_pinkvilla(soup, url)
+        elif 'bollywoodhungama' in url.lower():
+            review_data = self._parse_bollywoodhungama(soup, url)
         elif 'idlebrain' in url.lower():
             review_data = self._parse_idlebrain(soup, url)
         elif '123telugu' in url.lower():
