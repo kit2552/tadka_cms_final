@@ -80,15 +80,22 @@ class OTTReviewAgentService:
         """
         # Try to get OTT rating mapping from system settings
         try:
-            settings = db.system_settings.find_one({"setting_type": "ott_rating_mapping"})
-            if settings and settings.get('mappings'):
-                mappings = settings['mappings']
-                # Find the matching rating range
-                for mapping in mappings:
-                    min_rating = float(mapping.get('min_rating', 0))
-                    max_rating = float(mapping.get('max_rating', 5))
-                    if min_rating <= rating <= max_rating:
-                        return mapping.get('verdict', '')
+            settings = db.system_settings.find_one({"setting_type": "ott_rating_verdicts"})
+            if settings and settings.get('verdicts'):
+                verdicts = settings['verdicts']
+                # Find the exact or closest rating match
+                # Round to nearest 0.25
+                rounded_rating = round(rating * 4) / 4
+                rating_key = str(rounded_rating)
+                
+                if rating_key in verdicts:
+                    verdict_data = verdicts[rating_key]
+                    tag = verdict_data.get('tag', '')
+                    verdict = verdict_data.get('verdict', '')
+                    if tag:
+                        return f"{tag}"  # Return just the tag for the quick verdict
+                    elif verdict:
+                        return verdict[:50]  # Truncate verdict for display
         except Exception as e:
             print(f"   ⚠️ Error fetching OTT rating mapping: {str(e)}")
         
