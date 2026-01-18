@@ -622,7 +622,7 @@ def update_article_cms(db, article_id: int, article: dict):
     # Map of fields that can be updated
     allowed_fields = [
         "title", "display_title", "short_title", "content", "content_secondary", "summary", "author", 
-        "states", "category", "content_type", "ad_type", "sponsored_link", "sponsored_label", "image", "image_gallery", 
+        "states", "category", "content_type", "content_language", "ad_type", "sponsored_link", "sponsored_label", "image", "image_gallery", 
         "gallery_id", "youtube_url", "tags", "artists", "movie_rating",
         "is_featured", "is_sponsored", "is_top_story", "top_story_duration_hours", "is_published", "is_scheduled", "scheduled_publish_at", "scheduled_timezone",
         "status", "published_at",  # Status field: draft, in_review, approved, published, scheduled
@@ -634,7 +634,8 @@ def update_article_cms(db, article_id: int, article: dict):
         "review_what_works", "review_what_doesnt_work", "review_technical_aspects",
         "review_final_verdict", "review_cast", "review_director", "review_producer",
         "review_music_director", "review_dop", "review_genre", "review_runtime", "movie_language",
-        "censor_rating", "release_date", "platform", "ott_content_type", "ott_platforms",
+        "censor_rating", "release_date", "release_type", "platform", "ott_content_type", "ott_platforms",
+        "original_language", "languages",
         "comments_enabled", "review_comments_enabled", "social_media_type", "social_media_embed", "social_media_embeds"
     ]
     
