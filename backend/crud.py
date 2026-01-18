@@ -644,7 +644,7 @@ def update_article_cms(db, article_id: int, article: dict):
         "review_final_verdict", "review_cast", "review_director", "review_producer",
         "review_music_director", "review_dop", "review_genre", "review_runtime", "movie_language",
         "censor_rating", "release_date", "release_type", "platform", "ott_content_type", "ott_platforms",
-        "original_language", "languages",
+        "original_language", "languages", "enable_user_rating",
         "comments_enabled", "review_comments_enabled", "social_media_type", "social_media_embed", "social_media_embeds"
     ]
     
