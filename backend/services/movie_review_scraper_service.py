@@ -575,6 +575,8 @@ class MovieReviewScraper:
             data.performances = text
         elif section == 'verdict':
             data.final_verdict = text
+        
+        return data
     
     def _parse_idlebrain(self, soup: BeautifulSoup, url: str) -> MovieReviewData:
         """Parse movie review from idlebrain.com"""
