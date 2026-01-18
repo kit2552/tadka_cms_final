@@ -944,23 +944,25 @@ Story Review:
             
             results["reviews_scraped"] += 1
             
-            # Step 2: Detect movie language from title (for Bollywood Hungama/Pinkvilla)
-            # "(English)" in title means English movie, otherwise Hindi
-            detected_language = self._detect_movie_language_from_title(movie_name)
+            # Step 2: Detect movie language from title (for Bollywood Hungama only)
+            # Bollywood Hungama uses "(English)" in title for English movies
+            # Pinkvilla doesn't have this convention, so we don't filter
+            detected_language = self._detect_movie_language_from_title(movie_name, review_url)
             content_language_code = self._get_language_code(article_language)
             
-            # Check if detected language matches selected language
-            # Map detected language to code
-            detected_code = self._get_language_code(detected_language)
-            if detected_code != content_language_code:
-                print(f"      ⏭️  SKIPPED: '{movie_name}' is {detected_language} movie, but agent is set to {article_language}")
-                results["reviews_skipped"] += 1
-                results["skipped_reviews"].append({
-                    "movie_name": movie_name,
-                    "language": article_language,
-                    "reason": f"Movie is {detected_language}, not {article_language}"
-                })
-                return
+            # Only filter if language was detected (Bollywood Hungama)
+            # For other sources, detected_language is empty and we skip filtering
+            if detected_language:
+                detected_code = self._get_language_code(detected_language)
+                if detected_code != content_language_code:
+                    print(f"      ⏭️  SKIPPED: '{movie_name}' is {detected_language} movie, but agent is set to {article_language}")
+                    results["reviews_skipped"] += 1
+                    results["skipped_reviews"].append({
+                        "movie_name": movie_name,
+                        "language": article_language,
+                        "reason": f"Movie is {detected_language}, not {article_language}"
+                    })
+                    return
             
             # Step 3: Check if review already exists in last 20 reviews for this language
             # Clean movie name for comparison (remove language suffix like "(English)")
