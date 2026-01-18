@@ -904,26 +904,66 @@ Story Review:
             
             results["reviews_scraped"] += 1
             
-            # Step 2: Check if review already exists for this movie and language
+            # Step 2: Detect movie language from title
+            # Bollywood Hungama and Pinkvilla use "(English)" or "(Hindi)" in titles
+            detected_language = self._detect_movie_language_from_title(movie_name)
             content_language_code = self._get_language_code(article_language)
-            existing_review = db.articles.find_one({
+            
+            # Check if detected language matches selected language
+            if detected_language:
+                # Map detected language to code
+                detected_code = self._get_language_code(detected_language)
+                if detected_code != content_language_code:
+                    print(f"      ⏭️  SKIPPED: '{movie_name}' is {detected_language} movie, but agent is set to {article_language}")
+                    results["reviews_skipped"] += 1
+                    results["skipped_reviews"].append({
+                        "movie_name": movie_name,
+                        "language": article_language,
+                        "reason": f"Movie is {detected_language}, not {article_language}"
+                    })
+                    return
+            
+            # Step 3: Check if review already exists in last 20 reviews for this language
+            # Clean movie name for comparison (remove language suffix like "(English)")
+            clean_movie_name = re.sub(r'\s*\([^)]*\)\s*$', '', movie_name).strip()
+            
+            # Get last 20 reviews for this language
+            existing_reviews = list(db.articles.find({
                 "content_type": "movie_review",
-                "title": {"$regex": f"^{re.escape(movie_name)}", "$options": "i"},
                 "content_language": content_language_code
-            })
+            }).sort("created_at", -1).limit(20))
             
-            if existing_review:
-                print(f"      ⏭️  SKIPPED: Review already exists for '{movie_name}' ({article_language})")
-                results["reviews_skipped"] += 1
-                results["skipped_reviews"].append({
-                    "movie_name": movie_name,
-                    "language": article_language,
-                    "reason": "Already exists in database"
-                })
-                return
+            # Check if this movie already exists
+            for existing in existing_reviews:
+                existing_title = existing.get('title', '')
+                # Clean existing title for comparison
+                clean_existing_title = re.sub(r'\s*\([^)]*\)\s*$', '', existing_title).strip()
+                clean_existing_title = re.sub(r'\s*-\s*Movie Review.*$', '', clean_existing_title, flags=re.IGNORECASE).strip()
+                
+                # Compare titles (case-insensitive)
+                if clean_movie_name.lower() == clean_existing_title.lower():
+                    print(f"      ⏭️  SKIPPED: Review already exists for '{movie_name}' ({article_language}) in last 20 reviews")
+                    results["reviews_skipped"] += 1
+                    results["skipped_reviews"].append({
+                        "movie_name": movie_name,
+                        "language": article_language,
+                        "reason": "Already exists in last 20 reviews"
+                    })
+                    return
+                
+                # Also check if movie name is contained in title (partial match)
+                if clean_movie_name.lower() in clean_existing_title.lower() or clean_existing_title.lower() in clean_movie_name.lower():
+                    print(f"      ⏭️  SKIPPED: Similar review found for '{movie_name}' ({article_language}): '{existing_title}'")
+                    results["reviews_skipped"] += 1
+                    results["skipped_reviews"].append({
+                        "movie_name": movie_name,
+                        "language": article_language,
+                        "reason": f"Similar review exists: {existing_title}"
+                    })
+                    return
             
-            # Step 3: Review doesn't exist - create it
-            print(f"      ✅ NEW MOVIE: '{movie_name}' - Creating review...")
+            # Step 4: Review doesn't exist - create it
+            print(f"      ✅ NEW MOVIE: '{movie_name}' ({article_language}) - Creating review...")
             
             # Generate quick verdict based on rating
             verdict_data = self._get_verdict_for_rating(scraped_data.normalized_rating)
