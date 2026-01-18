@@ -2231,13 +2231,12 @@ Instructions:
                     <option value="Tamil">Tamil</option>
                     <option value="Kannada">Kannada</option>
                     <option value="Malayalam">Malayalam</option>
-                    <option value="Hindi">Hindi</option>
+                    <option value="Hindi">Hindi (Bollywood)</option>
                     <option value="Marathi">Marathi</option>
                     <option value="Bengali">Bengali</option>
-                    <option value="English">English</option>
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
-                    Used for state-language mapping on homepage display
+                    Used for state-language mapping on homepage display. Hindi/Bollywood reviews show in "Bollywood" tab.
                   </p>
                 </div>
 
