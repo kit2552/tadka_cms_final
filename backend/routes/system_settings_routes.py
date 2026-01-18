@@ -772,3 +772,93 @@ async def reset_movie_rating_verdicts(db = Depends(get_db)):
         "verdicts": {str(k): v for k, v in DEFAULT_RATING_VERDICTS.items()}
     }
 
+
+# OTT Rating Verdicts Default Configuration
+DEFAULT_OTT_RATING_VERDICTS = {
+    0.0: {"tag": "Disaster", "verdict": "A complete waste of time. Avoid at all costs."},
+    0.25: {"tag": "Terrible", "verdict": "Fails on almost every level."},
+    0.5: {"tag": "Very Poor", "verdict": "Severely lacking in quality."},
+    0.75: {"tag": "Poor", "verdict": "Far below acceptable standards."},
+    1.0: {"tag": "Bad", "verdict": "Disappointing and poorly executed."},
+    1.25: {"tag": "Weak", "verdict": "Falls short of expectations."},
+    1.5: {"tag": "Below Average", "verdict": "Has some merit but mostly underwhelming."},
+    1.75: {"tag": "Mediocre", "verdict": "Nothing special to write home about."},
+    2.0: {"tag": "Average", "verdict": "A passable watch but forgettable."},
+    2.25: {"tag": "Okay", "verdict": "Decent enough for a lazy watch."},
+    2.5: {"tag": "Fair", "verdict": "Has its moments but inconsistent."},
+    2.75: {"tag": "Decent", "verdict": "Worth a try if you have time."},
+    3.0: {"tag": "Good", "verdict": "A solid watch with entertainment value."},
+    3.25: {"tag": "Nice", "verdict": "Enjoyable with good moments."},
+    3.5: {"tag": "Very Good", "verdict": "Quality content that delivers."},
+    3.75: {"tag": "Great", "verdict": "Highly entertaining and well-made."},
+    4.0: {"tag": "Excellent", "verdict": "Must-watch content that excels."},
+    4.25: {"tag": "Outstanding", "verdict": "Exceptional quality throughout."},
+    4.5: {"tag": "Brilliant", "verdict": "Near-perfect entertainment experience."},
+    4.75: {"tag": "Superb", "verdict": "A masterclass in storytelling."},
+    5.0: {"tag": "Masterpiece", "verdict": "An absolute gem. Don't miss it!"}
+}
+
+
+@router.get("/system-settings/ott-rating-verdicts")
+async def get_ott_rating_verdicts(db = Depends(get_db)):
+    """Get OTT rating verdicts configuration"""
+    settings = db.system_settings.find_one({"setting_type": "ott_rating_verdicts"})
+    
+    if settings and settings.get('verdicts'):
+        return {
+            "verdicts": settings['verdicts'],
+            "is_default": False
+        }
+    
+    # Return default verdicts
+    return {
+        "verdicts": {str(k): v for k, v in DEFAULT_OTT_RATING_VERDICTS.items()},
+        "is_default": True
+    }
+
+
+@router.put("/system-settings/ott-rating-verdicts")
+async def update_ott_rating_verdicts(data: RatingVerdictsUpdate, db = Depends(get_db)):
+    """Update OTT rating verdicts configuration"""
+    from datetime import datetime
+    
+    # Convert RatingVerdict objects to dict
+    verdicts_dict = {}
+    for rating_str, verdict_obj in data.verdicts.items():
+        verdicts_dict[rating_str] = {
+            "tag": verdict_obj.tag,
+            "verdict": verdict_obj.verdict
+        }
+    
+    # Update or insert in database
+    db.system_settings.update_one(
+        {"setting_type": "ott_rating_verdicts"},
+        {
+            "$set": {
+                "setting_type": "ott_rating_verdicts",
+                "verdicts": verdicts_dict,
+                "updated_at": datetime.utcnow()
+            }
+        },
+        upsert=True
+    )
+    
+    return {
+        "success": True,
+        "message": "OTT rating verdicts updated successfully",
+        "verdicts": verdicts_dict
+    }
+
+
+@router.post("/system-settings/ott-rating-verdicts/reset")
+async def reset_ott_rating_verdicts(db = Depends(get_db)):
+    """Reset OTT rating verdicts to default"""
+    # Delete the custom settings
+    db.system_settings.delete_one({"setting_type": "ott_rating_verdicts"})
+    
+    return {
+        "success": True,
+        "message": "OTT rating verdicts reset to defaults",
+        "verdicts": {str(k): v for k, v in DEFAULT_OTT_RATING_VERDICTS.items()}
+    }
+
