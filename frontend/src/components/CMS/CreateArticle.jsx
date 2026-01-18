@@ -2371,8 +2371,8 @@ const CreateArticle = () => {
                     </div>
                   )}
 
-                  {/* Non-POST, Non-VIDEO-POST and Non-MOVIE-REVIEW Type: Title Only (No Image) */}
-                  {formData.content_type !== 'post' && formData.content_type !== 'video_post' && formData.content_type !== 'movie_review' && (
+                  {/* Non-POST, Non-VIDEO-POST, Non-MOVIE-REVIEW and Non-OTT-REVIEW Type: Title Only (No Image) */}
+                  {formData.content_type !== 'post' && formData.content_type !== 'video_post' && formData.content_type !== 'movie_review' && formData.content_type !== 'ott_review' && (
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                         Title *
