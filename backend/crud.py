@@ -625,7 +625,7 @@ def update_article_cms(db, article_id: int, article: dict):
         "states", "category", "content_type", "ad_type", "sponsored_link", "sponsored_label", "image", "image_gallery", 
         "gallery_id", "youtube_url", "tags", "artists", "movie_rating",
         "is_featured", "is_sponsored", "is_top_story", "top_story_duration_hours", "is_published", "is_scheduled", "scheduled_publish_at", "scheduled_timezone",
-        "status",  # Status field: draft, in_review, approved, published, scheduled
+        "status", "published_at",  # Status field: draft, in_review, approved, published, scheduled
         "action_needed", "action_needed_reasons",  # Action needed tracking for movie reviews
         "seo_title", "seo_description", "seo_keywords",
         "aeo_title", "aeo_description", "aeo_keywords", "faqs",
