@@ -879,7 +879,7 @@ const ArticlePage = () => {
                 )}
 
                 {/* Technical Aspects */}
-                {article.review_technical_aspects && (
+                {hasContent(article.review_technical_aspects) && (
                   <div className="mb-6">
                     <div className="border-b-2 border-gray-300 mb-4 pb-3">
                       <h3 className="text-base font-bold text-black text-left leading-tight">Technical Aspects</h3>
