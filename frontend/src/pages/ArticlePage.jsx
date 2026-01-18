@@ -497,7 +497,7 @@ const ArticlePage = () => {
             </div>
 
             {/* Main Image or YouTube Video or Gallery Slider - White background */}
-            {(article.content_type === 'video' || article.content_type === 'video_post' || article.content_type === 'movie_review') && article.youtube_url ? (
+            {(article.content_type === 'video' || article.content_type === 'video_post' || article.content_type === 'movie_review' || article.content_type === 'ott_review') && article.youtube_url ? (
               <div className="mb-3 bg-white" style={{ marginTop: '1rem' }}>
                 <div className="relative aspect-video w-full overflow-hidden">
                   <iframe
