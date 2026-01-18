@@ -561,6 +561,9 @@ class MovieReviewScraper:
             # Assign last section
             if current_section and section_content:
                 self._assign_section_content(data, current_section, section_content)
+        
+        data.full_review_text = article_body_text
+        return data
     
     def _assign_section_content(self, data: MovieReviewData, section: str, content: list):
         """Helper to assign parsed content to MovieReviewData"""
@@ -575,8 +578,6 @@ class MovieReviewScraper:
             data.performances = text
         elif section == 'verdict':
             data.final_verdict = text
-        
-        return data
     
     def _parse_idlebrain(self, soup: BeautifulSoup, url: str) -> MovieReviewData:
         """Parse movie review from idlebrain.com"""
