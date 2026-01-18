@@ -119,8 +119,8 @@ const ArticlePage = () => {
           
           setArticle(data);
           
-          // Fetch user ratings for movie reviews
-          if (data.content_type === 'movie_review') {
+          // Fetch user ratings for movie reviews and OTT reviews
+          if (data.content_type === 'movie_review' || data.content_type === 'ott_review') {
             fetchUserRatings(articleId);
           }
           
