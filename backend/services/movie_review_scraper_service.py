@@ -132,6 +132,10 @@ class MovieReviewScraper:
             return 'Tupaki'
         elif 'sakshipost' in url_lower:
             return 'SakshiPost'
+        elif 'pinkvilla' in url_lower:
+            return 'Pinkvilla'
+        elif 'bollywoodhungama' in url_lower:
+            return 'BollywoodHungama'
         else:
             # Extract domain name
             import urllib.parse
