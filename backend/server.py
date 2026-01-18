@@ -700,9 +700,6 @@ def get_movie_reviews_articles(limit: int = 20, states: str = None, db = Depends
         "movie_reviews": movie_reviews_articles or [],
         "bollywood": unique_bollywood or []
     }
-        "hindi": unique_hindi or [],
-        "english": unique_english or []
-    }
 
 @api_router.get("/articles/sections/trailers-teasers")
 async def get_trailers_teasers_articles(limit: int = 20, states: str = None, db = Depends(get_db)):
