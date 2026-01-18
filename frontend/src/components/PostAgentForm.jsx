@@ -61,7 +61,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     reality_show_category: 'tv-reality-shows',  // tv-reality-shows, tv-reality-shows-hindi
     reality_show_name: '',  // Specific reality show to fetch from (e.g., "Bigg Boss", "Indian Idol")
     youtube_channel_id: '',  // YouTube channel ID for the reality show
-    include_keywords: '',  // Comma-separated keywords that must be in video titles
+    reality_include_keywords: '',  // Comma-separated keywords that must be in video titles
     reality_show_lookback_days: 2,  // Days to look back for videos
     // OTT Release Agent fields
     ott_language: 'Hindi',  // Language filter for OTT releases
