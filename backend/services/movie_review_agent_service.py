@@ -844,7 +844,7 @@ Story Review:
         
         return review_links[:max_links]
     
-    async def _process_single_review(self, review_url: str, article_language: str, content_workflow: str, rating_strategy: str, results: dict):
+    async def _process_single_review(self, review_url: str, article_language: str, content_workflow: str, rating_strategy: str, results: dict, review_website: str = ''):
         """
         Process a single review URL - check if exists, scrape, and create if needed
         
@@ -854,13 +854,16 @@ Story Review:
             content_workflow: 'in_review' or 'published'
             rating_strategy: 'lowest', 'highest', 'average'
             results: Results dict to update
+            review_website: Website source to force specific scraper (optional)
         """
         from services.movie_review_scraper_service import movie_review_scraper
         
         try:
             # Step 1: Scrape the review to get movie name
             print(f"      📥 Scraping: {review_url}")
-            scraped_data = await movie_review_scraper.scrape_review(review_url)
+            if review_website:
+                print(f"      🔧 Using {review_website} scraper")
+            scraped_data = await movie_review_scraper.scrape_review(review_url, force_source=review_website)
             movie_name = scraped_data.movie_name
             
             # Validate movie name - skip if empty or untitled
