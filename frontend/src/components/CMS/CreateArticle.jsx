@@ -388,7 +388,13 @@ const CreateArticle = () => {
           release_date: article.release_date || '',
           release_type: article.release_type || '',
           platform: article.platform || '',
-          ott_content_type: article.ott_content_type || '',
+          ott_content_type: (() => {
+            // Normalize ott_content_type to match dropdown values
+            const val = article.ott_content_type || '';
+            if (val.toLowerCase() === 'movie') return 'Movie';
+            if (val.toLowerCase() === 'webseries' || val.toLowerCase() === 'web series') return 'Web Series';
+            return val;
+          })(),
           ott_platforms: (() => {
             try {
               return typeof article.ott_platforms === 'string' 
