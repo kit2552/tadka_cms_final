@@ -10,6 +10,7 @@ from database import db
 import crud
 import re
 import json
+from bs4 import BeautifulSoup
 
 # Default rating verdicts mapping (used if not configured in system settings)
 DEFAULT_RATING_VERDICTS = {
