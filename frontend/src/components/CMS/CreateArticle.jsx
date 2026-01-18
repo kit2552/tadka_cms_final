@@ -3480,8 +3480,8 @@ const CreateArticle = () => {
                     </>
                   )}
 
-                  {/* Main Content (Hidden for Movie Reviews and Video, Optional for Photo Gallery, Required for other types) */}
-                  {formData.content_type !== 'movie_review' && formData.content_type !== 'video' && (
+                  {/* Main Content (Hidden for Movie Reviews, OTT Reviews and Video, Optional for Photo Gallery, Required for other types) */}
+                  {formData.content_type !== 'movie_review' && formData.content_type !== 'ott_review' && formData.content_type !== 'video' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                       Main Content {formData.content_type !== 'photo' && '*'}
