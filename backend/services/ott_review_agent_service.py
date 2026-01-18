@@ -570,6 +570,9 @@ class OTTReviewAgentService:
             'image': main_image_url,
             'main_image_url': main_image_url,
             
+            # Enable user rating by default for OTT reviews
+            'enable_user_rating': True,
+            
             # SEO
             'seo_description': f"{review_data.title} OTT review. Rating: {normalized_rating:.1f}/5. {platform_str}",
             'seo_title': f"{review_data.title} Review - {platform_str or 'OTT'}",
