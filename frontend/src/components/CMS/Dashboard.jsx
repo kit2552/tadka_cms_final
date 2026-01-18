@@ -3149,7 +3149,7 @@ const Dashboard = () => {
                 </span>
               </button>
               <button
-                onClick={() => setActiveTab('releases')}}
+                onClick={() => setActiveTab('releases')}
                 className={`py-3 px-6 text-sm font-medium border-b-2 ${
                   activeTab === 'releases'
                     ? 'border-blue-500 text-blue-600'
