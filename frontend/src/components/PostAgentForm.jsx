@@ -2366,6 +2366,121 @@ Instructions:
               </div>
             )}
 
+            {/* OTT Review Agent Settings Section - Only for ott_review agent type */}
+            {formData.agent_type === 'ott_review' && (
+              <div className="bg-teal-50 rounded-lg p-4 space-y-4 border border-teal-200">
+                <h3 className="text-sm font-semibold text-teal-900">📺 OTT Review Agent Settings</h3>
+                
+                {/* Review Language */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Review Language
+                  </label>
+                  <select
+                    name="review_language"
+                    value={formData.review_language || 'Telugu'}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  >
+                    <option value="Telugu">Telugu</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Hindi">Hindi (Bollywood)</option>
+                    <option value="English">English</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Bengali">Bengali</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Used for state-language mapping on homepage display. Hindi/English reviews show in "Bollywood" tab.
+                  </p>
+                </div>
+
+                {/* Website Source - Default Binged.com */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Website Source
+                  </label>
+                  <select
+                    name="review_website"
+                    value={formData.review_website || 'binged'}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                      // Auto-fill reference URL based on website selection
+                      if (e.target.value === 'binged') {
+                        setFormData(prev => ({
+                          ...prev,
+                          reference_urls: [{ url: 'https://www.binged.com/category/reviews/', url_type: 'listing' }]
+                        }));
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  >
+                    <option value="binged">Binged.com</option>
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    OTT reviews are scraped from Binged.com reviews section.
+                  </p>
+                </div>
+
+                {/* Max Reviews from Listing Page */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Reviews to Process
+                  </label>
+                  <select
+                    name="max_reviews_from_listing"
+                    value={formData.max_reviews_from_listing !== undefined && formData.max_reviews_from_listing !== null ? formData.max_reviews_from_listing : 5}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  >
+                    {Array.from({ length: 20 }, (_, i) => i + 1).map(num => (
+                      <option key={num} value={num}>{num}</option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Number of OTT reviews to process from the listing page. Skips duplicates automatically.
+                  </p>
+                </div>
+
+                {/* Content Workflow */}
+                <div className="text-left">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Content Workflow
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    {workflowOptions.map(option => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, content_workflow: option.value }))}
+                        className={`p-2 rounded border-2 font-medium text-xs transition-all ${
+                          formData.content_workflow === option.value
+                            ? 'border-teal-600 bg-teal-100 text-teal-700'
+                            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Info Box */}
+                <div className="bg-white rounded-lg p-3 border border-teal-200">
+                  <div className="text-xs text-teal-800 text-left space-y-1">
+                    <p className="font-semibold text-teal-900">How it works:</p>
+                    <p>1️⃣ Agent scrapes OTT reviews from Binged.com reviews section</p>
+                    <p>2️⃣ For each review, fetches movie/series info (cast, director, platform) from Binged's OTT releases</p>
+                    <p>3️⃣ Creates OTT Review post with rating, content, and streaming platform info</p>
+                    <p>4️⃣ Reviews appear in OTT Reviews section on homepage</p>
+                    <p className="mt-2 text-teal-600">📍 Regional tab: Shows reviews based on user's state-language preference</p>
+                    <p className="text-teal-600">📍 Bollywood tab: Shows Hindi and English OTT reviews</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Instagram URLs Section - Only for Tadka Pics with Instagram source */}
             {formData.agent_type === 'tadka_pics' && formData.source_type === 'instagram' && (
               <div className="bg-pink-50 rounded-lg p-4 space-y-3 border border-pink-200">
