@@ -383,9 +383,9 @@ class OTTReviewAgentService:
                         # Map scraped type to app's type: "Film"/"movie" -> "Movie", "Tv show"/"web_series" -> "Web Series"
                         detail_content_type = detail_info.get('content_type', '')
                         if detail_content_type in ['tv_show', 'web_series', 'Tv show']:
-                            review_data.content_type = 'webseries'
+                            review_data.content_type = 'Web Series'
                         elif detail_content_type in ['Film', 'movie', 'documentary']:
-                            review_data.content_type = 'movie'
+                            review_data.content_type = 'Movie'
                         
                         print(f"      ✅ Got details from binged page (release_date: {review_data.release_date}, content_type: {review_data.content_type})")
                 except Exception as e:
