@@ -2292,7 +2292,7 @@ Instructions:
                     <p>3️⃣ AI rewrites the review content in our style</p>
                     <p>4️⃣ Creates Movie Review post in Manage Content → Posts</p>
                     <p className="mt-2 text-purple-600">✅ Telugu: GreatAndhra, Gulte, IdleBrain, 123Telugu</p>
-                    <p className="text-purple-600">✅ Hindi/English: Pinkvilla, Bollywood Hungama</p>
+                    <p className="text-purple-600">✅ Bollywood: Pinkvilla, Bollywood Hungama (both Hindi & English movies)</p>
                   </div>
                 </div>
               </div>
