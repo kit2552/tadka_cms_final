@@ -1538,8 +1538,8 @@ const ArticlePage = () => {
               style={{ 
                 backgroundColor: 'rgb(249 250 251 / var(--tw-bg-opacity, 1))', 
                 marginBottom: '1rem',
-                marginTop: ((article.content_type === 'movie_review' && (article.review_comments_enabled === false)) || 
-                           (article.content_type !== 'movie_review' && (article.comments_enabled === false))) ? '1rem' : '0rem'
+                marginTop: (((article.content_type === 'movie_review' || article.content_type === 'ott_review') && (article.review_comments_enabled === false)) || 
+                           (article.content_type !== 'movie_review' && article.content_type !== 'ott_review' && (article.comments_enabled === false))) ? '1rem' : '0rem'
               }}
             >
               <div className="pl-0 pr-4" style={{ paddingTop: '0px', paddingBottom: '1rem' }}>
