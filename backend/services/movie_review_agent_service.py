@@ -779,6 +779,24 @@ Rewrite the given content in a professional, engaging tone.
             scraped_data = await movie_review_scraper.scrape_review(review_url)
             movie_name = scraped_data.movie_name
             
+            # Validate movie name - skip if empty or untitled
+            if not movie_name or movie_name.strip() == '' or movie_name.lower() == 'untitled':
+                # Try to extract movie name from URL as fallback
+                url_slug = review_url.rstrip('/').split('/')[-1]
+                # Clean the slug: remove common suffixes and convert dashes to spaces
+                url_slug = re.sub(r'-(movie-)?review.*$', '', url_slug, flags=re.IGNORECASE)
+                url_slug = url_slug.replace('-', ' ').title()
+                
+                if url_slug and len(url_slug) > 2:
+                    movie_name = url_slug
+                    scraped_data.movie_name = movie_name
+                    print(f"      ⚠️  Movie name extracted from URL: '{movie_name}'")
+                else:
+                    error_msg = f"Could not extract movie name from {review_url}"
+                    print(f"      ❌ {error_msg}")
+                    results["errors"].append(error_msg)
+                    return
+            
             results["reviews_scraped"] += 1
             
             # Step 2: Check if review already exists for this movie and language
