@@ -18,8 +18,22 @@ class OTTReviewData:
     content_type: str = ""  # 'movie' or 'webseries'
     rating: float = 0.0
     rating_scale: float = 5.0
+    
+    # Review sections (binged.com structure)
+    story_synopsis: str = ""  # "What Is the Story About?"
+    performances: str = ""  # "Performances?"
+    analysis: str = ""  # "Analysis"
+    technical_aspects: str = ""  # "Music and Other Departments?"
+    other_artists: str = ""  # "Other Artists?"
+    highlights: str = ""  # "Highlights?" - What Works
+    drawbacks: str = ""  # "Drawbacks?" - What Doesn't Work
+    verdict: str = ""  # "Did I Enjoy It?" + "Will You Recommend It?"
+    bottom_line: str = ""  # BOTTOM LINE tagline
+    
+    # Full review content (fallback)
     review_content: str = ""
-    verdict: str = ""
+    
+    # Source info
     source_url: str = ""
     source_name: str = "Binged"
     binged_detail_url: str = ""  # URL to the movie/series detail page on binged
@@ -76,86 +90,41 @@ class OTTReviewScraper:
                 soup = BeautifulSoup(response.text, 'html.parser')
                 review_links = []
                 
-                # Find review article links - they typically have a specific pattern
-                # Looking for article cards with links to reviews
-                for article in soup.find_all(['article', 'div'], class_=re.compile(r'post|article|entry|card', re.I)):
-                    link = article.find('a', href=True)
-                    if not link:
-                        continue
-                    
+                # Find review article links - binged.com uses specific patterns
+                # Look for links to /reviews/ URLs
+                for link in soup.find_all('a', href=True):
                     href = link.get('href', '')
                     
-                    # Review URLs typically contain these patterns
-                    if not any(pattern in href.lower() for pattern in ['review', '/reviews/']):
-                        # Also check title link if exists
-                        title_link = article.find('a', class_=re.compile(r'title|heading', re.I), href=True)
-                        if title_link:
-                            href = title_link.get('href', '')
-                    
-                    # Skip if not a review link
-                    if not href or 'binged.com' not in href and not href.startswith('/'):
-                        continue
-                    
-                    # Make absolute URL
-                    if href.startswith('/'):
-                        full_url = self.BASE_URL + href
-                    elif href.startswith('http'):
-                        full_url = href
-                    else:
-                        continue
-                    
-                    # Extract title
-                    title_elem = article.find(['h2', 'h3', 'h4', 'a'], class_=re.compile(r'title|heading', re.I))
-                    title = title_elem.get_text(strip=True) if title_elem else ''
-                    
-                    if not title:
-                        title = link.get_text(strip=True)
-                    
-                    # Skip duplicates and non-review pages
-                    if any(r['url'] == full_url for r in review_links):
-                        continue
-                    
-                    # Skip category pages
-                    if '/category/' in full_url and full_url != self.REVIEWS_URL:
-                        continue
-                    
-                    review_links.append({
-                        'url': full_url,
-                        'title': title
-                    })
-                    print(f"   ✅ Found: {title[:50]}...")
-                    
-                    if len(review_links) >= max_links:
-                        break
-                
-                # If no articles found with class-based search, try direct link search
-                if not review_links:
-                    for link in soup.find_all('a', href=True):
-                        href = link.get('href', '')
+                    # Review URLs contain /reviews/ in the path
+                    if '/reviews/' in href and href != self.REVIEWS_URL:
+                        if href.startswith('/'):
+                            full_url = self.BASE_URL + href
+                        elif href.startswith('http'):
+                            full_url = href
+                        else:
+                            continue
                         
-                        # Look for review links
-                        if '-review' in href.lower() or '/review/' in href.lower():
-                            if href.startswith('/'):
-                                full_url = self.BASE_URL + href
-                            elif href.startswith('http'):
-                                full_url = href
-                            else:
-                                continue
+                        # Skip category and pagination URLs
+                        if '/category/' in full_url or '/page/' in full_url:
+                            continue
+                        
+                        # Get title from link text or parent
+                        title = link.get_text(strip=True)
+                        
+                        # Skip if already have this URL
+                        if any(r['url'] == full_url for r in review_links):
+                            continue
+                        
+                        # Skip very short or empty titles
+                        if title and len(title) > 5:
+                            review_links.append({
+                                'url': full_url,
+                                'title': title
+                            })
+                            print(f"   ✅ Found: {title[:50]}...")
                             
-                            title = link.get_text(strip=True)
-                            
-                            if any(r['url'] == full_url for r in review_links):
-                                continue
-                            
-                            if title and len(title) > 5:
-                                review_links.append({
-                                    'url': full_url,
-                                    'title': title
-                                })
-                                print(f"   ✅ Found: {title[:50]}...")
-                                
-                                if len(review_links) >= max_links:
-                                    break
+                            if len(review_links) >= max_links:
+                                break
                 
                 print(f"   📋 Found {len(review_links)} review links")
                 return review_links[:max_links]
@@ -169,6 +138,7 @@ class OTTReviewScraper:
     async def scrape_review(self, url: str) -> OTTReviewData:
         """
         Scrape a single OTT review from binged.com
+        Extracts structured sections like Story, Performances, Analysis, etc.
         """
         print(f"🎬 Scraping OTT review from: {url}")
         
@@ -186,111 +156,123 @@ class OTTReviewScraper:
                 title_elem = soup.find('h1')
                 if title_elem:
                     data.title = title_elem.get_text(strip=True)
-                    # Clean title - remove common prefixes/suffixes
-                    data.title = re.sub(r'^Review:\s*', '', data.title, flags=re.IGNORECASE)
+                    # Clean title - remove common suffixes
                     data.title = re.sub(r'\s*Review$', '', data.title, flags=re.IGNORECASE)
-                    data.title = re.sub(r'\s*\(\d{4}\)\s*$', '', data.title)  # Remove year at end
                     print(f"   📝 Title: {data.title}")
                 
                 # Detect content type from title or URL
                 url_lower = url.lower()
                 title_lower = (data.title or '').lower()
-                if any(kw in title_lower or kw in url_lower for kw in ['web series', 'web-series', 'series review', 'season']):
+                if any(kw in title_lower or kw in url_lower for kw in ['web series', 'web-series', 'series review', 'season', 'webseries']):
                     data.content_type = 'webseries'
                 else:
                     data.content_type = 'movie'
                 print(f"   📺 Content Type: {data.content_type}")
                 
-                # Extract rating - look for various patterns
-                rating_patterns = [
-                    r'(\d+(?:\.\d+)?)\s*/\s*(\d+)',  # "3.5/5" format
-                    r'Rating[:\s]*(\d+(?:\.\d+)?)\s*/\s*(\d+)',  # "Rating: 3.5/5"
-                    r'Rating[:\s]*(\d+(?:\.\d+)?)',  # "Rating: 3.5"
-                    r'(\d+(?:\.\d+)?)\s*stars?',  # "3.5 stars"
-                ]
+                # Extract rating - look for the rating display
+                rating_div = soup.find('div', string=re.compile(r'^\s*\d+\s*/\s*\d+\s*$'))
+                if rating_div:
+                    match = re.search(r'(\d+(?:\.\d+)?)\s*/\s*(\d+)', rating_div.get_text())
+                    if match:
+                        data.rating = float(match.group(1))
+                        data.rating_scale = float(match.group(2))
                 
-                # Look for rating in structured data
-                script_tags = soup.find_all('script', type='application/ld+json')
-                for script in script_tags:
-                    try:
-                        json_data = json.loads(script.string)
-                        if isinstance(json_data, dict):
-                            if 'reviewRating' in json_data:
-                                rating_obj = json_data['reviewRating']
-                                data.rating = float(rating_obj.get('ratingValue', 0))
-                                data.rating_scale = float(rating_obj.get('bestRating', 5))
-                            elif '@graph' in json_data:
-                                for item in json_data['@graph']:
-                                    if item.get('@type') == 'Review' and 'reviewRating' in item:
-                                        rating_obj = item['reviewRating']
-                                        data.rating = float(rating_obj.get('ratingValue', 0))
-                                        data.rating_scale = float(rating_obj.get('bestRating', 5))
-                    except (json.JSONDecodeError, TypeError, ValueError):
-                        continue
-                
-                # If no rating from JSON-LD, try text patterns
+                # Also try structured data
                 if data.rating == 0:
-                    # Check article content for rating
-                    article = soup.find('article') or soup.find('div', class_=re.compile(r'content|entry|post', re.I))
-                    if article:
-                        text = article.get_text()
-                        for pattern in rating_patterns:
-                            match = re.search(pattern, text, re.IGNORECASE)
-                            if match:
-                                data.rating = float(match.group(1))
-                                if len(match.groups()) > 1:
-                                    data.rating_scale = float(match.group(2))
-                                break
-                    
-                    # Also check full page text
-                    if data.rating == 0:
-                        page_text = soup.get_text()
-                        for pattern in rating_patterns:
-                            match = re.search(pattern, page_text, re.IGNORECASE)
-                            if match:
-                                data.rating = float(match.group(1))
-                                if len(match.groups()) > 1:
-                                    data.rating_scale = float(match.group(2))
-                                break
+                    script_tags = soup.find_all('script', type='application/ld+json')
+                    for script in script_tags:
+                        try:
+                            json_data = json.loads(script.string)
+                            if isinstance(json_data, dict):
+                                if 'reviewRating' in json_data:
+                                    rating_obj = json_data['reviewRating']
+                                    data.rating = float(rating_obj.get('ratingValue', 0))
+                                    data.rating_scale = float(rating_obj.get('bestRating', 5))
+                                elif '@graph' in json_data:
+                                    for item in json_data['@graph']:
+                                        if item.get('@type') == 'Review' and 'reviewRating' in item:
+                                            rating_obj = item['reviewRating']
+                                            data.rating = float(rating_obj.get('ratingValue', 0))
+                                            data.rating_scale = float(rating_obj.get('bestRating', 5))
+                        except (json.JSONDecodeError, TypeError, ValueError):
+                            continue
+                
+                # Fallback: search in page text
+                if data.rating == 0:
+                    page_text = soup.get_text()
+                    match = re.search(r'Rating[:\s]*(\d+(?:\.\d+)?)\s*/\s*(\d+)', page_text, re.IGNORECASE)
+                    if match:
+                        data.rating = float(match.group(1))
+                        data.rating_scale = float(match.group(2))
                 
                 print(f"   ⭐ Rating: {data.rating}/{data.rating_scale}")
                 
-                # Extract review content from article body
-                article = soup.find('article') or soup.find('div', class_=re.compile(r'entry-content|post-content|article-content|content', re.I))
+                # Extract BOTTOM LINE tagline
+                bottom_line_elem = soup.find(string=re.compile(r'BOTTOM LINE', re.IGNORECASE))
+                if bottom_line_elem:
+                    parent = bottom_line_elem.find_parent()
+                    if parent:
+                        # Get the next text element
+                        next_elem = parent.find_next_sibling()
+                        if next_elem:
+                            data.bottom_line = next_elem.get_text(strip=True)
+                        else:
+                            # Try getting text after "BOTTOM LINE:"
+                            full_text = parent.get_text(strip=True)
+                            match = re.search(r'BOTTOM LINE[:\s]*(.+)', full_text, re.IGNORECASE)
+                            if match:
+                                data.bottom_line = match.group(1).strip()
+                
+                print(f"   📌 Bottom Line: {data.bottom_line[:50] if data.bottom_line else 'None'}...")
+                
+                # Find article content
+                article = soup.find('article') or soup.find('div', class_=re.compile(r'entry-content|post-content|article-content', re.I))
+                
                 if article:
-                    # Get all paragraphs
+                    # Extract sections by h3 headers (binged.com uses h3 for section headers)
+                    sections = self._extract_sections(article)
+                    
+                    # Map sections to data fields
+                    data.story_synopsis = sections.get('story', '') or sections.get('synopsis', '') or sections.get('what is the story about', '')
+                    data.performances = sections.get('performances', '') or sections.get('performance', '')
+                    data.analysis = sections.get('analysis', '')
+                    data.technical_aspects = sections.get('music and other departments', '') or sections.get('technical', '') or sections.get('music', '')
+                    data.other_artists = sections.get('other artists', '')
+                    data.highlights = sections.get('highlights', '') or sections.get('what works', '') or sections.get('positives', '')
+                    data.drawbacks = sections.get('drawbacks', '') or sections.get('what doesn\'t work', '') or sections.get('negatives', '')
+                    
+                    # Verdict combines multiple sections
+                    verdict_parts = []
+                    if sections.get('did i enjoy it', ''):
+                        verdict_parts.append(sections['did i enjoy it'])
+                    if sections.get('will you recommend it', ''):
+                        verdict_parts.append(sections['will you recommend it'])
+                    if sections.get('verdict', ''):
+                        verdict_parts.append(sections['verdict'])
+                    if sections.get('final thoughts', ''):
+                        verdict_parts.append(sections['final thoughts'])
+                    data.verdict = '\n\n'.join(verdict_parts)
+                    
+                    # Build full review content from all paragraphs
                     paragraphs = article.find_all('p')
                     content_parts = []
                     for p in paragraphs:
                         text = p.get_text(strip=True)
-                        # Skip short paragraphs, author info, etc.
-                        if text and len(text) > 50 and not any(skip in text.lower() for skip in ['share', 'follow', 'subscribe', 'comment']):
+                        if text and len(text) > 30 and not any(skip in text.lower() for skip in ['share', 'follow', 'subscribe', 'we are hiring', 'interested candidates']):
                             content_parts.append(text)
-                    
                     data.review_content = '\n\n'.join(content_parts)
-                    print(f"   📄 Review content: {len(data.review_content)} chars")
-                
-                # Extract verdict - look for specific sections
-                verdict_selectors = [
-                    ('div', re.compile(r'verdict|conclusion|final', re.I)),
-                    ('p', re.compile(r'verdict|conclusion', re.I)),
-                    ('h2', re.compile(r'verdict|conclusion|final\s*word', re.I)),
-                ]
-                
-                for tag, pattern in verdict_selectors:
-                    verdict_header = soup.find(tag, string=pattern)
-                    if verdict_header:
-                        next_p = verdict_header.find_next('p')
-                        if next_p:
-                            data.verdict = next_p.get_text(strip=True)
-                            break
-                
-                # If no verdict found, use last substantial paragraph
-                if not data.verdict and content_parts:
-                    data.verdict = content_parts[-1] if content_parts else ""
+                    
+                    print(f"   📄 Sections extracted:")
+                    print(f"      Story: {len(data.story_synopsis)} chars")
+                    print(f"      Performances: {len(data.performances)} chars")
+                    print(f"      Analysis: {len(data.analysis)} chars")
+                    print(f"      Technical: {len(data.technical_aspects)} chars")
+                    print(f"      Highlights: {len(data.highlights)} chars")
+                    print(f"      Drawbacks: {len(data.drawbacks)} chars")
+                    print(f"      Verdict: {len(data.verdict)} chars")
                 
                 # Try to find link to the movie/series detail page on binged
-                detail_link = soup.find('a', href=re.compile(r'/streaming-premiere-dates/[a-z0-9-]+-streaming-online', re.I))
+                detail_link = soup.find('a', href=re.compile(r'/streaming-premiere-dates/.*-streaming-online', re.I))
                 if detail_link:
                     data.binged_detail_url = detail_link.get('href', '')
                     if data.binged_detail_url.startswith('/'):
@@ -302,6 +284,20 @@ class OTTReviewScraper:
                 if img:
                     data.poster_image = img.get('src', '') or img.get('data-src', '')
                 
+                # Extract YouTube trailer URL if present
+                youtube_iframe = soup.find('iframe', src=re.compile(r'youtube\.com|youtu\.be'))
+                if youtube_iframe:
+                    src = youtube_iframe.get('src', '')
+                    video_id_match = re.search(r'(?:embed/|v=)([a-zA-Z0-9_-]+)', src)
+                    if video_id_match:
+                        data.youtube_url = f"https://www.youtube.com/watch?v={video_id_match.group(1)}"
+                
+                # Also look for YouTube links in content
+                if not data.youtube_url:
+                    youtube_link = soup.find('a', href=re.compile(r'youtube\.com/watch|youtu\.be'))
+                    if youtube_link:
+                        data.youtube_url = youtube_link.get('href', '')
+                
                 return data
                 
         except Exception as e:
@@ -311,16 +307,46 @@ class OTTReviewScraper:
             data.title = self._extract_title_from_url(url)
             return data
     
+    def _extract_sections(self, article) -> Dict[str, str]:
+        """Extract content sections from the article based on h3 headers"""
+        sections = {}
+        
+        # Find all h3 headers
+        headers = article.find_all('h3')
+        
+        for header in headers:
+            header_text = header.get_text(strip=True).lower()
+            # Remove question marks and clean up
+            header_text = re.sub(r'\?+$', '', header_text).strip()
+            
+            # Get all content until next h3 or end
+            content_parts = []
+            for sibling in header.find_next_siblings():
+                if sibling.name == 'h3':
+                    break
+                if sibling.name == 'p':
+                    text = sibling.get_text(strip=True)
+                    if text and len(text) > 10:
+                        content_parts.append(text)
+                elif sibling.name == 'ul':
+                    # Handle bullet lists (highlights/drawbacks)
+                    for li in sibling.find_all('li'):
+                        text = li.get_text(strip=True)
+                        if text:
+                            content_parts.append(f"• {text}")
+            
+            if content_parts:
+                sections[header_text] = '\n\n'.join(content_parts)
+        
+        return sections
+    
     def _extract_title_from_url(self, url: str) -> str:
         """Extract title from URL as fallback"""
-        # Get the last part of the URL path
         slug = url.rstrip('/').split('/')[-1]
-        # Remove common suffixes
         slug = re.sub(r'-review.*$', '', slug, flags=re.IGNORECASE)
         slug = re.sub(r'-web-series.*$', '', slug, flags=re.IGNORECASE)
         slug = re.sub(r'-movie.*$', '', slug, flags=re.IGNORECASE)
         slug = re.sub(r'-ott.*$', '', slug, flags=re.IGNORECASE)
-        # Convert dashes to spaces and title case
         return slug.replace('-', ' ').title()
 
 
