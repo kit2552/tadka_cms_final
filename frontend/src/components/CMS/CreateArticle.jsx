@@ -385,6 +385,7 @@ const CreateArticle = () => {
           movie_language: article.movie_language || '',
           censor_rating: article.censor_rating || '',
           release_date: article.release_date || '',
+          release_type: article.release_type || '',
           platform: article.platform || '',
           ott_content_type: article.ott_content_type || '',
           ott_platforms: (() => {
@@ -396,6 +397,7 @@ const CreateArticle = () => {
               return [];
             }
           })(),
+          enable_user_rating: article.enable_user_rating === true || article.enable_user_rating === 'true',
           // Comment settings
           comments_enabled: article.comments_enabled !== undefined ? article.comments_enabled : true,
           review_comments_enabled: article.review_comments_enabled !== undefined ? article.review_comments_enabled : true,
