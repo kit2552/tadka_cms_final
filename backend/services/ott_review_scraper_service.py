@@ -158,9 +158,12 @@ class OTTReviewScraper:
                     raw_title = title_elem.get_text(strip=True)
                     # Clean title - remove "Review" suffix and taglines after dash/colon
                     # Example: "The Rip Review – High Tension, Low Surprise Cop Thriller" -> "The Rip"
-                    data.title = re.sub(r'\s*Review$', '', raw_title, flags=re.IGNORECASE)
+                    clean_title = re.sub(r'\s*Review$', '', raw_title, flags=re.IGNORECASE)
                     # Remove everything after dash, colon, or pipe (taglines)
-                    data.title = re.sub(r'\s*[–\-:|\|].*$', '', data.title).strip()
+                    clean_title = re.sub(r'\s*[–\-:|\|].*$', '', clean_title).strip()
+                    # Also remove "Review" if it's still in there after cleaning
+                    clean_title = re.sub(r'\s*Review\s*$', '', clean_title, flags=re.IGNORECASE).strip()
+                    data.title = clean_title
                     print(f"   📝 Title: {data.title} (from: {raw_title[:50]}...)")
                 
                 # Detect content type from title or URL
