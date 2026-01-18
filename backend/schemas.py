@@ -380,7 +380,7 @@ class ArticleListResponse(BaseModel):
     summary: str
     image_url: Optional[str] = None
     youtube_url: Optional[str] = None  # Add youtube_url field
-    author: str
+    author: Optional[str] = None
     language: str
     category: str
     content_type: Optional[str] = "post"  # Add content_type field
