@@ -205,7 +205,7 @@ const MovieReviews = ({ movieReviewsData = {}, onImageClick }) => {
                             alt={item.title || item.name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             style={{ width: '266px', height: '160px' }}
-                            contentType={activeTab === 'bollywood' ? 'movie-reviews-bollywood' : 'movie-reviews'}
+                            contentType={activeTab === 'hindi' ? 'movie-reviews-hindi' : activeTab === 'english' ? 'movie-reviews-english' : 'movie-reviews'}
                           />
                         )}
                         
