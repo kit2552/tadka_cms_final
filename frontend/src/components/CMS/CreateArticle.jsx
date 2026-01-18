@@ -717,15 +717,24 @@ const CreateArticle = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     
-    // Auto-set content_type to movie_review for movie/OTT review categories
+    // Auto-set content_type for movie/OTT review categories
     if (name === 'category') {
-      const movieReviewCategories = ['movie-reviews', 'movie-reviews-bollywood', 'ott-reviews', 'ott-reviews-bollywood'];
+      const movieReviewCategories = ['movie-reviews', 'movie-reviews-bollywood'];
+      const ottReviewCategories = ['ott-reviews', 'ott-reviews-bollywood'];
       const isMovieReviewCategory = movieReviewCategories.includes(value);
+      const isOttReviewCategory = ottReviewCategories.includes(value);
+      
+      let newContentType = prev.content_type;
+      if (isMovieReviewCategory) {
+        newContentType = 'movie_review';
+      } else if (isOttReviewCategory) {
+        newContentType = 'ott_review';
+      }
       
       setFormData(prev => ({
         ...prev,
         [name]: value,
-        content_type: isMovieReviewCategory ? 'movie_review' : prev.content_type
+        content_type: newContentType
       }));
       return;
     }
