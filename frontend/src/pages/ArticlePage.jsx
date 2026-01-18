@@ -869,7 +869,7 @@ const ArticlePage = () => {
                 )}
 
                 {/* What Doesn't Work */}
-                {article.review_what_doesnt_work && (
+                {hasContent(article.review_what_doesnt_work) && (
                   <div className="mb-6">
                     <div className="border-b-2 border-gray-300 mb-4 pb-3">
                       <h3 className="text-base font-bold text-black text-left leading-tight">What Doesn't Work</h3>
