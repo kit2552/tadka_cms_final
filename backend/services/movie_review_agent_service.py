@@ -180,28 +180,37 @@ class MovieReviewAgentService:
             print(f"   ❌ LLM Error: {str(e)}")
             return ""
     
-    def _detect_movie_language_from_title(self, movie_name: str) -> str:
+    def _detect_movie_language_from_title(self, movie_name: str, source_url: str = "") -> str:
         """
-        Detect if movie is English based on "(English)" in title.
+        Detect if movie is English or Hindi based on title and source.
         
-        Bollywood Hungama and Pinkvilla use:
+        For Bollywood Hungama:
         - "Movie Name (English)" → English movie
-        - "Movie Name" (no bracket or other bracket) → Hindi movie
+        - "Movie Name" (no bracket) → Hindi movie
         
-        Returns: 'English' if English movie detected, 'Hindi' otherwise
+        For Pinkvilla and other sources:
+        - Check if movie name contains known Hollywood/English indicators
+        - Default to selected language (don't filter)
+        
+        Returns: 'English', 'Hindi', or empty string (no filtering)
         """
         import re
         
         if not movie_name:
-            return "Hindi"  # Default to Hindi for Bollywood sites
+            return ""  # No filtering
         
-        # Check for "(English)" at the end of title (case-insensitive)
-        if re.search(r'\(\s*english\s*\)\s*$', movie_name, re.IGNORECASE):
-            print(f"      🌐 Detected English movie from title: '{movie_name}'")
-            return "English"
+        # For Bollywood Hungama - use the (English) bracket convention
+        if 'bollywoodhungama' in source_url.lower():
+            if re.search(r'\(\s*english\s*\)\s*$', movie_name, re.IGNORECASE):
+                print(f"      🌐 Detected English movie from title: '{movie_name}'")
+                return "English"
+            # No "(English)" in Bollywood Hungama title means Hindi
+            return "Hindi"
         
-        # No "(English)" in title - this is a Hindi movie
-        return "Hindi"
+        # For Pinkvilla and other sources - don't auto-filter based on title
+        # Let the user's selected language be used
+        # (Pinkvilla reviews both Hindi and English movies without language markers)
+        return ""  # Empty = no language filtering, use selected language
     
     async def run_movie_review_agent(self, agent_id: str) -> Dict:
         """
