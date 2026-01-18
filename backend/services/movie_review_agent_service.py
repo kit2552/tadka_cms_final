@@ -182,49 +182,26 @@ class MovieReviewAgentService:
     
     def _detect_movie_language_from_title(self, movie_name: str) -> str:
         """
-        Detect movie language from title based on language indicators in brackets.
+        Detect if movie is English based on "(English)" in title.
         
-        Bollywood Hungama and Pinkvilla use patterns like:
-        - "Movie Name (English)" → English
-        - "Movie Name (Hindi)" → Hindi
-        - "Movie Name (Telugu)" → Telugu
-        - "Movie Name" (no bracket) → Default to Hindi for Bollywood sites
+        Bollywood Hungama and Pinkvilla use:
+        - "Movie Name (English)" → English movie
+        - "Movie Name" (no bracket or other bracket) → Hindi movie
         
-        Returns: Language name ('English', 'Hindi', 'Telugu', etc.) or empty string if not detected
+        Returns: 'English' if English movie detected, 'Hindi' otherwise
         """
         import re
         
         if not movie_name:
-            return ""
+            return "Hindi"  # Default to Hindi for Bollywood sites
         
-        # Check for language in brackets at the end of title
-        # Pattern: (Language) at the end
-        bracket_match = re.search(r'\(([^)]+)\)\s*$', movie_name)
+        # Check for "(English)" at the end of title (case-insensitive)
+        if re.search(r'\(\s*english\s*\)\s*$', movie_name, re.IGNORECASE):
+            print(f"      🌐 Detected English movie from title: '{movie_name}'")
+            return "English"
         
-        if bracket_match:
-            bracket_content = bracket_match.group(1).strip().lower()
-            
-            # Map common language indicators
-            language_map = {
-                'english': 'English',
-                'hindi': 'Hindi',
-                'telugu': 'Telugu',
-                'tamil': 'Tamil',
-                'kannada': 'Kannada',
-                'malayalam': 'Malayalam',
-                'marathi': 'Marathi',
-                'bengali': 'Bengali',
-                'punjabi': 'Punjabi',
-                'gujarati': 'Gujarati',
-            }
-            
-            for key, lang in language_map.items():
-                if key in bracket_content:
-                    print(f"      🌐 Detected language from title: {lang}")
-                    return lang
-        
-        # No explicit language in title - return empty (will use agent's selected language)
-        return ""
+        # No "(English)" in title - this is a Hindi movie
+        return "Hindi"
     
     async def run_movie_review_agent(self, agent_id: str) -> Dict:
         """
