@@ -2225,7 +2225,15 @@ Instructions:
                   <select
                     name="review_language"
                     value={formData.review_language || 'Telugu'}
-                    onChange={handleInputChange}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                      // Clear website selection when language changes
+                      setFormData(prev => ({
+                        ...prev,
+                        review_website: '',
+                        reference_urls: []
+                      }));
+                    }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   >
                     <option value="Telugu">Telugu</option>
