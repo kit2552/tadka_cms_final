@@ -2007,17 +2007,40 @@ async def update_cms_article(
     # Convert Pydantic model to dict
     update_data = article_update.dict(exclude_unset=True)
     
-    # Check if this article had action_needed flag and if the missing fields are now provided
-    if article.get('action_needed', False):
+    # Check if this is a movie_review content type with action_needed flag
+    if article.get('action_needed', False) and article.get('content_type') == 'movie_review':
+        youtube_url = update_data.get('youtube_url', article.get('youtube_url', ''))
+        
+        # For movie reviews, image comes from YouTube thumbnail only
+        has_youtube = bool(youtube_url and youtube_url.strip())
+        
+        if has_youtube:
+            # Generate image from YouTube thumbnail
+            import re
+            youtube_match = re.search(r'(?:youtube\.com/watch\?v=|youtu\.be/)([a-zA-Z0-9_-]+)', youtube_url)
+            if youtube_match:
+                video_id = youtube_match.group(1)
+                update_data['image'] = f'https://img.youtube.com/vi/{video_id}/maxresdefault.jpg'
+            
+            # YouTube URL provided - auto-publish
+            update_data['action_needed'] = False
+            update_data['action_needed_reasons'] = []
+            update_data['is_published'] = True
+            update_data['status'] = 'approved'
+            update_data['published_at'] = datetime.now(timezone.utc)
+            print(f"   ✅ Auto-publishing movie review {article_id} - YouTube trailer added")
+        else:
+            # Still missing YouTube trailer
+            update_data['action_needed_reasons'] = ['Missing YouTube trailer']
+    elif article.get('action_needed', False):
+        # Non-movie-review articles - original logic
         youtube_url = update_data.get('youtube_url', article.get('youtube_url', ''))
         image = update_data.get('image', article.get('image', ''))
         
-        # Check if all required fields are now present
         has_youtube = bool(youtube_url and youtube_url.strip())
         has_image = bool(image and image.strip())
         
         if has_youtube and has_image:
-            # All required fields present - auto-publish
             update_data['action_needed'] = False
             update_data['action_needed_reasons'] = []
             update_data['is_published'] = True
@@ -2025,7 +2048,6 @@ async def update_cms_article(
             update_data['published_at'] = datetime.now(timezone.utc)
             print(f"   ✅ Auto-publishing article {article_id} - action resolved")
         else:
-            # Update action_needed_reasons based on what's still missing
             reasons = []
             if not has_youtube:
                 reasons.append('Missing YouTube trailer')
