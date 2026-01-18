@@ -107,6 +107,13 @@ const SystemSettings = () => {
   const [verdictsMessage, setVerdictsMessage] = useState({ type: '', text: '' });
   const [promptSaving, setPromptSaving] = useState(false);
 
+  // OTT Rating Verdicts State
+  const [ottRatingVerdicts, setOttRatingVerdicts] = useState({});
+  const [isDefaultOttVerdicts, setIsDefaultOttVerdicts] = useState(true);
+  const [editingOttVerdicts, setEditingOttVerdicts] = useState({});
+  const [ottVerdictsLoading, setOttVerdictsLoading] = useState(false);
+  const [ottVerdictsMessage, setOttVerdictsMessage] = useState({ type: '', text: '' });
+
   // YouTube Channels State
   const [youtubeChannels, setYoutubeChannels] = useState([]);
   const [youtubeChannelsLoading, setYoutubeChannelsLoading] = useState(false);
