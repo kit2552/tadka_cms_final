@@ -523,7 +523,7 @@ const ArticlePage = () => {
                   onError={(e) => {
                     const placeholder = document.createElement('div');
                     placeholder.className = 'w-full h-96 bg-gray-500 flex items-center justify-center';
-                    placeholder.innerHTML = `<span class="text-white font-bold text-6xl">${article.content_type === 'video' ? 'V' : article.content_type === 'photo' ? 'P' : article.content_type === 'movie_review' ? 'M' : 'A'}</span>`;
+                    placeholder.innerHTML = `<span class="text-white font-bold text-6xl">${article.content_type === 'video' ? 'V' : article.content_type === 'photo' ? 'P' : (article.content_type === 'movie_review' || article.content_type === 'ott_review') ? 'M' : 'A'}</span>`;
                     e.target.parentNode.replaceChild(placeholder, e.target);
                   }}
                 />
