@@ -767,7 +767,10 @@ const ArticlePage = () => {
                               <div className="w-full border-t border-gray-700 my-2"></div>
                               <div className="flex flex-col items-center gap-2 py-2">
                                 {article.review_runtime && (
-                                  <div className="text-xs text-gray-300 font-medium">{article.review_runtime}</div>
+                                  <div className="flex flex-col items-center">
+                                    <div className="text-xs text-gray-400 font-medium mb-1">Runtime</div>
+                                    <div className="text-xs text-gray-300 font-medium">{article.review_runtime}</div>
+                                  </div>
                                 )}
                                 {article.release_date && (
                                   <div className="flex flex-col items-center">
