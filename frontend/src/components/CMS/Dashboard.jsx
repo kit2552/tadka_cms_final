@@ -295,6 +295,13 @@ const Dashboard = () => {
   const [selectedAdStatus, setSelectedAdStatus] = useState('');
   const [adsLoading, setAdsLoading] = useState(false);
   
+  // Action Needed state
+  const [actionNeededArticles, setActionNeededArticles] = useState([]);
+  const [actionNeededCount, setActionNeededCount] = useState(0);
+  const [actionNeededLoading, setActionNeededLoading] = useState(false);
+  const [actionNeededCurrentPage, setActionNeededCurrentPage] = useState(1);
+  const [actionNeededItemsPerPage, setActionNeededItemsPerPage] = useState(15);
+  
   // Action menu state for articles
   const [actionMenu, setActionMenu] = useState({ show: false, articleId: null, article: null, scrollPosition: 0 });
   
