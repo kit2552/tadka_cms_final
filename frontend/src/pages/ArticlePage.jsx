@@ -939,12 +939,6 @@ const ArticlePage = () => {
                             </span>
                           </div>
                         )}
-                        {article.platform && (
-                          <div className="flex items-center gap-4">
-                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">Platform</span>
-                            <span className="text-white font-medium text-xs">{article.platform}</span>
-                          </div>
-                        )}
                         {article.ott_platforms && (
                           <div className="flex items-center gap-4">
                             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider min-w-[85px]">OTT</span>
