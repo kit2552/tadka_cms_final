@@ -144,7 +144,7 @@ class AgentRunnerService:
         }
         return language_state_map.get(language, [])
 
-    async def _fetch_reference_content(self, reference_urls: list, category: str = "") -> tuple:
+    async def _fetch_reference_content(self, reference_urls: list, category: str = "", scraper_website: str = "") -> tuple:
         """Fetch and extract main article content from reference URLs using trafilatura
         For listing pages, finds the latest article first and fetches THAT article's content.
         
@@ -153,6 +153,7 @@ class AgentRunnerService:
                 - strings (old format): ["https://example.com"]
                 - objects (new format): [{"url": "https://...", "url_type": "listing"}]
             category: Category slug for additional context
+            scraper_website: Force use of specific website scraper (greatandhra, gulte, etc.)
             
         Returns: (content_text, original_title, youtube_url)
         """
