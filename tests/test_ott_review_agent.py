@@ -8,7 +8,7 @@ import os
 import json
 import time
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://movie-review-hub-1.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://post-agent-boost.preview.emergentagent.com')
 
 class TestOTTReviewAgentAPI:
     """Test OTT Review Agent API endpoints"""
