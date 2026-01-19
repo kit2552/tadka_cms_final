@@ -929,7 +929,13 @@ const ArticlePage = () => {
                                 try {
                                   if (typeof article.movie_language === 'string' && article.movie_language.startsWith('[')) {
                                     const languages = JSON.parse(article.movie_language);
-                                    return Array.isArray(languages) ? languages.join(', ') : article.movie_language;
+                                    if (Array.isArray(languages) && languages.length > 0) {
+                                      // First language is original, mark it
+                                      return languages.map((lang, idx) => 
+                                        idx === 0 ? `${lang} (Original)` : lang
+                                      ).join(', ');
+                                    }
+                                    return article.movie_language;
                                   }
                                   return article.movie_language;
                                 } catch (e) {
