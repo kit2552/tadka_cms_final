@@ -33,6 +33,8 @@ class AIAgent(BaseModel):
     # Common fields
     category: Optional[str] = None
     target_state: Optional[str] = None
+    target_language: Optional[str] = None  # Target language for content targeting
+    scraper_website: Optional[str] = None  # Force specific website scraper
     article_language: Optional[str] = "en"  # Article language code
     content_type: Optional[str] = "post"  # Content type
     word_count: Optional[str] = None  # "<100", "<150", etc.
