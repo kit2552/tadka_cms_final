@@ -158,6 +158,13 @@ class OTTReviewAgentService:
         
         return content
     
+    def _format_as_paragraphs(self, content: str) -> str:
+        """Format content as HTML paragraphs"""
+        if not content:
+            return ''
+        paragraphs = content.split('\n\n')
+        return '\n'.join([f"<p>{p.strip()}</p>" for p in paragraphs if p.strip()])
+    
     def _get_language_code(self, language_name: str) -> str:
         """Convert language name to ISO code"""
         return self.LANGUAGE_MAP.get(language_name, 'en')
