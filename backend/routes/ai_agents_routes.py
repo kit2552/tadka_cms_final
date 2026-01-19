@@ -60,7 +60,6 @@ class AIAgent(BaseModel):
     
     # Video Agent fields
     video_category: Optional[str] = "trailers_teasers"  # trailers_teasers, latest_video_songs, events_interviews, tadka_shorts
-    target_language: Optional[str] = None  # Target language for video filtering (Telugu, Tamil, Hindi, etc.)
     search_query: Optional[str] = None  # Optional specific search query (movie name, celebrity name, etc.)
     max_videos: Optional[int] = 5  # Maximum videos to fetch
     channel_types: Optional[List[str]] = None  # List of channel types: production_house, music_label, popular_channel
