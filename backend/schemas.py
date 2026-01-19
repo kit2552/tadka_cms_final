@@ -135,7 +135,8 @@ class ArticleUpdate(BaseModel):
     summary: Optional[str] = None
     author: Optional[str] = None
     article_language: Optional[str] = None
-    content_language: Optional[str] = None  # Content Language for movie/video categories
+    content_language: Optional[str] = None  # Content Language for targeting by language
+    target_state: Optional[str] = None  # Target State for targeting by state
     states: Optional[str] = None
     category: Optional[str] = None
     content_type: Optional[str] = None  # New field for content type
