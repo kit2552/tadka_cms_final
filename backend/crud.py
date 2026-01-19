@@ -503,9 +503,9 @@ def create_article(db, article: dict):
         "summary": article.get("summary"),
         "author": article.get("author"),
         "article_language": article.get("article_language", "en"),
-        "content_language": article.get("content_language"),  # Content Language for movie/video categories
+        "content_language": article.get("content_language"),  # Content Language for targeting by language
+        "target_state": article.get("target_state"),  # Target State for targeting by state
         "states": article.get("states"),
-        "category": article.get("category"),
         "category": article.get("category"),
         "content_type": article.get("content_type", "post"),
         "ad_type": article.get("ad_type"),
