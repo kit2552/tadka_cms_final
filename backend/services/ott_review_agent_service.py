@@ -712,14 +712,14 @@ class OTTReviewAgentService:
             'action_needed': action_needed,
             'action_needed_reasons': action_needed_reasons,
             
-            # Review fields - properly filled from sections
+            # Review fields - properly filled from rewritten sections
             'review_quick_verdict': quick_verdict,
-            'review_plot_summary': f"<p>{story_content}</p>" if story_content else '',
-            'review_performances': f"<p>{review_data.performances}</p>" if review_data.performances else '',
+            'review_plot_summary': self._format_as_paragraphs(story_content) if story_content else '',
+            'review_performances': self._format_as_paragraphs(performances_content) if performances_content else '',
             'review_what_works': highlights_html,
             'review_what_doesnt_work': drawbacks_html,
-            'review_technical_aspects': f"<p>{review_data.technical_aspects}</p>" if review_data.technical_aspects else '',
-            'review_final_verdict': f"<p>{review_data.verdict}</p>" if review_data.verdict else '',
+            'review_technical_aspects': self._format_as_paragraphs(technical_content) if technical_content else '',
+            'review_final_verdict': self._format_as_paragraphs(verdict_content) if verdict_content else '',
             'movie_rating': f"{normalized_rating:.1f}",
             
             # OTT info
