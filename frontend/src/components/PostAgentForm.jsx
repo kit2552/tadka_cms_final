@@ -788,7 +788,38 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                 </div>
               </div>
               
-              {/* Target State */}
+              {/* Target State Type Selection */}
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Target State Type
+                </label>
+                <select
+                  name="target_state_type"
+                  value={formData.target_state_type || 'state'}
+                  onChange={(e) => {
+                    const newType = e.target.value;
+                    setFormData(prev => ({
+                      ...prev,
+                      target_state_type: newType,
+                      // Clear the opposite field when switching
+                      target_state: newType === 'state' ? prev.target_state : '',
+                      target_language: newType === 'language' ? prev.target_language : ''
+                    }));
+                  }}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="state">State</option>
+                  <option value="language">Language</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  {formData.target_state_type === 'language' 
+                    ? 'Content will be shown to users based on language-state mapping'
+                    : 'Content will be shown only in the selected state'}
+                </p>
+              </div>
+
+              {/* Target State - Show only when target_state_type is 'state' */}
+              {formData.target_state_type !== 'language' && (
               <div className="text-left">
                 <label className="block text-xs font-medium text-gray-700 mb-1">
                   Target State
@@ -850,6 +881,63 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                     </div>
                   )}
                 </div>
+              </div>
+              )}
+
+              {/* Target Language - Show only when target_state_type is 'language' */}
+              {formData.target_state_type === 'language' && (
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Target Language
+                </label>
+                <select
+                  name="target_language"
+                  value={formData.target_language || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, target_language: e.target.value }))}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Select Language</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Kannada">Kannada</option>
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Punjabi">Punjabi</option>
+                  <option value="Gujarati">Gujarati</option>
+                  <option value="Odia">Odia</option>
+                  <option value="English">English</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Content will be displayed in states associated with this language
+                </p>
+              </div>
+              )}
+
+              {/* Scraper Website Selection */}
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Scraper Website
+                </label>
+                <select
+                  name="scraper_website"
+                  value={formData.scraper_website || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, scraper_website: e.target.value }))}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Auto Detect (from URL)</option>
+                  <option value="greatandhra">GreatAndhra</option>
+                  <option value="gulte">Gulte</option>
+                  <option value="idlebrain">IdleBrain</option>
+                  <option value="123telugu">123Telugu</option>
+                  <option value="telugumirchi">TeluguMirchi</option>
+                  <option value="pinkvilla">Pinkvilla</option>
+                  <option value="bollywoodhungama">BollywoodHungama</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Force use of a specific website scraper (useful when URL auto-detection fails)
+                </p>
               </div>
 
               {/* Word Count */}
