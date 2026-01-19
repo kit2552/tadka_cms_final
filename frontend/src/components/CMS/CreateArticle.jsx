@@ -414,7 +414,17 @@ const CreateArticle = () => {
           is_top_story: article.is_top_story || false,
           social_media_type: article.social_media_type || '',
           social_media_embed: article.social_media_embed || '',
-          social_media_embeds: article.social_media_embeds || []
+          social_media_embeds: (() => {
+            // Parse social_media_embeds if it's a string
+            if (typeof article.social_media_embeds === 'string') {
+              try {
+                return JSON.parse(article.social_media_embeds) || [];
+              } catch {
+                return [];
+              }
+            }
+            return article.social_media_embeds || [];
+          })()
         });
         
         // Set selected states (multiple selection)
