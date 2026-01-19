@@ -628,6 +628,7 @@ Original Article:
         try:
             # If we have an original title, rewrite it
             if original_title:
+                print(f"   📝 Rewriting original title: {original_title}")
                 prompt = f"""Rewrite this news headline in a different way.
 
 Original headline: {original_title}
@@ -646,8 +647,10 @@ Write ONLY the rewritten headline, nothing else."""
                     prompt,
                     150
                 )
+                print(f"   ✅ LLM returned title: {title}")
             else:
                 # No original title - generate from content
+                print(f"   📝 No original title, generating from content...")
                 prompt = f"""Write a news headline for this article.
 
 Article summary:
@@ -665,36 +668,42 @@ Write ONLY the headline, nothing else."""
                     prompt,
                     150
                 )
+                print(f"   ✅ LLM generated title: {title}")
             
             # Clean up the title
-            title = title.strip('"\'')
-            title = title.replace("Headline:", "").replace("Title:", "").strip()
+            if title:
+                title = title.strip('"\'')
+                title = title.replace("Headline:", "").replace("Title:", "").strip()
             
             # If title is still too long (over 125 chars), ask AI to shorten it
-            if len(title) > 125:
-                print(f"Title too long ({len(title)} chars), asking AI to shorten...")
+            if title and len(title) > 125:
+                print(f"   ⚠️ Title too long ({len(title)} chars), asking AI to shorten...")
                 title = self._chat_completion(
                     "You shorten headlines to under 125 characters while keeping the meaning.",
                     f"Shorten this headline to UNDER 125 characters:\n\n{title}\n\nWrite only the shortened headline.",
                     150
                 ).strip('"\'')
-                print(f"Shortened title ({len(title)} chars): {title}")
+                print(f"   ✅ Shortened title ({len(title)} chars): {title}")
             
             # Final truncation safety check
-            if len(title) > 125:
+            if title and len(title) > 125:
                 # Truncate at last complete word before 125 chars
                 title = title[:122].rsplit(' ', 1)[0] + '...'
             
-            # If title generation failed or empty, create from content
+            # If title generation failed or empty, use original title or content excerpt
             if not title:
-                first_sentence = content.split('.')[0] if content else "News Article"
-                title = first_sentence.strip()[:122] + '...' if len(first_sentence) > 125 else first_sentence.strip()
+                print(f"   ⚠️ LLM returned empty title, using fallback...")
+                if original_title:
+                    title = original_title[:122] + '...' if len(original_title) > 125 else original_title
+                else:
+                    first_sentence = content.split('.')[0] if content else "News Article"
+                    title = first_sentence.strip()[:122] + '...' if len(first_sentence) > 125 else first_sentence.strip()
             
-            print(f"Final title ({len(title)} chars): {title}")
+            print(f"   📰 Final title ({len(title)} chars): {title}")
             return title
             
         except Exception as e:
-            print(f"Title generation failed: {e}")
+            print(f"   ❌ Title generation failed: {e}")
             # Fallback to original title or content excerpt
             if original_title:
                 return original_title[:122] + '...' if len(original_title) > 125 else original_title
