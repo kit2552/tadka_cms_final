@@ -1292,6 +1292,10 @@ Article:
     async def _run_agent_single(self, agent: Dict[str, Any]) -> Dict[str, Any]:
         """Run agent to create a single article from reference URLs."""
         try:
+            # Ensure AI client is initialized
+            if not self.client:
+                self._initialize_ai_client()
+            
             # Step 2: Fetch content from reference URLs
             reference_urls = agent.get('reference_urls', [])
             category = agent.get('category', '')
