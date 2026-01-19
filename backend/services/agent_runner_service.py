@@ -1156,16 +1156,142 @@ Article:
         return None
 
     async def run_agent(self, agent_id: str) -> Dict[str, Any]:
-        """Run an AI agent and generate an article"""
+        """Run an AI agent and generate article(s).
+        
+        If posts_count > 1, this will scrape multiple articles from a listing page
+        and create a post for each.
+        """
         # Get agent configuration
         agent = crud.get_ai_agent(db, agent_id)
         if not agent:
             raise ValueError("Agent not found")
         
         try:
-            # Step 1: Initialize OpenAI
+            # Initialize AI client
             self._initialize_ai_client()
             
+            # Check if bulk creation is requested
+            posts_count = agent.get('posts_count', 1) or 1
+            posts_count = min(max(1, posts_count), 100)  # Clamp between 1 and 100
+            
+            if posts_count > 1:
+                return await self._run_agent_bulk(agent, posts_count)
+            else:
+                return await self._run_agent_single(agent)
+                
+        except Exception as e:
+            return {
+                'success': False,
+                'message': str(e),
+                'article_id': None
+            }
+    
+    async def _run_agent_bulk(self, agent: Dict[str, Any], posts_count: int) -> Dict[str, Any]:
+        """Run agent in bulk mode - create multiple articles from a listing page."""
+        import trafilatura
+        
+        reference_urls = agent.get('reference_urls', [])
+        if not reference_urls:
+            return {
+                'success': False,
+                'message': 'No reference URL provided for bulk creation',
+                'article_id': None
+            }
+        
+        # Get the first URL (should be a listing page)
+        first_url = reference_urls[0]
+        if isinstance(first_url, dict):
+            listing_url = first_url.get('url', '')
+        else:
+            listing_url = first_url
+        
+        if not listing_url:
+            return {
+                'success': False,
+                'message': 'Invalid listing page URL',
+                'article_id': None
+            }
+        
+        print(f"\n{'='*60}")
+        print(f"🚀 BULK CREATION MODE: Creating {posts_count} posts from listing page")
+        print(f"📋 Listing URL: {listing_url}")
+        print(f"{'='*60}\n")
+        
+        # Fetch the listing page
+        downloaded = trafilatura.fetch_url(listing_url)
+        if not downloaded:
+            return {
+                'success': False,
+                'message': f'Failed to download listing page: {listing_url}',
+                'article_id': None
+            }
+        
+        # Find multiple article URLs
+        article_urls = await self._find_multiple_article_urls(downloaded, listing_url, posts_count)
+        
+        if not article_urls:
+            return {
+                'success': False,
+                'message': f'No article URLs found on listing page: {listing_url}',
+                'article_id': None
+            }
+        
+        print(f"\n✅ Found {len(article_urls)} article URLs to process\n")
+        
+        # Create articles for each URL
+        created_articles = []
+        failed_articles = []
+        
+        for i, article_url in enumerate(article_urls):
+            print(f"\n{'='*60}")
+            print(f"📰 Processing article {i+1}/{len(article_urls)}: {article_url}")
+            print(f"{'='*60}")
+            
+            try:
+                # Create a modified agent config with this specific URL
+                single_agent = dict(agent)
+                single_agent['reference_urls'] = [{'url': article_url, 'url_type': 'direct'}]
+                
+                result = await self._run_agent_single(single_agent)
+                
+                if result.get('success'):
+                    created_articles.append({
+                        'url': article_url,
+                        'article_id': result.get('article_id'),
+                        'title': result.get('title')
+                    })
+                    print(f"✅ Created article: {result.get('title', 'Unknown')}")
+                else:
+                    failed_articles.append({
+                        'url': article_url,
+                        'error': result.get('message', 'Unknown error')
+                    })
+                    print(f"❌ Failed to create article: {result.get('message')}")
+                    
+            except Exception as e:
+                failed_articles.append({
+                    'url': article_url,
+                    'error': str(e)
+                })
+                print(f"❌ Exception creating article: {e}")
+        
+        # Return summary
+        success_count = len(created_articles)
+        fail_count = len(failed_articles)
+        
+        return {
+            'success': success_count > 0,
+            'message': f'Created {success_count} articles successfully' + (f', {fail_count} failed' if fail_count > 0 else ''),
+            'article_id': created_articles[0]['article_id'] if created_articles else None,
+            'created_count': success_count,
+            'failed_count': fail_count,
+            'created_articles': created_articles,
+            'failed_articles': failed_articles
+        }
+
+    async def _run_agent_single(self, agent: Dict[str, Any]) -> Dict[str, Any]:
+        """Run agent to create a single article from reference URLs."""
+        try:
             # Step 2: Fetch content from reference URLs
             reference_urls = agent.get('reference_urls', [])
             category = agent.get('category', '')
