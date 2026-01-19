@@ -956,9 +956,15 @@ Article:
         else:  # 'in_review'
             return 'in_review', False
 
-    def _extract_youtube_url(self, content: str) -> Optional[str]:
+    def _extract_youtube_url(self, content: str, from_article_content: bool = False) -> Optional[str]:
         """Extract YouTube video URL from content if present.
-        Returns the first YouTube URL found, or None if not found.
+        
+        Args:
+            content: HTML content or text content to search
+            from_article_content: If True, only extract from clean article content (trafilatura extracted).
+                                 If False, search in raw HTML (may include ads).
+        
+        Returns the first YouTube URL found that appears to be part of the main content, or None if not found.
         """
         import re
         
@@ -974,10 +980,51 @@ Article:
             r'(?:https?://)?(?:www\.)?youtube\.com/shorts/([a-zA-Z0-9_-]{11})',
         ]
         
+        # Skip patterns - these are typically ads, social links, or channel links
+        skip_patterns = [
+            r'youtube\.com/user/',           # Channel links
+            r'youtube\.com/channel/',        # Channel links
+            r'youtube\.com/@',               # Handle links
+            r'youtube\.com/live/',           # Live streams (often ads)
+            r'rll-youtube-player',           # Lazy load players (often ads)
+            r'youtube-carousel',             # YouTube carousels (sidebar content)
+            r'youtube-short',                # YouTube shorts carousels
+        ]
+        
         for pattern in youtube_patterns:
-            match = re.search(pattern, content, re.IGNORECASE)
-            if match:
+            matches = re.finditer(pattern, content, re.IGNORECASE)
+            for match in matches:
                 video_id = match.group(1)
+                full_match_context = content[max(0, match.start()-200):match.end()+100]
+                
+                # Skip if this URL is in an ad/sidebar context
+                is_ad_content = False
+                for skip_pat in skip_patterns:
+                    if re.search(skip_pat, full_match_context, re.IGNORECASE):
+                        is_ad_content = True
+                        print(f"   ⏭️ Skipping YouTube URL (ad/sidebar context): {video_id}")
+                        break
+                
+                if is_ad_content:
+                    continue
+                
+                # For raw HTML, also check if it's in article main content area
+                if not from_article_content:
+                    # Look for common article content markers
+                    article_markers = [
+                        r'class="[^"]*entry-content[^"]*"',
+                        r'class="[^"]*article-content[^"]*"',
+                        r'class="[^"]*post-content[^"]*"',
+                        r'class="[^"]*td-post-content[^"]*"',
+                        r'<article[^>]*>',
+                    ]
+                    
+                    # Try to find if the match is within an article content block
+                    for marker in article_markers:
+                        marker_match = re.search(marker, content[:match.start()], re.IGNORECASE)
+                        if marker_match:
+                            break
+                
                 youtube_url = f"https://www.youtube.com/watch?v={video_id}"
                 print(f"🎬 Found YouTube video URL: {youtube_url}")
                 return youtube_url
