@@ -788,41 +788,10 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                 </div>
               </div>
               
-              {/* Target State Type Selection */}
+              {/* Target State - Always visible for Post content type, optional */}
               <div className="text-left">
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Target State Type
-                </label>
-                <select
-                  name="target_state_type"
-                  value={formData.target_state_type || 'state'}
-                  onChange={(e) => {
-                    const newType = e.target.value;
-                    setFormData(prev => ({
-                      ...prev,
-                      target_state_type: newType,
-                      // Clear the opposite field when switching
-                      target_state: newType === 'state' ? prev.target_state : '',
-                      target_language: newType === 'language' ? prev.target_language : ''
-                    }));
-                  }}
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="state">State</option>
-                  <option value="language">Language</option>
-                </select>
-                <p className="text-xs text-gray-500 mt-1">
-                  {formData.target_state_type === 'language' 
-                    ? 'Content will be shown to users based on language-state mapping'
-                    : 'Content will be shown only in the selected state'}
-                </p>
-              </div>
-
-              {/* Target State - Show only when target_state_type is 'state' */}
-              {formData.target_state_type !== 'language' && (
-              <div className="text-left">
-                <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Target State
+                  Target State <span className="text-gray-400 font-normal">(Optional)</span>
                 </label>
                 <div className="relative">
                   {/* Selected State Tag */}
@@ -881,14 +850,15 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                     </div>
                   )}
                 </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Content will be shown only in the selected state
+                </p>
               </div>
-              )}
 
-              {/* Target Language - Show only when target_state_type is 'language' */}
-              {formData.target_state_type === 'language' && (
+              {/* Content Language - Always visible for Post content type, optional */}
               <div className="text-left">
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Target Language
+                  Content Language <span className="text-gray-400 font-normal">(Optional)</span>
                 </label>
                 <select
                   name="target_language"
@@ -913,7 +883,6 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                   Content will be displayed in states associated with this language
                 </p>
               </div>
-              )}
 
               {/* Scraper Website Selection */}
               <div className="text-left">
