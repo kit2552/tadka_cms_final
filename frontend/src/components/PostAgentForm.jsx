@@ -169,7 +169,11 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
           : undefined,
         // Set filter keywords
         include_keywords: includeKw,
-        exclude_keywords: excludeKw
+        exclude_keywords: excludeKw,
+        // Ensure these fields are explicitly loaded for post agents
+        target_state: editingAgent.target_state || '',
+        target_language: editingAgent.target_language || '',
+        scraper_website: editingAgent.scraper_website || ''
       }));
       setActiveTab(editingAgent.mode || 'recurring');
     }
