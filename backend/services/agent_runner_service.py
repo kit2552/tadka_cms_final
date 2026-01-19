@@ -1107,6 +1107,8 @@ Article:
                 'summary': summary,
                 'author': 'AI Agent',
                 'article_language': agent.get('article_language', 'en'),
+                'content_language': target_language if target_language else None,  # Content language for targeting
+                'target_state': target_state if target_state else None,  # Target state for targeting
                 'states': states_json,
                 'category': agent.get('category', ''),
                 'content_type': content_type,
