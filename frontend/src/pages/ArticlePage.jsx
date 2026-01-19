@@ -497,6 +497,7 @@ const ArticlePage = () => {
             </div>
 
             {/* Main Image or YouTube Video or Gallery Slider - White background */}
+            {/* Only show if youtube_url or image is present, otherwise skip entirely */}
             {(article.content_type === 'video' || article.content_type === 'video_post' || article.content_type === 'movie_review' || article.content_type === 'ott_review') && article.youtube_url ? (
               <div className="mb-3 bg-white" style={{ marginTop: '1rem' }}>
                 <div className="relative aspect-video w-full overflow-hidden">
@@ -521,21 +522,12 @@ const ArticlePage = () => {
                   alt={article.title}
                   className="w-full h-96 object-cover"
                   onError={(e) => {
-                    const placeholder = document.createElement('div');
-                    placeholder.className = 'w-full h-96 bg-gray-500 flex items-center justify-center';
-                    placeholder.innerHTML = `<span class="text-white font-bold text-6xl">${article.content_type === 'video' ? 'V' : article.content_type === 'photo' ? 'P' : (article.content_type === 'movie_review' || article.content_type === 'ott_review') ? 'M' : 'A'}</span>`;
-                    e.target.parentNode.replaceChild(placeholder, e.target);
+                    // Hide the image container if image fails to load
+                    e.target.parentNode.style.display = 'none';
                   }}
                 />
               </div>
-            ) : (
-              <div className="mb-3 bg-white" style={{ marginTop: '1rem' }}>
-                <PlaceholderImage 
-                  contentType={article.content_type || 'post'} 
-                  className="w-full h-96"
-                />
-              </div>
-            )}
+            ) : null}
 
             {/* Movie Review Content */}
             {article.content_type === 'movie_review' ? (
