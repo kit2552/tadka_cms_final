@@ -824,6 +824,12 @@ const ArticlePage = () => {
                   .movie-review-content {
                     font-size: 1rem;
                   }
+                  .movie-review-content p {
+                    margin-bottom: 1rem;
+                  }
+                  .movie-review-content p:last-child {
+                    margin-bottom: 0;
+                  }
                   
                   /* Convert bullet lists to numbered lists for What Works/Doesn't Work sections */
                   .movie-review-numbered-list ul {
