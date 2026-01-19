@@ -784,7 +784,15 @@ const ArticlePage = () => {
                                   <div className="flex flex-col items-center">
                                     <div className="text-xs text-gray-400 font-medium mb-1">Streaming On</div>
                                     <div className="text-xs text-gray-300 font-medium">
-                                      {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                      {(() => {
+                                        // Parse date without timezone conversion
+                                        const parts = article.release_date.split('-');
+                                        if (parts.length === 3) {
+                                          const date = new Date(parts[0], parts[1] - 1, parts[2]);
+                                          return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                                        }
+                                        return article.release_date;
+                                      })()}
                                     </div>
                                   </div>
                                 )}
@@ -1105,7 +1113,15 @@ const ArticlePage = () => {
                                   <div className="flex flex-col items-center">
                                     <div className="text-xs text-gray-400 font-medium mb-1">Streaming On</div>
                                     <div className="text-xs text-gray-300 font-medium">
-                                      {new Date(article.release_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                      {(() => {
+                                        // Parse date without timezone conversion
+                                        const parts = article.release_date.split('-');
+                                        if (parts.length === 3) {
+                                          const date = new Date(parts[0], parts[1] - 1, parts[2]);
+                                          return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                                        }
+                                        return article.release_date;
+                                      })()}
                                     </div>
                                   </div>
                                 )}
