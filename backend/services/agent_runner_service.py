@@ -629,23 +629,24 @@ Original Article:
             # If we have an original title, rewrite it
             if original_title:
                 print(f"   📝 Rewriting original title: {original_title}")
-                prompt = f"""Rewrite this news headline in a different way.
+                prompt = f"""Rewrite this news headline in a different way. Return ONLY ONE headline.
 
-Original headline: {original_title}
+Original: {original_title}
 
 RULES:
-- MUST be under 125 characters (including spaces)
+- Return exactly ONE headline, nothing else
+- MUST be under 125 characters
 - Keep the same meaning but use different words
 - Make it catchy and engaging
-- No quotes, colons at the start, or labels like "Headline:"
+- No quotes, no numbering, no bullet points
 - Write in the same language as the original
 
-Write ONLY the rewritten headline, nothing else."""
+Your response should be just the headline text, nothing more."""
 
                 title = self._chat_completion(
-                    "You are a headline rewriter. You rewrite headlines to be under 125 characters while keeping the meaning. Never exceed 125 characters.",
+                    "You rewrite headlines. Return only ONE headline under 125 characters. No lists, no options, just one headline.",
                     prompt,
-                    500
+                    2000
                 )
                 print(f"   ✅ LLM returned title: {title}")
             else:
