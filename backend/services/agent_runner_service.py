@@ -974,12 +974,15 @@ Article:
             # Step 2: Fetch content from reference URLs
             reference_urls = agent.get('reference_urls', [])
             category = agent.get('category', '')
+            scraper_website = agent.get('scraper_website', '')  # Website-specific scraper selection
             reference_content = ""
             original_title = ""
             youtube_url_from_source = None  # YouTube URL found in source HTML
             if reference_urls:
                 print(f"Fetching content from {len(reference_urls)} reference URLs for category: {category}...")
-                reference_content, original_title, youtube_url_from_source = await self._fetch_reference_content(reference_urls, category)
+                if scraper_website:
+                    print(f"   🔧 Using forced scraper: {scraper_website}")
+                reference_content, original_title, youtube_url_from_source = await self._fetch_reference_content(reference_urls, category, scraper_website)
                 print(f"Fetched {len(reference_content)} characters of reference content")
                 if original_title:
                     print(f"Original article title: {original_title}")
