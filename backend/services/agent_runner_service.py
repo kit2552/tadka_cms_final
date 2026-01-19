@@ -1060,7 +1060,9 @@ Article:
                 target_language = agent.get('target_language', '')
                 states_list = self._get_states_for_language(target_language)
                 if states_list:
-                    states_json = f'[{", ".join([f\'"{s}\'' for s in states_list])}]'
+                    # Build JSON array of states
+                    quoted_states = [f'"{s}"' for s in states_list]
+                    states_json = '[' + ', '.join(quoted_states) + ']'
                 else:
                     states_json = '["all"]'  # English or unknown language shows to all
                 print(f"   🌐 Language-based targeting: {target_language} -> {states_list}")
