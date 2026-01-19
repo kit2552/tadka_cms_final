@@ -338,7 +338,8 @@ const CreateArticle = () => {
           summary: article.summary || '',
           author: article.author || '',
           article_language: article.article_language || 'en',
-          content_language: article.content_language || '', // Load content_language for movie/video categories
+          content_language: article.content_language || '', // Load content_language for targeting by language
+          target_state: article.target_state || '', // Load target_state for targeting by state
           states: article.states || 'all',
           category: article.category || '',
           content_type: article.content_type || 'post', // Load content type
