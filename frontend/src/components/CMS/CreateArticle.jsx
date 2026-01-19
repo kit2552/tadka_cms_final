@@ -2291,6 +2291,56 @@ const CreateArticle = () => {
                             <span className="text-sm font-semibold text-gray-800">Enable Comments</span>
                           </label>
                         </div>
+
+                        {/* Target State Field (Optional) */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Target State <span className="text-gray-400 font-normal">(Optional)</span>
+                          </label>
+                          <select
+                            name="target_state"
+                            value={formData.target_state || ''}
+                            onChange={handleInputChange}
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">All States</option>
+                            {states.map(state => (
+                              <option key={state.code} value={state.name}>{state.name}</option>
+                            ))}
+                          </select>
+                          <p className="text-xs text-gray-500 mt-1 text-left">
+                            Content will be shown only in the selected state
+                          </p>
+                        </div>
+
+                        {/* Content Language Field (Optional) */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
+                            Content Language <span className="text-gray-400 font-normal">(Optional)</span>
+                          </label>
+                          <select
+                            name="content_language"
+                            value={formData.content_language || ''}
+                            onChange={handleInputChange}
+                            className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">Select Language</option>
+                            <option value="Telugu">Telugu</option>
+                            <option value="Tamil">Tamil</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Kannada">Kannada</option>
+                            <option value="Malayalam">Malayalam</option>
+                            <option value="Bengali">Bengali</option>
+                            <option value="Marathi">Marathi</option>
+                            <option value="Punjabi">Punjabi</option>
+                            <option value="Gujarati">Gujarati</option>
+                            <option value="Odia">Odia</option>
+                            <option value="English">English</option>
+                          </select>
+                          <p className="text-xs text-gray-500 mt-1 text-left">
+                            Content will be displayed in states associated with this language
+                          </p>
+                        </div>
                       </div>
 
                       {/* Right Column: Image Preview (40% = 2 cols) */}
