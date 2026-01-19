@@ -423,6 +423,128 @@ class AgentRunnerService:
             print(f"Error finding article URL: {e}")
             return None
 
+    async def _find_multiple_article_urls(self, html_content: str, base_url: str, count: int = 1) -> list:
+        """Find multiple article URLs from a listing page, sorted by most recent first.
+        
+        Args:
+            html_content: Raw HTML of the listing page
+            base_url: Base URL of the listing page
+            count: Number of article URLs to return (max)
+            
+        Returns: List of article URLs, up to 'count' items
+        """
+        try:
+            import re
+            from urllib.parse import urljoin, urlparse
+            from datetime import datetime
+            
+            # Extract domain and path category from base URL
+            parsed_base = urlparse(base_url)
+            base_domain = parsed_base.netloc
+            
+            # Extract category from base URL path
+            base_path_parts = [p for p in parsed_base.path.split('/') if p]
+            base_category = base_path_parts[-1] if base_path_parts else None
+            print(f"📋 Finding {count} articles from listing page. Base category: {base_category}")
+            
+            found_articles = []  # List of (url, sort_key, source_type)
+            
+            # First, try to find articles with datetime information
+            datetime_patterns = [
+                r'<a[^>]*href=["\']([^"\']+)["\'][^>]*>.*?<time[^>]*datetime=["\']([^"\']+)["\']',
+                r'<time[^>]*datetime=["\']([^"\']+)["\'][^>]*>.*?<a[^>]*href=["\']([^"\']+)["\']',
+                r'datetime=["\'](\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})[^"\']*["\'][^>]*>.*?href=["\']([^"\']+)["\']',
+            ]
+            
+            for pattern in datetime_patterns:
+                matches = re.findall(pattern, html_content, re.IGNORECASE | re.DOTALL)
+                for match in matches:
+                    if match[0].startswith('http') or match[0].startswith('/'):
+                        href, dt_str = match[0], match[1]
+                    else:
+                        dt_str, href = match[0], match[1]
+                    
+                    full_url = urljoin(base_url, href)
+                    parsed_url = urlparse(full_url)
+                    
+                    if base_domain not in parsed_url.netloc:
+                        continue
+                    
+                    try:
+                        dt_str_clean = dt_str.replace('Z', '+00:00')
+                        if 'T' in dt_str_clean:
+                            dt = datetime.fromisoformat(dt_str_clean.split('+')[0])
+                            sort_key = int(dt.strftime('%Y%m%d%H%M%S'))
+                            already_added = any(url == full_url for url, _, _ in found_articles)
+                            if not already_added:
+                                found_articles.append((full_url, sort_key, 'datetime'))
+                    except:
+                        pass
+            
+            # If no datetime found, fall back to URL-based ID extraction
+            if not found_articles:
+                href_pattern = r'href=["\']([^"\']+)["\']'
+                all_hrefs = re.findall(href_pattern, html_content, re.IGNORECASE)
+                
+                for href in all_hrefs:
+                    full_url = urljoin(base_url, href)
+                    parsed_url = urlparse(full_url)
+                    
+                    is_same_domain = base_domain in parsed_url.netloc
+                    is_not_asset = not any(x in full_url.lower() for x in [
+                        '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.woff', '.woff2', 
+                        '.svg', '.ico', '/feed/', '/category/', '/tag/', '/author/',
+                        'cdn.', 'assets', 'static', '#', 'javascript:', 'mailto:',
+                        'login', 'signup', 'subscribe', 'search', 'page/', '/amp/'
+                    ])
+                    is_different_from_base = full_url.rstrip('/') != base_url.rstrip('/')
+                    already_added = any(url == full_url for url, _, _ in found_articles)
+                    
+                    is_same_category = True
+                    if base_category:
+                        is_same_category = base_category.lower() in parsed_url.path.lower()
+                    
+                    if not (is_same_domain and is_not_asset and is_different_from_base and not already_added and is_same_category):
+                        continue
+                    
+                    article_id = 0
+                    id_patterns = [
+                        r'/(\d{5,})/',
+                        r'/(\d{5,})$',
+                        r'-(\d{5,})$',
+                        r'-(\d{5,})/?$',
+                    ]
+                    
+                    for pattern in id_patterns:
+                        match = re.search(pattern, parsed_url.path)
+                        if match:
+                            article_id = int(match.group(1))
+                            break
+                    
+                    if article_id == 0:
+                        date_match = re.search(r'/(\d{4})/(\d{2})/(\d{2})/', parsed_url.path)
+                        if date_match:
+                            article_id = int(f"{date_match.group(1)}{date_match.group(2)}{date_match.group(3)}000000")
+                    
+                    if article_id > 0:
+                        found_articles.append((full_url, article_id, 'url_id'))
+            
+            # Sort by sort_key (highest first) to get the latest articles
+            if found_articles:
+                found_articles.sort(key=lambda x: x[1], reverse=True)
+                # Return only the requested count
+                result_urls = [url for url, _, _ in found_articles[:count]]
+                print(f"✅ Found {len(found_articles)} total articles, returning top {len(result_urls)}")
+                for i, url in enumerate(result_urls):
+                    print(f"   {i+1}. {url}")
+                return result_urls
+            
+            return []
+            
+        except Exception as e:
+            print(f"❌ Error finding article URLs: {e}")
+            return []
+
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
         category = agent.get('category', '')
