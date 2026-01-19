@@ -41,6 +41,7 @@ class AIAgent(BaseModel):
     split_content: Optional[bool] = False  # Whether to split content
     split_paragraphs: Optional[int] = 2  # Number of paragraphs for split
     reference_urls: Optional[List[Any]] = None  # Reference URLs - can be strings or ReferenceUrlItem objects
+    posts_count: Optional[int] = 1  # Number of posts to create from listing page (1-100)
     image_option: Optional[str] = None  # "ai_generate", "upload", "existing", "web_search"
     content_workflow: Optional[str] = None  # "in_review", "ready_to_publish", "auto_post"
     is_top_story: Optional[bool] = False  # Mark as top story
