@@ -1153,6 +1153,12 @@ const ArticlePage = () => {
                   .ott-review-content {
                     font-size: 1rem;
                   }
+                  .ott-review-content p {
+                    margin-bottom: 1rem;
+                  }
+                  .ott-review-content p:last-child {
+                    margin-bottom: 0;
+                  }
                   
                   /* Convert bullet lists to numbered lists for What Works/Doesn't Work sections */
                   .ott-review-numbered-list ul {
