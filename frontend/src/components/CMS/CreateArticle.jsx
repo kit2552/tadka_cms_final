@@ -148,7 +148,8 @@ const CreateArticle = () => {
     summary: '',
     author: 'Tadka Team', // Default author
     article_language: 'en',
-    content_language: '', // Content Language field for movie/video categories
+    content_language: '', // Content Language field for targeting by language
+    target_state: '', // Target State field for targeting by state
     states: 'all',
     category: '',
     content_type: 'post', // New field for content type
