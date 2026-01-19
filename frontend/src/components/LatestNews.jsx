@@ -74,11 +74,6 @@ const LatestNews = ({ onArticleClick }) => {
                 onClick={() => handleArticleClick(article)}
               >
                 <div className="flex items-start space-x-2 text-left">
-                  <img
-                    src={getThumbnail(index)}
-                    alt=""
-                    className="flex-shrink-0 w-20 h-16 object-cover border border-gray-300 rounded group-hover:scale-105 transition-transform duration-300"
-                  />
                   <div className="flex-1 min-w-0">
                     <h4 className="text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200" style={{fontSize: '14px', fontWeight: '600'}}>
                       {article.title}
