@@ -1538,8 +1538,8 @@ const ArticlePage = () => {
 
           {/* Right Sidebar - Comments & Related Articles Section - 40% width - Scrollable */}
           <div className="lg:col-span-2 border-t border-gray-300 lg:border-t-0 pt-2 lg:pt-0 lg:overflow-y-auto custom-scrollbar lg:h-full" style={{ paddingLeft: '0px', paddingRight: '4px' }}>
-            {/* Comment Section */}
-            {(article.content_type === 'movie_review' || article.content_type === 'ott_review') && (article.review_comments_enabled !== false) && (
+            {/* Comment Section - User Reviews for movie/ott reviews when enabled */}
+            {(article.content_type === 'movie_review' || article.content_type === 'ott_review') && (article.enable_user_rating === true || article.review_comments_enabled !== false) && (
               <div className="mb-6" style={{ marginTop: '1rem' }}>
                 <CommentSection articleId={article.id} commentType="review" headerTitle="User Reviews" />
               </div>
