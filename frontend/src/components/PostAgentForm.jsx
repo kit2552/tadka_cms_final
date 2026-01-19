@@ -22,6 +22,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     split_content: false,
     split_paragraphs: 2,
     reference_urls: [],
+    posts_count: 1,  // Number of posts to create from listing page (1-100)
     image_option: 'web_search',
     content_workflow: 'in_review',
     is_top_story: false,
