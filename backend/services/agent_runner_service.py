@@ -681,7 +681,7 @@ Write ONLY the headline, nothing else."""
                 title = self._chat_completion(
                     "You shorten headlines to under 125 characters while keeping the meaning.",
                     f"Shorten this headline to UNDER 125 characters:\n\n{title}\n\nWrite only the shortened headline.",
-                    150
+                    500
                 ).strip('"\'')
                 print(f"   ✅ Shortened title ({len(title)} chars): {title}")
             
