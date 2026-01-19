@@ -747,18 +747,19 @@ const CreateArticle = () => {
       const isMovieReviewCategory = movieReviewCategories.includes(value);
       const isOttReviewCategory = ottReviewCategories.includes(value);
       
-      let newContentType = prev.content_type;
-      if (isMovieReviewCategory) {
-        newContentType = 'movie_review';
-      } else if (isOttReviewCategory) {
-        newContentType = 'ott_review';
-      }
-      
-      setFormData(prev => ({
-        ...prev,
-        [name]: value,
-        content_type: newContentType
-      }));
+      setFormData(prev => {
+        let newContentType = prev.content_type;
+        if (isMovieReviewCategory) {
+          newContentType = 'movie_review';
+        } else if (isOttReviewCategory) {
+          newContentType = 'ott_review';
+        }
+        return {
+          ...prev,
+          [name]: value,
+          content_type: newContentType
+        };
+      });
       return;
     }
     
