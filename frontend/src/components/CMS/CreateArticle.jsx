@@ -2018,8 +2018,8 @@ const CreateArticle = () => {
                     )}
                   </div>
 
-                  {/* Target State Field (Optional) - Show for Post content type */}
-                  {formData.content_type === 'post' && (
+                  {/* Target State Field (Optional) - Show for Post and Video Post content types */}
+                  {(formData.content_type === 'post' || formData.content_type === 'video_post') && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                         Target State <span className="text-gray-400 font-normal">(Optional)</span>
@@ -2041,8 +2041,8 @@ const CreateArticle = () => {
                     </div>
                   )}
 
-                  {/* Content Language Field (Optional) - Show for Post content type */}
-                  {formData.content_type === 'post' && (
+                  {/* Content Language Field (Optional) - Show for Post and Video Post content types */}
+                  {(formData.content_type === 'post' || formData.content_type === 'video_post') && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                         Content Language <span className="text-gray-400 font-normal">(Optional)</span>
@@ -2072,8 +2072,8 @@ const CreateArticle = () => {
                     </div>
                   )}
 
-                  {/* Language Field - Show for movie/video categories (NOT for post content type) */}
-                  {formData.content_type !== 'post' && [
+                  {/* Language Field - Show for movie/video categories (NOT for post or video_post content types) */}
+                  {formData.content_type !== 'post' && formData.content_type !== 'video_post' && [
                     'movie-news',
                     'movie-news-bollywood', 
                     'movie-reviews',
