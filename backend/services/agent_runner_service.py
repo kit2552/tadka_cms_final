@@ -126,6 +126,23 @@ class AgentRunnerService:
             'All': 'Hindi'
         }
         return state_language_map.get(target_state, 'Hindi')
+    
+    def _get_states_for_language(self, language: str) -> list:
+        """Get list of states associated with a language"""
+        language_state_map = {
+            'Telugu': ['Telangana', 'Andhra Pradesh'],
+            'Tamil': ['Tamil Nadu'],
+            'Kannada': ['Karnataka'],
+            'Malayalam': ['Kerala'],
+            'Hindi': ['Uttar Pradesh', 'Madhya Pradesh', 'Rajasthan', 'Bihar', 'Jharkhand', 'Uttarakhand', 'Chhattisgarh', 'Haryana', 'Delhi', 'Himachal Pradesh'],
+            'Marathi': ['Maharashtra'],
+            'Gujarati': ['Gujarat'],
+            'Bengali': ['West Bengal'],
+            'Punjabi': ['Punjab'],
+            'Odia': ['Odisha'],
+            'English': [],  # English shown to all states
+        }
+        return language_state_map.get(language, [])
 
     async def _fetch_reference_content(self, reference_urls: list, category: str = "") -> tuple:
         """Fetch and extract main article content from reference URLs using trafilatura
