@@ -12,7 +12,10 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
     post_time: '09:00 AM',
     timezone: 'IST',
     category: '',
+    target_state_type: 'state',  // 'state' or 'language'
     target_state: '',
+    target_language: '',  // Target language when target_state_type is 'language'
+    scraper_website: '',  // Website-specific scraper selection
     article_language: 'en',
     content_type: 'post',
     word_count: '<100',
