@@ -652,22 +652,23 @@ Your response should be just the headline text, nothing more."""
             else:
                 # No original title - generate from content
                 print(f"   📝 No original title, generating from content...")
-                prompt = f"""Write a news headline for this article.
+                prompt = f"""Write a news headline for this article. Return ONLY ONE headline.
 
 Article summary:
 {content[:800]}
 
 RULES:
-- MUST be under 125 characters (including spaces)
+- Return exactly ONE headline, nothing else
+- MUST be under 125 characters
 - Catchy and engaging
-- No quotes, colons at the start, or labels like "Headline:"
+- No quotes, no numbering, no bullet points
 
-Write ONLY the headline, nothing else."""
+Your response should be just the headline text, nothing more."""
 
                 title = self._chat_completion(
-                    "You are a headline writer. You write headlines under 125 characters. Never exceed 125 characters.",
+                    "You write headlines. Return only ONE headline under 125 characters. No lists, no options, just one headline.",
                     prompt,
-                    500
+                    2000
                 )
                 print(f"   ✅ LLM generated title: {title}")
             
