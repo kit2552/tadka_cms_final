@@ -631,7 +631,7 @@ def update_article_cms(db, article_id: int, article: dict):
     # Map of fields that can be updated
     allowed_fields = [
         "title", "display_title", "short_title", "content", "content_secondary", "summary", "author", 
-        "states", "category", "content_type", "content_language", "ad_type", "sponsored_link", "sponsored_label", "image", "image_gallery", 
+        "states", "category", "content_type", "content_language", "target_state", "ad_type", "sponsored_link", "sponsored_label", "image", "image_gallery", 
         "gallery_id", "youtube_url", "tags", "artists", "movie_rating",
         "is_featured", "is_sponsored", "is_top_story", "top_story_duration_hours", "is_published", "is_scheduled", "scheduled_publish_at", "scheduled_timezone",
         "status", "published_at",  # Status field: draft, in_review, approved, published, scheduled
