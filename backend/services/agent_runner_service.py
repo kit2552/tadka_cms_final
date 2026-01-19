@@ -274,12 +274,13 @@ class AgentRunnerService:
                     )
                     metadata = trafilatura.extract_metadata(downloaded)
                     
-                    # Check raw HTML for YouTube URL (since trafilatura might not include it)
-                    if not found_youtube_url:
-                        youtube_from_html = self._extract_youtube_url(downloaded)
-                        if youtube_from_html:
-                            found_youtube_url = youtube_from_html
-                            print(f"🎬 Found YouTube URL in raw HTML: {found_youtube_url}")
+                    # Only extract YouTube URL from clean trafilatura content (not raw HTML)
+                    # This avoids picking up ads and sidebar content
+                    if extracted and not found_youtube_url:
+                        youtube_from_content = self._extract_youtube_url(extracted, from_article_content=True)
+                        if youtube_from_content:
+                            found_youtube_url = youtube_from_content
+                            print(f"🎬 Found YouTube URL in article content: {found_youtube_url}")
                     
                     if extracted:
                         if metadata and metadata.title:
