@@ -666,7 +666,7 @@ Write ONLY the headline, nothing else."""
                 title = self._chat_completion(
                     "You are a headline writer. You write headlines under 125 characters. Never exceed 125 characters.",
                     prompt,
-                    150
+                    500
                 )
                 print(f"   ✅ LLM generated title: {title}")
             
