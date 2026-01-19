@@ -174,7 +174,8 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
         // Ensure these fields are explicitly loaded for post agents
         target_state: editingAgent.target_state || '',
         target_language: editingAgent.target_language || '',
-        scraper_website: editingAgent.scraper_website || ''
+        scraper_website: editingAgent.scraper_website || '',
+        posts_count: editingAgent.posts_count || 1
       }));
       setActiveTab(editingAgent.mode || 'recurring');
     }
