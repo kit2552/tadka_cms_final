@@ -179,16 +179,30 @@ export const dataService = {
           return true;
         }
         
-        // Map user states to state codes that match the backend using centralized mapping
-        const userStateCodes = userStates.map(state => {
-          return STATE_CODE_MAPPING[state] || state.toLowerCase();
+        // Check if any user state matches article states
+        // User states can be full names (like "Telangana") or codes (like "ts")
+        // Article states can also be full names or codes
+        return userStates.some(userState => {
+          // Direct match with full name
+          if (articleStates.includes(userState)) {
+            return true;
+          }
+          
+          // Get user's state code
+          const userStateCode = STATE_CODE_MAPPING[userState] || userState.toLowerCase();
+          
+          // Check if user's state code matches any article state (as code)
+          if (articleStates.includes(userStateCode) || articleStates.includes(userStateCode.toLowerCase())) {
+            return true;
+          }
+          
+          // Also check if article has full state names that match user's selected state
+          // by converting article states to codes and comparing
+          return articleStates.some(articleState => {
+            const articleStateCode = STATE_CODE_MAPPING[articleState] || articleState.toLowerCase();
+            return articleStateCode === userStateCode || articleStateCode === userStateCode.toLowerCase();
+          });
         });
-        
-        // Check if any of the user's state codes match the article's target states
-        return userStateCodes.some(userStateCode => 
-          articleStates.includes(userStateCode) || 
-          articleStates.includes(userStateCode.toLowerCase())
-        );
       });
       
       return {
