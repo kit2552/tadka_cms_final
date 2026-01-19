@@ -645,7 +645,7 @@ Write ONLY the rewritten headline, nothing else."""
                 title = self._chat_completion(
                     "You are a headline rewriter. You rewrite headlines to be under 125 characters while keeping the meaning. Never exceed 125 characters.",
                     prompt,
-                    150
+                    500
                 )
                 print(f"   ✅ LLM returned title: {title}")
             else:
