@@ -2249,7 +2249,6 @@ const CreateArticle = () => {
                       </div>
                     </div>
                   )}
-                  </div>
                 </div>
               )}
             </div>
