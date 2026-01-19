@@ -1053,11 +1053,12 @@ Article:
             # Step 12: Determine status from workflow
             status, is_published = self._get_status_from_workflow(agent.get('content_workflow', 'in_review'))
             
-            # Step 13: Determine states based on target_state_type
-            target_state_type = agent.get('target_state_type', 'state')
-            if target_state_type == 'language':
+            # Step 13: Determine states based on target_language or target_state (both optional)
+            target_language = agent.get('target_language', '')
+            target_state = agent.get('target_state', '')
+            
+            if target_language:
                 # Language-based targeting: get all states for this language
-                target_language = agent.get('target_language', '')
                 states_list = self._get_states_for_language(target_language)
                 if states_list:
                     # Build JSON array of states
@@ -1066,10 +1067,14 @@ Article:
                 else:
                     states_json = '["all"]'  # English or unknown language shows to all
                 print(f"   🌐 Language-based targeting: {target_language} -> {states_list}")
+            elif target_state:
+                # State-based targeting
+                states_json = f'["{target_state}"]'
+                print(f"   📍 State-based targeting: {target_state}")
             else:
-                # State-based targeting (original behavior)
-                target_state = agent.get('target_state', '')
-                states_json = f'["{target_state}"]' if target_state else '["all"]'
+                # No targeting - show to all states
+                states_json = '["all"]'
+                print(f"   🌍 No targeting specified - showing to all states")
             
             # Step 14: Create the article
             article_data = {
