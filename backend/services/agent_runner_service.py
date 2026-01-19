@@ -674,6 +674,10 @@ Your response should be just the headline text, nothing more."""
             
             # Clean up the title
             if title:
+                # Take only the first line if multiple lines returned
+                title = title.split('\n')[0].strip()
+                # Remove any bullet points, numbers at start
+                title = title.lstrip('-•*0123456789. ')
                 title = title.strip('"\'')
                 title = title.replace("Headline:", "").replace("Title:", "").strip()
             
