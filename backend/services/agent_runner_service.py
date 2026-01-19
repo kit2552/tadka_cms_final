@@ -1093,16 +1093,16 @@ Article:
             youtube_url = None
             content_type = agent.get('content_type', 'post')
             
-            # Use YouTube URL found from source HTML first (most reliable)
+            # Use YouTube URL found from source content first (most reliable - extracted from trafilatura content)
             if youtube_url_from_source:
                 youtube_url = youtube_url_from_source
-                print(f"🎬 Using YouTube URL from source HTML: {youtube_url}")
+                print(f"🎬 Using YouTube URL from source content: {youtube_url}")
             else:
                 # Fallback: Check reference content and generated content for YouTube URLs
                 if category in video_categories or content_type == 'post':
-                    youtube_url = self._extract_youtube_url(reference_content)
+                    youtube_url = self._extract_youtube_url(reference_content, from_article_content=True)
                     if not youtube_url:
-                        youtube_url = self._extract_youtube_url(content)
+                        youtube_url = self._extract_youtube_url(content, from_article_content=True)
             
             if youtube_url:
                 print(f"🎬 YouTube video detected! Switching content type from '{content_type}' to 'video_post'")
