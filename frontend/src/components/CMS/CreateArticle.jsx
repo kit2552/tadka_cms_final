@@ -2062,9 +2062,8 @@ const CreateArticle = () => {
                     </div>
                   )}
 
-                  <div>
-                  {/* Language Field - Show for movie/video categories */}
-                  {[
+                  {/* Language Field - Show for movie/video categories (NOT for post content type) */}
+                  {formData.content_type !== 'post' && [
                     'movie-news',
                     'movie-news-bollywood', 
                     'movie-reviews',
