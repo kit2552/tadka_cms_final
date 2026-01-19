@@ -621,78 +621,85 @@ Original Article:
             return raw_content
 
     async def _generate_title(self, content: str, original_title: str = "") -> str:
-        """Generate a compelling, DIFFERENT title for the content using OpenAI"""
+        """Rewrite the original title using LLM, keeping it under 75 characters"""
         if not self.client:
             self._initialize_ai_client()
         
         try:
-            # Build prompt based on whether we have original title
+            # If we have an original title, rewrite it
             if original_title:
-                prompt = f"""Write a SHORT news headline (8-10 words ONLY).
+                prompt = f"""Rewrite this news headline in a different way.
 
-Topic: {original_title[:200]}
+Original headline: {original_title}
 
 RULES:
-- 8 to 10 words MAXIMUM
-- One simple sentence
-- Catchy and clear
-- No quotes, colons, or dashes
+- MUST be under 75 characters (including spaces)
+- Keep the same meaning but use different words
+- Make it catchy and engaging
+- No quotes, colons at the start, or labels like "Headline:"
+- Write in the same language as the original
 
-Good examples:
-- "Cameron Wants to Visit Rajamouli's Film Sets"
-- "Pawan Kalyan's OG Sequel Coming in 2028"
-- "Director Plans Exciting New Telugu Project"
+Write ONLY the rewritten headline, nothing else."""
 
-Write ONLY the headline, nothing else."""
+                title = self._chat_completion(
+                    "You are a headline rewriter. You rewrite headlines to be under 75 characters while keeping the meaning. Never exceed 75 characters.",
+                    prompt,
+                    100
+                )
             else:
-                prompt = f"""Write a SHORT news headline (8-10 words ONLY).
+                # No original title - generate from content
+                prompt = f"""Write a news headline for this article.
 
 Article summary:
 {content[:800]}
 
 RULES:
-- 8 to 10 words MAXIMUM
-- One simple sentence
-- Catchy and clear
-- No quotes, colons, or dashes
+- MUST be under 75 characters (including spaces)
+- Catchy and engaging
+- No quotes, colons at the start, or labels like "Headline:"
 
 Write ONLY the headline, nothing else."""
 
-            title = self._chat_completion(
-                "You are a headline writer. You write ONLY 8-10 word headlines. Never more than 10 words. Keep it simple and punchy.",
-                prompt,
-                100
-            )
+                title = self._chat_completion(
+                    "You are a headline writer. You write headlines under 75 characters. Never exceed 75 characters.",
+                    prompt,
+                    100
+                )
             
             # Clean up the title
             title = title.strip('"\'')
             title = title.replace("Headline:", "").replace("Title:", "").strip()
             
-            # If title is too long, ask AI to shorten it properly
-            words = title.split()
-            if len(words) > 14:
-                print(f"Title too long ({len(words)} words), asking AI to shorten...")
+            # If title is still too long (over 75 chars), ask AI to shorten it
+            if len(title) > 75:
+                print(f"Title too long ({len(title)} chars), asking AI to shorten...")
                 title = self._chat_completion(
-                    "You shorten headlines while keeping the complete meaning.",
-                    f"Shorten this headline to 10-12 words while keeping the full meaning:\n\n{title}\n\nWrite only the shortened headline.",
+                    "You shorten headlines to under 75 characters while keeping the meaning.",
+                    f"Shorten this headline to UNDER 75 characters:\n\n{title}\n\nWrite only the shortened headline.",
                     100
                 ).strip('"\'')
-                print(f"Shortened title ({len(title.split())} words): {title}")
+                print(f"Shortened title ({len(title)} chars): {title}")
+            
+            # Final truncation safety check
+            if len(title) > 75:
+                # Truncate at last complete word before 75 chars
+                title = title[:72].rsplit(' ', 1)[0] + '...'
             
             # If title generation failed or empty, create from content
             if not title:
                 first_sentence = content.split('.')[0] if content else "News Article"
-                title = first_sentence.strip()
+                title = first_sentence.strip()[:72] + '...' if len(first_sentence) > 75 else first_sentence.strip()
             
-            print(f"Final title ({len(title.split())} words): {title}")
+            print(f"Final title ({len(title)} chars): {title}")
             return title
             
         except Exception as e:
             print(f"Title generation failed: {e}")
-            # Fallback to content excerpt
+            # Fallback to original title or content excerpt
+            if original_title:
+                return original_title[:72] + '...' if len(original_title) > 75 else original_title
             first_sentence = content.split('.')[0] if content else "News Article"
-            words = first_sentence.split()[:10]
-            return ' '.join(words)
+            return first_sentence[:72] + '...' if len(first_sentence) > 75 else first_sentence
 
     async def _generate_summary(self, content: str) -> str:
         """Generate an engaging summary for the content"""
