@@ -2708,6 +2708,36 @@ Instructions:
             </div>
             )}
 
+            {/* Posts Count - Only show for post agent with listing URLs */}
+            {formData.agent_type === 'post' && formData.reference_urls.some(item => getUrlType(item) === 'listing') && (
+            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-900 mb-2 text-left">Posts Count</h3>
+              <div className="text-left">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Number of Posts to Create (1-100)
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="number"
+                    name="posts_count"
+                    min="1"
+                    max="100"
+                    value={formData.posts_count || 1}
+                    onChange={(e) => {
+                      const value = Math.min(100, Math.max(1, parseInt(e.target.value) || 1));
+                      setFormData(prev => ({ ...prev, posts_count: value }));
+                    }}
+                    className="w-24 px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <span className="text-xs text-gray-500">posts from the listing page</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  The agent will scrape the latest {formData.posts_count || 1} article(s) from the listing page and create posts for each.
+                </p>
+              </div>
+            </div>
+            )}
+
             {/* Image Options Section - Hide for photo_gallery, tadka_pics, video, tv_video, reality_show, ott_release, theater_release, movie_review, and ott_review */}
             {formData.agent_type !== 'photo_gallery' && formData.agent_type !== 'tadka_pics' && formData.agent_type !== 'video' && formData.agent_type !== 'tv_video' && formData.agent_type !== 'reality_show' && formData.agent_type !== 'ott_release' && formData.agent_type !== 'theater_release' && formData.agent_type !== 'movie_review' && formData.agent_type !== 'ott_review' && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
