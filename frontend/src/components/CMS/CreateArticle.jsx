@@ -2112,8 +2112,8 @@ const CreateArticle = () => {
                     </div>
                   )}
 
-                  {/* Target States Field - Show for non-movie/video categories */}
-                  {![
+                  {/* Target States Field - Show for non-movie/video categories and NOT post content type */}
+                  {formData.content_type !== 'post' && ![
                     'movie-news',
                     'movie-news-bollywood', 
                     'movie-reviews',
