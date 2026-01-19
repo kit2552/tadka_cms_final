@@ -48,7 +48,8 @@ class ArticleBase(BaseModel):
     summary: str
     author: Optional[str] = None
     article_language: str = "en"
-    content_language: Optional[str] = None  # Content Language for movie/video categories
+    content_language: Optional[str] = None  # Content Language for targeting by language
+    target_state: Optional[str] = None  # Target State for targeting by state
     states: Optional[str] = None  # JSON string
     category: str
     content_type: Optional[str] = "post"  # New field for content type
