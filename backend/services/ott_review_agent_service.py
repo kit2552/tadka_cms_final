@@ -529,6 +529,9 @@ class OTTReviewAgentService:
         content_language_code = self._get_language_code(article_language)
         states = self._get_states_for_language(article_language)
         
+        # Initialize LLM for content rewriting
+        self._initialize_llm(db)
+        
         # Check for YouTube URL - if missing, mark as action needed
         youtube_url = review_data.youtube_url or ''
         action_needed = False
@@ -567,30 +570,69 @@ class OTTReviewAgentService:
         slug = re.sub(r'[^a-z0-9]+', '-', review_data.title.lower()).strip('-')
         slug = f"{slug}-ott-review-{datetime.now().strftime('%Y%m%d%H%M%S')}"
         
-        # Build content from review sections
+        # Rewrite content sections using LLM for better readability
+        print(f"      📝 Rewriting content sections...")
+        
+        # Story/Synopsis section - rewrite to be concise
+        story_content = review_data.story_synopsis or review_data.synopsis
+        if story_content and self.llm_initialized:
+            rewritten_story = self._rewrite_section(story_content, 'story', review_data.title)
+            if rewritten_story:
+                story_content = rewritten_story
+        
+        # Performances section - rewrite to 2-3 paragraphs
+        performances_content = review_data.performances
+        if performances_content and self.llm_initialized:
+            rewritten_perf = self._rewrite_section(performances_content, 'performances', review_data.title)
+            if rewritten_perf:
+                performances_content = rewritten_perf
+        
+        # Analysis section - rewrite to 2-3 paragraphs
+        analysis_content = review_data.analysis
+        if analysis_content and self.llm_initialized:
+            rewritten_analysis = self._rewrite_section(analysis_content, 'analysis', review_data.title)
+            if rewritten_analysis:
+                analysis_content = rewritten_analysis
+        
+        # Technical Aspects section - rewrite to 1-2 paragraphs
+        technical_content = review_data.technical_aspects
+        if technical_content and self.llm_initialized:
+            rewritten_tech = self._rewrite_section(technical_content, 'technical', review_data.title)
+            if rewritten_tech:
+                technical_content = rewritten_tech
+        
+        # Verdict section - rewrite to be concise
+        verdict_content = review_data.verdict
+        if verdict_content and self.llm_initialized:
+            rewritten_verdict = self._rewrite_section(verdict_content, 'verdict', review_data.title)
+            if rewritten_verdict:
+                verdict_content = rewritten_verdict
+        
+        # Build content from rewritten sections
         content_parts = []
         
         # Story/Synopsis section
-        story_content = review_data.story_synopsis or review_data.synopsis
         if story_content:
-            content_parts.append(f"<h2>Story</h2>\n<p>{story_content}</p>")
+            paragraphs = story_content.split('\n\n')
+            story_html = '\n'.join([f"<p>{p.strip()}</p>" for p in paragraphs if p.strip()])
+            content_parts.append(f"<h2>Story</h2>\n{story_html}")
         
         # Performances section
-        if review_data.performances:
-            paragraphs = review_data.performances.split('\n\n')
-            perf_html = '\n'.join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
+        if performances_content:
+            paragraphs = performances_content.split('\n\n')
+            perf_html = '\n'.join([f"<p>{p.strip()}</p>" for p in paragraphs if p.strip()])
             content_parts.append(f"<h2>Performances</h2>\n{perf_html}")
         
         # Analysis section
-        if review_data.analysis:
-            paragraphs = review_data.analysis.split('\n\n')
-            analysis_html = '\n'.join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
+        if analysis_content:
+            paragraphs = analysis_content.split('\n\n')
+            analysis_html = '\n'.join([f"<p>{p.strip()}</p>" for p in paragraphs if p.strip()])
             content_parts.append(f"<h2>Analysis</h2>\n{analysis_html}")
         
         # Technical Aspects section
-        if review_data.technical_aspects:
-            paragraphs = review_data.technical_aspects.split('\n\n')
-            tech_html = '\n'.join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
+        if technical_content:
+            paragraphs = technical_content.split('\n\n')
+            tech_html = '\n'.join([f"<p>{p.strip()}</p>" for p in paragraphs if p.strip()])
             content_parts.append(f"<h2>Technical Aspects</h2>\n{tech_html}")
         
         # If no structured sections, use the full review content
