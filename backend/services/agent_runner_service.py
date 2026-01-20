@@ -738,8 +738,18 @@ Return ONLY the optimized prompt, nothing else."""
             self._initialize_ai_client()
         
         try:
+            # Use a more explicit system prompt when reference content is included
+            if "**REFERENCE CONTENT" in optimized_prompt or "Article Content:" in optimized_prompt:
+                system_prompt = """You are a professional news writer and journalist. 
+The article content has ALREADY been provided to you in the prompt below. 
+You do NOT need web access - all the information you need is in the prompt.
+Your task is to rewrite this content into a well-structured, engaging article.
+Write engaging, factual, and well-structured articles based on the provided content."""
+            else:
+                system_prompt = "You are a professional news writer and journalist. Write engaging, factual, and well-structured articles."
+            
             content = self._chat_completion(
-                "You are a professional news writer and journalist. Write engaging, factual, and well-structured articles.",
+                system_prompt,
                 optimized_prompt,
                 20000
             )
