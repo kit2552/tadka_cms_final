@@ -545,6 +545,62 @@ class AgentRunnerService:
             print(f"❌ Error finding article URLs: {e}")
             return []
 
+    async def _find_bbc_cricket_articles(self, html_content: str, base_url: str, count: int = 1) -> list:
+        """Find BBC Cricket article URLs from their listing page.
+        
+        BBC Sport uses a specific URL pattern: /sport/cricket/articles/{article_id}
+        
+        Args:
+            html_content: Raw HTML of the BBC Cricket listing page
+            base_url: Base URL (should be https://www.bbc.com/sport/cricket)
+            count: Number of article URLs to return
+            
+        Returns: List of article URLs, up to 'count' items
+        """
+        try:
+            import re
+            from urllib.parse import urljoin
+            
+            print(f"🏏 BBC Cricket scraper: Finding {count} articles...")
+            
+            found_articles = []
+            seen_ids = set()  # Track unique article IDs
+            
+            # BBC Sport article URL pattern: /sport/cricket/articles/{article_id}
+            # Article IDs are alphanumeric strings like 'cwyw1w7d4gjo'
+            pattern = r'href="(/sport/cricket/articles/([a-zA-Z0-9]+))(?:#[^"]*)?'
+            
+            matches = re.findall(pattern, html_content, re.IGNORECASE)
+            
+            for path, article_id in matches:
+                # Skip if we've already seen this article (avoid duplicates from #comments links)
+                if article_id in seen_ids:
+                    continue
+                seen_ids.add(article_id)
+                
+                # Build full URL
+                full_url = f"https://www.bbc.com{path}"
+                
+                # Use position in page as sort key (first articles are more recent)
+                position = len(found_articles)
+                found_articles.append((full_url, position, article_id))
+            
+            if found_articles:
+                # BBC typically lists articles in order, so position 0 = most recent
+                # No need to sort, just take first N
+                result_urls = [url for url, _, _ in found_articles[:count]]
+                print(f"✅ BBC Cricket: Found {len(found_articles)} total articles, returning top {len(result_urls)}")
+                for i, url in enumerate(result_urls):
+                    print(f"   {i+1}. {url}")
+                return result_urls
+            
+            print("❌ BBC Cricket: No articles found on listing page")
+            return []
+            
+        except Exception as e:
+            print(f"❌ BBC Cricket scraper error: {e}")
+            return []
+
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
         category = agent.get('category', '')
