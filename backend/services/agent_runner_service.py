@@ -226,8 +226,12 @@ class AgentRunnerService:
                     print(f"📋 Processing as LISTING PAGE - will find latest article first...")
                     
                     # Find the latest article URL from the listing page
-                    # Use site-specific scraper if BBC Cricket
-                    if scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in url:
+                    # Use site-specific scraper based on scraper_website or URL
+                    if scraper_website == 'espn-cricinfo' or 'espncricinfo.com' in url:
+                        print(f"🏏 Using ESPN Cricinfo scraper (RSS feed)...")
+                        article_urls = await self._find_espn_cricinfo_articles(1)
+                        article_url = article_urls[0] if article_urls else None
+                    elif scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in url:
                         print(f"🏏 Using BBC Cricket scraper for listing page...")
                         article_urls = await self._find_bbc_cricket_articles(downloaded, url, 1)
                         article_url = article_urls[0] if article_urls else None
