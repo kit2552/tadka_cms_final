@@ -339,7 +339,36 @@ const CreateArticle = () => {
           author: article.author || '',
           article_language: article.article_language || 'en',
           content_language: article.content_language || '', // Load content_language for targeting by language
-          target_state: article.target_state || '', // Load target_state for targeting by state
+          // Load target_state - fallback to extracting from states array if target_state is not set
+          target_state: article.target_state || (() => {
+            // Try to extract from states array if target_state is not set
+            if (article.states && article.states !== 'all' && article.states !== '["all"]') {
+              try {
+                const statesArray = typeof article.states === 'string' ? JSON.parse(article.states) : article.states;
+                if (Array.isArray(statesArray) && statesArray.length === 1 && statesArray[0] !== 'all') {
+                  // Map state code back to full name for the dropdown
+                  const stateCodeToName = {
+                    'ap': 'Andhra Pradesh', 'ts': 'Telangana', 'tn': 'Tamil Nadu',
+                    'ka': 'Karnataka', 'kl': 'Kerala', 'mh': 'Maharashtra',
+                    'gj': 'Gujarat', 'pb': 'Punjab', 'wb': 'West Bengal',
+                    'or': 'Odisha', 'rj': 'Rajasthan', 'up': 'Uttar Pradesh',
+                    'mp': 'Madhya Pradesh', 'br': 'Bihar', 'jh': 'Jharkhand',
+                    'dl': 'Delhi', 'hr': 'Haryana', 'uk': 'Uttarakhand',
+                    'cg': 'Chhattisgarh', 'hp': 'Himachal Pradesh', 'jk': 'Jammu and Kashmir',
+                    'as': 'Assam', 'ga': 'Goa', 'mn': 'Manipur', 'ml': 'Meghalaya',
+                    'mz': 'Mizoram', 'nl': 'Nagaland', 'sk': 'Sikkim', 'tr': 'Tripura',
+                    'ar': 'Arunachal Pradesh', 'ld': 'Ladakh'
+                  };
+                  const stateValue = statesArray[0];
+                  // Return full name if it's a code, otherwise return as-is (might already be full name)
+                  return stateCodeToName[stateValue.toLowerCase()] || stateValue;
+                }
+              } catch (e) {
+                console.log('Could not parse states for target_state fallback:', e);
+              }
+            }
+            return '';
+          })(),
           states: article.states || 'all',
           category: article.category || '',
           content_type: article.content_type || 'post', // Load content type
