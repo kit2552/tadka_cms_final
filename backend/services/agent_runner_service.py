@@ -708,6 +708,12 @@ Structure your article into exactly {split_paragraphs} distinct paragraphs, clea
         if not self.client:
             self._initialize_ai_client()
         
+        # Check if the prompt contains reference content - if so, skip optimization
+        # to prevent the LLM from accidentally removing the actual content
+        if "**REFERENCE CONTENT" in base_prompt or "Article Content:" in base_prompt:
+            print("   ℹ️ Skipping prompt optimization (reference content detected)")
+            return base_prompt
+        
         optimization_prompt = f"""You are a prompt optimization expert. Optimize the following prompt to generate better, more engaging news content. 
 Keep the core requirements but make the instructions clearer and more specific.
 
