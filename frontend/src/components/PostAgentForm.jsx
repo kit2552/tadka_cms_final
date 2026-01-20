@@ -902,6 +902,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                   className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Auto Detect (from URL)</option>
+                  <option value="bbc-cricket">BBC Cricket</option>
                   <option value="greatandhra">GreatAndhra</option>
                   <option value="gulte">Gulte</option>
                   <option value="idlebrain">IdleBrain</option>
