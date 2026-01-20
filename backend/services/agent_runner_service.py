@@ -1625,7 +1625,10 @@ Article:
             }
         
         # Find multiple article URLs using appropriate scraper
-        if scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in listing_url:
+        if scraper_website == 'indian-express' or 'indianexpress.com' in listing_url:
+            print(f"📰 Using Indian Express scraper...")
+            article_urls = await self._find_indian_express_articles(downloaded, listing_url, posts_count)
+        elif scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in listing_url:
             print(f"🏏 Using BBC Cricket scraper...")
             article_urls = await self._find_bbc_cricket_articles(downloaded, listing_url, posts_count)
         else:
