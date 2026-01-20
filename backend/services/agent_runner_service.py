@@ -619,7 +619,7 @@ class AgentRunnerService:
             return []
 
     async def _find_espn_cricinfo_articles(self, count: int = 1) -> list:
-        """Find ESPN Cricinfo article URLs from their RSS feed.
+        """Find ESPN Cricinfo article URLs and content from their RSS feed.
         
         ESPN Cricinfo blocks direct web scraping but their RSS feed is accessible.
         RSS Feed URL: https://www.espncricinfo.com/rss/content/story/feeds/0.xml
@@ -627,7 +627,7 @@ class AgentRunnerService:
         Args:
             count: Number of article URLs to return
             
-        Returns: List of article URLs, up to 'count' items
+        Returns: List of tuples (url, title, description, image_url), up to 'count' items
         """
         try:
             import re
@@ -650,32 +650,43 @@ class AgentRunnerService:
             
             found_articles = []
             
-            # Parse RSS items - extract the <url> tag which has the clean article URL
-            # Pattern: <url>https://www.espncricinfo.com/story/...</url>
-            url_pattern = r'<url>(https://www\.espncricinfo\.com/story/[^<]+)</url>'
-            matches = re.findall(url_pattern, rss_content)
+            # Parse RSS items - extract full item data
+            # Pattern to extract each <item>...</item> block
+            item_pattern = r'<item>(.*?)</item>'
+            items = re.findall(item_pattern, rss_content, re.DOTALL)
             
-            for url in matches:
-                if url not in [u for u, _ in found_articles]:
-                    found_articles.append((url, len(found_articles)))
+            for item in items:
+                # Extract URL
+                url_match = re.search(r'<url>(https://www\.espncricinfo\.com/story/[^<]+)</url>', item)
+                if not url_match:
+                    continue
+                url = url_match.group(1)
+                
+                # Extract title
+                title_match = re.search(r'<title>([^<]+)</title>', item)
+                title = title_match.group(1) if title_match else ""
+                
+                # Extract description
+                desc_match = re.search(r'<description>([^<]+)</description>', item)
+                description = desc_match.group(1) if desc_match else ""
+                
+                # Extract image URL
+                img_match = re.search(r'<coverImages>([^<]+)</coverImages>', item)
+                image_url = img_match.group(1) if img_match else ""
+                
+                found_articles.append({
+                    'url': url,
+                    'title': title,
+                    'description': description,
+                    'image_url': image_url
+                })
             
             if found_articles:
-                result_urls = [url for url, _ in found_articles[:count]]
-                print(f"✅ ESPN Cricinfo: Found {len(found_articles)} total articles, returning top {len(result_urls)}")
-                for i, url in enumerate(result_urls):
-                    print(f"   {i+1}. {url}")
-                return result_urls
-            
-            # Fallback: Try the <link> tag if <url> not found
-            link_pattern = r'<link>(https://www\.espncricinfo\.com/ci/content/story/[^<]+)</link>'
-            link_matches = re.findall(link_pattern, rss_content)
-            
-            if link_matches:
-                result_urls = link_matches[:count]
-                print(f"✅ ESPN Cricinfo (fallback): Found {len(link_matches)} articles, returning top {len(result_urls)}")
-                for i, url in enumerate(result_urls):
-                    print(f"   {i+1}. {url}")
-                return result_urls
+                result = found_articles[:count]
+                print(f"✅ ESPN Cricinfo: Found {len(found_articles)} total articles, returning top {len(result)}")
+                for i, article in enumerate(result):
+                    print(f"   {i+1}. {article['title'][:50]}...")
+                return result
             
             print("❌ ESPN Cricinfo: No articles found in RSS feed")
             return []
@@ -684,72 +695,34 @@ class AgentRunnerService:
             print(f"❌ ESPN Cricinfo scraper error: {e}")
             return []
 
-    async def _fetch_espn_cricinfo_article(self, article_url: str) -> tuple:
-        """Fetch and extract content from an ESPN Cricinfo article.
+    async def _fetch_espn_cricinfo_content(self, article_data: dict) -> tuple:
+        """Generate content from ESPN Cricinfo RSS data.
         
-        ESPN Cricinfo blocks direct scraping, so we use their RSS feed to get
-        article URLs and then try to fetch the actual article content.
+        Since ESPN Cricinfo blocks direct article fetching, we use the RSS data
+        (title + description) as the reference content for the LLM to expand.
         
-        Returns: (content, title, youtube_url)
+        Args:
+            article_data: Dict with 'url', 'title', 'description', 'image_url'
+            
+        Returns: (content, title, image_url)
         """
-        try:
-            import httpx
-            import trafilatura
-            
-            print(f"📰 Fetching ESPN Cricinfo article: {article_url}")
-            
-            # Try with custom headers to bypass blocking
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.5',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1',
-            }
-            
-            with httpx.Client(follow_redirects=True, timeout=30) as client:
-                response = client.get(article_url, headers=headers)
-                
-                if response.status_code == 200:
-                    html_content = response.text
-                    
-                    # Extract content using trafilatura
-                    extracted = trafilatura.extract(
-                        html_content,
-                        include_comments=False,
-                        include_tables=True,
-                        no_fallback=False,
-                        favor_precision=True
-                    )
-                    metadata = trafilatura.extract_metadata(html_content)
-                    
-                    title = metadata.title if metadata and metadata.title else ""
-                    youtube_url = self._extract_youtube_url(extracted or "", from_article_content=True)
-                    
-                    if extracted:
-                        print(f"✅ ESPN Cricinfo article extracted: {len(extracted)} chars")
-                        return extracted, title, youtube_url
-                    else:
-                        print("❌ ESPN Cricinfo: trafilatura could not extract content")
-                else:
-                    print(f"❌ ESPN Cricinfo: HTTP {response.status_code}")
-            
-            # If direct fetch fails, try trafilatura's fetch
-            downloaded = trafilatura.fetch_url(article_url)
-            if downloaded:
-                extracted = trafilatura.extract(downloaded)
-                metadata = trafilatura.extract_metadata(downloaded)
-                title = metadata.title if metadata and metadata.title else ""
-                if extracted:
-                    print(f"✅ ESPN Cricinfo article extracted (trafilatura): {len(extracted)} chars")
-                    return extracted, title, None
-            
-            return None, None, None
-            
-        except Exception as e:
-            print(f"❌ ESPN Cricinfo article fetch error: {e}")
-            return None, None, None
+        title = article_data.get('title', '')
+        description = article_data.get('description', '')
+        image_url = article_data.get('image_url', '')
+        url = article_data.get('url', '')
+        
+        # Build reference content from RSS data
+        content = f"""**Article Title:** {title}
+
+**Article Summary:** {description}
+
+**Source:** ESPN Cricinfo
+**Original URL:** {url}
+
+Note: This is a news summary from ESPN Cricinfo RSS feed. Use this information to write a comprehensive cricket news article."""
+        
+        print(f"📰 ESPN Cricinfo RSS content prepared: {len(content)} chars")
+        return content, title, image_url
 
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
