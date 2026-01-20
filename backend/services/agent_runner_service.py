@@ -614,6 +614,139 @@ class AgentRunnerService:
             print(f"❌ BBC Cricket scraper error: {e}")
             return []
 
+    async def _find_espn_cricinfo_articles(self, count: int = 1) -> list:
+        """Find ESPN Cricinfo article URLs from their RSS feed.
+        
+        ESPN Cricinfo blocks direct web scraping but their RSS feed is accessible.
+        RSS Feed URL: https://www.espncricinfo.com/rss/content/story/feeds/0.xml
+        
+        Args:
+            count: Number of article URLs to return
+            
+        Returns: List of article URLs, up to 'count' items
+        """
+        try:
+            import re
+            import httpx
+            
+            print(f"🏏 ESPN Cricinfo scraper: Finding {count} articles from RSS feed...")
+            
+            rss_url = "https://www.espncricinfo.com/rss/content/story/feeds/0.xml"
+            
+            # Fetch the RSS feed
+            with httpx.Client(timeout=30) as client:
+                response = client.get(rss_url)
+                if response.status_code != 200:
+                    print(f"❌ ESPN Cricinfo: Failed to fetch RSS feed (status {response.status_code})")
+                    return []
+                
+                rss_content = response.text
+            
+            print(f"✅ ESPN Cricinfo: RSS feed downloaded ({len(rss_content)} bytes)")
+            
+            found_articles = []
+            
+            # Parse RSS items - extract the <url> tag which has the clean article URL
+            # Pattern: <url>https://www.espncricinfo.com/story/...</url>
+            url_pattern = r'<url>(https://www\.espncricinfo\.com/story/[^<]+)</url>'
+            matches = re.findall(url_pattern, rss_content)
+            
+            for url in matches:
+                if url not in [u for u, _ in found_articles]:
+                    found_articles.append((url, len(found_articles)))
+            
+            if found_articles:
+                result_urls = [url for url, _ in found_articles[:count]]
+                print(f"✅ ESPN Cricinfo: Found {len(found_articles)} total articles, returning top {len(result_urls)}")
+                for i, url in enumerate(result_urls):
+                    print(f"   {i+1}. {url}")
+                return result_urls
+            
+            # Fallback: Try the <link> tag if <url> not found
+            link_pattern = r'<link>(https://www\.espncricinfo\.com/ci/content/story/[^<]+)</link>'
+            link_matches = re.findall(link_pattern, rss_content)
+            
+            if link_matches:
+                result_urls = link_matches[:count]
+                print(f"✅ ESPN Cricinfo (fallback): Found {len(link_matches)} articles, returning top {len(result_urls)}")
+                for i, url in enumerate(result_urls):
+                    print(f"   {i+1}. {url}")
+                return result_urls
+            
+            print("❌ ESPN Cricinfo: No articles found in RSS feed")
+            return []
+            
+        except Exception as e:
+            print(f"❌ ESPN Cricinfo scraper error: {e}")
+            return []
+
+    async def _fetch_espn_cricinfo_article(self, article_url: str) -> tuple:
+        """Fetch and extract content from an ESPN Cricinfo article.
+        
+        ESPN Cricinfo blocks direct scraping, so we use their RSS feed to get
+        article URLs and then try to fetch the actual article content.
+        
+        Returns: (content, title, youtube_url)
+        """
+        try:
+            import httpx
+            import trafilatura
+            
+            print(f"📰 Fetching ESPN Cricinfo article: {article_url}")
+            
+            # Try with custom headers to bypass blocking
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+            }
+            
+            with httpx.Client(follow_redirects=True, timeout=30) as client:
+                response = client.get(article_url, headers=headers)
+                
+                if response.status_code == 200:
+                    html_content = response.text
+                    
+                    # Extract content using trafilatura
+                    extracted = trafilatura.extract(
+                        html_content,
+                        include_comments=False,
+                        include_tables=True,
+                        no_fallback=False,
+                        favor_precision=True
+                    )
+                    metadata = trafilatura.extract_metadata(html_content)
+                    
+                    title = metadata.title if metadata and metadata.title else ""
+                    youtube_url = self._extract_youtube_url(extracted or "", from_article_content=True)
+                    
+                    if extracted:
+                        print(f"✅ ESPN Cricinfo article extracted: {len(extracted)} chars")
+                        return extracted, title, youtube_url
+                    else:
+                        print("❌ ESPN Cricinfo: trafilatura could not extract content")
+                else:
+                    print(f"❌ ESPN Cricinfo: HTTP {response.status_code}")
+            
+            # If direct fetch fails, try trafilatura's fetch
+            downloaded = trafilatura.fetch_url(article_url)
+            if downloaded:
+                extracted = trafilatura.extract(downloaded)
+                metadata = trafilatura.extract_metadata(downloaded)
+                title = metadata.title if metadata and metadata.title else ""
+                if extracted:
+                    print(f"✅ ESPN Cricinfo article extracted (trafilatura): {len(extracted)} chars")
+                    return extracted, title, None
+            
+            return None, None, None
+            
+        except Exception as e:
+            print(f"❌ ESPN Cricinfo article fetch error: {e}")
+            return None, None, None
+
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
         category = agent.get('category', '')
