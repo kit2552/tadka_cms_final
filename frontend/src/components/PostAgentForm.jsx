@@ -903,6 +903,7 @@ const PostAgentForm = ({ onClose, onSave, editingAgent }) => {
                 >
                   <option value="">Auto Detect (from URL)</option>
                   <option value="bbc-cricket">BBC Cricket</option>
+                  <option value="espn-cricinfo">ESPN Cricinfo</option>
                   <option value="greatandhra">GreatAndhra</option>
                   <option value="gulte">Gulte</option>
                   <option value="idlebrain">IdleBrain</option>
