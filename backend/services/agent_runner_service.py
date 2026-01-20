@@ -668,22 +668,33 @@ class AgentRunnerService:
         # Handle reference content section - include actual fetched content
         reference_urls = agent.get('reference_urls', [])
         if reference_content:
-            reference_section = f"""**REFERENCE CONTENT (FETCHED FROM PROVIDED URLs):**
-The following content has been fetched from the reference URLs. Use this as your PRIMARY source to generate the article:
+            reference_section = f"""**REFERENCE CONTENT (ALREADY FETCHED - NO WEB ACCESS NEEDED):**
+The following content has been fetched from the reference URLs. Use this as your PRIMARY source to generate the article.
+DO NOT ask for web access or browsing - the content is provided below:
 
+---BEGIN ARTICLE CONTENT---
 {reference_content}
+---END ARTICLE CONTENT---
 
 **INSTRUCTIONS:**
 1. Read and analyze the above reference content carefully
 2. Identify the main news stories, facts, and key information
 3. Write a NEW, original article based on this content
-4. Do NOT copy text directly - rewrite in your own words"""
-            final_prompt = final_prompt.replace('{reference_content_section}', reference_section)
+4. Do NOT copy text directly - rewrite in your own words
+5. Do NOT say you need web access - all content is provided above"""
+            # Replace placeholder if exists, otherwise append to prompt
+            if '{reference_content_section}' in final_prompt:
+                final_prompt = final_prompt.replace('{reference_content_section}', reference_section)
+            else:
+                final_prompt = reference_section + "\n\n" + final_prompt
         elif reference_urls and len(reference_urls) > 0:
             urls_list = "\n".join([f"- {url}" for url in reference_urls if url])
             reference_section = f"""Reference URLs provided: {urls_list}
 Note: Could not fetch content from these URLs. Generate content based on general knowledge."""
-            final_prompt = final_prompt.replace('{reference_content_section}', reference_section)
+            if '{reference_content_section}' in final_prompt:
+                final_prompt = final_prompt.replace('{reference_content_section}', reference_section)
+            else:
+                final_prompt = reference_section + "\n\n" + final_prompt
         else:
             final_prompt = final_prompt.replace('{reference_content_section}', 'No reference URLs provided. Generate content based on general knowledge.')
         
