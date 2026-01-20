@@ -229,8 +229,14 @@ class AgentRunnerService:
                     # Use site-specific scraper based on scraper_website or URL
                     if scraper_website == 'espn-cricinfo' or 'espncricinfo.com' in url:
                         print(f"🏏 Using ESPN Cricinfo scraper (RSS feed)...")
-                        article_urls = await self._find_espn_cricinfo_articles(1)
-                        article_url = article_urls[0] if article_urls else None
+                        espn_articles = await self._find_espn_cricinfo_articles(1)
+                        if espn_articles:
+                            content, title, image = await self._fetch_espn_cricinfo_content(espn_articles[0])
+                            if content:
+                                fetched_content.append(content)
+                                original_title = title
+                            continue
+                        article_url = None
                     elif scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in url:
                         print(f"🏏 Using BBC Cricket scraper for listing page...")
                         article_urls = await self._find_bbc_cricket_articles(downloaded, url, 1)
