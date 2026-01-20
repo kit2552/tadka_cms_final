@@ -1657,8 +1657,13 @@ Article:
             # Step 10: Get image based on image option (skip for video posts)
             image_url = None
             if content_type != 'video_post':
-                image_option = agent.get('image_option', 'web_search')
-                image_url = await self._get_image_for_content(content, title, image_option, agent.get('category', ''))
+                # Use ESPN image if available
+                if espn_image:
+                    image_url = espn_image
+                    print(f"🖼️ Using ESPN Cricinfo image: {image_url}")
+                else:
+                    image_option = agent.get('image_option', 'web_search')
+                    image_url = await self._get_image_for_content(content, title, image_option, agent.get('category', ''))
             else:
                 print("📹 Skipping image generation for video post")
             
