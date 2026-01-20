@@ -843,6 +843,99 @@ Note: This is a news summary from ESPN Cricinfo RSS feed. Use this information t
             print(f"❌ Indian Express scraper error: {e}")
             return []
 
+    def _extract_indian_express_content(self, html_content: str) -> tuple:
+        """Custom content extraction for Indian Express articles.
+        
+        Indian Express has complex page structure where trafilatura often 
+        extracts author bio instead of main content. This method specifically
+        targets the article content.
+        
+        Args:
+            html_content: Raw HTML of the article page
+            
+        Returns: (content, title)
+        """
+        import re
+        from bs4 import BeautifulSoup
+        
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+            
+            # Extract title
+            title = ""
+            title_tag = soup.find('h1', class_='native_story_title') or soup.find('h1')
+            if title_tag:
+                title = title_tag.get_text(strip=True)
+            
+            # Find the main article content div
+            content_parts = []
+            
+            # Indian Express article content is typically in div with class 'full-details'
+            # or within article tag with specific structure
+            article_body = soup.find('div', class_='full-details')
+            if not article_body:
+                article_body = soup.find('div', {'id': 'pcl-full-content'})
+            if not article_body:
+                article_body = soup.find('article')
+            
+            if article_body:
+                # Get all <p> tags from the article body
+                for p in article_body.find_all('p'):
+                    text = p.get_text(strip=True)
+                    
+                    # Skip empty paragraphs
+                    if not text:
+                        continue
+                    
+                    # Skip "Also Read" sections
+                    if text.lower().startswith('also read'):
+                        continue
+                    if 'also read:' in text.lower():
+                        continue
+                    
+                    # Skip social media follow prompts
+                    if 'follow us on instagram' in text.lower():
+                        continue
+                    if 'click here to follow' in text.lower():
+                        continue
+                    
+                    # Skip author bio indicators
+                    if 'is a journalist with' in text.lower():
+                        continue
+                    if 'professional journey' in text.lower():
+                        continue
+                    if 'areas of coverage' in text.lower():
+                        continue
+                    
+                    # Skip advertisement labels
+                    if text.lower().startswith('advertisement'):
+                        continue
+                    
+                    content_parts.append(text)
+            
+            # Fallback: If no content found in article body, try all <p> tags
+            if not content_parts:
+                for p in soup.find_all('p'):
+                    text = p.get_text(strip=True)
+                    if not text or len(text) < 50:
+                        continue
+                    if 'also read' in text.lower():
+                        continue
+                    if 'follow us' in text.lower():
+                        continue
+                    if 'is a journalist with' in text.lower():
+                        continue
+                    content_parts.append(text)
+            
+            content = '\n\n'.join(content_parts)
+            
+            print(f"📰 Indian Express custom extraction: {len(content)} chars, title: {title[:50]}...")
+            return content, title
+            
+        except Exception as e:
+            print(f"❌ Indian Express custom extraction error: {e}")
+            return "", ""
+
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
         category = agent.get('category', '')
