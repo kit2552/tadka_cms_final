@@ -310,15 +310,24 @@ class AgentRunnerService:
                         article_downloaded = trafilatura.fetch_url(article_url)
                         
                         if article_downloaded:
-                            # Extract content from the ACTUAL article using trafilatura (clean extraction)
-                            extracted = trafilatura.extract(
-                                article_downloaded,
-                                include_comments=False,
-                                include_tables=True,
-                                no_fallback=False,
-                                favor_precision=True
-                            )
-                            metadata = trafilatura.extract_metadata(article_downloaded)
+                            # Use custom extractor for Indian Express
+                            if scraper_website == 'indian-express' or 'indianexpress.com' in article_url:
+                                print(f"📰 Using Indian Express custom extractor...")
+                                extracted, title_from_extractor = self._extract_indian_express_content(article_downloaded)
+                                if title_from_extractor:
+                                    original_title = title_from_extractor
+                            else:
+                                # Extract content from the ACTUAL article using trafilatura (clean extraction)
+                                extracted = trafilatura.extract(
+                                    article_downloaded,
+                                    include_comments=False,
+                                    include_tables=True,
+                                    no_fallback=False,
+                                    favor_precision=True
+                                )
+                                metadata = trafilatura.extract_metadata(article_downloaded)
+                                if metadata and metadata.title:
+                                    original_title = metadata.title
                             
                             # Only extract YouTube URL from clean trafilatura content (not raw HTML)
                             # This avoids picking up ads and sidebar content
@@ -329,8 +338,6 @@ class AgentRunnerService:
                                     print(f"🎬 Found YouTube URL in article content: {found_youtube_url}")
                             
                             if extracted:
-                                if metadata and metadata.title:
-                                    original_title = metadata.title
                                 print(f"✅ Successfully extracted article content: {len(extracted)} chars")
                                 print(f"📰 Article title: {original_title or 'Unknown'}")
                                 fetched_content.append(f"**Article Title:** {original_title or 'Unknown'}\n\n**Article Content:**\n{extracted}")
