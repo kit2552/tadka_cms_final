@@ -1744,16 +1744,18 @@ Article:
                 # Language-based targeting: get all states for this language
                 states_list = self._get_states_for_language(target_language)
                 if states_list:
-                    # Build JSON array of states
-                    quoted_states = [f'"{s}"' for s in states_list]
+                    # Convert state names to state codes for filtering
+                    state_codes = [self._get_state_code(s) for s in states_list]
+                    quoted_states = [f'"{code}"' for code in state_codes]
                     states_json = '[' + ', '.join(quoted_states) + ']'
                 else:
                     states_json = '["all"]'  # English or unknown language shows to all
-                print(f"   🌐 Language-based targeting: {target_language} -> {states_list}")
+                print(f"   🌐 Language-based targeting: {target_language} -> {states_list} -> codes: {state_codes if states_list else ['all']}")
             elif target_state:
-                # State-based targeting
-                states_json = f'["{target_state}"]'
-                print(f"   📍 State-based targeting: {target_state}")
+                # State-based targeting - convert to state code
+                state_code = self._get_state_code(target_state)
+                states_json = f'["{state_code}"]'
+                print(f"   📍 State-based targeting: {target_state} -> code: {state_code}")
             else:
                 # No targeting - show to all states
                 states_json = '["all"]'
