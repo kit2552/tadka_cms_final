@@ -1449,20 +1449,26 @@ Article:
         # Get scraper website setting
         scraper_website = agent.get('scraper_website', '')
         
-        # Fetch the listing page
-        downloaded = trafilatura.fetch_url(listing_url)
-        if not downloaded:
-            return {
-                'success': False,
-                'message': f'Failed to download listing page: {listing_url}',
-                'article_id': None
-            }
-        
-        # Find multiple article URLs using appropriate scraper
-        if scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in listing_url:
-            print(f"🏏 Using BBC Cricket scraper...")
-            article_urls = await self._find_bbc_cricket_articles(downloaded, listing_url, posts_count)
+        # ESPN Cricinfo uses RSS feed - doesn't need to download listing page
+        if scraper_website == 'espn-cricinfo' or 'espncricinfo.com' in listing_url:
+            print(f"🏏 Using ESPN Cricinfo scraper (RSS feed)...")
+            article_urls = await self._find_espn_cricinfo_articles(posts_count)
         else:
+            # Fetch the listing page for other scrapers
+            downloaded = trafilatura.fetch_url(listing_url)
+            if not downloaded:
+                return {
+                    'success': False,
+                    'message': f'Failed to download listing page: {listing_url}',
+                    'article_id': None
+                }
+            
+            # Find multiple article URLs using appropriate scraper
+            if scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in listing_url:
+                print(f"🏏 Using BBC Cricket scraper...")
+                article_urls = await self._find_bbc_cricket_articles(downloaded, listing_url, posts_count)
+            else:
+                article_urls = await self._find_multiple_article_urls(downloaded, listing_url, posts_count)
             article_urls = await self._find_multiple_article_urls(downloaded, listing_url, posts_count)
         
         if not article_urls:
