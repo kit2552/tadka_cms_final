@@ -195,6 +195,21 @@ class AgentRunnerService:
                 print(f"📌 URL Type setting: {url_type}")
                 print(f"{'='*60}")
                 
+                # ESPN Cricinfo special handling - must use RSS feed (site blocks direct scraping)
+                if scraper_website == 'espn-cricinfo' or 'espncricinfo.com' in url:
+                    print(f"🏏 ESPN Cricinfo detected - using RSS feed (site blocks direct scraping)...")
+                    espn_articles = await self._find_espn_cricinfo_articles(1)
+                    if espn_articles:
+                        content, title, image = await self._fetch_espn_cricinfo_content(espn_articles[0])
+                        if content:
+                            fetched_content.append(content)
+                            original_title = title
+                            print(f"✅ ESPN Cricinfo content fetched via RSS")
+                            continue
+                    print(f"❌ ESPN Cricinfo: Could not fetch from RSS feed")
+                    fetched_content.append(f"**Could not fetch ESPN Cricinfo content**")
+                    continue
+                
                 # Download the webpage
                 downloaded = trafilatura.fetch_url(url)
                 
