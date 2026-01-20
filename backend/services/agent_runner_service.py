@@ -291,6 +291,10 @@ class AgentRunnerService:
                                 original_title = title
                             continue
                         article_url = None
+                    elif scraper_website == 'indian-express' or 'indianexpress.com' in url:
+                        print(f"📰 Using Indian Express scraper for listing page...")
+                        article_urls = await self._find_indian_express_articles(downloaded, url, 1)
+                        article_url = article_urls[0] if article_urls else None
                     elif scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in url:
                         print(f"🏏 Using BBC Cricket scraper for listing page...")
                         article_urls = await self._find_bbc_cricket_articles(downloaded, url, 1)
