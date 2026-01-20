@@ -134,6 +134,45 @@ class AgentRunnerService:
         }
         return state_language_map.get(target_state, 'Hindi')
     
+    def _get_state_code(self, state_name: str) -> str:
+        """Convert full state name to state code for filtering"""
+        state_code_map = {
+            'Andhra Pradesh': 'ap',
+            'Arunachal Pradesh': 'ar',
+            'Assam': 'as',
+            'Bihar': 'br',
+            'Chhattisgarh': 'cg',
+            'Delhi': 'dl',
+            'Goa': 'ga',
+            'Gujarat': 'gj',
+            'Haryana': 'hr',
+            'Himachal Pradesh': 'hp',
+            'Jammu and Kashmir': 'jk',
+            'Jharkhand': 'jh',
+            'Karnataka': 'ka',
+            'Kerala': 'kl',
+            'Ladakh': 'ld',
+            'Madhya Pradesh': 'mp',
+            'Maharashtra': 'mh',
+            'Manipur': 'mn',
+            'Meghalaya': 'ml',
+            'Mizoram': 'mz',
+            'Nagaland': 'nl',
+            'Odisha': 'or',
+            'Punjab': 'pb',
+            'Rajasthan': 'rj',
+            'Sikkim': 'sk',
+            'Tamil Nadu': 'tn',
+            'Telangana': 'ts',
+            'Tripura': 'tr',
+            'Uttar Pradesh': 'up',
+            'Uttarakhand': 'uk',
+            'West Bengal': 'wb',
+            'All States': 'all',
+            'All': 'all'
+        }
+        return state_code_map.get(state_name, state_name.lower())
+    
     def _get_states_for_language(self, language: str) -> list:
         """Get list of states associated with a language"""
         language_state_map = {
