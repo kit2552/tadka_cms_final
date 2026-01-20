@@ -353,14 +353,24 @@ class AgentRunnerService:
                 else:
                     # Direct article URL - extract content directly
                     print(f"📄 Processing as DIRECT ARTICLE - extracting content directly...")
-                    extracted = trafilatura.extract(
-                        downloaded,
-                        include_comments=False,
-                        include_tables=True,
-                        no_fallback=False,
-                        favor_precision=True
-                    )
-                    metadata = trafilatura.extract_metadata(downloaded)
+                    
+                    # Use custom extractor for Indian Express
+                    if scraper_website == 'indian-express' or 'indianexpress.com' in url:
+                        print(f"📰 Using Indian Express custom extractor...")
+                        extracted, title_from_extractor = self._extract_indian_express_content(downloaded)
+                        if title_from_extractor:
+                            original_title = title_from_extractor
+                    else:
+                        extracted = trafilatura.extract(
+                            downloaded,
+                            include_comments=False,
+                            include_tables=True,
+                            no_fallback=False,
+                            favor_precision=True
+                        )
+                        metadata = trafilatura.extract_metadata(downloaded)
+                        if metadata and metadata.title:
+                            original_title = metadata.title
                     
                     # Only extract YouTube URL from clean trafilatura content (not raw HTML)
                     # This avoids picking up ads and sidebar content
@@ -371,8 +381,6 @@ class AgentRunnerService:
                             print(f"🎬 Found YouTube URL in article content: {found_youtube_url}")
                     
                     if extracted:
-                        if metadata and metadata.title:
-                            original_title = metadata.title
                         print(f"✅ Successfully extracted article content: {len(extracted)} chars")
                         print(f"📰 Article title: {original_title or 'Unknown'}")
                         fetched_content.append(f"**Article Title:** {original_title or 'Unknown'}\n\n**Article Content:**\n{extracted}")
