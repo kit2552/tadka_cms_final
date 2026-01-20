@@ -1273,6 +1273,9 @@ Article:
         print(f"📋 Listing URL: {listing_url}")
         print(f"{'='*60}\n")
         
+        # Get scraper website setting
+        scraper_website = agent.get('scraper_website', '')
+        
         # Fetch the listing page
         downloaded = trafilatura.fetch_url(listing_url)
         if not downloaded:
@@ -1282,8 +1285,12 @@ Article:
                 'article_id': None
             }
         
-        # Find multiple article URLs
-        article_urls = await self._find_multiple_article_urls(downloaded, listing_url, posts_count)
+        # Find multiple article URLs using appropriate scraper
+        if scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in listing_url:
+            print(f"🏏 Using BBC Cricket scraper...")
+            article_urls = await self._find_bbc_cricket_articles(downloaded, listing_url, posts_count)
+        else:
+            article_urls = await self._find_multiple_article_urls(downloaded, listing_url, posts_count)
         
         if not article_urls:
             return {
