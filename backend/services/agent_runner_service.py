@@ -1579,6 +1579,11 @@ Article:
             if not self.client:
                 self._initialize_ai_client()
             
+            # Check for ESPN Cricinfo RSS content (pre-fetched)
+            espn_content = agent.get('_espn_rss_content')
+            espn_title = agent.get('_espn_title')
+            espn_image = agent.get('_espn_image')
+            
             # Step 2: Fetch content from reference URLs
             reference_urls = agent.get('reference_urls', [])
             category = agent.get('category', '')
@@ -1586,7 +1591,13 @@ Article:
             reference_content = ""
             original_title = ""
             youtube_url_from_source = None  # YouTube URL found in source HTML
-            if reference_urls:
+            
+            # Use ESPN RSS content if available
+            if espn_content:
+                print(f"📰 Using ESPN Cricinfo RSS content...")
+                reference_content = espn_content
+                original_title = espn_title or ""
+            elif reference_urls:
                 print(f"Fetching content from {len(reference_urls)} reference URLs for category: {category}...")
                 if scraper_website:
                     print(f"   🔧 Using forced scraper: {scraper_website}")
