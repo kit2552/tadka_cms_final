@@ -101,12 +101,19 @@ class AgentRunnerService:
         if mappings and category_slug in mappings:
             return mappings[category_slug]
         
-        # Default prompt if no mapping exists
-        return f"""Search the web for the latest trending news about {category_slug}. Write a comprehensive article that:
+        # Default prompt if no mapping exists - includes placeholder for reference content
+        return f"""Write a comprehensive news article about {category_slug}.
+
+{{reference_content_section}}
+
+**ARTICLE REQUIREMENTS:**
 - Has an engaging headline
 - Provides context and background
 - Is well-structured and informative
-- Uses clear, accessible language"""
+- Uses clear, accessible language
+- Based ONLY on the provided reference content (do NOT search the web)
+
+{{split_content_section}}"""
 
     def _get_state_language(self, target_state: str) -> str:
         """Get the regional language based on target state"""
