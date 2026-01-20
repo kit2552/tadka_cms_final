@@ -784,6 +784,61 @@ Note: This is a news summary from ESPN Cricinfo RSS feed. Use this information t
         print(f"📰 ESPN Cricinfo RSS content prepared: {len(content)} chars")
         return content, title, image_url
 
+    async def _find_indian_express_articles(self, html_content: str, base_url: str, count: int = 1) -> list:
+        """Find Indian Express article URLs from their listing page.
+        
+        Indian Express uses URL pattern: https://indianexpress.com/article/india/{slug}-{id}/
+        
+        Args:
+            html_content: Raw HTML of the listing page
+            base_url: Base URL (e.g., https://indianexpress.com/section/india/)
+            count: Number of article URLs to return
+            
+        Returns: List of article URLs, up to 'count' items
+        """
+        try:
+            import re
+            
+            print(f"📰 Indian Express scraper: Finding {count} articles...")
+            
+            found_articles = []
+            seen_urls = set()
+            
+            # Indian Express article URL pattern
+            # Matches: https://indianexpress.com/article/india/{slug}-{id}/
+            pattern = r'href="(https://indianexpress\.com/article/india/[^"]+)"'
+            
+            matches = re.findall(pattern, html_content, re.IGNORECASE)
+            
+            for url in matches:
+                # Clean URL (remove trailing slash variations)
+                clean_url = url.rstrip('/')
+                
+                # Skip if already seen
+                if clean_url in seen_urls:
+                    continue
+                seen_urls.add(clean_url)
+                
+                # Skip non-article URLs
+                if '/live-updates/' in clean_url or '/liveblog/' in clean_url:
+                    continue
+                
+                found_articles.append(clean_url)
+            
+            if found_articles:
+                result_urls = found_articles[:count]
+                print(f"✅ Indian Express: Found {len(found_articles)} total articles, returning top {len(result_urls)}")
+                for i, url in enumerate(result_urls):
+                    print(f"   {i+1}. {url}")
+                return result_urls
+            
+            print("❌ Indian Express: No articles found on listing page")
+            return []
+            
+        except Exception as e:
+            print(f"❌ Indian Express scraper error: {e}")
+            return []
+
     def _build_final_prompt(self, agent: Dict[str, Any], reference_content: str = "") -> str:
         """Build the final prompt with all dynamic placeholders replaced"""
         category = agent.get('category', '')
