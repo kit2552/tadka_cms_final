@@ -1426,26 +1426,90 @@ Article:
         # Get scraper website setting
         scraper_website = agent.get('scraper_website', '')
         
-        # ESPN Cricinfo uses RSS feed - doesn't need to download listing page
+        # ESPN Cricinfo uses RSS feed - special handling
         if scraper_website == 'espn-cricinfo' or 'espncricinfo.com' in listing_url:
             print(f"🏏 Using ESPN Cricinfo scraper (RSS feed)...")
-            article_urls = await self._find_espn_cricinfo_articles(posts_count)
-        else:
-            # Fetch the listing page for other scrapers
-            downloaded = trafilatura.fetch_url(listing_url)
-            if not downloaded:
+            espn_articles = await self._find_espn_cricinfo_articles(posts_count)
+            
+            if not espn_articles:
                 return {
                     'success': False,
-                    'message': f'Failed to download listing page: {listing_url}',
+                    'message': 'No articles found in ESPN Cricinfo RSS feed',
                     'article_id': None
                 }
             
-            # Find multiple article URLs using appropriate scraper
-            if scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in listing_url:
-                print(f"🏏 Using BBC Cricket scraper...")
-                article_urls = await self._find_bbc_cricket_articles(downloaded, listing_url, posts_count)
-            else:
-                article_urls = await self._find_multiple_article_urls(downloaded, listing_url, posts_count)
+            print(f"\n✅ Found {len(espn_articles)} ESPN Cricinfo articles to process\n")
+            
+            # Create articles for each ESPN article (using RSS data)
+            created_articles = []
+            failed_articles = []
+            
+            for i, article_data in enumerate(espn_articles):
+                print(f"\n{'='*60}")
+                print(f"📰 Processing article {i+1}/{len(espn_articles)}: {article_data['title'][:50]}...")
+                print(f"{'='*60}")
+                
+                try:
+                    # Get content from RSS data
+                    content, title, image_url = await self._fetch_espn_cricinfo_content(article_data)
+                    
+                    # Create a modified agent with ESPN content as reference
+                    single_agent = dict(agent)
+                    single_agent['_espn_rss_content'] = content
+                    single_agent['_espn_title'] = title
+                    single_agent['_espn_image'] = image_url
+                    single_agent['reference_urls'] = [{'url': article_data['url'], 'url_type': 'direct'}]
+                    
+                    result = await self._run_agent_single(single_agent)
+                    
+                    if result.get('success'):
+                        created_articles.append({
+                            'url': article_data['url'],
+                            'article_id': result.get('article_id'),
+                            'title': result.get('title')
+                        })
+                        print(f"✅ Created article: {result.get('title', 'Unknown')}")
+                    else:
+                        failed_articles.append({
+                            'url': article_data['url'],
+                            'error': result.get('message', 'Unknown error')
+                        })
+                        print(f"❌ Failed to create article: {result.get('message')}")
+                        
+                except Exception as e:
+                    failed_articles.append({
+                        'url': article_data.get('url', 'Unknown'),
+                        'error': str(e)
+                    })
+                    print(f"❌ Exception creating article: {e}")
+            
+            success_count = len(created_articles)
+            fail_count = len(failed_articles)
+            
+            return {
+                'success': success_count > 0,
+                'message': f'Created {success_count} articles successfully' + (f', {fail_count} failed' if fail_count > 0 else ''),
+                'article_id': created_articles[0]['article_id'] if created_articles else None,
+                'created_count': success_count,
+                'failed_count': fail_count,
+                'created_articles': created_articles,
+                'failed_articles': failed_articles
+            }
+        
+        # For other scrapers, fetch the listing page
+        downloaded = trafilatura.fetch_url(listing_url)
+        if not downloaded:
+            return {
+                'success': False,
+                'message': f'Failed to download listing page: {listing_url}',
+                'article_id': None
+            }
+        
+        # Find multiple article URLs using appropriate scraper
+        if scraper_website == 'bbc-cricket' or 'bbc.com/sport/cricket' in listing_url:
+            print(f"🏏 Using BBC Cricket scraper...")
+            article_urls = await self._find_bbc_cricket_articles(downloaded, listing_url, posts_count)
+        else:
             article_urls = await self._find_multiple_article_urls(downloaded, listing_url, posts_count)
         
         if not article_urls:
