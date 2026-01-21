@@ -806,11 +806,13 @@ Note: This is a news summary from ESPN Cricinfo RSS feed. Use this information t
     async def _find_indian_express_articles(self, html_content: str, base_url: str, count: int = 1) -> list:
         """Find Indian Express article URLs from their listing page.
         
-        Indian Express uses URL pattern: https://indianexpress.com/article/india/{slug}-{id}/
+        Indian Express uses URL patterns:
+        - https://indianexpress.com/article/india/{slug}-{id}/
+        - https://indianexpress.com/article/sports/{slug}-{id}/
         
         Args:
             html_content: Raw HTML of the listing page
-            base_url: Base URL (e.g., https://indianexpress.com/section/india/)
+            base_url: Base URL (e.g., https://indianexpress.com/section/india/ or /section/sports/)
             count: Number of article URLs to return
             
         Returns: List of article URLs, up to 'count' items
@@ -823,9 +825,19 @@ Note: This is a news summary from ESPN Cricinfo RSS feed. Use this information t
             found_articles = []
             seen_urls = set()
             
-            # Indian Express article URL pattern
-            # Matches: https://indianexpress.com/article/india/{slug}-{id}/
-            pattern = r'href="(https://indianexpress\.com/article/india/[^"]+)"'
+            # Determine which section we're scraping based on base_url
+            if '/sports' in base_url.lower():
+                # Sports section - match sports articles
+                pattern = r'href="(https://indianexpress\.com/article/sports/[^"]+)"'
+                print(f"   📌 Targeting Sports section articles")
+            elif '/india' in base_url.lower():
+                # India/National news section
+                pattern = r'href="(https://indianexpress\.com/article/india/[^"]+)"'
+                print(f"   📌 Targeting India/National section articles")
+            else:
+                # Generic - match any article
+                pattern = r'href="(https://indianexpress\.com/article/(?:india|sports|entertainment|cities|world|business|technology)/[^"]+)"'
+                print(f"   📌 Targeting all article sections")
             
             matches = re.findall(pattern, html_content, re.IGNORECASE)
             
@@ -856,6 +868,7 @@ Note: This is a news summary from ESPN Cricinfo RSS feed. Use this information t
             
         except Exception as e:
             print(f"❌ Indian Express scraper error: {e}")
+            return []
             return []
 
     def _extract_indian_express_content(self, html_content: str) -> tuple:
