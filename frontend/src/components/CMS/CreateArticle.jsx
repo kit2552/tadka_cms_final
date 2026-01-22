@@ -297,13 +297,15 @@ const CreateArticle = () => {
   const handleNotificationClose = () => {
     const shouldNavigate = notification.type === 'success' && 
                           (notification.title.includes('Created Successfully') || 
-                           notification.title.includes('Updated Successfully'));
+                           notification.title.includes('Updated Successfully') ||
+                           notification.title.includes('Published') ||
+                           notification.title.includes('Unpublished'));
     
     closeNotification();
     
-    // Only navigate to dashboard after successful create/update operations
+    // Navigate to dashboard posts list after successful create/update/publish operations
     if (shouldNavigate) {
-      navigate('/cms/dashboard');
+      navigate('/cms/dashboard?tab=posts');
     }
   };
 
