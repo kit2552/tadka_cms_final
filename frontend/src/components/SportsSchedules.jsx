@@ -1,13 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { Calendar, Clock } from 'lucide-react';
 
 const SportsSchedules = ({ sportsData, onArticleClick }) => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { getSectionHeaderClasses, getSectionContainerClasses, getSectionBodyClasses, theme } = useTheme();
   const [activeTab, setActiveTab] = useState('cricket');
+  const [schedules, setSchedules] = useState({ today: [], tomorrow: [] });
+  const [loadingSchedules, setLoadingSchedules] = useState(false);
+  
+  const API_URL = process.env.REACT_APP_BACKEND_URL;
+  
+  // Fetch cricket schedules for today and tomorrow
+  useEffect(() => {
+    const fetchSchedules = async () => {
+      setLoadingSchedules(true);
+      try {
+        const response = await fetch(`${API_URL}/api/cricket-schedules/today-tomorrow`);
+        if (response.ok) {
+          const data = await response.json();
+          setSchedules({
+            today: data.today || [],
+            tomorrow: data.tomorrow || []
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching schedules:', error);
+      } finally {
+        setLoadingSchedules(false);
+      }
+    };
+    
+    fetchSchedules();
+  }, [API_URL]);
   
   const handleArticleClick = (article) => {
     if (onArticleClick) {
@@ -15,18 +43,32 @@ const SportsSchedules = ({ sportsData, onArticleClick }) => {
     }
   };
 
-  const getThumbnail = (index) => {
-    const thumbnails = [
-      'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1593766827228-8737b4534aa6?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1586188984888-e4a8b7c9b25e?w=80&h=64&fit=crop',
-      'https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=80&h=64&fit=crop'
-    ];
-    return thumbnails[index % thumbnails.length];
+  const formatMatchTime = (dateString) => {
+    if (!dateString) return 'TBD';
+    
+    let utcDateString = dateString;
+    if (!dateString.endsWith('Z') && !dateString.includes('+') && !dateString.includes('-', 10)) {
+      utcDateString = dateString + 'Z';
+    }
+    
+    const date = new Date(utcDateString);
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    
+    const timePart = date.toLocaleString('en-US', {
+      timeZone: userTimezone,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }).toUpperCase();
+    
+    let tzAbbr = date.toLocaleString('en-US', {
+      timeZone: userTimezone,
+      timeZoneName: 'short'
+    }).split(' ').pop();
+    
+    if (tzAbbr === 'GMT+5:30') tzAbbr = 'IST';
+    
+    return `${timePart} ${tzAbbr}`;
   };
 
   // Get articles from sportsData prop or fallback to mock data
@@ -37,18 +79,15 @@ const SportsSchedules = ({ sportsData, onArticleClick }) => {
     { id: 111, title: "Elite Cricket Academy Produces Next Generation Stars" }
   ];
 
-  const otherSportsArticles = sportsData?.other_sports || [
-    { id: 104, title: "Olympic Athletes Prepare for Upcoming International Games" },
-    { id: 105, title: "Basketball Championship Finals Deliver Thrilling Competition" },
-    { id: 106, title: "Swimming Records Broken at National Championships" },
-    { id: 114, title: "Tennis Tournament Features Rising International Stars" }
-  ];
+  // Combine today and tomorrow schedules
+  const allSchedules = [...schedules.today, ...schedules.tomorrow];
 
-  const getTabArticles = () => {
-    return activeTab === 'cricket' ? cricketArticles : otherSportsArticles;
+  const getTabContent = () => {
+    if (activeTab === 'cricket') {
+      return cricketArticles;
+    }
+    return null; // Schedules tab uses different rendering
   };
-
-  const currentArticles = getTabArticles();
 
   return (
     <div className={`${getSectionContainerClasses()} relative`} style={{ minHeight: '355px' }}>
@@ -66,15 +105,15 @@ const SportsSchedules = ({ sportsData, onArticleClick }) => {
           {t('sections.cricket', 'Cricket')}
         </button>
         <button
-          onClick={() => setActiveTab('other')}
+          onClick={() => setActiveTab('schedules')}
           className={`flex-1 px-3 py-2 transition-colors duration-200 text-left rounded-tr-lg ${
-            activeTab === 'other'
+            activeTab === 'schedules'
               ? `${getSectionHeaderClasses().containerClass} ${getSectionHeaderClasses().selectedTabTextClass} ${getSectionHeaderClasses().selectedTabBorderClass}`
               : getSectionHeaderClasses().unselectedTabClass
           }`}
           style={{fontSize: '14px', fontWeight: '500'}}
         >
-          {t('sections.other_sports', 'Other Sports')}
+          {t('sections.schedules', 'Schedules')}
         </button>
       </div>
       
