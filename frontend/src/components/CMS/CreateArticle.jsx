@@ -1638,7 +1638,7 @@ const CreateArticle = () => {
   };
 
   const handleTranslate = () => {
-    alert('Translation feature will be implemented with Google Translate API integration');
+    showNotification('info', 'Coming Soon', 'Translation feature will be implemented with Google Translate API integration');
   };
 
   const handleUnpublish = async () => {
