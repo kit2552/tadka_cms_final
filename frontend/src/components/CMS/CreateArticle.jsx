@@ -868,7 +868,7 @@ const CreateArticle = () => {
       setLinkUrl(existingUrl);
       setShowLinkModal(true);
     } else {
-      alert('Please select some text first to add a link');
+      showNotification('warning', 'Selection Required', 'Please select some text first to add a link');
     }
   };
 
@@ -883,7 +883,7 @@ const CreateArticle = () => {
     
     if (!savedEditorState || !savedSelection) {
       console.error('No saved editor state or selection');
-      alert('Error: Lost editor state. Please try again.');
+      showNotification('error', 'Editor Error', 'Lost editor state. Please try again.');
       setShowLinkModal(false);
       return;
     }
