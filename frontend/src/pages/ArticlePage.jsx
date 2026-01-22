@@ -413,7 +413,14 @@ const ArticlePage = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Recently published';
-    const date = new Date(dateString);
+    
+    // Ensure the timestamp is treated as UTC by adding 'Z' if not present
+    let utcDateString = dateString;
+    if (!dateString.endsWith('Z') && !dateString.includes('+') && !dateString.includes('-', 10)) {
+      utcDateString = dateString + 'Z';
+    }
+    
+    const date = new Date(utcDateString);
     
     // Get user's timezone
     const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
