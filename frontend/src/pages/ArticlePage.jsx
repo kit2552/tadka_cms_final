@@ -435,10 +435,13 @@ const ArticlePage = () => {
     }).toUpperCase(); // Convert AM/PM to uppercase
     
     // Get timezone abbreviation
-    const tzAbbr = date.toLocaleString('en-US', {
+    let tzAbbr = date.toLocaleString('en-US', {
       timeZone: userTimezone,
       timeZoneName: 'short'
     }).split(' ').pop(); // Get the last part which is the timezone
+    
+    // Map common timezone offsets to abbreviations for India
+    if (tzAbbr === 'GMT+5:30') tzAbbr = 'IST';
     
     return `${datePart}, ${timePart} ${tzAbbr}`;
   };
