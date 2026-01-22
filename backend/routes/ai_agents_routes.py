@@ -96,6 +96,11 @@ class AIAgent(BaseModel):
     review_language: Optional[str] = "Telugu"  # Language for the review (Telugu, Tamil, Hindi, etc.)
     max_reviews_from_listing: Optional[int] = 10  # Number of reviews to fetch from listing page (1-50)
     
+    # Cricket Schedules Agent fields
+    schedule_source: Optional[str] = "bbc"  # bbc, espn-cricinfo
+    schedule_days: Optional[int] = 7  # Number of days to fetch (1-30)
+    fetch_mode: Optional[str] = "full"  # full (all days), next (only next day to maintain window)
+    
     # Post Aggregation fields (for Video Agent)
     enable_aggregation: Optional[bool] = False  # Enable post grouping by movie/event name
     aggregation_lookback_days: Optional[int] = 2  # Days to look back for grouping (1-30)
