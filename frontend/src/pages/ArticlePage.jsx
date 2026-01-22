@@ -413,12 +413,25 @@ const ArticlePage = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Recently published';
-    return new Date(dateString).toLocaleString('en-IN', {
+    const date = new Date(dateString);
+    
+    // Format date part
+    const datePart = date.toLocaleString('en-IN', {
       timeZone: 'Asia/Kolkata',
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
+    
+    // Format time part
+    const timePart = date.toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+    
+    return `${datePart}, ${timePart} IST`;
   };
 
   // Force light theme for content areas regardless of user's theme selection
