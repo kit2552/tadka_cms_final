@@ -964,7 +964,7 @@ const CreateArticle = () => {
       
     } catch (error) {
       console.error('❌ Error adding link:', error);
-      alert('Error adding link: ' + error.message);
+      showNotification('error', 'Link Error', 'Error adding link: ' + error.message);
       setShowLinkModal(false);
       setLinkUrl('');
       setLinkText('');
