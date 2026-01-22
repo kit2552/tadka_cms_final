@@ -810,19 +810,21 @@ Note: This is a news summary from ESPN Cricinfo RSS feed. Use this information t
         - https://indianexpress.com/article/india/{slug}-{id}/
         - https://indianexpress.com/article/sports/{slug}-{id}/
         
+        Articles are sorted by ID (higher = newer) to get the latest articles.
+        
         Args:
             html_content: Raw HTML of the listing page
             base_url: Base URL (e.g., https://indianexpress.com/section/india/ or /section/sports/)
             count: Number of article URLs to return
             
-        Returns: List of article URLs, up to 'count' items
+        Returns: List of article URLs sorted by recency, up to 'count' items
         """
         try:
             import re
             
             print(f"📰 Indian Express scraper: Finding {count} articles...")
             
-            found_articles = []
+            found_articles = []  # List of (url, article_id)
             seen_urls = set()
             
             # Determine which section we're scraping based on base_url
@@ -854,13 +856,24 @@ Note: This is a news summary from ESPN Cricinfo RSS feed. Use this information t
                 if '/live-updates/' in clean_url or '/liveblog/' in clean_url:
                     continue
                 
-                found_articles.append(clean_url)
+                # Extract article ID from URL (the number at the end)
+                # Higher ID = newer article
+                id_match = re.search(r'-(\d+)/?$', clean_url)
+                if id_match:
+                    article_id = int(id_match.group(1))
+                    found_articles.append((clean_url, article_id))
+                else:
+                    # If no ID found, use 0 (will be sorted last)
+                    found_articles.append((clean_url, 0))
             
             if found_articles:
-                result_urls = found_articles[:count]
-                print(f"✅ Indian Express: Found {len(found_articles)} total articles, returning top {len(result_urls)}")
-                for i, url in enumerate(result_urls):
-                    print(f"   {i+1}. {url}")
+                # Sort by article ID descending (newest first)
+                found_articles.sort(key=lambda x: x[1], reverse=True)
+                
+                result_urls = [url for url, _ in found_articles[:count]]
+                print(f"✅ Indian Express: Found {len(found_articles)} total articles, returning top {len(result_urls)} (sorted by ID)")
+                for i, (url, aid) in enumerate(found_articles[:count]):
+                    print(f"   {i+1}. ID {aid}: ...{url[-60:]}")
                 return result_urls
             
             print("❌ Indian Express: No articles found on listing page")
