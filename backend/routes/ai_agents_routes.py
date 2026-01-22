@@ -245,6 +245,10 @@ async def run_ai_agent(agent_id: str, db = Depends(get_db)):
             # Get agent config
             agent_config = crud.get_ai_agent(db, agent_id)
             result = await ott_review_agent_service.run(agent_config, db)
+        elif agent_type == 'cricket_schedules':
+            # Use Cricket Schedules Agent Service
+            from services.cricket_schedules_agent_service import cricket_schedules_agent
+            result = await cricket_schedules_agent.run_agent(agent_id)
         else:
             # Use Post Agent Service (default)
             result = await agent_runner.run_agent(agent_id)
