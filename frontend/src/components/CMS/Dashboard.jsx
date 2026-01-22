@@ -6,6 +6,7 @@ import TopicSelector from './TopicSelector';
 import RelatedVideosManagement from './RelatedVideosManagement';
 import AdManagement from './AdManagement';
 import GroupedPosts from './GroupedPosts';
+import CricketSchedulesManagement from './CricketSchedulesManagement';
 import { getSortedStates, getStateNameByCode } from '../../utils/statesConfig';
 
 // Topic Management Modal Component
