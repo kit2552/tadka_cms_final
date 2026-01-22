@@ -415,23 +415,32 @@ const ArticlePage = () => {
     if (!dateString) return 'Recently published';
     const date = new Date(dateString);
     
-    // Format date part
-    const datePart = date.toLocaleString('en-IN', {
-      timeZone: 'Asia/Kolkata',
+    // Get user's timezone
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    
+    // Format date part with short month
+    const datePart = date.toLocaleString('en-US', {
+      timeZone: userTimezone,
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric'
     });
     
     // Format time part
-    const timePart = date.toLocaleString('en-IN', {
-      timeZone: 'Asia/Kolkata',
+    const timePart = date.toLocaleString('en-US', {
+      timeZone: userTimezone,
       hour: 'numeric',
       minute: '2-digit',
       hour12: true
-    });
+    }).toUpperCase(); // Convert AM/PM to uppercase
     
-    return `${datePart}, ${timePart} IST`;
+    // Get timezone abbreviation
+    const tzAbbr = date.toLocaleString('en-US', {
+      timeZone: userTimezone,
+      timeZoneName: 'short'
+    }).split(' ').pop(); // Get the last part which is the timezone
+    
+    return `${datePart}, ${timePart} ${tzAbbr}`;
   };
 
   // Force light theme for content areas regardless of user's theme selection
