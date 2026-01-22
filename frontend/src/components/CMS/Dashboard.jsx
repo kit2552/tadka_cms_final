@@ -235,6 +235,15 @@ const Dashboard = () => {
   const initialTab = searchParams.get('tab') || 'posts';
   
   const [activeTab, setActiveTab] = useState(initialTab);
+  
+  // Sync activeTab with URL when navigating back to dashboard
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab') || 'posts';
+    if (tabFromUrl !== activeTab) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [location.search]);
+  
   const [showCreateAdForm, setShowCreateAdForm] = useState(false);
   const [articles, setArticles] = useState([]);
   const [languages, setLanguages] = useState([]);
