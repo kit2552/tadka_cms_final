@@ -3089,21 +3089,39 @@ const Dashboard = () => {
   const formatDate = (dateString, showTimezone = true) => {
     if (!dateString) return 'Draft';
     const date = new Date(dateString);
-    const formatted = date.toLocaleDateString('en-US', {
+    
+    // Get user's timezone
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    
+    // Format date part with short month
+    const datePart = date.toLocaleString('en-US', {
+      timeZone: userTimezone,
       year: 'numeric',
       month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: 'numeric'
     });
+    
+    // Format time part
+    const timePart = date.toLocaleString('en-US', {
+      timeZone: userTimezone,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }).toUpperCase(); // Convert AM/PM to uppercase
+    
     if (showTimezone) {
       // Get timezone abbreviation
-      const timezone = Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
-        .formatToParts(date)
-        .find(part => part.type === 'timeZoneName')?.value || 'IST';
-      return `${formatted} ${timezone}`;
+      let tzAbbr = date.toLocaleString('en-US', {
+        timeZone: userTimezone,
+        timeZoneName: 'short'
+      }).split(' ').pop();
+      
+      // Map common timezone offsets to abbreviations for India
+      if (tzAbbr === 'GMT+5:30') tzAbbr = 'IST';
+      
+      return `${datePart}, ${timePart} ${tzAbbr}`;
     }
-    return formatted;
+    return `${datePart}, ${timePart}`;
   };
 
   return (
