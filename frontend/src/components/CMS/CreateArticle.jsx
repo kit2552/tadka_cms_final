@@ -1645,9 +1645,6 @@ const CreateArticle = () => {
     if (!id || id === 'new') return;
     
     const action = formData.is_published ? 'unpublish' : 'publish';
-    const confirmMessage = `Are you sure you want to ${action} this article?`;
-    
-    if (!window.confirm(confirmMessage)) return;
     
     setLoading(true);
     try {
@@ -1663,13 +1660,13 @@ const CreateArticle = () => {
 
       if (response.ok) {
         setFormData(prev => ({ ...prev, is_published: !prev.is_published }));
-        showNotification(`Article ${action}ed successfully!`, 'success');
+        showNotification('success', `Article ${action === 'publish' ? 'Published' : 'Unpublished'}`, `Article has been ${action}ed successfully!`);
       } else {
         throw new Error(`Failed to ${action} article`);
       }
     } catch (error) {
       console.error(`Error ${action}ing article:`, error);
-      showNotification(`Failed to ${action} article. Please try again.`, 'error');
+      showNotification('error', `${action.charAt(0).toUpperCase() + action.slice(1)} Failed`, `Failed to ${action} article. Please try again.`);
     } finally {
       setLoading(false);
     }
